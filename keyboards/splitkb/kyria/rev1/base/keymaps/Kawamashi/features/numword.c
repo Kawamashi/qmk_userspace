@@ -28,13 +28,13 @@ bool is_num_word_enabled(void) {
 void enable_num_word(void) {
     //if (is_num_word_on) return;
     is_num_word_on = true;
-    layer_on(_SYMNUM);
+    layer_on(_NUMBERS);
 }
 
 void disable_num_word(void) {
     //if (!is_num_word_on) return;
     is_num_word_on = false;
-    layer_off(_SYMNUM);
+    layer_off(_NUMBERS);
     exit_num_word = false;
 }
 
@@ -53,20 +53,22 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
         // Keycodes which should not disable num word mode.
 
         // Numpad keycodes
-/*         case KC_P1 ... KC_P0:
-        case KC_PDOT:
-        case FR_SLSH: */
+         case KC_P1 ... KC_P0:
+         case KC_PDOT:
+         case FR_VIRG:
+         case FR_MOIN:
+         case FR_ASTX: 
+         case FR_PLUS:
+         case FR_SLSH:
+         case FR_ACIR:
+         case FR_CARN:
 
         // Misc
         case KC_BSPC:
         case NUMWORD:   // For the combo NUMWORD to work
 
-/*         case FR_MOIN:
+/*         
         case FR_EGAL:
-        case FR_ACIR:
-        case FR_VIRG:
-        case FR_ASTX: 
-        case FR_PLUS:
         case FR_BSLS:
 
         // Misc
@@ -79,7 +81,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
             return false; */
     }
 
-    if (!on_left_hand(record->event.key)) { return false; }
+    //if (!on_left_hand(record->event.key)) { return false; }
     return true;
 }
 

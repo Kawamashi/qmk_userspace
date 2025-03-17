@@ -237,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_ESC, FR_AGRV,     FR_B,        FR_EACU,      FR_POIN,       FR_MOIN,                                                               FR_ACIR,       FR_V,         FR_L,         FR_M,        FR_X,         FR_W,
       KC_ENT, ALT_T(FR_O), SFT_T(FR_U), ALGR_T(FR_A), LCTL_T(FR_I),  FR_J,                                                                  FR_G,          RCTL_T(FR_T), ALGR_T(FR_S), RSFT_T(FR_N), ALT_T(FR_R), FR_F,
       LT_TAB, FR_Q,        FR_Y,        FR_EGRV,      LWIN_T(FR_P),  FR_DQUO,       KC_BSPC,          KC_END,  KC_HOME, KC_DEL,             FR_K,          RWIN_T(FR_D), FR_Z,         FR_H,        FR_C,         LT_CCED,
-                                        TG(_SYMNUM),  KC_SPC,        OSM(MOD_LSFT), LT(_SYMNUM,FR_E), LT_VIRG, LT_APOS, LT(_SYMNUM,KC_SPC), OSM(MOD_RSFT), KC_RGUI,      KC_MUTE
+                                        TG(_SYMBOLS),  KC_SPC,        OSM(MOD_LSFT), LT(_SYMBOLS,FR_E), LT_VIRG, LT_APOS, LT(_SYMBOLS,KC_SPC), OSM(MOD_RSFT), KC_RGUI,      KC_MUTE
     ),
 
 	  
@@ -255,7 +255,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_SYMNUM] = LAYOUT(
+    [_SYMBOLS] = LAYOUT(
       KC_ESC,  FR_EXLM, FR_QUES,        FR_ESPR,         FR_PVIR, FR_PIPE,                                       FR_MOIN, KC_P7,         KC_P8,         KC_P9, FR_ASTX, KC_NUM,
       _______, FR_LACL, SFT_T(FR_RACL), ALGR_T(FR_LPRN), FR_RPRN, LAYER_LCK,                                     FR_EGAL, RCTL_T(KC_P4), ALGR_T(KC_P5), KC_P6, FR_SLSH, FR_BSLS,
       _______, FR_LBKT, FR_RBKT,        FR_INF,          FR_SUP,  FR_CARN,   _______, _______, _______, _______, FR_ACIR, KC_P1,         KC_P2,         KC_P3, FR_PLUS, FR_PERC,

@@ -25,6 +25,7 @@ uint16_t global_quick_tap_timer = 0;
 
 bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
   switch (tap_hold_keycode) {
+    case LT_REPT:
     case LT_MGC:
       return false;
   }
@@ -156,7 +157,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_L_MODS] = LAYOUT(
-      KC_NO, KC_NO,   KC_NO,  OS_WIN,  KC_RGUI, KC_NO,                                        _______, _______, _______, _______, _______, _______,
+      KC_NO, KC_NO,   OS_SN,  OS_WIN,  KC_RGUI, KC_NO,                                        _______, _______, _______, _______, _______, _______,
       KC_NO, OS_RALT, OS_FA,  OS_CTRL, OS_SHFT, KC_NO,                                        _______, _______, _______, _______, _______, _______,
       KC_NO, OS_LALT, KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______, _______, _______, _______, _______, _______,
                               KC_NO,   KC_NO,   _______, _______, _______, CAPSWORD, _______, KC_CAPS, _______, _______
@@ -197,11 +198,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_SYMNUM] = LAYOUT(
-      KC_NO,   FR_PIPE,         FR_ESPR, FR_UNDS, FR_PVIR,        FR_ACIR,                                     FR_MOIN, KC_P7,   KC_P8,  KC_P9, FR_ASTX,         _______,
-      _______, ALGR_T(FR_LACL), FR_RACL, FR_LPRN, SFT_T(FR_RPRN), FR_CARN,                                     FR_EGAL, KC_P4,   KC_P5,  KC_P6, ALGR_T(FR_SLSH), _______,
-      _______, FR_LBKT,         FR_RBKT, FR_INF,  FR_SUP,         KC_NO,   _______, _______, _______, _______, KC_NO,   KC_P1,   KC_P2,  KC_P3, FR_PLUS,         _______,
-                                         _______, _______,        _______, KC_SPC,  LT_VIRG, NUMWORD, KC_P0,   KC_PDOT, _______, _______
+    [_SYMBOLS] = LAYOUT(
+      _______, CIRC,    FR_EXLM, FR_EGAL, FR_DLR,  FR_AROB,                                     FR_HASH, FR_INF,  FR_SUP,  FR_QUES, FR_2PTS, _______,
+      _______, FR_ASTX, FR_PLUS, FR_MOIN, FR_SLSH, FR_BSLS,                                     GRAVE,   FR_LPRN, FR_RPRN, FR_PVIR, FR_DQUO, _______,
+      _______, FR_PERC, TILDE,   FR_PIPE, FR_ESPR, KC_NO,   _______, _______, _______, _______, KC_NO,   FR_LACL, FR_RACL, FR_LBKT, FR_RBKT, _______,
+                                 _______, _______, _______, FR_UNDS, _______, _______, FR_UNDS, KC_PDOT, _______, _______
     ),
 
 /*
@@ -218,12 +219,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-/*     [_NUMPAD] = LAYOUT(
-      _______, _______, _______, _______, _______, FR_ACIR,                                     FR_MOIN, KC_P7,   KC_P8,  KC_P9, FR_ASTX, _______,
-      OSM(MOD_LGUI),  OSM(MOD_LALT), OSM(MOD_RSFT), OSM(MOD_RALT), OSM(MOD_LCTL), FR_CARN,                                     FR_EGAL, KC_P4,   KC_P5,  KC_P6, FR_SLSH, FR_BSLS,
-      _______, KC_SPC,  _______, _______, _______, KC_NO,   _______, _______, _______, _______, KC_NO  , KC_P1,   KC_P2,  KC_P3, FR_PLUS, _______,
-                                 _______, _______, _______, KC_SPC , FR_VIRG, NUMWORD, KC_P0,   KC_PDOT, _______, _______
-    ), */
+    [_NUMBERS] = LAYOUT(
+       _______, _______, _______, FR_ASTX, _______, FR_ACIR,                                     _______, _______, FR_PLUS, FR_MOIN, _______, _______,
+       _______, KC_P8,   KC_P6,   KC_P4,   KC_P2,   FR_CARN,                                     _______, KC_KP_1, KC_P3,   KC_P5,   KC_P7,   _______,
+       _______, _______, _______, _______, FR_SLSH, _______, _______, _______, _______, _______, _______, KC_P9,   _______, _______, _______, _______,
+                                  _______, _______, FR_VIRG, KC_P0  , NUMWORD, LT_REPT, KC_SPC,  KC_PDOT, _______, _______
+     ),
 
 /*
  * Layer 2 : Symbols
@@ -261,18 +262,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ACCENTS] = LAYOUT(
-      _______, O_CIRC,  A_CIRC,  I_CIRC,  U_CIRC,  FR_LDAQ   ,                                      FR_RDAQ, FR_TREM, FR_GRV,  FR_ACIR, FR_CEDL,   _______,
-      _______, OU_GRV,  FR_AGRV, FR_DQUO, FR_MOIN, ALGR(FR_G),                                      _______, FR_J,    _______, FR_AROB, _______,   _______,
+      _______, O_CIRC,  A_CIRC,  I_CIRC,  U_CIRC,  FR_LDAQ   ,                                      FR_RDAQ, FR_3PTS, FR_MOIN, FR_APOS, FR_POIN,   _______,
+      _______, OU_GRV,  FR_AGRV, FR_MOIN, FR_DQUO, ALGR(FR_G),                                      FR_SS,   FR_J,    TILDE,   FR_AROB, _______,   _______,
       _______, FR_OE,   FR_AE,   I_TREM,  CA_CED,  _______   , _______, _______, _______, _______,  _______, FR_CCED, FR_TREM, FR_K,    TG_ACC,    _______,
                                  _______, _______, _______   , FR_EGRV, E_CIRC,  _______, AGRV_SPC, _______, _______, _______
     ),
 
-/*     [_ACCENTS] = LAYOUT(
-      _______, _______, _______, _______, _______, FR_LDAQ   ,                                      FR_RDAQ, U_CIRC,  I_CIRC,  A_CIRC, O_CIRC, _______,
-      _______, _______, FR_DQUO, _______, FR_J,    ALGR(FR_G),                                      _______, FR_AROB, FR_MOIN, FR_K,   OU_GRV, _______,
-      _______, _______, FR_AGRV, I_TREM, CA_CED,   _______   , _______, _______, _______, _______,  _______, FR_CCED, FR_UNDS, FR_AE,  FR_OE,  _______,
-                                 _______, _______, _______   , FR_EGRV, E_CIRC,  _______, AGRV_SPC, _______, _______, _______
-    ), */
 
 /*
  * Layer 3 : Symbols + function keys
@@ -289,10 +284,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      _______, KC_BSPC, LWIN(KC_TAB), LWIN(FR_V), RCS(FR_V),   _______,                                           KC_PGUP, C(KC_LEFT), KC_UP,   C(KC_RGHT), _______, _______,
-      _______, C(FR_A), C(FR_X),      C(FR_V),    SFT_T(COPY), _______,                                           KC_PGDN, KC_LEFT,    KC_DOWN, KC_RIGHT,   KC_F2  , _______,
-      _______, KC_SPC,  KC_SPC,       KC_SPC,     C(FR_Z),     C(FR_Y),  _______, S(KC_END), S(KC_HOME), _______, _______, KC_VOLD,    KC_VOLU, KC_MUTE,    _______, _______,
-                                      _______,    _______,     _______,  _______, _______,   _______,    _______, _______, _______,    _______
+      _______, KC_BSPC, LWIN(KC_TAB), LWIN(FR_V), RCS(FR_V),   _______,                                      KC_PGUP, C(KC_LEFT), KC_UP,   C(KC_RGHT), _______, _______,
+      _______, C(FR_A), C(FR_X),      C(FR_V),    SFT_T(COPY), _______,                                      KC_PGDN, KC_LEFT,    KC_DOWN, KC_RIGHT,   KC_F2  , _______,
+      _______, KC_SPC,  KC_SPC,       KC_SPC,     C(FR_Z),     C(FR_Y),  _______, _______, _______, _______, _______, KC_VOLD,    KC_VOLU, KC_MUTE,    _______, _______,
+                                      _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
     ),
 
 /*

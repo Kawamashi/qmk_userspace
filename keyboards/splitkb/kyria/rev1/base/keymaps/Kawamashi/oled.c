@@ -53,7 +53,7 @@ bool oled_task_user(void) {
             case _R_MODS:
                 oled_write_P(PSTR("Mods D\n"), false);
                 break;
-            case _SYMNUM:
+            case _SYMBOLS:
                 oled_write_P(PSTR("SymNum\n"), false);
                 break;
             case _SHORTNAV:

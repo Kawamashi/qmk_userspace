@@ -35,7 +35,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                     case _BASE:
                         tap_code(KC_F13);
                         return false;
-                    case _SYMNUM:
+                    case _SYMBOLS:
                         tap_code(KC_F14);
                         return false;
                     case _SHORTNAV:

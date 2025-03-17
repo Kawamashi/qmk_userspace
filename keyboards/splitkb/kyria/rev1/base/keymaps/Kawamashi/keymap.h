@@ -34,7 +34,8 @@ enum layers {
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
-    _SYMNUM,
+    _SYMBOLS,
+    _NUMBERS,
     _ACCENTS,
     _SHORTNAV,
     _FUNCAPPS,
@@ -60,6 +61,9 @@ enum custom_keycodes {
   U_CIRC,
   I_TREM,
   CA_CED,
+  CIRC,
+  TILDE,
+  GRAVE,
   MAGIC,
   OS_SHFT,
   OS_CTRL,
@@ -69,15 +73,16 @@ enum custom_keycodes {
 };
 
 // Layer taps
-#define LT_SPC LT(_SYMNUM,KC_SPC)
-#define LT_E LT(_SYMNUM,FR_E)
-#define LT_REPT LT(_SHORTNAV, KC_0)
-#define LT_MGC LT(_SHORTNAV, KC_1)
-#define LT_D LT(_FUNCAPPS, FR_D)
-#define LT_C LT(_FUNCAPPS, FR_C)
+#define LT_SPC LT(_SYMBOLS,KC_SPC)
+#define LT_E LT(_SYMBOLS,FR_E)
+#define LT_REPT LT(_NUMBERS, KC_0)
+#define LT_MGC LT(_SHORTNAV, KC_0)
+#define LT_D FR_D
+#define LT_C FR_C
 #define LT_VIRG LT(_SHORTNAV, FR_VIRG)
 #define OS_ACC OSL(_ACCENTS)
 #define OS_FA OSL(_FUNCAPPS)
+#define OS_SN OSL(_SHORTNAV)
 #define TT_FA TT(_FUNCAPPS)
 #define TG_ACC TG(_ACCENTS)
 

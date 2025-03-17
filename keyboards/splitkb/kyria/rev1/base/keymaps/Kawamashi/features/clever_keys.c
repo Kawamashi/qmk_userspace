@@ -7,7 +7,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
   uint16_t prev_keycode = recent[RECENT_SIZE - 1];
   const uint8_t mods = get_mods();
-  const bool isCaps = is_caps_lock_on() || is_caps_word_on();
+  //const bool isCaps = is_caps_lock_on() || is_caps_word_on();
 
   if (isLetter(next_keycode) || next_keycode == E_CIRC) {
     switch (prev_keycode) {
@@ -195,7 +195,8 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       break;
 
     case FR_A:
-      if (prev_keycode == FR_O && !isCaps) {
+      //if (prev_keycode == FR_O && !isCaps) {
+      if (prev_keycode == FR_O) {
         // "oa" -> "oi"
         clear_recent_keys();  // To prevent infinite loop
         return replace_next_key(FR_I, record);
@@ -203,7 +204,8 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       break;
 
     case FR_I:
-      if (prev_keycode == FR_O && !isCaps && recent[RECENT_SIZE - 3] != FR_Q) {
+      //if (prev_keycode == FR_O && !isCaps && recent[RECENT_SIZE - 3] != FR_Q) {
+      if (prev_keycode == FR_O && recent[RECENT_SIZE - 3] != FR_Q) {
         // "oi" -> "oa", for "keyboard"
         clear_recent_keys();  // To prevent infinite loop
         return replace_next_key(FR_A, record);
@@ -243,6 +245,15 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
     case I_TREM:
       return process_accent(FR_TREM, FR_I, record);
+
+    case CIRC:
+      return process_accent(FR_ACIR, KC_SPC, record);
+
+    case TILDE:
+      return process_accent(FR_TILD, KC_SPC, record);
+
+    case GRAVE:
+      return process_accent(FR_GRV, KC_SPC, record);
   }
 
   return false; // Process next keycode normally

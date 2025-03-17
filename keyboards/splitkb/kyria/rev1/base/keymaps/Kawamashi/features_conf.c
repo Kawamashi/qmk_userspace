@@ -70,7 +70,7 @@ const custom_altgr_key_t custom_altgr_keys[] = {
   //{FR_I, FR_LDAQ},
   //{FR_T, FR_RDAQ},
   {FR_J, FR_CURR},
-  {FR_H, FR_HASH},
+  //{FR_H, FR_HASH},
   {FR_Q, FR_SECT},
   {KC_KP_8, FR_INFN},
   {FR_F, FR_DEG}
@@ -95,6 +95,7 @@ bool os4a_layer_changer(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
+    case OS_SN:
       return true;
     default:
       return false;
@@ -143,6 +144,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_LALT:
     case OS_WIN:
     case OS_FA:
+    case OS_SN:
     case NUMWORD:
     case TT_FA:
         return true;
