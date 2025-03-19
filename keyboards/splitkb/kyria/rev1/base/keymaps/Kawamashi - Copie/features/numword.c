@@ -61,7 +61,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
          case FR_PLUS:
          case FR_SLSH:
          case FR_ACIR:
-         //case FR_CARN:
+         case FR_CARN:
 
         // Misc
         case KC_BSPC:

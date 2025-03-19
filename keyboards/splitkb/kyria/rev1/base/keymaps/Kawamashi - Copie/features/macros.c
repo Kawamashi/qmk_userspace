@@ -30,20 +30,13 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
             case REV_TAB:
                 return process_swapper(S(KC_TAB)); */
 
-            case OS_TYPO:
-                if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_BIT(KC_ALGR)) {
-                    tap_code16(ALGR(FR_TYPO));
-                    return false;
-                }
-                return true;
-
             case AIDE_MEM:                    
                 switch(get_highest_layer(layer_state|default_layer_state)) {
                     case _BASE:
                         tap_code(KC_F13);
                         return false;
-/*                     case _SYMBOLS:
-                        tap_code(KC_F14); */
+                    case _SYMBOLS:
+                        tap_code(KC_F14);
                         return false;
                     case _SHORTNAV:
                         tap_code(KC_F15);

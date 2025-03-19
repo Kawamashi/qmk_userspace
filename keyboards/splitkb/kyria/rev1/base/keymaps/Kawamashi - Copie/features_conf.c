@@ -4,11 +4,14 @@ bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
 bool isLetter(uint16_t keycode) {
   switch (keycode) {
-    case KC_A ... KC_N:
-    case KC_Q ... KC_V:
-    case KC_X ... KC_Z:
-    case FR_E:
-    case KC_SCLN ... KC_DOT:
+    case KC_A ... KC_L:
+    case FR_M:
+    case KC_N ... KC_Z:
+    case FR_AGRV:
+    case FR_EACU:
+    case FR_EGRV:
+    case FR_CCED:
+    case ALGR(FR_U):
       return true;
 
     default:
@@ -18,9 +21,10 @@ bool isLetter(uint16_t keycode) {
 
 uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
-    case ALGR_T(FR_E):
-      return FR_E;
-
+/*     case LT_REPT:
+      return REPEAT;
+    case LT_MGC:
+      return MAGIC; */
     default:
       return keycode &= 0xff;
   }
@@ -31,9 +35,7 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
 
 bool caps_word_press_user(uint16_t keycode) {
 
-  // Managing underscore on alt gr + E.
-  // Underscore must continue Caps Word, without shifting.
-  if ((get_mods() & MOD_BIT(KC_ALGR)) && keycode == FR_E) { return true; }
+  //if (IS_LAYER_ON(_ACCENTS) && keycode == FR_A) { return false; }
 
   // Keycodes that continue Caps Word, with shift applied.
   if (isLetter(keycode)) {
@@ -43,8 +45,7 @@ bool caps_word_press_user(uint16_t keycode) {
 
   switch (keycode) {
     // Keycodes that continue Caps Word, without shifting.
-    case FR_TYPO:
-    //case FR_GRV:
+    case FR_GRV:
     case FR_MOIN:
     case FR_UNDS:
     case FR_SLSH:
@@ -65,7 +66,7 @@ bool caps_word_press_user(uint16_t keycode) {
 
 // Custom AltGr keys
 
-/* const custom_altgr_key_t custom_altgr_keys[] = {
+const custom_altgr_key_t custom_altgr_keys[] = {
   {FR_C, FR_COPY},
   {FR_Y, FR_TM},
   //{FR_I, FR_LDAQ},
@@ -75,10 +76,10 @@ bool caps_word_press_user(uint16_t keycode) {
   {FR_Q, FR_SECT},
   {KC_KP_8, FR_INFN},
   {FR_F, FR_DEG}
-}; 
+};
 
 uint8_t NUM_CUSTOM_ALTGR_KEYS =
-    sizeof(custom_altgr_keys) / sizeof(custom_altgr_key_t);*/
+    sizeof(custom_altgr_keys) / sizeof(custom_altgr_key_t);
 
 
 // One-shot 4 all configuration
@@ -96,6 +97,7 @@ bool os4a_layer_changer(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
+    case OS_SN:
       return true;
     default:
       return false;
@@ -129,15 +131,13 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 }
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
-  // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
+  // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi qu'un tréma avec.
   // Autrement, la touche typo est ignorée par les Callum mods.
   // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  //uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_TYPO && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
-  //if (keycode == OS_TYPO && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
+  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  if (keycode == OS_ACC && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
 
   switch (keycode) {
-    case OS_TYPO:
     case L_OS4A:
     case R_OS4A:
     case OS_SHFT:
@@ -146,6 +146,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_LALT:
     case OS_WIN:
     case OS_FA:
+    case OS_SN:
     case NUMWORD:
     case TT_FA:
         return true;

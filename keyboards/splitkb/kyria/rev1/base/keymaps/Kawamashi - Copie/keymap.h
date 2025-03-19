@@ -34,10 +34,12 @@ enum layers {
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
-    _TYPO,
+    _SYMBOLS,
     _NUMBERS,
+    _ACCENTS,
     _SHORTNAV,
     _FUNCAPPS,
+    //_NUMPAD
 };
 
 enum custom_keycodes {
@@ -71,17 +73,18 @@ enum custom_keycodes {
 };
 
 // Layer taps
-#define LT_SPC ALGR_T(KC_SPC)
-#define LT_E ALGR_T(FR_E)
+#define LT_SPC LT(_SYMBOLS,KC_SPC)
+#define LT_E LT(_SYMBOLS,FR_E)
 #define LT_REPT LT(_NUMBERS, KC_0)
 #define LT_MGC LT(_SHORTNAV, KC_0)
 #define LT_D FR_D
 #define LT_C FR_C
 #define LT_VIRG LT(_SHORTNAV, FR_VIRG)
-#define OS_TYPO OSL(_TYPO)
+#define OS_ACC OSL(_ACCENTS)
 #define OS_FA OSL(_FUNCAPPS)
+#define OS_SN OSL(_SHORTNAV)
 #define TT_FA TT(_FUNCAPPS)
-#define TG_ACC TG(_TYPO)
+#define TG_ACC TG(_ACCENTS)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)

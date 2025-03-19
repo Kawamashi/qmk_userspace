@@ -1,4 +1,4 @@
-/* Copyright 2020 Guillaume Gérard
+/* Copyright 2025 @Kawamashi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,29 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* French AZERTY - AFNOR NF Z71-300
- *
- * A standard for the French keyboard
- *
- * The project was launched at the end of 2015 on the proposal of the General
- * Delegation for the French language and the languages ​​of France (Ministry
- * of Culture), starting from the observation that the current "azerty"
- * keyboards constrain the writing of French, languages regional and European
- * languages ​​with Latin alphabet.
- *
- * For the first time, a standard (NF Z71-300) defines the placement of
- * characters on the French keyboard. It offers two layouts, one of which
- * closely follows the QWERTY keyboard used by most people who write in French.
- *
- * However, it is in many ways superior to the old keyboard:
- *
- * - it contains all the characters required to enter text in French (for example É, œ and ")
- * - it is designed to be more ergonomic and allow faster typing
- * - it includes almost 60 additional characters for entering foreign languages, technical content, etc
- * - however, the characters remain easy to locate thanks to intuitive groupings
- *
- * Source: https://norme-azerty.fr
- */
+
 
 #pragma once
 #include "keycodes.h"
@@ -46,189 +24,165 @@
 
 /*
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │ @ │ à │ é │ è │ & │ ( │ ) │ ç │ ’ │ « │ » │ ' │ ^ │       │
+ * │ À │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │ 0 │ / │ * │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
- * │     │ A │ Z │ E │ R │ T │ Y │ U │ I │ O │ P │ - │ + │     │
+ * │     │ X │ , │ É │ P │ B │ F │ M │ L │ ' │ . │ = │ + │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │ Q │ S │ D │ F │ G │ H │ J │ K │ L │ M │ / │ * │    │
+ * │      │ O │ A │ I │ T │ G │ V │ S │ N │ R │ U │ Ù │ Ç │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
- * │    │ < │ W │ X │ C │ V │ B │ N │ . │ , │ " │ = │          │
+ * │    │ E │ Q │ Z │ Y │ D │ J │ K │ C │ H │ W │ **│          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
  * │    │    │    │                        │    │    │    │    │
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
+
 // Row 1
-#define FR_AROB KC_GRV  // @
-#define FR_AGRV KC_1    // à
-#define FR_EACU KC_2    // é
-#define FR_EGRV KC_3    // è
-#define FR_ESPR KC_4    // &
-#define FR_LPRN KC_5    // (
-#define FR_RPRN KC_6    // )
-#define FR_CCED KC_7    // ç
-#define FR_RSQU KC_8    // ’
-#define FR_LDAQ KC_9    // «
-#define FR_RDAQ KC_0    // »
-#define FR_APOS KC_MINS // '
-#define FR_ACIR KC_EQL  // ^ (dead)
+#define FR_AGRV KC_GRV  // à
+#define FR_1 KC_1       // 1
+#define FR_2 KC_2       // 2
+#define FR_3 KC_3       // 3
+#define FR_4 KC_4       // 4
+#define FR_5 KC_5       // 5
+#define FR_6 KC_6       // 6
+#define FR_7 KC_7       // 7
+#define FR_8 KC_8       // 8
+#define FR_9 KC_9       // 9
+#define FR_0 KC_0       // 0
+#define FR_SLSH KC_MINS // /
+#define FR_ASTX KC_EQL  // *
+
 // Row 2
-#define FR_A    KC_Q    // A
-#define FR_Z    KC_W    // Z
-#define FR_E    KC_E    // E
-#define FR_R    KC_R    // R
-#define FR_T    KC_T    // T
-#define FR_Y    KC_Y    // Y
-#define FR_U    KC_U    // U
-#define FR_I    KC_I    // I
-#define FR_O    KC_O    // O
-#define FR_P    KC_P    // P
-#define FR_MOIN KC_LBRC // -
+#define FR_X    KC_Q    // X
+#define FR_VIRG KC_W    // ,    
+#define FR_EACU KC_E    // É
+#define FR_P    KC_R    // P
+#define FR_B    KC_T    // B
+#define FR_F    KC_Y    // F
+#define FR_M    KC_U    // M
+#define FR_L    KC_I    // L
+#define FR_APOS KC_O    // '
+#define FR_POIN KC_P    // .
+#define FR_EGAL KC_LBRC // =
 #define FR_PLUS KC_RBRC // +
+
 // Row 3
-#define FR_Q    KC_A    // Q
-#define FR_S    KC_S    // S
-#define FR_D    KC_D    // D
-#define FR_F    KC_F    // F
+#define FR_O    KC_A    // O
+#define FR_A    KC_S    // A
+#define FR_I    KC_D    // I
+#define FR_T    KC_F    // T
 #define FR_G    KC_G    // G
-#define FR_H    KC_H    // H
-#define FR_J    KC_J    // J
-#define FR_K    KC_K    // K
-#define FR_L    KC_L    // L
-#define FR_M    KC_SCLN // M
-#define FR_SLSH KC_QUOT // /
-#define FR_ASTX KC_NUHS // *
+#define FR_V    KC_H    // V
+#define FR_S    KC_J    // S
+#define FR_N    KC_K    // N
+#define FR_R    KC_L    // R
+#define FR_U    KC_SCLN // U
+#define FR_UGRV KC_QUOT // Ù
+#define FR_CCED KC_NUHS // Ç
+
 // Row 4
-#define FR_INF  KC_NUBS // <
-#define FR_W    KC_Z    // W
-#define FR_X    KC_X    // X
-#define FR_C    KC_C    // C
-#define FR_V    KC_V    // V
-#define FR_B    KC_B    // B
-#define FR_N    KC_N    // N
-#define FR_POIN KC_M    // .
-#define FR_VIRG KC_COMM // ,
-#define FR_DQUO KC_DOT  // ""
-#define FR_EGAL KC_SLSH // =
+#define FR_E    KC_NUBS // E
+#define FR_Q    KC_Z    // Q
+#define FR_Z    KC_X    // Z
+#define FR_Y    KC_C    // Y
+#define FR_D    KC_V    // D
+#define FR_J    KC_B    // J
+#define FR_K    KC_N    // K
+#define FR_C    KC_M    // C
+#define FR_H    KC_COMM // H
+#define FR_W    KC_DOT  // W
+#define FR_TYPO KC_SLSH // **
+
 
 /* Shifted symbols
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │ # │ À │ É │ È │ ° │ [ │ ] │ Ç │ 8 │ 9 │ 0 │ ? │ ¨ │       │
+ * │   │   │   │   │   │   │   │   │   │   │   │   │   │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
- * │     │   │   │   │   │   │   │   │   │   │   │ – │ ± │     │
+ * │     │   │ ! │   │   │   │   │   │   │ ? │ : │ ≠ │   │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │   │   │   │   │   │   │   │   │   │   │ \ │ ½ │    │
+ * │      │   │   │   │   │   │   │   │   │   │   │   │   │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
- * │    │ > │   │   │   │   │   │   │ : │ ! │ … │ ≠ │          │
+ * │    │   │   │   │   │   │   │   │   │   │   │   │          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
- * │    │    │    │                        │    │    │    │    │
+ * │    │    │    │                        │    │    │    │    │
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
-// Row 1
-#define FR_HASH S(FR_AROB) // #
-//#define FR_1    S(FR_AGRV) // 1
-//#define FR_2    S(FR_EACU) // 2
-//#define FR_3    S(FR_EGRV) // 3
-#define FR_DEG  S(FR_ESPR) // 4
-#define FR_LBKT S(FR_LPRN) // 5
-#define FR_RBKT S(FR_RPRN) // 6
-//#define FR_7    S(FR_CCED) // 7
-#define FR_8    S(FR_RSQU) // 8
-#define FR_9    S(FR_LDAQ) // 9
-#define FR_0    S(FR_RDAQ) // 0
-#define FR_QUES S(FR_APOS) // ?
-#define FR_TREM S(FR_ACIR) // ¨ (dead)
 // Row 2
-#define FR_NDSH S(FR_MOIN) // –
-#define FR_PLMN S(FR_PLUS) // ±
-// Row 3
-#define FR_BSLS S(FR_SLSH) // (backslash)
-#define FR_HALF S(FR_ASTX) // ½
-// Row 4
-#define FR_SUP  S(FR_INF) // >
-#define FR_2PTS S(FR_POIN)  // :
 #define FR_EXLM S(FR_VIRG) // !
-//#define FR_3PTS S(FR_DQUO) // …
+#define FR_QUES S(FR_APOS) // ?
+#define FR_2PTS S(FR_POIN) // :
 #define FR_DIFF S(FR_EGAL) // ≠
+
+// Row 5
+#define FR_NBSP S(KC_SPC)  // Espace insecable
+
+
 
 /* AltGr symbols
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │ ˘ │ § │ ´ │ ` │   │ { │ } │ ¯ │ _ │ “ │ ” │ ˚ │ ˇ │       │
+ * │   │ ₁ │ ₂ │ ₃ │ ₄ │ ₅ │ ₆ │ ₇ │ ₈ │ ₉ │ ₀ │   │   │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
- * │     │ æ │ £ │ € │ ® │ { │ } │ ù │ ˙ │ œ │ % │ − │ † │     │
+ * │     │ ^ │ ! │ = │ $ │ @ │ # │ < │ > │ ? │ : │   │   │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │ θ │ ß │ $ │ ¤ │ µ │ Eu│   │ ∕ │ | │ ∞ │ ÷ │ × │    │
+ * │      │ * │ + │ - │ / │ \ │ ` │ ( │ ) │ ; │ " │   │   │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
- * │    │ ≤ │ ʒ │ © │ ç │ ¸ │ − │ ~ │ … │ ; │ · │ ≃ │          │
+ * │    │ _ │ % │ ~ │ | │ & │   │   │ { │ } │ [ │ ] │          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
  * │    │    │    │                        │    │    │    │    │
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
-// Row 1
-#define FR_BREV ALGR(FR_AROB)   // ˘ (dead)
-#define FR_SECT ALGR(FR_AGRV) // §
-#define FR_ACUT ALGR(FR_EACU) // ´ (dead)
-#define FR_GRV  ALGR(FR_EGRV) // ` (dead)
-//#define FR_AMPR ALGR(FR_ESPR) // &
-#define FR_LACL ALGR(FR_LPRN) // {
-#define FR_RACL ALGR(FR_RPRN) // }
-#define FR_MACR ALGR(FR_CCED) // ¯ (dead)
-#define FR_UNDS ALGR(FR_RSQU) // _
-#define FR_LDQU ALGR(FR_LDAQ) // “
-#define FR_RDQU ALGR(FR_RDAQ) // ”
-#define FR_RNGA ALGR(FR_APOS) // ˚ (dead)
-#define FR_CARN ALGR(FR_ACIR) // ˇ (dead)
+
 // Row 2
-#define FR_AE   ALGR(FR_A)    // æ
-#define FR_PND  ALGR(FR_Z)    // £
-#define FR_EURO ALGR(FR_E)    // €
-#define FR_REGD ALGR(FR_R)    // ®
-#define FR_LCBR ALGR(FR_T)    // {
-#define FR_RCBR ALGR(FR_Y)    // }
-#define FR_UGRV ALGR(FR_U)    // ù
-#define FR_DOTA ALGR(FR_I)    // ˙ (dead)
-#define FR_OE   ALGR(FR_O)    // œ
-#define FR_PERC ALGR(FR_P)    // %
-#define FR_MMNS ALGR(FR_MOIN) // −
-#define FR_DAGG ALGR(FR_PLUS) // †
+#define FR_ACIR ALGR(FR_X)    // ^
+//#define FR_EXLM ALGR(FR_VIRG) // !
+//#define FR_EGAL ALGR(FR_EACU) // =
+#define FR_DLR  ALGR(FR_P)    // $
+#define FR_AROB ALGR(FR_B)    // @
+#define FR_HASH ALGR(FR_F)    // #
+#define FR_INF ALGR(FR_M)    // <
+#define FR_SUP ALGR(FR_L)    // > 
+//#define FR_QUES ALGR(FR_APOS) // ?
+//#define FR_2PTS ALGR(FR_POIN) // :
+
 // Row 3
-#define FR_THET ALGR(FR_Q)    // θ
-#define FR_SS   ALGR(FR_S)    // ß
-#define FR_DLR  ALGR(FR_D)    // $
-#define FR_CURR ALGR(FR_F)    // ¤ (dead monetary key)
-#define FR_DGRK ALGR(FR_G)    // µ (dead Greek key)
-#define FR_EU   ALGR(FR_H)    // Eu (dead European symbol key)
-#define FR_DSLS ALGR(FR_K)    // ∕ (dead)
-#define FR_PIPE ALGR(FR_L)    // |
-#define FR_INFN ALGR(FR_M)    // ∞
-#define FR_DIV  ALGR(FR_SLSH) // ÷
-#define FR_MUL  ALGR(FR_ASTX) // ×
+/* #define FR_ASTX ALGR(FR_O)    // *
+#define FR_PLUS ALGR(FR_A)    // +
+#define FR_SLSH ALGR(FR_T)    // / */
+#define FR_MOIN ALGR(FR_I)    // -
+#define FR_BSLS ALGR(FR_G)    // '\'
+#define FR_GRV  ALGR(FR_V)    // `
+#define FR_LPRN ALGR(FR_S)    // (
+#define FR_RPRN ALGR(FR_N)    // )
+#define FR_PVIR ALGR(FR_R)    // ;
+#define FR_DQUO ALGR(FR_U)    // "
+
 // Row 4
-#define FR_LEQL ALGR(FR_INF) // ≤
-#define FR_EZH  ALGR(FR_W)    // ʒ
-#define FR_COPY ALGR(FR_X)    // ©
-//#define FR_CCED ALGR(FR_C)    // ç
-#define FR_CEDL ALGR(FR_V)    // ¸ (dead)
-#define FR_DMNS ALGR(FR_B)    // − (dead)
-#define FR_TILD ALGR(FR_N)    // ~ (dead)
-#define FR_3PTS ALGR(FR_POIN)  // ¿
-#define FR_PVIR ALGR(FR_VIRG) // ;
-#define FR_MDDT ALGR(FR_DQUO) // ·
-#define FR_AEQL ALGR(FR_EGAL) // ≃
+#define FR_UNDS ALGR(FR_E)    // _
+#define FR_PERC ALGR(FR_Q)    // %
+#define FR_TILD ALGR(FR_Z)    // ~
+#define FR_PIPE ALGR(FR_Y)    // |
+#define FR_ESPR ALGR(FR_D)    // &
+#define FR_LCBR ALGR(FR_C)    // {
+#define FR_RCBR ALGR(FR_H)    // }
+#define FR_LSBR ALGR(FR_W)    // [
+#define FR_RSBR ALGR(FR_TYPO) // ]
+
 
 /* Shift+AltGr symbols
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │  ̑ │   │   │   │   │ ˝ │  ̏ │   │ — │ ‹ │ › │ ¿ │   │       │
+ * │  ̑ │   │   │   │   │   │  ̏ │   │   │   │   │   │   │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
- * │     │   │   │   │   │ ™ │   │   │  ̣ │   │ ‰ │ ‑ │ ‡ │     │
+ * │     │ *^│ ¬ │ ≠ │ *¤│ *˚│   │ ≤ │ ≥ │   │ *ˇ│   │   │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │   │   │   │   │   │ ˍ │   │   │   │   │ √ │ ¼ │    │
+ * │      │ × │ ± │ *¯│ ÷ │   │ *`│ *´│   │ *˘│ *”│   │   │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
- * │    │ ≥ │   │   │   │ ˛ │   │   │   │ ¡ │   │ ≠ │          │
+ * │    │   │ ‰ │ *~│ ¦ │   │   │   │ *¸│ *,│ *˛│   │          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
  * │    │    │    │                        │    │    │    │    │
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
-// Row 1
+
+ #define FR_CARN S(ALGR(FR_POIN)) // ˇ (dead)
+/* // Row 1
 #define FR_IBRV S(ALGR(FR_AROB))   //  ̑ (dead)
 #define FR_DACU S(ALGR(FR_LPRN)) // ˝ (dead)
 #define FR_DGRV S(ALGR(FR_RPRN)) //  ̏ (dead)
@@ -250,4 +204,4 @@
 #define FR_GEQL S(ALGR(FR_INF)) // ≥
 #define FR_OGON S(ALGR(FR_V))    // ˛ (dead)
 #define FR_IEXL S(ALGR(FR_VIRG)) //  ̦ (dead)
-//#define FR_NEQL S(ALGR(FR_EGAL)) // ≠
+//#define FR_NEQL S(ALGR(FR_EGAL)) // ≠ */

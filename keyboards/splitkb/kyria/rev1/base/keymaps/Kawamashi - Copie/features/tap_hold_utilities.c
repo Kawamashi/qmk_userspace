@@ -59,8 +59,8 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
     switch (keycode) {
 
-/*         case ALGR_T(FR_LACL):
-            return process_tap_hold(FR_LACL, record); */
+        case ALGR_T(FR_LACL):
+            return process_tap_hold(FR_LACL, record);
 
         case RCTL_T(FEN_B):
             return process_tap_hold(LWIN(KC_DOWN), record);

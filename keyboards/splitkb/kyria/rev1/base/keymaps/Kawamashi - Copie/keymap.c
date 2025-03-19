@@ -39,7 +39,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     if (record->event.key.col != next_record.event.key.col) {
 
       // J'avais mis cette ligne pour faire les "". Je pense que ce n'est plus nécessaire maintenant que que 
-      //if (keycode == OS_TYPO) { return true; }
+      //if (keycode == OS_ACC) { return true; }
 
       if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
@@ -94,35 +94,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Custom tap-hold keys
   if (!process_custom_tap_hold(keycode, record)) { return false; }
 
-  if (IS_LAYER_ON(_TYPO) && record->event.pressed) {
-    
-    switch (keycode) {
-      case FR_AROB:
-      case FR_K:
-      case FR_J:
-      case CA_CED:
-      case AGRV_SPC:
-      case OU_GRV:
-        break;
-
-      default:
-        const bool is_shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-        if (is_shifted) {
-            del_weak_mods(MOD_MASK_SHIFT);
-            del_oneshot_mods(MOD_MASK_SHIFT);
-            unregister_mods(MOD_MASK_SHIFT);
-        }
-        tap_code(FR_TYPO);
-        //set_mods(mods);
-        if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
-    }
-  }
+/*   if (IS_LAYER_ON(_ACCENTS) && record->event.pressed) {
+    tap_code16(FR_TREM);  // Tap Ctrl+A.
+  } */
 
   // Macros
   if (!process_macros(keycode, record)) { return false; }
   
   // Custom alt gr
-  //if (!process_custom_altgr_keys(keycode, record)) { return false; }
+  if (!process_custom_altgr_keys(keycode, record)) { return false; }
 
     // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
@@ -160,9 +140,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-      KC_NO, FR_X,  FR_VIRG, FR_EACU, FR_P,   FR_B,                                   FR_F,   FR_M,    FR_L, FR_APOS, FR_POIN,  KC_NO,
-      KC_NO, FR_O,  FR_A,    FR_I,    FR_T,   FR_G,                                   FR_V,   FR_S,    FR_N, FR_R,    FR_U,     KC_NO,
-      KC_NO, FR_Q,  FR_Z,    FR_Y,    LT_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  LT_C,    FR_H, FR_W,    OS_TYPO,  KC_NO,
+      KC_NO, FR_X,  FR_VIRG, FR_EACU, FR_P,   FR_B,                                   FR_F,   FR_M,    FR_L, FR_APOS, FR_POIN, KC_NO,
+      KC_NO, FR_O,  FR_A,    FR_I,    FR_T,   FR_G,                                   FR_V,   FR_S,    FR_N, FR_R,    FR_U,    KC_NO,
+      KC_NO, FR_Q,  FR_Z,    FR_Y,    LT_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  LT_C,    FR_H, FR_W,    OS_ACC,  KC_NO,
                              KC_NO,   KC_SPC, L_OS4A, LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
     ),
 
@@ -181,7 +161,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_L_MODS] = LAYOUT(
-      KC_NO, KC_NO,   KC_NO,  OS_WIN,  KC_RGUI, KC_NO,                                        _______, _______, _______, _______, _______, _______,
+      KC_NO, KC_NO,   OS_SN,  OS_WIN,  KC_RGUI, KC_NO,                                        _______, _______, _______, _______, _______, _______,
       KC_NO, OS_RALT, OS_FA,  OS_CTRL, OS_SHFT, KC_NO,                                        _______, _______, _______, _______, _______, _______,
       KC_NO, OS_LALT, KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______, _______, _______, _______, _______, _______,
                               KC_NO,   KC_NO,   _______, _______, _______, CAPSWORD, _______, KC_CAPS, _______, _______
@@ -202,8 +182,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_R_MODS] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, OS_TYPO, KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,  KC_NO,   KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, OS_RALT, KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO
     ),
@@ -222,12 +202,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-/*     [_SYMBOLS] = LAYOUT(
+    [_SYMBOLS] = LAYOUT(
       _______, CIRC,    FR_EXLM, FR_EGAL, FR_DLR,  FR_AROB,                                     FR_HASH, FR_INF,  FR_SUP,  FR_QUES, FR_2PTS, _______,
       _______, FR_ASTX, FR_PLUS, FR_MOIN, FR_SLSH, FR_BSLS,                                     GRAVE,   FR_LPRN, FR_RPRN, FR_PVIR, FR_DQUO, _______,
       _______, FR_PERC, TILDE,   FR_PIPE, FR_ESPR, KC_NO,   _______, _______, _______, _______, KC_NO,   FR_LACL, FR_RACL, FR_LBKT, FR_RBKT, _______,
                                  _______, _______, _______, FR_UNDS, _______, _______, FR_UNDS, KC_PDOT, _______, _______
-    ), */
+    ),
 
 /*
  * Layer 1 : Numpad
@@ -244,10 +224,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, _______, FR_ASTX, FR_EGAL, _______, S(FR_ACIR),                                  KC_6,    _______, FR_PLUS, FR_MOIN, _______, _______,
-       _______, KC_8,    KC_6,    KC_4,    KC_2,    FR_CARN,                                     _______, KC_1,    KC_3,    KC_5,    KC_7,   _______,
-       _______, _______, _______, _______, FR_SLSH, _______, _______, _______, _______, _______, _______, KC_9,    _______, _______, _______, _______,
-                                  _______, _______, FR_VIRG, KC_0   , NUMWORD, LT_REPT, KC_SPC,  KC_PDOT, _______, _______
+       _______, _______, FR_ASTX, FR_EGAL, _______, FR_ACIR,                                     _______, _______, FR_PLUS, FR_MOIN, _______, _______,
+       _______, KC_P8,   KC_P6,   KC_P4,   KC_P2,   FR_CARN,                                     _______, KC_P1,   KC_P3,   KC_P5,   KC_P7,   _______,
+       _______, _______, _______, _______, FR_SLSH, _______, _______, _______, _______, _______, _______, KC_P9,   _______, _______, _______, _______,
+                                  _______, _______, FR_VIRG, KC_P0  , NUMWORD, LT_REPT, KC_SPC,  KC_PDOT, _______, _______
      ),
 
 /*
@@ -285,12 +265,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_TYPO] = LAYOUT(
-       _______, _______, _______, _______, _______, FR_J,                                         FR_K,    FR_F,    FR_D,    _______, _______, _______,
-       _______, OU_GRV,  _______, _______, _______, _______,                                      FR_M,    FR_J,    FR_L,    FR_AROB, _______, _______,
-       _______, _______, _______, _______, CA_CED,  _______, _______, _______, _______, _______,  _______, _______, _______, FR_K,    TG_ACC,  _______,
-                                  _______, _______, _______, _______, FR_O,    _______, AGRV_SPC, _______, _______, _______
-     ),
+    [_ACCENTS] = LAYOUT(
+      _______, O_CIRC,  A_CIRC,  I_CIRC,  U_CIRC,  FR_LDAQ   ,                                      FR_RDAQ, FR_3PTS, FR_MOIN, FR_APOS, FR_POIN,   _______,
+      _______, OU_GRV,  FR_AGRV, FR_MOIN, FR_DQUO, ALGR(FR_G),                                      FR_SS,   FR_J,    FR_A,   FR_AROB, _______,   _______,
+      _______, FR_OE,   FR_AE,   I_TREM,  CA_CED,  _______   , _______, _______, _______, _______,  _______, FR_CCED, FR_TREM, FR_K,    TG_ACC,    _______,
+                                 _______, _______, _______   , FR_EGRV, E_CIRC,  _______, AGRV_SPC, _______, _______, _______
+    ),
 
 
 /*

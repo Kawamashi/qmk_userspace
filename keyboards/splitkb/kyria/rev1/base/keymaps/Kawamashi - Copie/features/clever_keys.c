@@ -13,7 +13,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
     switch (prev_keycode) {
         case FR_EXLM:
         case FR_QUES:
-        //case FR_3PTS:
+        case FR_3PTS:
         case FR_2PTS:
           // Add space between punctuation and letters.
           invoke_key(KC_SPC, record);
@@ -22,7 +22,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
           switch (recent[RECENT_SIZE - 2]) {
             case FR_EXLM:
             case FR_QUES:
-            //case FR_3PTS:
+            case FR_3PTS:
             case FR_POIN:
               // Add OS shift at the beginning of sentences.
               if (!is_caps_lock_on()) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
@@ -149,7 +149,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
             return finish_magic((uint16_t[]) {FR_E, FR_N, FR_T}, 3, record);
           } else {
             // "même"
-            return finish_magic((uint16_t[]) {FR_TYPO, FR_O, FR_M, FR_E}, 4, record);
+            return finish_magic((uint16_t[]) {FR_ACIR, FR_E, FR_M, FR_E}, 4, record);
           }
         
         default:
@@ -162,32 +162,26 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
           case FR_T:
             // "t@" -> "toujours"
-            layer_off(_TYPO);
             return finish_word((uint16_t[]) {FR_O, FR_U, FR_J, FR_O, FR_U, FR_R, FR_S}, 7, record);
 
           case FR_P:
             // "p@" -> "peut-être"
-            layer_off(_TYPO);
-            return finish_word((uint16_t[]) {FR_E, FR_U, FR_T, FR_MOIN, FR_TYPO, FR_O, FR_T, FR_R, FR_E}, 9, record);
+            return finish_word((uint16_t[]) {FR_E, FR_U, FR_T, FR_MOIN, FR_ACIR, FR_E, FR_T, FR_R, FR_E}, 9, record);
 
           case FR_A:
             // "a@" -> "aujourd'hui"
-            layer_off(_TYPO);
             return finish_word((uint16_t[]) {FR_U, FR_J, FR_O, FR_U, FR_R, FR_D, FR_APOS, FR_H, FR_U, FR_I}, 10, record);
           
           case FR_B:
             // "b@" -> "beaucoup"
-            layer_off(_TYPO);
             return finish_word((uint16_t[]) {FR_E, FR_A, FR_U, FR_C, FR_O, FR_U, FR_P}, 7, record);
           
           case FR_E:
             // "e@" -> "est-ce qu"
-            layer_off(_TYPO);
             return finish_word((uint16_t[]) {FR_S, FR_T, FR_MOIN, FR_C, FR_E, KC_SPC, FR_Q}, 7, record);
           
           case FR_D:
             // "d@" -> "déjà"
-            layer_off(_TYPO);
             return finish_word((uint16_t[]) {FR_EACU, FR_J, FR_AGRV}, 3, record);
         }          
       }
@@ -226,18 +220,15 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       break;
     
     case CA_CED:
-      layer_off(_TYPO);
       return finish_word((uint16_t[]) {FR_CCED, FR_A}, 2, record);
 
     case OU_GRV:
-      layer_off(_TYPO);
-      return finish_word((uint16_t[]) {FR_O, FR_UGRV}, 2, record);
+      return finish_word((uint16_t[]) {FR_O, ALGR(FR_U)}, 2, record);
 
     case AGRV_SPC:
-      layer_off(_TYPO);
       return finish_word((uint16_t[]) {FR_AGRV, KC_SPC}, 2, record);
 
-/*    case E_CIRC:
+    case E_CIRC:
       return process_accent(FR_ACIR, FR_E, record);
 
     case I_CIRC:
@@ -252,8 +243,8 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
     case U_CIRC:
       return process_accent(FR_ACIR, FR_U, record);
 
-     case I_TREM:
-      return process_accent(FR_TREM, FR_I, record); 
+    case I_TREM:
+      return process_accent(FR_TREM, FR_I, record);
 
     case CIRC:
       return process_accent(FR_ACIR, KC_SPC, record);
@@ -262,7 +253,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       return process_accent(FR_TILD, KC_SPC, record);
 
     case GRAVE:
-      return process_accent(FR_GRV, KC_SPC, record);*/
+      return process_accent(FR_GRV, KC_SPC, record);
   }
 
   return false; // Process next keycode normally

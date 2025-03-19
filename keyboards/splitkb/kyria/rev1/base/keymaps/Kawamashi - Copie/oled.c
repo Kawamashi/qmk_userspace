@@ -53,8 +53,8 @@ bool oled_task_user(void) {
             case _R_MODS:
                 oled_write_P(PSTR("Mods D\n"), false);
                 break;
-/*             case _SYMBOLS:
-                oled_write_P(PSTR("SymNum\n"), false); */
+            case _SYMBOLS:
+                oled_write_P(PSTR("SymNum\n"), false);
                 break;
             case _SHORTNAV:
                 oled_write_P(PSTR("ShortNav\n"), false);
@@ -62,7 +62,7 @@ bool oled_task_user(void) {
             case _FUNCAPPS:
                 oled_write_P(PSTR("FuncApps\n"), false);
                 break;
-            case _TYPO:
+            case _ACCENTS:
                 oled_write_P(PSTR("Accents\n"), false);
                 break;
             default:
