@@ -1,20 +1,5 @@
-/* Copyright 2025 @Kawamashi
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "tap_hold_utilities.h"
+
 
 
 void tap_converter(uint16_t keycode, keyrecord_t *record) {
@@ -22,6 +7,9 @@ void tap_converter(uint16_t keycode, keyrecord_t *record) {
   if (IS_OS4A_KEY(keycode)) {
     // Instant OS4A processing
     os4a_tap(keycode);
+
+/*   } else if (keycode == LT_REPT) {    // Je pense que dans les faits, cette ligne ne sert à rien.
+    repeat_key_invoke(&record->event); */
 
   } else {
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {

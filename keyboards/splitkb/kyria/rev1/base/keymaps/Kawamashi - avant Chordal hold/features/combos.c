@@ -1,21 +1,6 @@
-/* Copyright 2025 @Kawamashi
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include QMK_KEYBOARD_H
 
+//#include "combos.h"
 #include "keymap.h"
 
 enum combos {
@@ -49,8 +34,8 @@ const uint16_t PROGMEM end_combo[] = {FR_EACU, FR_VIRG, COMBO_END};
 const uint16_t PROGMEM help_combo[] = {FR_VIRG, FR_APOS, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {FR_EACU, FR_L, COMBO_END};
 const uint16_t PROGMEM numword_combo[] = {FR_S, FR_R, COMBO_END};
-const uint16_t PROGMEM alttab_combo[] = {FR_D, FR_Y, COMBO_END};
-const uint16_t PROGMEM ctrlaFR_Combo[] = {FR_A, FR_I, FR_T, COMBO_END};
+const uint16_t PROGMEM alttab_combo[] = {LT_D, FR_Y, COMBO_END};
+const uint16_t PROGMEM ctrlalt_combo[] = {FR_A, FR_I, FR_T, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
@@ -67,7 +52,7 @@ combo_t key_combos[] = {
     [PANIC] = COMBO(panic_combo, RAZ),
     [NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
-    [CTRLALT] = COMBO(ctrlaFR_Combo, RCTL(RALT(KC_DEL)))
+    [CTRLALT] = COMBO(ctrlalt_combo, RCTL(RALT(KC_DEL)))
     };
 
 /* uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
@@ -121,7 +106,7 @@ bool process_combo_key_repress(uint16_t combo_index, combo_t *combo, uint8_t key
               case FR_Y:
                   tap_code16(S(KC_TAB));
                   return true;
-              case FR_D:
+              case LT_D:
                   tap_code(KC_TAB);
                   return true;
           }

@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2020 @frogm0uth
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -6,18 +6,22 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY; without even the implied warranty ofo
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 #include QMK_KEYBOARD_H
 
 #include "keymap.h"
+
+/* The default OLED and rotary encoder code can be found at the bottom of qmk_firmware/keyboards/splitkb/kyria/rev1/rev1.c
+ * These default settings can be overriden by your own settings in your keymap.c
+ * For your convenience, here's a copy of those settings so that you can uncomment them if you wish to apply your own modifications.
+ * DO NOT edit the rev1.c file; instead override the weakly defined default functions by your own.
+ */
 
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_180; }

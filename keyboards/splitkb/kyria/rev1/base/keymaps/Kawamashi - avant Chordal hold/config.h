@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2022 Thomas Baart <thomas@splitkb.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,8 +46,7 @@
 // mod tap
 #define TAPPING_TERM 200
 
-#define PERMISSIVE_HOLD
-//#define PERMISSIVE_HOLD_PER_KEY
+#define PERMISSIVE_HOLD_PER_KEY
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
 #define TAPPING_TOGGLE 1

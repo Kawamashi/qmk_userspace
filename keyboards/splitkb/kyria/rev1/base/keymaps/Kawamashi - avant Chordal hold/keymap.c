@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2019 Thomas Baart <thomas@splitkb.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,8 +13,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
- 
 #include QMK_KEYBOARD_H
 
 #include "keymap.h"
@@ -40,8 +38,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.key.col != next_record.event.key.col) {
 
-      // La ligne suivante n'est nécessaire que si on a besoin de doubler rapidement un caractère présent sur la moitié droite du clavier.
-      // Ce n'est pas nécessaire pour l'instant, vu que les guillemets sont passés à gauche.
+      // J'avais mis cette ligne pour faire les "". Je pense que ce n'est plus nécessaire maintenant que que 
       //if (keycode == OS_TYPO) { return true; }
 
       if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
@@ -52,9 +49,9 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     return false;
 }
 
-/* bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
   return !forbidden_chord(keycode, record, next_keycode, &next_record);
-} */
+}
 
 
 // Matrix scan
@@ -165,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       KC_NO, FR_X,  FR_VIRG, FR_EACU, FR_P,   FR_B,                                   FR_F,   FR_M,    FR_L, FR_APOS, FR_POIN,  KC_NO,
       KC_NO, FR_O,  FR_A,    FR_I,    FR_T,   FR_G,                                   FR_V,   FR_S,    FR_N, FR_R,    FR_U,     KC_NO,
-      KC_NO, FR_Q,  FR_Z,    FR_Y,    FR_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  FR_C,    FR_H, FR_W,    OS_TYPO,  KC_NO,
+      KC_NO, FR_Q,  FR_Z,    FR_Y,    LT_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  LT_C,    FR_H, FR_W,    OS_TYPO,  KC_NO,
                              KC_NO,   KC_SPC, L_OS4A, LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
     ),
 
@@ -206,7 +203,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, FR_TYPO, KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, OS_TYPO, KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO
     ),
@@ -248,7 +245,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NUMBERS] = LAYOUT(
        _______, _______, FR_ASTX, FR_EGAL, _______, S(FR_ACIR),                                  KC_6,    _______, FR_PLUS, FR_MOIN, _______, _______,
-       _______, KC_8,    KC_6,    KC_4,    KC_2,    FR_CARN,                                     _______, KC_1,    KC_3,    KC_5,    KC_7,    _______,
+       _______, KC_8,    KC_6,    KC_4,    KC_2,    FR_CARN,                                     _______, KC_1,    KC_3,    KC_5,    KC_7,   _______,
        _______, _______, _______, _______, FR_SLSH, _______, _______, _______, _______, _______, _______, KC_9,    _______, _______, _______, _______,
                                   _______, _______, FR_VIRG, KC_0   , NUMWORD, LT_REPT, KC_SPC,  KC_PDOT, _______, _______
      ),
@@ -291,7 +288,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_TYPO] = LAYOUT(
        _______, _______, _______, _______, _______, FR_J,                                         FR_K,    FR_F,    FR_D,    _______, _______, _______,
        _______, OU_GRV,  _______, _______, _______, _______,                                      FR_M,    FR_J,    FR_L,    FR_AROB, _______, _______,
-       _______, _______, _______, _______, CA_CED,  _______, _______, _______, _______, _______,  _______, _______, _______, FR_K,    TG_TYPO,  _______,
+       _______, _______, _______, _______, CA_CED,  _______, _______, _______, _______, _______,  _______, _______, _______, FR_K,    TG_ACC,  _______,
                                   _______, _______, _______, _______, FR_O,    _______, AGRV_SPC, _______, _______, _______
      ),
 

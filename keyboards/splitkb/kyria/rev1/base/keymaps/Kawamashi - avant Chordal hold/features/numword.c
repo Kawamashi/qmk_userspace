@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2021 Joshua T.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
         // Keycodes which should not disable num word mode.
 
         // Numpad keycodes
-         case KC_1 ... KC_0:
+         case KC_P1 ... KC_P0:
          case KC_PDOT:
          case FR_VIRG:
          case FR_MOIN:
@@ -61,7 +61,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
          case FR_PLUS:
          case FR_SLSH:
          case FR_ACIR:
-         case FR_CARN:
+         //case FR_CARN:
 
         // Misc
         case KC_BSPC:

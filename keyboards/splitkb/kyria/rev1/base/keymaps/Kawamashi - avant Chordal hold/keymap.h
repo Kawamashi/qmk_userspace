@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2019 Thomas Baart <thomas@splitkb.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,17 +13,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
 #pragma once
 
 #include QMK_KEYBOARD_H
 
 #include "keymap_french_frgo.h"
 #include "features_conf.h"
-#include "clever_keys.h"
 #include "features/custom_altgr_keys.h"
 #include "features/tap_hold_utilities.h"
-#include "features/clever_keys_utilities.h"
+#include "features/next_keycode.h"
+#include "features/clever_keys.h"
 #include "features/numword.h"
 #include "features/macros.h"
 #include "features/os4a.h"
@@ -45,6 +44,8 @@ enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
   FEN_B,
   COPY,
+/*   ALT_TAB,
+  REV_TAB, */
   AIDE_MEM,
   OS4A,
   RAZ,
@@ -74,10 +75,13 @@ enum custom_keycodes {
 #define LT_E ALGR_T(FR_E)
 #define LT_REPT LT(_NUMBERS, KC_0)
 #define LT_MGC LT(_SHORTNAV, KC_0)
+#define LT_D FR_D
+#define LT_C FR_C
+#define LT_VIRG LT(_SHORTNAV, FR_VIRG)
 #define OS_TYPO OSL(_TYPO)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
-#define TG_TYPO TG(_TYPO)
+#define TG_ACC TG(_TYPO)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)

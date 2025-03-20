@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2021 Joshua T.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,15 @@
  */
 
 #pragma once
-
-#include "quantum.h"
+#include QMK_KEYBOARD_H
 #include "keymap.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+bool is_num_word_enabled(void);
+extern bool exit_num_word;
+extern bool is_num_word_on;
 
-bool on_left_hand(keypos_t pos);
+void enable_num_word(void);
+extern void disable_num_word(void);
+void toggle_num_word(void);
 
-bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record);
-
-void tap_converter(uint16_t keycode, keyrecord_t *record);
-
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
-
-#ifdef __cplusplus
-}
-#endif
+bool process_numword(uint16_t keycode, const keyrecord_t *record);

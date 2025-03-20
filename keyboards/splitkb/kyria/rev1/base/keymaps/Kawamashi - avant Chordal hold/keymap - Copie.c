@@ -156,7 +156,7 @@ bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
 bool first_of_chorded_mods(uint16_t keycode) {
   switch (keycode) {
     case LT_TAB:    // Pour pouvoir faire OSM shift + LT_TAB (win + shift + flèche).
-    case FR_CCED:   // Pour pouvoir faire Alt + F4, Alt + F11.
+    case LT_CCED:   // Pour pouvoir faire Alt + F4, Alt + F11.
     case LCTL_T(FR_I):
     case RCTL_T(FR_T):
     case OSM(MOD_LSFT):   // Pour pouvoir faire OSM shift + LT_TAB (win + shift + flèche).
@@ -236,7 +236,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       KC_ESC, FR_AGRV,     FR_B,        FR_EACU,      FR_POIN,       FR_MOIN,                                                               FR_ACIR,       FR_V,         FR_L,         FR_M,        FR_X,         FR_W,
       KC_ENT, ALT_T(FR_O), SFT_T(FR_U), ALGR_T(FR_A), LCTL_T(FR_I),  FR_J,                                                                  FR_G,          RCTL_T(FR_T), ALGR_T(FR_S), RSFT_T(FR_N), ALT_T(FR_R), FR_F,
-      LT_TAB, FR_Q,        FR_Y,        FR_EGRV,      LWIN_T(FR_P),  FR_DQUO,       KC_BSPC,          KC_END,  KC_HOME, KC_DEL,             FR_K,          RWIN_T(FR_D), FR_Z,         FR_H,        FR_C,         FR_CCED,
+      LT_TAB, FR_Q,        FR_Y,        FR_EGRV,      LWIN_T(FR_P),  FR_DQUO,       KC_BSPC,          KC_END,  KC_HOME, KC_DEL,             FR_K,          RWIN_T(FR_D), FR_Z,         FR_H,        FR_C,         LT_CCED,
                                         TG(_SYMBOLS),  KC_SPC,        OSM(MOD_LSFT), LT(_SYMBOLS,FR_E), LT_VIRG, LT_APOS, LT(_SYMBOLS,KC_SPC), OSM(MOD_RSFT), KC_RGUI,      KC_MUTE
     ),
 
