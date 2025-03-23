@@ -23,12 +23,12 @@ bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 bool isLetter(uint16_t keycode) {
   switch (keycode) {
     case KC_A ... KC_L:
-    case FR_M:
+    case FG_M:
     case KC_N ... KC_Z:
-    case FR_AGRV:
-    case FR_EACU:
-    case FR_EGRV:
-    case FR_CCED:
+    case FG_AGRV:
+    case FG_EACU:
+    case FG_EGRV:
+    case FG_CCED:
       return true;
 
     default:
@@ -64,13 +64,13 @@ bool caps_word_press_user(uint16_t keycode) {
   } else {
     switch (keycode) {
         // Keycodes that continue Caps Word, without shifting.
-        case FR_MOIN:
+        case FG_MOIN:
         case KC_KP_1 ... KC_KP_0:
         case KC_LEFT:
         case KC_RIGHT:
         case KC_BSPC:
         case KC_DEL:
-        case FR_APOS:
+        case FG_APOS:
             return true;
 
         default:
@@ -87,24 +87,24 @@ uint16_t COMBO_LEN = 0;
 // Custom altGr keys
 
 const custom_altgr_key_t custom_altgr_keys[] = {
-  {FR_AGRV, FR_AE},
-  {FR_B, FR_SS},
-  {FR_A, FR_LDAQ},
-  {FR_I, FR_RDAQ},
-  {FR_T, FR_ESPR},
-  {FR_S, FR_AROB},
-  {ALGR_T(FR_A), FR_LDAQ},
-  {LCTL_T(FR_I), FR_RDAQ},
-  {RCTL_T(FR_T), FR_ESPR},
-  {ALGR_T(FR_S), FR_AROB},
-  {FR_X, FR_TM},
-  {KC_KP_8, FR_INFN},
-  {FR_H, FR_HASH},
-  {FR_V, FR_DEG},
-  {FR_CCED, FR_CEDL},
-  {FR_Q, FR_SECT},
-  {FR_POIN, FR_PVIR},
-  {FR_C, FR_COPY},
+  {FG_AGRV, FG_AE},
+  {FG_B, FG_SS},
+  {FG_A, FG_LDAQ},
+  {FG_I, FG_RDAQ},
+  {FG_T, FG_ESPR},
+  {FG_S, FG_AROB},
+  {ALGR_T(FG_A), FG_LDAQ},
+  {LCTL_T(FG_I), FG_RDAQ},
+  {RCTL_T(FG_T), FG_ESPR},
+  {ALGR_T(FG_S), FG_AROB},
+  {FG_X, FG_TM},
+  {KC_KP_8, FG_INFN},
+  {FG_H, FG_HASH},
+  {FG_V, FG_DEG},
+  {FG_CCED, FG_CEDL},
+  {FG_Q, FG_SECT},
+  {FG_POIN, FG_PVIR},
+  {FG_C, FG_COPY},
 };
 
 uint8_t NUM_CUSTOM_ALTGR_KEYS =
@@ -156,9 +156,9 @@ bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
 bool first_of_chorded_mods(uint16_t keycode) {
   switch (keycode) {
     case LT_TAB:    // Pour pouvoir faire OSM shift + LT_TAB (win + shift + flèche).
-    case FR_CCED:   // Pour pouvoir faire Alt + F4, Alt + F11.
-    case LCTL_T(FR_I):
-    case RCTL_T(FR_T):
+    case FG_CCED:   // Pour pouvoir faire Alt + F4, Alt + F11.
+    case LCTL_T(FG_I):
+    case RCTL_T(FG_T):
     case OSM(MOD_LSFT):   // Pour pouvoir faire OSM shift + LT_TAB (win + shift + flèche).
       return true;
 
@@ -234,10 +234,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-      KC_ESC, FR_AGRV,     FR_B,        FR_EACU,      FR_POIN,       FR_MOIN,                                                               FR_ACIR,       FR_V,         FR_L,         FR_M,        FR_X,         FR_W,
-      KC_ENT, ALT_T(FR_O), SFT_T(FR_U), ALGR_T(FR_A), LCTL_T(FR_I),  FR_J,                                                                  FR_G,          RCTL_T(FR_T), ALGR_T(FR_S), RSFT_T(FR_N), ALT_T(FR_R), FR_F,
-      LT_TAB, FR_Q,        FR_Y,        FR_EGRV,      LWIN_T(FR_P),  FR_DQUO,       KC_BSPC,          KC_END,  KC_HOME, KC_DEL,             FR_K,          RWIN_T(FR_D), FR_Z,         FR_H,        FR_C,         FR_CCED,
-                                        TG(_SYMBOLS),  KC_SPC,        OSM(MOD_LSFT), LT(_SYMBOLS,FR_E), LT_VIRG, LT_APOS, LT(_SYMBOLS,KC_SPC), OSM(MOD_RSFT), KC_RGUI,      KC_MUTE
+      KC_ESC, FG_AGRV,     FG_B,        FG_EACU,      FG_POIN,       FG_MOIN,                                                               FG_ACIR,       FG_V,         FG_L,         FG_M,        FG_X,         FG_W,
+      KC_ENT, ALT_T(FG_O), SFT_T(FG_U), ALGR_T(FG_A), LCTL_T(FG_I),  FG_J,                                                                  FG_G,          RCTL_T(FG_T), ALGR_T(FG_S), RSFT_T(FG_N), ALT_T(FG_R), FG_F,
+      LT_TAB, FG_Q,        FG_Y,        FG_EGRV,      LWIN_T(FG_P),  FG_DQUO,       KC_BSPC,          KC_END,  KC_HOME, KC_DEL,             FG_K,          RWIN_T(FG_D), FG_Z,         FG_H,        FG_C,         FG_CCED,
+                                        TG(_SYMBOLS),  KC_SPC,        OSM(MOD_LSFT), LT(_SYMBOLS,FG_E), LT_VIRG, LT_APOS, LT(_SYMBOLS,KC_SPC), OSM(MOD_RSFT), KC_RGUI,      KC_MUTE
     ),
 
 	  
@@ -256,10 +256,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SYMBOLS] = LAYOUT(
-      KC_ESC,  FR_EXLM, FR_QUES,        FR_ESPR,         FR_PVIR, FR_PIPE,                                       FR_MOIN, KC_P7,         KC_P8,         KC_P9, FR_ASTX, KC_NUM,
-      _______, FR_LACL, SFT_T(FR_RACL), ALGR_T(FR_LPRN), FR_RPRN, LAYER_LCK,                                     FR_EGAL, RCTL_T(KC_P4), ALGR_T(KC_P5), KC_P6, FR_SLSH, FR_BSLS,
-      _______, FR_LBKT, FR_RBKT,        FR_INF,          FR_SUP,  FR_CARN,   _______, _______, _______, _______, FR_ACIR, KC_P1,         KC_P2,         KC_P3, FR_PLUS, FR_PERC,
-                                        _______,         _______, _______,   KC_SPC,  FR_VIRG, NUMWORD, KC_P0,   KC_PDOT, _______      , _______
+      KC_ESC,  FG_EXLM, FG_QUES,        FG_ESPR,         FG_PVIR, FG_PIPE,                                       FG_MOIN, KC_P7,         KC_P8,         KC_P9, FG_ASTX, KC_NUM,
+      _______, FG_LACL, SFT_T(FG_RACL), ALGR_T(FG_LPRN), FG_RPRN, LAYER_LCK,                                     FG_EGAL, RCTL_T(KC_P4), ALGR_T(KC_P5), KC_P6, FG_SLSH, FG_BSLS,
+      _______, FG_LBKT, FG_RBKT,        FG_INF,          FG_SUP,  FG_CARN,   _______, _______, _______, _______, FG_ACIR, KC_P1,         KC_P2,         KC_P3, FG_PLUS, FG_PERC,
+                                        _______,         _______, _______,   KC_SPC,  FG_VIRG, NUMWORD, KC_P0,   KC_PDOT, _______      , _______
     ),
 /*
  * Layer 2 : Symbols + function keys
@@ -276,9 +276,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      KC_ESC,  A(KC_F4), ALT_TAB,      LWIN(FR_V), _______, _______,                                           _______, C(KC_LEFT),      KC_UP,   C(KC_RIGHT), _______, _______,
-      _______, C(FR_A),  C(FR_X),      C(FR_V),    C(FR_C), LAYER_LCK,                                         KC_MUTE, RCTL_T(KC_LEFT), KC_DOWN, KC_RIGHT,    KC_F2  , KC_MUTE,
-      _______, SELWORD,  LWIN(KC_TAB), REV_TAB,    ALT_TAB, _______,  _______, S(KC_END), S(KC_HOME), _______, _______, C(FR_Z),         C(FR_Y), _______,     _______, _______,
+      KC_ESC,  A(KC_F4), ALT_TAB,      LWIN(FG_V), _______, _______,                                           _______, C(KC_LEFT),      KC_UP,   C(KC_RIGHT), _______, _______,
+      _______, C(FG_A),  C(FG_X),      C(FG_V),    C(FG_C), LAYER_LCK,                                         KC_MUTE, RCTL_T(KC_LEFT), KC_DOWN, KC_RIGHT,    KC_F2  , KC_MUTE,
+      _______, SELWORD,  LWIN(KC_TAB), REV_TAB,    ALT_TAB, _______,  _______, S(KC_END), S(KC_HOME), _______, _______, C(FG_Z),         C(FG_Y), _______,     _______, _______,
                                        _______,    _______, _______,  QUES_PT, QUES_PT,   EXCL_PT,    EXCL_PT, _______, _______,         _______
     ),
 
@@ -299,7 +299,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_FUNCAPPS] = LAYOUT(
       KC_ESC,  KC_F12,        KC_F9,         KC_F8,   KC_F7,   C(KC_PAUS),                                     _______, SWIN(KC_LEFT), LWIN(KC_UP),   SWIN(KC_RIGHT), _______, QK_BOOT,
       _______, ALT_T(KC_F11), SFT_T(KC_F6),  KC_F5,   KC_F4,   LAYER_LCK,                                      _______, RCTL_T(FEN_G), LWIN(KC_DOWN), LWIN(KC_RIGHT), _______, _______,
-      _______, KC_F10,        KC_F3,         KC_F2,   KC_F1,   _______,    _______, _______, _______, _______, _______, LWIN(FR_D),    LWIN(KC_HOME), _______,        _______, _______,
+      _______, KC_F10,        KC_F3,         KC_F2,   KC_F1,   _______,    _______, _______, _______, _______, _______, LWIN(FG_D),    LWIN(KC_HOME), _______,        _______, _______,
                                              _______, _______, _______,    _______, _______, _______, _______, _______, _______,       _______
     ),
 

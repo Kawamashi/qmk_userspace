@@ -26,7 +26,8 @@ void tap_converter(uint16_t keycode, keyrecord_t *record) {
   } else {
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
       // Tranform the record to send the tap event
-      record->keycode = tap_hold_extractor(keycode);
+      //record->keycode = tap_hold_extractor(keycode);
+      record->keycode = (keycode &= 0xff);
     }
     process_record(record);
   }
@@ -71,14 +72,14 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
     switch (keycode) {
 
-/*         case ALGR_T(FR_LACL):
-            return process_tap_hold(FR_LACL, record); */
+/*         case ALGR_T(FG_LACL):
+            return process_tap_hold(FG_LACL, record); */
 
         case RCTL_T(FEN_B):
             return process_tap_hold(LWIN(KC_DOWN), record);
 
         case SFT_T(COPY):
-            return process_tap_hold(C(FR_C), record);
+            return process_tap_hold(C(FG_C), record);
 
         case LT_REPT:
             repeat_key_invoke(&record->event);

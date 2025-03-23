@@ -36,21 +36,21 @@ enum combos {
   CTRLALT
 };
 
-const uint16_t PROGMEM del_combo_d[] = {FR_S, FR_N, COMBO_END};
-const uint16_t PROGMEM bkspc_combo_d[] = {FR_N, FR_R, COMBO_END};
-const uint16_t PROGMEM del_word_combo[] = {FR_M, FR_L, COMBO_END};
-const uint16_t PROGMEM bk_word_combo[] = {FR_L, FR_APOS, COMBO_END};
-const uint16_t PROGMEM enter_combo[] = {FR_P, FR_EACU, COMBO_END};
-const uint16_t PROGMEM tab_combo[] = {FR_T, FR_I, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {FR_T, FR_A, COMBO_END};
-const uint16_t PROGMEM bkspc_combo_g[] = {FR_A, FR_I, COMBO_END};
-const uint16_t PROGMEM home_combo[] = {FR_Z, FR_Y, COMBO_END};
-const uint16_t PROGMEM end_combo[] = {FR_EACU, FR_VIRG, COMBO_END};
-const uint16_t PROGMEM help_combo[] = {FR_VIRG, FR_APOS, COMBO_END};
-const uint16_t PROGMEM panic_combo[] = {FR_EACU, FR_L, COMBO_END};
-const uint16_t PROGMEM numword_combo[] = {FR_S, FR_R, COMBO_END};
-const uint16_t PROGMEM alttab_combo[] = {FR_D, FR_Y, COMBO_END};
-const uint16_t PROGMEM ctrlaFR_Combo[] = {FR_A, FR_I, FR_T, COMBO_END};
+const uint16_t PROGMEM del_combo_d[] = {FG_S, FG_N, COMBO_END};
+const uint16_t PROGMEM bkspc_combo_d[] = {FG_N, FG_R, COMBO_END};
+const uint16_t PROGMEM del_word_combo[] = {FG_M, FG_L, COMBO_END};
+const uint16_t PROGMEM bk_word_combo[] = {FG_L, FG_APOS, COMBO_END};
+const uint16_t PROGMEM enter_combo[] = {FG_P, FG_EACU, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {FG_T, FG_I, COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {FG_T, FG_A, COMBO_END};
+const uint16_t PROGMEM bkspc_combo_g[] = {FG_A, FG_I, COMBO_END};
+const uint16_t PROGMEM home_combo[] = {FG_Z, FG_Y, COMBO_END};
+const uint16_t PROGMEM end_combo[] = {FG_EACU, FG_VIRG, COMBO_END};
+const uint16_t PROGMEM help_combo[] = {FG_VIRG, FG_APOS, COMBO_END};
+const uint16_t PROGMEM panic_combo[] = {FG_EACU, FG_L, COMBO_END};
+const uint16_t PROGMEM numword_combo[] = {FG_S, FG_R, COMBO_END};
+const uint16_t PROGMEM alttab_combo[] = {FG_D, FG_Y, COMBO_END};
+const uint16_t PROGMEM ctrlaFG_Combo[] = {FG_A, FG_I, FG_T, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
@@ -67,7 +67,7 @@ combo_t key_combos[] = {
     [PANIC] = COMBO(panic_combo, RAZ),
     [NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
-    [CTRLALT] = COMBO(ctrlaFR_Combo, RCTL(RALT(KC_DEL)))
+    [CTRLALT] = COMBO(ctrlaFG_Combo, RCTL(RALT(KC_DEL)))
     };
 
 /* uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
@@ -118,10 +118,10 @@ bool process_combo_key_repress(uint16_t combo_index, combo_t *combo, uint8_t key
   switch (combo_index) {
       case ALTTAB:
           switch (keycode) {
-              case FR_Y:
+              case FG_Y:
                   tap_code16(S(KC_TAB));
                   return true;
-              case FR_D:
+              case FG_D:
                   tap_code(KC_TAB);
                   return true;
           }

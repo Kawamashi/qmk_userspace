@@ -80,7 +80,7 @@ uint16_t get_next_keycode(uint16_t keycode, keyrecord_t* record) {
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
-    case FR_E:
+    case FG_E:
 
       if (isLetter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
           // Shift doesn't matter for letters.

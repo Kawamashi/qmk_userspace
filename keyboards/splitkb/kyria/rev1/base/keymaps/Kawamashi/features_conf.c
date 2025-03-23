@@ -23,8 +23,9 @@ bool isLetter(uint16_t keycode) {
     case KC_A ... KC_N:
     case KC_Q ... KC_V:
     case KC_X ... KC_Z:
-    case FR_E:
-    case KC_NUHS ... KC_DOT:
+    case FG_U:
+    case FG_E:
+    case KC_GRV ... KC_DOT:
       return true;
 
     default:
@@ -32,6 +33,8 @@ bool isLetter(uint16_t keycode) {
   }
 }
 
+// This function extracts the base keycode of MT and LT,
+// even if the tap/hold key is a custom one, with non-basic tap keycode.
 uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     default:
@@ -46,7 +49,7 @@ bool caps_word_press_user(uint16_t keycode) {
 
   // Managing underscore on alt gr + E.
   // Underscore must continue Caps Word, without shifting.
-  if ((get_mods() & MOD_BIT(KC_ALGR)) && keycode == FR_E) { return true; }
+  if ((get_mods() & MOD_BIT(KC_ALGR)) && keycode == FG_E) { return true; }
 
   // Keycodes that continue Caps Word, with shift applied.
   if (isLetter(keycode)) {
@@ -56,42 +59,23 @@ bool caps_word_press_user(uint16_t keycode) {
 
   switch (keycode) {
     // Keycodes that continue Caps Word, without shifting.
-    case FR_TYPO:
-    //case FR_GRV:
-    case FR_MOIN:
-    case FR_UNDS:
-    case FR_SLSH:
+    case FG_TYPO:
+    //case FG_GRV:
+    case FG_MOIN:
+    case FG_UNDS:
+    case FG_SLSH:
     case KC_KP_1 ... KC_KP_0:
     case KC_LEFT:
     case KC_RIGHT:
     case KC_BSPC:
     case KC_DEL:
-    case FR_APOS:
+    case FG_APOS:
       return true;
 
     default:
       return false;  // Deactivate Caps Word.
     }
 }
-
-
-// Custom AltGr keys
-
-/* const custom_altgr_key_t custom_altgr_keys[] = {
-  {FR_C, FR_COPY},
-  {FR_Y, FR_TM},
-  //{FR_I, FR_LDAQ},
-  //{FR_T, FR_RDAQ},
-  {FR_J, FR_CURR},
-  //{FR_H, FR_HASH},
-  {FR_Q, FR_SECT},
-  {KC_KP_8, FR_INFN},
-  {FR_F, FR_DEG}
-}; 
-
-uint8_t NUM_CUSTOM_ALTGR_KEYS =
-    sizeof(custom_altgr_keys) / sizeof(custom_altgr_key_t);*/
-
 
 // One-shot 4 all configuration
 
@@ -108,6 +92,7 @@ bool os4a_layer_changer(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
+    case TG_APOD:
       return true;
     default:
       return false;
@@ -149,7 +134,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   //if (keycode == OS_TYPO && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
 
   switch (keycode) {
-    case OS_TYPO:
+    //case OS_TYPO:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
     case L_OS4A:
     case R_OS4A:
     case OS_SHFT:
@@ -160,7 +145,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case FR_TYPO:
+    case FG_TYPO:
         return true;
     default:
         return false;
@@ -183,10 +168,10 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
   switch (keycode) {
-    case C(FR_Z):
-      return C(FR_Y);
-    case C(FR_Y):
-      return C(FR_Z);
+    case C(FG_Z):
+      return C(FG_Y);
+    case C(FG_Y):
+      return C(FG_Z);
   }
 
   keycode = tap_hold_extractor(keycode);

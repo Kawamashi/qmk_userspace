@@ -58,11 +58,6 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-/* void update_osl(uint16_t keycode) {
-  //if (os4a_layer_changer(keycode)) { pending_OSL = true; }
-  pending_OSL = os4a_layer_changer(keycode);
-} */
-
 bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
 
     // Should keycode exit the OS4A layer ?

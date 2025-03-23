@@ -29,8 +29,14 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
             case OS_TYPO:
                 if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_BIT(KC_ALGR)) {
-                    tap_code16(ALGR(FR_TYPO));
+                    tap_code16(ALGR(FG_TYPO));
                     return false;
+                }
+                const bool is_shifted = get_mods() & MOD_MASK_SHIFT;
+                if (is_shifted) {
+                    del_weak_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
+                    set_oneshot_mods(MOD_BIT(KC_LSFT));
                 }
                 return true;
 

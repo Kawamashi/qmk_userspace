@@ -55,33 +55,24 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
         // Numpad keycodes
          case KC_1 ... KC_0:
          case KC_PDOT:
-         case FR_VIRG:
-         case FR_MOIN:
-         case FR_ASTX: 
-         case FR_PLUS:
-         case FR_SLSH:
-         case FR_ACIR:
-         case FR_CARN:
+         case FG_VIRG:
+         case FG_MOIN:
+         case FG_ASTX: 
+         case FG_PLUS:
+         case FG_SLSH:
+         case FG_ACIR:
+         case FG_CARN:
 
         // Misc
         case KC_BSPC:
         case NUMWORD:   // For the combo NUMWORD to work
 
 /*         
-        case FR_EGAL:
-        case FR_BSLS:
-
-        // Misc
-        //case KC_BSPC:
-        case FR_UNDS: */
+        case FG_EGAL:
+        case FG_BSLS:*/
             return false;
-
-/*         default:
-            if (record->event.pressed) { return true; }
-            return false; */
     }
 
-    //if (!on_left_hand(record->event.key)) { return false; }
     return true;
 }
 

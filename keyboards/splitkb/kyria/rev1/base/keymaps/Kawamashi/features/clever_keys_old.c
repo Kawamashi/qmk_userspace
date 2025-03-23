@@ -15,19 +15,19 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
 
     if (isLetter(next_keycode) || next_keycode == E_CIRC) {
       switch (prev_keycode) {
-          case FR_EXLM:
-          case FR_QUES:
-          case FR_3PTS:
-          case FR_2PTS:
+          case FG_EXLM:
+          case FG_QUES:
+          case FG_3PTS:
+          case FG_2PTS:
             // Add space between punctuation and letters.
             process_next_key(KC_SPC, record);
 
           case KC_SPC:
             switch (recent[RECENT_SIZE - 2]) {
-              case FR_EXLM:
-              case FR_QUES:
-              case FR_3PTS:
-              case FR_POIN:
+              case FG_EXLM:
+              case FG_QUES:
+              case FG_3PTS:
+              case FG_POIN:
                 // Add OS shift at the beginning of a sentence.
                 if (!is_caps_lock_on()) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
                 break;
@@ -36,97 +36,97 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     }
 
     // Ajout automatique du "u" après le "q"
-    if (prev_keycode == FR_Q) {
+    if (prev_keycode == FG_Q) {
         switch (next_keycode) {
 
-          case FR_E:
-          case FR_I:
-          case FR_A:
-          case FR_O:
-          case FR_EACU:
+          case FG_E:
+          case FG_I:
+          case FG_A:
+          case FG_O:
+          case FG_EACU:
           case E_CIRC:
-          case FR_APOS:
-            process_next_key(FR_U, record);
+          case FG_APOS:
+            process_next_key(FG_U, record);
             break;
 
           // Raccourci pour "quelq"
-          case FR_Q:
+          case FG_Q:
             clear_recent_keys();  // To prevent infinite loop
-            process_word((uint16_t[]) {FR_U, FR_E, FR_L}, 3, record);
+            process_word((uint16_t[]) {FG_U, FG_E, FG_L}, 3, record);
             break;
 
           // Raccourci pour "quoi", ça évite un aller-retour sur la main gauche.
-          case FR_Z:
-            return finish_word((uint16_t[]) {FR_U, FR_O, FR_I}, 3, record);
+          case FG_Z:
+            return finish_word((uint16_t[]) {FG_U, FG_O, FG_I}, 3, record);
 
           // Raccourci pour "quand"
-          case FR_D:
-            process_word((uint16_t[]) {FR_U, FR_A, FR_N}, 3, record);
+          case FG_D:
+            process_word((uint16_t[]) {FG_U, FG_A, FG_N}, 3, record);
             break;
         }
 
 
-    } else if (next_keycode == FR_AROB && !isLetter(recent[RECENT_SIZE - 2])) {
+    } else if (next_keycode == FG_AROB && !isLetter(recent[RECENT_SIZE - 2])) {
         switch (prev_keycode) {
 
-          case FR_T:
+          case FG_T:
             // "t@" -> "toujours"
-            return finish_word((uint16_t[]) {FR_O, FR_U, FR_J, FR_O, FR_U, FR_R, FR_S}, 7, record);
+            return finish_word((uint16_t[]) {FG_O, FG_U, FG_J, FG_O, FG_U, FG_R, FG_S}, 7, record);
 
-          case FR_P:
+          case FG_P:
             // "p@" -> "peut-être"
-            return finish_word((uint16_t[]) {FR_E, FR_U, FR_T, FR_MOIN, FR_ACIR, FR_E, FR_T, FR_R, FR_E}, 9, record);
+            return finish_word((uint16_t[]) {FG_E, FG_U, FG_T, FG_MOIN, FG_ACIR, FG_E, FG_T, FG_R, FG_E}, 9, record);
 
-          case FR_A:
+          case FG_A:
             // "a@" -> "aujourd'hui"
-            return finish_word((uint16_t[]) {FR_U, FR_J, FR_O, FR_U, FR_R, FR_D, FR_APOS, FR_H, FR_U, FR_I}, 10, record);
+            return finish_word((uint16_t[]) {FG_U, FG_J, FG_O, FG_U, FG_R, FG_D, FG_APOS, FG_H, FG_U, FG_I}, 10, record);
           
-          case FR_B:
+          case FG_B:
             // "b@" -> "beaucoup"
-            return finish_word((uint16_t[]) {FR_E, FR_A, FR_U, FR_C, FR_O, FR_U, FR_P}, 7, record);
+            return finish_word((uint16_t[]) {FG_E, FG_A, FG_U, FG_C, FG_O, FG_U, FG_P}, 7, record);
           
-          case FR_E:
+          case FG_E:
             // "e@" -> "est-ce qu"
-            return finish_word((uint16_t[]) {FR_S, FR_T, FR_MOIN, FR_C, FR_E, KC_SPC, FR_Q}, 7, record);
+            return finish_word((uint16_t[]) {FG_S, FG_T, FG_MOIN, FG_C, FG_E, KC_SPC, FG_Q}, 7, record);
           
-          case FR_D:
+          case FG_D:
             // "d@" -> "déjà"
-            return finish_word((uint16_t[]) {FR_EACU, FR_J, FR_AGRV}, 3, record);
+            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_AGRV}, 3, record);
         }
 
-    } else if (prev_keycode == FR_P) {
+    } else if (prev_keycode == FG_P) {
         switch (next_keycode) {
 
-          case FR_M:
+          case FG_M:
             // "pas"
-            return finish_word((uint16_t[]) {FR_A, FR_S}, 2, record);
+            return finish_word((uint16_t[]) {FG_A, FG_S}, 2, record);
           
-          case FR_APOS:
+          case FG_APOS:
             // "par"
-            return finish_word((uint16_t[]) {FR_A, FR_R}, 2, record);
+            return finish_word((uint16_t[]) {FG_A, FG_R}, 2, record);
           
-          case FR_POIN:
+          case FG_POIN:
             if (!isLetter(recent[RECENT_SIZE - 2])) {
               // "pour"
-              return finish_word((uint16_t[]) {FR_O, FR_U, FR_R}, 3, record);
+              return finish_word((uint16_t[]) {FG_O, FG_U, FG_R}, 3, record);
             }
           
         }
         
-    } else if (next_keycode == FR_A && prev_keycode == FR_O) {
+    } else if (next_keycode == FG_A && prev_keycode == FG_O) {
         // "oa" -> "oi"
-        process_next_key(FR_I, record);
+        process_next_key(FG_I, record);
         return false;
 
-    } else if (next_keycode == FR_O && prev_keycode == FR_U && recent[RECENT_SIZE - 2] != FR_Q) {
+    } else if (next_keycode == FG_O && prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
         // "uo" -> "un"
-        process_next_key(FR_N, record);
+        process_next_key(FG_N, record);
         return false;
     }
     
     switch (next_keycode) {
-      case FR_QUES:
-      case FR_EXLM:
+      case FG_QUES:
+      case FG_EXLM:
         // On ajoute un espace insécable s'il n'a pas été entré avant le point d'exclamation.
         // Il ne faut pas tester cette fonctionnalité avec Word, qui ajoute cet espace automatiquement.
         if (isLetter(recent[RECENT_SIZE - 1])) {
@@ -146,73 +146,73 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
       case MAGIC:
         switch (prev_keycode) {
 
-          case FR_T:
-            process_next_key(FR_I, record);
-          case FR_I:
-            return finish_word((uint16_t[]) {FR_O, FR_N}, 2, record);
+          case FG_T:
+            process_next_key(FG_I, record);
+          case FG_I:
+            return finish_word((uint16_t[]) {FG_O, FG_N}, 2, record);
           
-          case FR_C:
-            return finish_word((uint16_t[]) {FR_APOS, FR_E, FR_S, FR_T}, 4, record);
+          case FG_C:
+            return finish_word((uint16_t[]) {FG_APOS, FG_E, FG_S, FG_T}, 4, record);
           
-          case FR_D:
-            return finish_word((uint16_t[]) {FR_A, FR_N, FR_S}, 3, record);
+          case FG_D:
+            return finish_word((uint16_t[]) {FG_A, FG_N, FG_S}, 3, record);
           
-          case FR_P:
-            return finish_word((uint16_t[]) {FR_L, FR_U, FR_S}, 3, record);
+          case FG_P:
+            return finish_word((uint16_t[]) {FG_L, FG_U, FG_S}, 3, record);
           
-          case FR_A:
-            return finish_word((uint16_t[]) {FR_V, FR_E, FR_C}, 3, record);
+          case FG_A:
+            return finish_word((uint16_t[]) {FG_V, FG_E, FG_C}, 3, record);
           
-          case FR_S:
-            return finish_word((uint16_t[]) {FR_U, FR_R}, 2, record);
+          case FG_S:
+            return finish_word((uint16_t[]) {FG_U, FG_R}, 2, record);
           
-          case FR_B:
-            process_word((uint16_t[]) {FR_O, FR_N, FR_J}, 3, record);
+          case FG_B:
+            process_word((uint16_t[]) {FG_O, FG_N, FG_J}, 3, record);
           
-          case FR_J:
-            return finish_word((uint16_t[]) {FR_O, FR_U, FR_R}, 3, record);
+          case FG_J:
+            return finish_word((uint16_t[]) {FG_O, FG_U, FG_R}, 3, record);
           
-          case FR_M:
+          case FG_M:
             // "même"
-            return finish_word((uint16_t[]) {FR_ACIR, FR_E, FR_M, FR_E}, 4, record);
+            return finish_word((uint16_t[]) {FG_ACIR, FG_E, FG_M, FG_E}, 4, record);
           
           default:
             return false;
         }
 
-      case FR_Q:
-        if (prev_keycode == FR_J) {
+      case FG_Q:
+        if (prev_keycode == FG_J) {
             // "jq" -> "jusqu"
-            process_word((uint16_t[]) {FR_U, FR_S}, 2, record);
+            process_word((uint16_t[]) {FG_U, FG_S}, 2, record);
         }
         break;
       
       case CA_CED:
-        return finish_word((uint16_t[]) {FR_CCED, FR_A}, 2, record);
+        return finish_word((uint16_t[]) {FG_CCED, FG_A}, 2, record);
 
       case OU_GRV:
-        return finish_word((uint16_t[]) {FR_O, ALGR(FR_U)}, 2, record);
+        return finish_word((uint16_t[]) {FG_O, ALGR(FG_U)}, 2, record);
 
       case AGRV_SPC:
-        return finish_word((uint16_t[]) {FR_AGRV, KC_SPC}, 2, record);
+        return finish_word((uint16_t[]) {FG_AGRV, KC_SPC}, 2, record);
 
       case E_CIRC:
-          return process_accent(FR_ACIR, FR_E, record);
+          return process_accent(FG_ACIR, FG_E, record);
 
       case I_CIRC:
-          return process_accent(FR_ACIR, FR_I, record);
+          return process_accent(FG_ACIR, FG_I, record);
 
       case A_CIRC:
-          return process_accent(FR_ACIR, FR_A, record);
+          return process_accent(FG_ACIR, FG_A, record);
 
       case O_CIRC:
-          return process_accent(FR_ACIR, FR_O, record);
+          return process_accent(FG_ACIR, FG_O, record);
 
       case U_CIRC:
-          return process_accent(FR_ACIR, FR_U, record);
+          return process_accent(FG_ACIR, FG_U, record);
 
       case I_TREM:
-          return process_accent(FR_TREM, FR_I, record);
+          return process_accent(FG_TREM, FG_I, record);
     }
 
     store_keycode(next_keycode, record);

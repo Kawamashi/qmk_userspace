@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #pragma once
 
 #include QMK_KEYBOARD_H
@@ -21,17 +21,18 @@
 #include "keymap_french_frgo.h"
 #include "features_conf.h"
 #include "clever_keys.h"
-#include "features/custom_altgr_keys.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
 #include "features/numword.h"
 #include "features/macros.h"
 #include "features/os4a.h"
 #include "features/oneshot.h"
+#include "features/typo_layer.h"
 
 
 enum layers {
     _BASE = 0,
+    _APOS_DR,
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
@@ -51,33 +52,35 @@ enum custom_keycodes {
   CAPSWORD,
   AGRV_SPC,
   OU_GRV,
-  E_CIRC,
-  I_CIRC,
+   E_CIRC,
+/*  I_CIRC,
   A_CIRC,
   O_CIRC,
   U_CIRC,
-  I_TREM,
+  I_TREM, */
   CA_CED,
-  CIRC,
+/*   CIRC,
   TILDE,
-  GRAVE,
+  GRAVE, */
   MAGIC,
   OS_SHFT,
   OS_CTRL,
   OS_RALT,
   OS_LALT,
-  OS_WIN
+  OS_WIN,
+  //OS_TYPO
 };
 
 // Layer taps
 #define LT_SPC ALGR_T(KC_SPC)
-#define LT_E ALGR_T(FR_E)
+#define LT_E ALGR_T(FG_E)
 #define LT_REPT LT(_NUMBERS, KC_0)
 #define LT_MGC LT(_SHORTNAV, KC_0)
 #define OS_TYPO OSL(_TYPO)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
 #define TG_TYPO TG(_TYPO)
+#define TG_APOD TG(_APOS_DR)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)
