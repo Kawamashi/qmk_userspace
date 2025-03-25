@@ -17,111 +17,91 @@
  #include "typo_layer.h"
 
 
-//bool is_typo = false;
 bool exit_typo = false;
-
-void typo_layer_off() {
-    layer_off(_TYPO);
-    exit_typo = false;
-}
 
 bool process_typo(uint16_t keycode, keyrecord_t *record) {
 
+    if (record->event.pressed) {    // On press
 
-    return true;
-}
+        const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+        static bool is_shifted = false;
 
-/* bool process_typo(uint16_t keycode, keyrecord_t *record) {
-
-    if (record->event.pressed) {
-        switch (keycode) {
-            case OS_TYPO:
-                // Handle the custom OSL that go with this feature
-                // It's timerless, to avoid problems when rolling with an other key, when shift is on.
-                //is_typo = true;
-                if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_BIT(KC_ALGR)) {
-                    tap_code16(ALGR(FG_TYPO));
-                } else {
-                    layer_on(_TYPO);
-                }                
+        if (keycode == OS_TYPO) {
+            // Handle the custom OSL that go with this feature
+            // It's timerless, to avoid problems when rolling with an other key, when shift is on.
+            // Custom behaviour when alt-gr
+            if (mods & MOD_BIT(KC_ALGR)) {
+                tap_code16(ALGR(FG_TYPO));
                 return false;
+            }
+            is_shifted = mods & MOD_MASK_SHIFT;
+            if (is_shifted) {
+                del_weak_mods(MOD_MASK_SHIFT);
+                del_oneshot_mods(MOD_MASK_SHIFT);
+                unregister_mods(MOD_MASK_SHIFT);
+            }
+            layer_on(_TYPO);
+            return false;
 
-             case FG_TYPO:
-                const bool is_shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-                if (is_shifted) {
-                    del_weak_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    unregister_mods(MOD_MASK_SHIFT);
-                }
-                tap_code(FG_TYPO);
-                //set_mods(mods);
-                if (is_shifted) {
-                    set_oneshot_mods(MOD_BIT(KC_LSFT));
-                    //is_shifted = false;
-                } 
-         }
+        } else if (keycode == FG_TYPO) {
+            // Special behaviour of FR_TYPO when shifted
+            // Shift must apply to the next keycode
+/*             is_shifted = mods & MOD_MASK_SHIFT;
+            if (is_shifted) {
+                del_weak_mods(MOD_MASK_SHIFT);
+                del_oneshot_mods(MOD_MASK_SHIFT);
+                unregister_mods(MOD_MASK_SHIFT);
+            } */
+            //tap_code(FR_TYPO);
+            return true;
 
-        if (IS_LAYER_ON(_TYPO)) {
+        } else if (IS_LAYER_ON(_TYPO)) {
             switch (keycode) {
-                case TG_TYPO:
                 case FG_AROB:
                 case FG_K:
                 case FG_J:
                 case OU_GRV:
-                  break;
+                case FG_CCED:
+                case AGRV_SPC:
+                case CNL_TYPO:
+                    break;
           
                 default:
-                    //tap_code(FG_TYPO);
-                  const bool is_shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-                  if (is_shifted) {
-                      del_weak_mods(MOD_MASK_SHIFT);
-                      del_oneshot_mods(MOD_MASK_SHIFT);
-                      unregister_mods(MOD_MASK_SHIFT);
-                  }
-                  tap_code(FG_TYPO);
-                  if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+/*                     is_shifted = mods & MOD_MASK_SHIFT;
+                    if (is_shifted) {
+                        del_weak_mods(MOD_MASK_SHIFT);
+                        del_oneshot_mods(MOD_MASK_SHIFT);
+                        unregister_mods(MOD_MASK_SHIFT);
+                    } */
+                    tap_code(FG_TYPO);
+            }
+            if (!IS_LAYER_ON(_APOS_DR)) {
+                switch (keycode) {
+                    case FG_M:
+                    case FG_L:
+                        is_shifted = true;
+                }
+            }
+            if (is_shifted) {
+                //set_mods(mods);
+                set_oneshot_mods(MOD_BIT(KC_LSFT));
+                is_shifted = false;
             }
             exit_typo = true;
         }
+/*     } else {    // On release
+        switch (keycode) {
+            case OS_TYPO:
+            case FG_TYPO:
+                break;
+            default:
+                if (exit_typo) { typo_layer_off(); }
+        } */
     }
     return true;
-}  */
+}
 
-
-
-/* bool process_typo(uint16_t keycode, const keyrecord_t *record) {
-    // Handle the custom keycodes that go with this feature
-    if (keycode == OS_TYPO) {
-        if (record->event.pressed) {
-            is_typo = true;
-            layer_on(_TYPO);
-            return false;
-        }
-    }
-
-    // Other than the custom keycode, nothing else in this feature will activate
-    // if the behavior is not on, so allow QMK to handle the event as usual.
-    if (!is_typo) { return true; }
-
-    switch (keycode) {
-        case TG_TYPO :
-        case FG_AROB:
-        case FG_K:
-        case FG_J:
-        case OU_GRV:
-          break;
-  
-        default:
-          const bool is_shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-          if (is_shifted) {
-              del_weak_mods(MOD_MASK_SHIFT);
-              del_oneshot_mods(MOD_MASK_SHIFT);
-              unregister_mods(MOD_MASK_SHIFT);
-          }
-          tap_code(FG_TYPO);
-          if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
-      }
-
-    exit_typo = true;
-    return true;
-} */
+void typo_layer_off(void) {
+    layer_off(_TYPO);
+    exit_typo = false;
+}

@@ -97,34 +97,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Custom tap-hold keys
   if (!process_custom_tap_hold(keycode, record)) { return false; }
 
+  // Custom behaviour of the typo dead-key
   if (!process_typo(keycode, record)) { return false; }
-
-  if (IS_LAYER_ON(_TYPO) && record->event.pressed) {
-    
-    switch (keycode) {
-      case FG_AROB:
-      case FG_K:
-      case FG_J:
-      case OU_GRV:
-      case FG_CCED:
-      case AGRV_SPC:
-        break;
-
-      default:
-        const bool is_shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-        if (is_shifted) {
-            del_weak_mods(MOD_MASK_SHIFT);
-            del_oneshot_mods(MOD_MASK_SHIFT);
-            unregister_mods(MOD_MASK_SHIFT);
-        }
-        tap_code(FG_TYPO);
-        //set_mods(mods);
-        if (is_shifted) {
-          set_oneshot_mods(MOD_BIT(KC_LSFT));
-          //is_shifted = false;
-        }
-    }
-  }
 
   // Macros
   if (!process_macros(keycode, record)) { return false; }
@@ -141,6 +115,7 @@ void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
   if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
   if (exit_num_word) { disable_num_word(); }
   //if (exit_typo && keycode != FG_TYPO) { typo_layer_off(); }
+  if (exit_typo) { typo_layer_off(); }
 }
 
 
@@ -247,10 +222,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, _______, FG_ASTX, FG_EGAL, _______, FG_PERC,                                     KC_6,       _______, FG_PLUS, FG_MOIN, _______, _______,
-       _______, KC_6,    KC_4,    KC_2,    FG_SLSH, FG_CARN,                                     S(FG_ACIR), KC_1,    KC_3,    KC_5,    KC_7,    _______,
-       _______, _______, _______, _______, KC_8,    _______, _______, _______, _______, _______, _______,    KC_9,    _______, _______, _______, _______,
-                                  _______, _______, FG_VIRG, KC_0   , NUMWORD, LT_REPT, KC_SPC,  _______,    _______, _______
+       _______, _______, FG_ASTX, FG_EGAL, KC_7,    FG_PERC,                                     S(FG_ACIR), _______, FG_PLUS, FG_MOIN, _______, _______,
+       _______, KC_6,    KC_4,    KC_2,    MT_SLSH, _______,                                     FG_CARN,    MT_1,    KC_3,    KC_5,    KC_7,    _______,
+       _______, _______, _______, _______, KC_8,    _______, _______, _______, _______, _______, _______,    KC_9,    KC_6,    _______, FG_TYPO, _______,
+                                  _______, _______, KC_PDOT, KC_0   , NUMWORD, LT_REPT, KC_SPC,  _______,    _______, _______
      ),
 
 
@@ -269,9 +244,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_TYPO] = LAYOUT(
-       _______, _______, _______, _______, _______, FG_D,                                         _______, S(FG_M), S(FG_L), _______, _______, _______,
-       _______, OU_GRV,  _______, _______, FG_B,    _______,                                      _______, FG_J,    FG_T,    FG_AROB, _______, _______,
-       _______, _______, _______, _______, FG_DQUO, _______, _______, _______, _______, _______,  _______, FG_CCED, _______, FG_K,    TG_TYPO, _______,
+       _______, _______, _______, _______, _______, _______,                                      _______, _______, _______, _______, _______,  _______,
+       _______, OU_GRV,  _______, _______, FG_U,    _______,                                      _______, FG_J,    FG_T,    FG_AROB, _______,  _______,
+       _______, _______, _______, _______, FG_F,    _______, _______, _______, _______, _______,  _______, FG_CCED, _______, FG_K,    CNL_TYPO, _______,
                                   _______, _______, _______, _______, FG_O,    _______, AGRV_SPC, _______, _______, _______
      ),
 

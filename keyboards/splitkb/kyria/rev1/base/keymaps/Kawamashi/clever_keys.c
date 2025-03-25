@@ -99,11 +99,13 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
           }
           break;
       }
+      break;
     
     case FG_CCED:
       if (!isLetter(next_keycode)) {
         invoke_key(FG_A, record);
       }
+      break;
   }
 
   
@@ -125,6 +127,12 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
         return replace_next_key(next_keycode, record);
       }
       break;
+
+/*     case KC_SPC:
+      if (get_last_keycode() == FG_TYPO) {
+        invoke_key(FG_A, record);
+      }
+      break; */
 
     case MAGIC:
       switch (prev_keycode) {
@@ -209,7 +217,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
           case FG_D:
             // "d@" -> "déjà"
             layer_off(_TYPO);
-            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_A}, 3, record);
+            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_TYPO, FG_A}, 4, record);
         }          
       }
       break;
@@ -252,11 +260,19 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
     case OU_GRV:
       layer_off(_TYPO);
-      return finish_word((uint16_t[]) {FG_O, FG_TYPO, FG_U}, 3, record);
+      return finish_word((uint16_t[]) {FG_O, FG_TYPO, FG_D}, 3, record);
 
     case AGRV_SPC:
-      //layer_off(_TYPO);
-      return finish_word((uint16_t[]) {FG_A, KC_SPC}, 2, record);
+/*     const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+    if (is_shifted) {
+        del_weak_mods(MOD_MASK_SHIFT);
+        del_oneshot_mods(MOD_MASK_SHIFT);
+        unregister_mods(MOD_MASK_SHIFT);
+    }
+    invoke_key(FG_TYPO, record);
+    if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); } */
+      layer_off(_TYPO);
+      return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, record);
   }
 
   return false; // Process next keycode normally

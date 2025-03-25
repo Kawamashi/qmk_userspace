@@ -55,7 +55,8 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
         // Numpad keycodes
          case KC_1 ... KC_0:
          case KC_PDOT:
-         case FG_VIRG:
+         case FG_POIN:
+         //case FG_VIRG:
          case FG_MOIN:
          case FG_ASTX: 
          case FG_PLUS:
@@ -65,6 +66,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
 
         // Misc
         case KC_BSPC:
+        case FG_TYPO:   // Not to exit Numword when chording it with Typo
         case NUMWORD:   // For the combo NUMWORD to work
 
 /*         

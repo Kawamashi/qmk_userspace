@@ -47,9 +47,41 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
 
 bool caps_word_press_user(uint16_t keycode) {
 
+  // Caps Word shouldn’t be applied with Alt-gr
   // Managing underscore on alt gr + E.
   // Underscore must continue Caps Word, without shifting.
-  if ((get_mods() & MOD_BIT(KC_ALGR)) && keycode == FG_E) { return true; }
+  if ((get_mods() & MOD_BIT(KC_ALGR))) {
+    switch (keycode) {
+      case FG_E:
+      case FG_T:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  if (IS_LAYER_ON(_TYPO)) {
+    switch (keycode) {
+      case FG_VIRG:
+        add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
+        return true;
+      case FG_I:
+      case FG_H:
+        return true;
+      case FG_U:
+      case FG_T:
+      case FG_G:
+      case FG_B:
+      case FG_F:
+      case FG_M:
+      case FG_L:
+      case FG_S:
+      case FG_N:
+        return false;
+    }
+  }
+
+  // 
 
   // Keycodes that continue Caps Word, with shift applied.
   if (isLetter(keycode)) {
@@ -62,8 +94,6 @@ bool caps_word_press_user(uint16_t keycode) {
     case FG_TYPO:
     //case FG_GRV:
     case FG_MOIN:
-    case FG_UNDS:
-    case FG_SLSH:
     case KC_KP_1 ... KC_KP_0:
     case KC_LEFT:
     case KC_RIGHT:

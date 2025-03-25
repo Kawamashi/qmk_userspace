@@ -73,6 +73,18 @@ uint16_t get_next_keycode(uint16_t keycode, keyrecord_t* record) {
 
   // Handles custom keycodes.
   if IS_QK_USER(keycode) { return keycode; }
+  //if (keycode == FG_CCED) { return FG_CCED; }
+  if (IS_LAYER_ON(_TYPO)) {
+    switch (keycode) {
+      case FG_K:
+      case FG_J:
+      case FG_AROB:
+      case FG_CCED:
+        break;
+      default:
+        return KC_NO;
+    }
+  }
 
   uint8_t basic_keycode = keycode;
   // Handle keys carrying a modifier, for ex on layers(! and ?).

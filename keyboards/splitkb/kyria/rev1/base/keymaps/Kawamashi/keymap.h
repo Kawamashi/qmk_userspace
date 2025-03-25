@@ -68,7 +68,8 @@ enum custom_keycodes {
   OS_RALT,
   OS_LALT,
   OS_WIN,
-  //OS_TYPO
+  OS_TYPO,
+  CNL_TYPO
 };
 
 // Layer taps
@@ -76,11 +77,11 @@ enum custom_keycodes {
 #define LT_E ALGR_T(FG_E)
 #define LT_REPT LT(_NUMBERS, KC_0)
 #define LT_MGC LT(_SHORTNAV, KC_0)
-#define OS_TYPO OSL(_TYPO)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
-#define TG_TYPO TG(_TYPO)
 #define TG_APOD TG(_APOS_DR)
+#define MT_SLSH SFT_T(FG_SLSH)
+#define MT_1 SFT_T(KC_1)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)

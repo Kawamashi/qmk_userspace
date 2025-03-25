@@ -16,6 +16,7 @@
 
 #include "macros.h"
 
+bool is_typo_shifted = false;
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
     //const uint8_t mods = get_mods();
@@ -27,18 +28,25 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
             case REV_TAB:
                 return process_swapper(S(KC_TAB)); */
 
-            case OS_TYPO:
+/*             case OS_TYPO:
                 if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_BIT(KC_ALGR)) {
                     tap_code16(ALGR(FG_TYPO));
                     return false;
                 }
-                const bool is_shifted = get_mods() & MOD_MASK_SHIFT;
-                if (is_shifted) {
+                is_typo_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+                if (is_typo_shifted) {
                     del_weak_mods(MOD_MASK_SHIFT);
                     unregister_mods(MOD_MASK_SHIFT);
-                    set_oneshot_mods(MOD_BIT(KC_LSFT));
+                    del_oneshot_mods(MOD_BIT(KC_LSFT));
                 }
-                return true;
+                return true; */
+/*             case FG_TYPO:
+                if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+                    del_weak_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    unregister_mods(MOD_MASK_SHIFT);
+                }
+                return true; */
 
             case AIDE_MEM:                    
                 switch(get_highest_layer(layer_state|default_layer_state)) {

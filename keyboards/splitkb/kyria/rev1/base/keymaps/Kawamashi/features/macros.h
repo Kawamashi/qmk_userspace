@@ -22,7 +22,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+extern bool is_typo_shifted;
 
 bool process_macros(uint16_t keycode, keyrecord_t *record);
 
