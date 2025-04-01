@@ -78,12 +78,10 @@ bool update_oneshot_typo(oneshot_state *state, uint16_t keycode, keyrecord_t *re
                     return true; */
                 case os_up_queued:
                     *state = os_up_queued_used;
-                    dprintf("key down, layer: %d, os_up_queued -> os_up_queued_used\n", _TYPO);
                     return true;
                 case os_up_queued_used:
                     *state = os_up_unqueued;
                     layer_off(_TYPO);
-                    dprintf("key down (off), layer: %d, os_up_queued_used -> os_up_unqueued\n", _TYPO);
                     //return false;
                 default:
                     break;
@@ -99,12 +97,10 @@ bool update_oneshot_typo(oneshot_state *state, uint16_t keycode, keyrecord_t *re
                 case os_up_queued:
                     *state = os_up_unqueued;
                     layer_off(_TYPO);
-                    dprintf("key up (off), layer: %d, os_up_queued -> os_up_unqueued\n", _TYPO);
                     return true;
                 case os_up_queued_used:
                     *state = os_up_unqueued;
                     layer_off(_TYPO);
-                    dprintf("key up (off), layer: %d, os_up_queued_used -> os_up_unqueued\n", _TYPO);
                     return true;
                 default:
                     break;

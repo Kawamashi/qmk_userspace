@@ -52,7 +52,7 @@ enum custom_keycodes {
   CAPSWORD,
   AGRV_SPC,
   OU_GRV,
-   E_CIRC,
+  //E_CIRC,
 /*  I_CIRC,
   A_CIRC,
   O_CIRC,
@@ -82,6 +82,7 @@ enum custom_keycodes {
 #define TG_APOD TG(_APOS_DR)
 #define MT_SLSH SFT_T(FG_SLSH)
 #define MT_1 SFT_T(KC_1)
+#define E_CIRC S(FG_0)
 //#define OS_TYPO OSL(_TYPO)
 
 // One shot mods

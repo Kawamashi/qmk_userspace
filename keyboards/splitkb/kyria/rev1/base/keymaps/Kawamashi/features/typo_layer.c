@@ -16,8 +16,8 @@
 
  #include "typo_layer.h"
 
-
-bool exit_typo = false;
+ static uint16_t typo_keycode = KC_NO;
+//bool exit_typo = false;
 
 bool process_typo_layer(uint16_t keycode, keyrecord_t *record) {
 
@@ -41,6 +41,7 @@ bool process_typo_layer(uint16_t keycode, keyrecord_t *record) {
                 unregister_mods(MOD_MASK_SHIFT);
             }
             layer_on(_TYPO);
+            typo_keycode = KC_NO;
             return false;
 
         } else if (keycode == FG_TYPO) {
@@ -56,13 +57,19 @@ bool process_typo_layer(uint16_t keycode, keyrecord_t *record) {
             return true;
 
         } else if (IS_LAYER_ON(_TYPO)) {
+            if (typo_keycode == KC_NO) { typo_keycode = keycode; }
+                //if (!IS_QK_USER(keycode)) { typo_keycode = keycode; }
+
             switch (keycode) {
                 case FG_AROB:
                 case FG_K:
                 case FG_J:
+                case FG_ECIR:
                 case OU_GRV:
                 case FG_CCED:
                 case AGRV_SPC:
+                case KC_SPC:    // When space is added by Clever Keys
+                case FG_3PTS:
                 case CNL_TYPO:
                     break;
           
@@ -87,21 +94,29 @@ bool process_typo_layer(uint16_t keycode, keyrecord_t *record) {
                 set_oneshot_mods(MOD_BIT(KC_LSFT));
                 is_shifted = false;
             }
-            exit_typo = true;
+            //exit_typo = true;
+        } else {
+            typo_keycode = KC_NO;
         }
-/*     } else {    // On release
+    } else {    // On release
         switch (keycode) {
             case OS_TYPO:
             case FG_TYPO:
                 break;
             default:
-                if (exit_typo) { typo_layer_off(); }
-        } */
+                //if (exit_typo) { typo_layer_off(); }
+                if (keycode == typo_keycode) {
+                    layer_off(_TYPO);
+                    typo_keycode = KC_NO;
+                }
+        }
     }
     return true;
 }
 
-void typo_layer_off(void) {
-    layer_off(_TYPO);
-    exit_typo = false;
+void typo_layer_off(uint16_t keycode) {
+    if (keycode == typo_keycode) {
+        layer_off(_TYPO);
+        typo_keycode = KC_NO;
+    }
 }

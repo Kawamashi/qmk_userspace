@@ -20,6 +20,7 @@
 #include "keymap.h"
 
 bool isLetter(uint16_t keycode);
+bool isSendStringMacro(uint16_t keycode);
 bool is_caps_lock_on(void);
 uint16_t tap_hold_extractor(uint16_t keycode);
 

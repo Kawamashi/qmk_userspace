@@ -25,9 +25,23 @@ bool isLetter(uint16_t keycode) {
     case KC_X ... KC_Z:
     case FG_U:
     case FG_E:
+    case FG_AGR:
+    case FG_ECIR:
     case KC_GRV ... KC_DOT:
       return true;
 
+    default:
+      return false;
+  }
+}
+
+bool isSendStringMacro(uint16_t keycode) {
+  switch (keycode) {
+    case AGRV_SPC:
+    case OU_GRV:
+    case MAGIC:
+      return true;
+    
     default:
       return false;
   }
@@ -47,9 +61,9 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
 
 bool caps_word_press_user(uint16_t keycode) {
 
-  // Caps Word shouldn’t be applied with Alt-gr
-  // Managing underscore on alt gr + E.
-  // Underscore must continue Caps Word, without shifting.
+  // Caps Word shouldn't be applied with Alt-gr
+  // Managing underscore on alt gr + E/T.
+  // Underscore and slash must continue Caps Word, without shifting.
   if ((get_mods() & MOD_BIT(KC_ALGR))) {
     switch (keycode) {
       case FG_E:

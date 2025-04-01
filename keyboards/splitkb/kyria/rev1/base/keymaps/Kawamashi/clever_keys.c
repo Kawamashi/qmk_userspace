@@ -22,34 +22,38 @@
 bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
   uint16_t prev_keycode = recent[RECENT_SIZE - 1];
-  //const uint8_t mods = get_mods();
-  //const bool isCaps = is_caps_lock_on() || is_caps_word_on();
 
-  if (isLetter(next_keycode) || next_keycode == E_CIRC) {
-    switch (prev_keycode) {
-        case FG_EXLM:
-        case FG_QUES:
-        //case FG_3PTS:
-        case FG_2PTS:
-          // Add space between punctuation and letters.
-          invoke_key(KC_SPC, record);
-          //if (next_keycode == FG_J) { layer_on(_TYPO); }
+    if (isLetter(next_keycode) || isSendStringMacro(next_keycode)) {
+      switch (prev_keycode) {
+          case FG_EXLM:
+          case FG_QUES:
+          case FG_3PTS:
+          case FG_2PTS:
+            // Add space between punctuation and letters.
+            invoke_key(KC_SPC, record);
+            set_last_keycode(next_keycode);
 
-        case KC_SPC:
-          switch (recent[RECENT_SIZE - 2]) {
-            case FG_EXLM:
-            case FG_QUES:
-            //case FG_3PTS:
-            case FG_POIN:
-              // Add OS shift at the beginning of sentences.
-              if (!is_caps_lock_on()) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
-              break;
-          }
+          case KC_SPC:
+            switch (recent[RECENT_SIZE - 2]) {
+              case FG_EXLM:
+              case FG_QUES:
+              case FG_3PTS:
+              case FG_POIN:
+                // Add OS shift at the beginning of sentences.
+                if (!is_caps_lock_on()) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+                break;
+            }
+      }
     }
-  }
 
   
   switch (prev_keycode) {
+
+/*     case FG_C:
+      if (next_keycode == FG_A) {
+        invoke_key(FG_U,record); 
+        break;
+      } */
 
     case FG_Q:
       switch (next_keycode) {
@@ -60,7 +64,6 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
         case FG_A:
         case FG_O:
         case FG_EACU:
-        case E_CIRC:
         case FG_APOS:
           invoke_key(FG_U, record);
           break;
@@ -117,23 +120,10 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       // On ajoute un espace insécable s'il n'a pas été entré avant le point d'exclamation.
       // Il ne faut pas tester cette fonctionnalité avec Word, qui ajoute cet espace automatiquement.
       if (isLetter(recent[RECENT_SIZE - 1])) {
-        
-/*         if ((mods | get_oneshot_mods() | get_weak_mods()) & MOD_MASK_SHIFT) {
-          del_weak_mods(MOD_MASK_SHIFT);
-          del_oneshot_mods(MOD_MASK_SHIFT);
-          unregister_mods(MOD_MASK_SHIFT);
-        } */
         invoke_key(KC_SPC, record);
-        //set_mods(mods);
         return replace_next_key(next_keycode, record);
       }
       break;
-
-/*     case KC_SPC:
-      if (get_last_keycode() == FG_TYPO) {
-        invoke_key(FG_A, record);
-      }
-      break; */
 
     case MAGIC:
       switch (prev_keycode) {
@@ -254,24 +244,12 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
         return replace_next_key(FG_N, record);
       }
       break;
-    
-/*     case CA_CED:
-      //layer_off(_TYPO);
-      return finish_word((uint16_t[]) {FG_C, FG_A}, 2, record); */
 
     case OU_GRV:
       layer_off(_TYPO);
       return finish_word((uint16_t[]) {FG_O, FG_TYPO, FG_T}, 3, record);
 
     case AGRV_SPC:
-/*     const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-    if (is_shifted) {
-        del_weak_mods(MOD_MASK_SHIFT);
-        del_oneshot_mods(MOD_MASK_SHIFT);
-        unregister_mods(MOD_MASK_SHIFT);
-    }
-    invoke_key(FG_TYPO, record);
-    if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); } */
       layer_off(_TYPO);
       return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, record);
   }

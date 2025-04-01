@@ -44,7 +44,7 @@ bool finish_magic(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record
 
 bool process_clever_keys(uint16_t keycode, keyrecord_t* record);
 
-bool process_accent(uint16_t accent, uint16_t letter, keyrecord_t* record);
+//bool process_accent(uint16_t accent, uint16_t letter, keyrecord_t* record);
 
 #ifdef __cplusplus
 }

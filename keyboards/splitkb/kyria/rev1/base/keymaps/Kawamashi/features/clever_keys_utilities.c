@@ -72,15 +72,20 @@ uint16_t get_next_keycode(uint16_t keycode, keyrecord_t* record) {
   }
 
   // Handles custom keycodes.
-  if IS_QK_USER(keycode) { return keycode; }
+  if (isSendStringMacro(keycode)) { return keycode; }
   //if (keycode == FG_CCED) { return FG_CCED; }
   if (IS_LAYER_ON(_TYPO)) {
     switch (keycode) {
       case FG_K:
       case FG_J:
       case FG_AROB:
+      case FG_ECIR:
       case FG_CCED:
-        break;
+      case FG_3PTS:
+      case KC_SPC:  // In order to uppercase J after '?' for ex.
+        return keycode;
+/*       case FG_C:
+        return FG_CCED; */
       default:
         return KC_NO;
     }
@@ -163,14 +168,14 @@ bool finish_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record)
 }
 
 bool finish_magic(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
-  // Setting the key to be repeated to match the key buffer.
+  // Set the keycode to be repeated to match the key buffer.
   set_last_keycode(keycodes[num_keycodes - 1]);
   return finish_word(keycodes, num_keycodes, record);
 }
 
 bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
 
-  uint16_t next_keycode = get_next_keycode(keycode, record);  
+  uint16_t next_keycode = get_next_keycode(keycode, record);
 
   if (next_keycode != KC_NO) {
 
@@ -178,18 +183,4 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     store_keycode(next_keycode, record);
   }
   return true; // If no clever key was found, process keycode normally.
-}
-
-bool process_accent(uint16_t accent, uint16_t letter, keyrecord_t* record) {
-  const bool is_shifted = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-  if (is_shifted) {
-      del_weak_mods(MOD_MASK_SHIFT);
-      del_oneshot_mods(MOD_MASK_SHIFT);
-      unregister_mods(MOD_MASK_SHIFT);
-  }
-  tap_code16(accent);
-  //set_mods(mods);
-  if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
-  invoke_key(letter, record);
-  return true;
 }

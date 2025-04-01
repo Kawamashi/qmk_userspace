@@ -97,11 +97,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Custom tap-hold keys
   if (!process_custom_tap_hold(keycode, record)) { return false; }
 
-  // Custom behaviour of the typo dead-key
-  if (!process_typo_layer(keycode, record)) { return false; }
-
   // Macros
   if (!process_macros(keycode, record)) { return false; }
+
+  // Custom behaviour of the typo dead-key
+  if (!process_typo_layer(keycode, record)) { return false; }
 
     // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
@@ -111,11 +111,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
-  // 
+  
   if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
   if (exit_num_word) { disable_num_word(); }
-  //if (exit_typo && keycode != FG_TYPO) { typo_layer_off(); }
-  if (exit_typo) { typo_layer_off(); }
+  typo_layer_off(keycode);
 }
 
 
@@ -245,9 +244,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_TYPO] = LAYOUT(
        _______, _______, _______, _______, _______, _______,                                      _______, _______, _______, _______, _______,  _______,
-       _______, OU_GRV,  _______, _______, FG_U,    _______,                                      _______, FG_J,    FG_D,    FG_AROB, _______,  _______,
+       _______, OU_GRV,  _______, _______, FG_3PTS, _______,                                      _______, FG_J,    FG_D,    FG_AROB, _______,  _______,
        _______, _______, _______, _______, FG_F,    _______, _______, _______, _______, _______,  _______, FG_CCED, _______, FG_K,    CNL_TYPO, _______,
-                                  _______, _______, _______, _______, FG_O,    _______, AGRV_SPC, _______, _______, _______
+                                  _______, _______, _______, _______, FG_ECIR, _______, AGRV_SPC, _______, _______, _______
      ),
 
 

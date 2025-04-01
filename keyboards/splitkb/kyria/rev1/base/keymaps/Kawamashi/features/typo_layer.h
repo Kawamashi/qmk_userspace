@@ -26,7 +26,7 @@ extern "C" {
 
 extern bool exit_typo;
 
-void typo_layer_off(void);
+void typo_layer_off(uint16_t keycode);
 
 //bool update_oneshot_typo(oneshot_state *state, uint16_t keycode, keyrecord_t *record);
 bool process_typo_layer(uint16_t keycode, keyrecord_t *record);
