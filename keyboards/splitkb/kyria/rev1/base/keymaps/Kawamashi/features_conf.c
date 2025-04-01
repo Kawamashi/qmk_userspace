@@ -69,7 +69,7 @@ bool caps_word_press_user(uint16_t keycode) {
       case FG_H:
         return true;
       case FG_U:
-      case FG_T:
+      case FG_D:
       case FG_G:
       case FG_B:
       case FG_F:

@@ -6,6 +6,7 @@
 typedef enum {
     os_up_unqueued,
     os_up_queued,
+    //os_up_queued_used,
     os_down_unused,
     os_down_used,
 } oneshot_state;

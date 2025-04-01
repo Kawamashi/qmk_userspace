@@ -58,7 +58,7 @@ enum custom_keycodes {
   O_CIRC,
   U_CIRC,
   I_TREM, */
-  CA_CED,
+  //CA_CED,
 /*   CIRC,
   TILDE,
   GRAVE, */
@@ -82,6 +82,7 @@ enum custom_keycodes {
 #define TG_APOD TG(_APOS_DR)
 #define MT_SLSH SFT_T(FG_SLSH)
 #define MT_1 SFT_T(KC_1)
+//#define OS_TYPO OSL(_TYPO)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)

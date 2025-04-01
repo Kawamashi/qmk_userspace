@@ -141,6 +141,7 @@ void process_key(uint16_t keycode, keyrecord_t* record) {
 
 void invoke_key(uint16_t keycode, keyrecord_t* record) {
   process_key(keycode, record);
+  //record->keycode = keycode;
   bkspc_countdown = 1;
 }
 

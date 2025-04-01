@@ -33,6 +33,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
         case FG_2PTS:
           // Add space between punctuation and letters.
           invoke_key(KC_SPC, record);
+          //if (next_keycode == FG_J) { layer_on(_TYPO); }
 
         case KC_SPC:
           switch (recent[RECENT_SIZE - 2]) {
@@ -260,7 +261,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
     case OU_GRV:
       layer_off(_TYPO);
-      return finish_word((uint16_t[]) {FG_O, FG_TYPO, FG_D}, 3, record);
+      return finish_word((uint16_t[]) {FG_O, FG_TYPO, FG_T}, 3, record);
 
     case AGRV_SPC:
 /*     const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;

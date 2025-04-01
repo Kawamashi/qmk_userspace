@@ -28,7 +28,8 @@ extern bool exit_typo;
 
 void typo_layer_off(void);
 
-bool process_typo(uint16_t keycode, keyrecord_t *record);
+//bool update_oneshot_typo(oneshot_state *state, uint16_t keycode, keyrecord_t *record);
+bool process_typo_layer(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus
 }

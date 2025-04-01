@@ -98,7 +98,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_custom_tap_hold(keycode, record)) { return false; }
 
   // Custom behaviour of the typo dead-key
-  if (!process_typo(keycode, record)) { return false; }
+  if (!process_typo_layer(keycode, record)) { return false; }
 
   // Macros
   if (!process_macros(keycode, record)) { return false; }
@@ -245,7 +245,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_TYPO] = LAYOUT(
        _______, _______, _______, _______, _______, _______,                                      _______, _______, _______, _______, _______,  _______,
-       _______, OU_GRV,  _______, _______, FG_U,    _______,                                      _______, FG_J,    FG_T,    FG_AROB, _______,  _______,
+       _______, OU_GRV,  _______, _______, FG_U,    _______,                                      _______, FG_J,    FG_D,    FG_AROB, _______,  _______,
        _______, _______, _______, _______, FG_F,    _______, _______, _______, _______, _______,  _______, FG_CCED, _______, FG_K,    CNL_TYPO, _______,
                                   _______, _______, _______, _______, FG_O,    _______, AGRV_SPC, _______, _______, _______
      ),
