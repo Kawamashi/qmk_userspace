@@ -74,7 +74,7 @@ bool caps_word_press_user(uint16_t keycode) {
     }
   }
 
-  if (IS_LAYER_ON(_TYPO)) {
+  if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
       case FG_VIRG:
         add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
@@ -105,7 +105,7 @@ bool caps_word_press_user(uint16_t keycode) {
 
   switch (keycode) {
     // Keycodes that continue Caps Word, without shifting.
-    case FG_TYPO:
+    case FG_ODK:
     //case FG_GRV:
     case FG_MOIN:
     case KC_KP_1 ... KC_KP_0:
@@ -174,11 +174,11 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   // Autrement, la touche typo est ignorée par les Callum mods.
   // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
   //uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_TYPO && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
-  //if (keycode == OS_TYPO && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
+  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
+  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
 
   switch (keycode) {
-    //case OS_TYPO:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
+    //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
     case L_OS4A:
     case R_OS4A:
     case OS_SHFT:
@@ -189,7 +189,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case FG_TYPO:
+    case FG_ODK:
         return true;
     default:
         return false;

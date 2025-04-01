@@ -66,7 +66,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
 
         // Misc
         case KC_BSPC:
-        case FG_TYPO:   // Not to exit Numword when chording it with Typo
+        case FG_ODK:   // Not to exit Numword when chording it with Typo
         case NUMWORD:   // For the combo NUMWORD to work
 
 /*         

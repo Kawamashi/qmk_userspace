@@ -42,7 +42,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
       // La ligne suivante n'est nécessaire que si on a besoin de doubler rapidement un caractère présent sur la moitié droite du clavier.
       // Ce n'est pas nécessaire pour l'instant, vu que les guillemets sont passés à gauche.
-      //if (keycode == OS_TYPO) { return true; }
+      //if (keycode == OS_ODK) { return true; }
 
       if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
@@ -101,7 +101,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_macros(keycode, record)) { return false; }
 
   // Custom behaviour of the typo dead-key
-  if (!process_typo_layer(keycode, record)) { return false; }
+  if (!process_odk_layer(keycode, record)) { return false; }
 
     // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
@@ -114,7 +114,7 @@ void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
   
   if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
   if (exit_num_word) { disable_num_word(); }
-  typo_layer_off(keycode);
+  odk_layer_off(keycode);
 }
 
 
@@ -138,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       KC_NO, FG_X,  FG_VIRG, FG_EACU, FG_P,   FG_B,                                   FG_F,   FG_M,    FG_L, FG_APOS, FG_POIN,  KC_NO,
       KC_NO, FG_O,  FG_A,    FG_I,    FG_T,   FG_G,                                   FG_V,   FG_S,    FG_N, FG_R,    FG_U,     KC_NO,
-      KC_NO, FG_Q,  FG_Z,    FG_Y,    FG_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  FG_C,    FG_H, FG_W,    OS_TYPO,  KC_NO,
+      KC_NO, FG_Q,  FG_Z,    FG_Y,    FG_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  FG_C,    FG_H, FG_W,    OS_ODK,  KC_NO,
                              KC_NO,   KC_SPC, L_OS4A, LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
     ),
 
@@ -199,7 +199,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  TG_APOD, KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, FG_TYPO, KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, FG_ODK, KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO
     ),
@@ -223,7 +223,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NUMBERS] = LAYOUT(
        _______, _______, FG_ASTX, FG_EGAL, KC_7,    FG_PERC,                                     S(FG_ACIR), _______, FG_PLUS, FG_MOIN, _______, _______,
        _______, KC_6,    KC_4,    KC_2,    MT_SLSH, _______,                                     FG_CARN,    MT_1,    KC_3,    KC_5,    KC_7,    _______,
-       _______, _______, _______, _______, KC_8,    _______, _______, _______, _______, _______, _______,    KC_9,    KC_6,    _______, FG_TYPO, _______,
+       _______, _______, _______, _______, KC_8,    _______, _______, _______, _______, _______, _______,    KC_9,    KC_6,    _______, FG_ODK, _______,
                                   _______, _______, KC_PDOT, KC_0   , NUMWORD, LT_REPT, KC_SPC,  _______,    _______, _______
      ),
 
@@ -242,10 +242,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_TYPO] = LAYOUT(
+    [_ODK] = LAYOUT(
        _______, _______, _______, _______, _______, _______,                                      _______, _______, _______, _______, _______,  _______,
        _______, OU_GRV,  _______, _______, FG_3PTS, _______,                                      _______, FG_J,    FG_D,    FG_AROB, _______,  _______,
-       _______, _______, _______, _______, FG_F,    _______, _______, _______, _______, _______,  _______, FG_CCED, _______, FG_K,    CNL_TYPO, _______,
+       _______, _______, _______, _______, FG_F,    _______, _______, _______, _______, _______,  _______, FG_CCED, _______, FG_K,    CNL_ODK, _______,
                                   _______, _______, _______, _______, FG_ECIR, _______, AGRV_SPC, _______, _______, _______
      ),
 

@@ -16,7 +16,7 @@
 
 #include "macros.h"
 
-bool is_typo_shifted = false;
+bool is_odk_shifted = false;
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
     //const uint8_t mods = get_mods();

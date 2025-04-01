@@ -90,7 +90,7 @@
 #define FG_C    KC_M    // C
 #define FG_H    KC_COMM // H
 #define FG_W    KC_DOT  // W
-#define FG_TYPO KC_SLSH // **
+#define FG_ODK KC_SLSH // **
 
 
 /* Shifted symbols
@@ -118,7 +118,7 @@
 
 
 // Row 4
-//#define FG_PVIR S(FG_TYPO)
+//#define FG_PVIR S(FG_ODK)
 
 // Row 5
 #define FG_NBSP S(KC_SPC)  // Espace insecable
@@ -178,7 +178,7 @@
 #define FG_LCBR ALGR(FG_C)    // {
 #define FG_RCBR ALGR(FG_H)    // }
 #define FG_LSBR ALGR(FG_W)    // [
-#define FG_RSBR ALGR(FG_TYPO) // ]
+#define FG_RSBR ALGR(FG_ODK) // ]
 
 
 /* Shift+AltGr symbols

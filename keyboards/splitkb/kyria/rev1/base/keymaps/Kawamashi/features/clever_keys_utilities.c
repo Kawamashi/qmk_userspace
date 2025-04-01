@@ -74,7 +74,7 @@ uint16_t get_next_keycode(uint16_t keycode, keyrecord_t* record) {
   // Handles custom keycodes.
   if (isSendStringMacro(keycode)) { return keycode; }
   //if (keycode == FG_CCED) { return FG_CCED; }
-  if (IS_LAYER_ON(_TYPO)) {
+  if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
       case FG_K:
       case FG_J:

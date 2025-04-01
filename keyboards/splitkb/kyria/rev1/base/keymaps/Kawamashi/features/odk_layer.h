@@ -24,12 +24,12 @@
 extern "C" {
 #endif
 
-extern bool exit_typo;
+extern bool exit_odk;
 
-void typo_layer_off(uint16_t keycode);
+void odk_layer_off(uint16_t keycode);
 
-//bool update_oneshot_typo(oneshot_state *state, uint16_t keycode, keyrecord_t *record);
-bool process_typo_layer(uint16_t keycode, keyrecord_t *record);
+//bool update_oneshot_odk(oneshot_state *state, uint16_t keycode, keyrecord_t *record);
+bool process_odk_layer(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus
 }

@@ -169,7 +169,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
             return finish_magic((uint16_t[]) {FG_E, FG_N, FG_T}, 3, record);
           } else {
             // "même"
-            return finish_magic((uint16_t[]) {FG_TYPO, FG_O, FG_M, FG_E}, 4, record);
+            return finish_magic((uint16_t[]) {FG_ODK, FG_O, FG_M, FG_E}, 4, record);
           }
         
         default:
@@ -182,33 +182,33 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
           case FG_T:
             // "t@" -> "toujours"
-            layer_off(_TYPO);
+            layer_off(_ODK);
             return finish_word((uint16_t[]) {FG_O, FG_U, FG_J, FG_O, FG_U, FG_R, FG_S}, 7, record);
 
           case FG_P:
             // "p@" -> "peut-être"
-            layer_off(_TYPO);
-            return finish_word((uint16_t[]) {FG_E, FG_U, FG_T, FG_MOIN, FG_TYPO, FG_O, FG_T, FG_R, FG_E}, 9, record);
+            layer_off(_ODK);
+            return finish_word((uint16_t[]) {FG_E, FG_U, FG_T, FG_MOIN, FG_ODK, FG_O, FG_T, FG_R, FG_E}, 9, record);
 
           case FG_A:
             // "a@" -> "aujourd'hui"
-            layer_off(_TYPO);
+            layer_off(_ODK);
             return finish_word((uint16_t[]) {FG_U, FG_J, FG_O, FG_U, FG_R, FG_D, FG_APOS, FG_H, FG_U, FG_I}, 10, record);
           
           case FG_B:
             // "b@" -> "beaucoup"
-            layer_off(_TYPO);
+            layer_off(_ODK);
             return finish_word((uint16_t[]) {FG_E, FG_A, FG_U, FG_C, FG_O, FG_U, FG_P}, 7, record);
           
           case FG_E:
             // "e@" -> "est-ce qu"
-            layer_off(_TYPO);
+            layer_off(_ODK);
             return finish_word((uint16_t[]) {FG_S, FG_T, FG_MOIN, FG_C, FG_E, KC_SPC, FG_Q}, 7, record);
           
           case FG_D:
             // "d@" -> "déjà"
-            layer_off(_TYPO);
-            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_TYPO, FG_A}, 4, record);
+            layer_off(_ODK);
+            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_ODK, FG_A}, 4, record);
         }          
       }
       break;
@@ -246,11 +246,11 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       break;
 
     case OU_GRV:
-      layer_off(_TYPO);
-      return finish_word((uint16_t[]) {FG_O, FG_TYPO, FG_T}, 3, record);
+      layer_off(_ODK);
+      return finish_word((uint16_t[]) {FG_O, FG_ODK, FG_T}, 3, record);
 
     case AGRV_SPC:
-      layer_off(_TYPO);
+      layer_off(_ODK);
       return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, record);
   }
 

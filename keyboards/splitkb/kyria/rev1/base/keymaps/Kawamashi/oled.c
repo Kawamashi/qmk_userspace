@@ -58,7 +58,7 @@ bool oled_task_user(void) {
             case _FUNCAPPS:
                 oled_write_P(PSTR("FuncApps\n"), false);
                 break;
-            case _TYPO:
+            case _ODK:
                 oled_write_P(PSTR("Accents\n"), false);
                 break;
             default:

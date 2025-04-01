@@ -27,7 +27,7 @@
 #include "features/macros.h"
 #include "features/os4a.h"
 #include "features/oneshot.h"
-#include "features/typo_layer.h"
+#include "features/odk_layer.h"
 
 
 enum layers {
@@ -36,7 +36,7 @@ enum layers {
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
-    _TYPO,
+    _ODK,
     _NUMBERS,
     _SHORTNAV,
     _FUNCAPPS,
@@ -68,8 +68,8 @@ enum custom_keycodes {
   OS_RALT,
   OS_LALT,
   OS_WIN,
-  OS_TYPO,
-  CNL_TYPO
+  OS_ODK,
+  CNL_ODK
 };
 
 // Layer taps
@@ -83,7 +83,7 @@ enum custom_keycodes {
 #define MT_SLSH SFT_T(FG_SLSH)
 #define MT_1 SFT_T(KC_1)
 #define E_CIRC S(FG_0)
-//#define OS_TYPO OSL(_TYPO)
+//#define OS_ODK OSL(_ODK)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)
