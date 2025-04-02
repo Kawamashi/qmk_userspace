@@ -24,8 +24,8 @@ oneshot_state os_altgr_state = os_up_unqueued;
 oneshot_state os_win_state = os_up_unqueued;
 
 uint8_t os4a_layer = 0;
-bool exit_os4a_layer = false;
-bool pending_OSL = false;
+static bool exit_os4a_layer = false;
+static bool pending_OSL = false;
 
 void os4a_layer_on(uint8_t layer) {
   layer_on(layer);
@@ -107,4 +107,8 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
 
   return true;
+}
+
+void os4a_layer_exit_check(void) {
+  if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
 }

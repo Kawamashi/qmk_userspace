@@ -17,7 +17,6 @@
  #include "odk_layer.h"
 
  static uint16_t odk_keycode = KC_NO;
-//bool exit_odk = false;
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
@@ -104,7 +103,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             case FG_ODK:
                 break;
             default:
-                //if (exit_odk) { odk_layer_off(); }
+                //if (exit_odk) { odk_layer_exit_check(); }
                 if (keycode == odk_keycode) {
                     layer_off(_ODK);
                     odk_keycode = KC_NO;
@@ -114,7 +113,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-void odk_layer_off(uint16_t keycode) {
+void odk_layer_exit_check(uint16_t keycode) {
     if (keycode == odk_keycode) {
         layer_off(_ODK);
         odk_keycode = KC_NO;

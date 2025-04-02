@@ -112,9 +112,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
   
-  if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
-  if (exit_num_word) { disable_num_word(); }
-  odk_layer_off(keycode);
+  //if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
+  os4a_layer_exit_check();
+  numword_exit_check();
+  odk_layer_exit_check(keycode);
 }
 
 

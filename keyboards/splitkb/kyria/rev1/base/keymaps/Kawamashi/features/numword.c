@@ -19,7 +19,7 @@
 //static uint16_t num_word_timer = 0;
 //static bool is_num_word_on = false;
 bool is_num_word_on = false;
-bool exit_num_word = false;
+static bool exit_num_word = false;
 
 bool is_num_word_enabled(void) {
     return is_num_word_on;
@@ -47,7 +47,7 @@ void toggle_num_word(void) {
     }
 }
 
-bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
+bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
 
     switch (keycode) {
         // Keycodes which should not disable num word mode.
@@ -66,7 +66,7 @@ bool should_terminate_num_word(uint16_t keycode, const keyrecord_t *record) {
 
         // Misc
         case KC_BSPC:
-        case FG_ODK:   // Not to exit Numword when chording it with Typo
+        case FG_ODK:   // Not to exit Numword when chording it with ODK
         case NUMWORD:   // For the combo NUMWORD to work
 
 /*         
@@ -111,6 +111,10 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
             break; */
     }
 
-    exit_num_word = should_terminate_num_word(keycode, record);
+    exit_num_word = should_exit_num_word(keycode, record);
     return true;
+}
+
+void numword_exit_check(void) {
+    if (exit_num_word) { disable_num_word(); }
 }

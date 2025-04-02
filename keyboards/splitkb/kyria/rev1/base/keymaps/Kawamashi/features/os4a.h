@@ -25,8 +25,8 @@ extern "C" {
 #endif
 
 extern uint8_t os4a_layer;
-extern bool exit_os4a_layer;
-extern bool pending_OSL;
+//extern bool exit_os4a_layer;
+//extern bool pending_OSL;
 
 void os4a_layer_off(uint8_t layer);
 void os4a_layer_on(uint8_t layer);
@@ -42,6 +42,8 @@ bool process_os4a_layers(uint16_t keycode, keyrecord_t *record);
 void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record);
 
 bool process_mods(uint16_t keycode, keyrecord_t *record);
+
+void os4a_layer_exit_check(void);
 
 #ifdef __cplusplus
 }

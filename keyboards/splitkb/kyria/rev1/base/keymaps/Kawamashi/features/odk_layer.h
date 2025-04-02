@@ -24,12 +24,8 @@
 extern "C" {
 #endif
 
-extern bool exit_odk;
-
-void odk_layer_off(uint16_t keycode);
-
-//bool update_oneshot_odk(oneshot_state *state, uint16_t keycode, keyrecord_t *record);
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record);
+void odk_layer_exit_check(uint16_t keycode);
 
 #ifdef __cplusplus
 }

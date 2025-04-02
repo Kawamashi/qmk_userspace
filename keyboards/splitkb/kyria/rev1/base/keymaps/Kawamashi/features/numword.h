@@ -19,7 +19,7 @@
 #include "keymap.h"
 
 bool is_num_word_enabled(void);
-extern bool exit_num_word;
+//extern bool exit_num_word;
 extern bool is_num_word_on;
 
 void enable_num_word(void);
@@ -27,3 +27,4 @@ extern void disable_num_word(void);
 void toggle_num_word(void);
 
 bool process_numword(uint16_t keycode, const keyrecord_t *record);
+void numword_exit_check(void);
