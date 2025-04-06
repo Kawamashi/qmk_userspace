@@ -200,7 +200,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  TG_APOD, KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, FG_ODK,  KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, FG_ODK, KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO
     ),
