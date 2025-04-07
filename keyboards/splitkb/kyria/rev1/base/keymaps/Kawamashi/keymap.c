@@ -116,6 +116,7 @@ void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
   os4a_layer_exit_check();
   numword_exit_check();
   odk_layer_exit_check(keycode);
+  end_CK(record);
 }
 
 

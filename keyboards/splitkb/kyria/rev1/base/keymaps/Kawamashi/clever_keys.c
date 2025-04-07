@@ -23,7 +23,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
   uint16_t prev_keycode = recent[RECENT_SIZE - 1];
 
-    if (isLetter(next_keycode) || isSendStringMacro(next_keycode)) {
+/*     if (isLetter(next_keycode) || isSendStringMacro(next_keycode)) {
       switch (prev_keycode) {
           case FG_EXLM:
           case FG_QUES:
@@ -48,12 +48,6 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
 
   
   switch (prev_keycode) {
-
-/*     case FG_C:
-      if (next_keycode == FG_A) {
-        invoke_key(FG_U,record); 
-        break;
-      } */
 
     case FG_Q:
       switch (next_keycode) {
@@ -252,6 +246,14 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
     case AGRV_SPC:
       layer_off(_ODK);
       return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, record);
+  } */
+  switch (next_keycode) {
+    case FG_O:
+      if (prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
+        // "uo" -> "un"
+        return replace_next_key(FG_N, record);
+      }
+      break;
   }
 
   return false; // Process next keycode normally
