@@ -19,11 +19,11 @@
 #include "clever_keys.h"
 
 
-bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
+void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
 
   uint16_t prev_keycode = recent[RECENT_SIZE - 1];
 
-/*     if (isLetter(next_keycode) || isSendStringMacro(next_keycode)) {
+    if (isLetter(*next_keycode) || isSendStringMacro(*next_keycode)) {
       switch (prev_keycode) {
           case FG_EXLM:
           case FG_QUES:
@@ -31,7 +31,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
           case FG_2PTS:
             // Add space between punctuation and letters.
             invoke_key(KC_SPC, record);
-            set_last_keycode(next_keycode);
+            set_last_keycode(*next_keycode);
 
           case KC_SPC:
             switch (recent[RECENT_SIZE - 2]) {
@@ -50,7 +50,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
   switch (prev_keycode) {
 
     case FG_Q:
-      switch (next_keycode) {
+      switch (*next_keycode) {
         
         // Ajout automatique du "u" après le "q"
         case FG_E:
@@ -60,54 +60,57 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
         case FG_EACU:
         case FG_APOS:
           invoke_key(FG_U, record);
+          set_last_keycode(*next_keycode);
           break;
 
         // Raccourci pour "quelq"
         case FG_Q:
-          clear_recent_keys();  // To prevent infinite loop
           process_word((uint16_t[]) {FG_U, FG_E, FG_L}, 3, record);
           break;
 
         // Raccourci pour "quoi", ça évite un aller-retour sur la main gauche.
         case FG_Z:
-          return finish_word((uint16_t[]) {FG_U, FG_O, FG_I}, 3, record);
+          finish_word((uint16_t[]) {FG_U, FG_O, FG_I}, 3, next_keycode, record);
+          break;
 
         // Raccourci pour "quand"
         case FG_D:
           process_word((uint16_t[]) {FG_U, FG_A, FG_N}, 3, record);
+          set_last_keycode(*next_keycode);
           break;
       }
       break;
 
     case FG_P:
-      switch (next_keycode) {
+      switch (*next_keycode) {
 
         case FG_M:
           // "pas"
-          return finish_word((uint16_t[]) {FG_A, FG_S}, 2, record);
+          return finish_word((uint16_t[]) {FG_A, FG_S}, 2, next_keycode, record);
         
         case FG_APOS:
           // "par"
-          return finish_word((uint16_t[]) {FG_A, FG_R}, 2, record);
+          return finish_word((uint16_t[]) {FG_A, FG_R}, 2, next_keycode, record);
         
         case FG_POIN:
           if (!isLetter(recent[RECENT_SIZE - 2])) {
             // "pour"
-            return finish_word((uint16_t[]) {FG_O, FG_U, FG_R}, 3, record);
+            return finish_word((uint16_t[]) {FG_O, FG_U, FG_R}, 3, next_keycode, record);
           }
           break;
       }
       break;
     
     case FG_CCED:
-      if (!isLetter(next_keycode)) {
+      if (!isLetter(*next_keycode)) {
         invoke_key(FG_A, record);
+        set_last_keycode(*next_keycode);
       }
       break;
   }
 
   
-  switch (next_keycode) {
+  switch (*next_keycode) {
 
     case FG_QUES:
     case FG_EXLM:
@@ -115,7 +118,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       // Il ne faut pas tester cette fonctionnalité avec Word, qui ajoute cet espace automatiquement.
       if (isLetter(recent[RECENT_SIZE - 1])) {
         invoke_key(KC_SPC, record);
-        return replace_next_key(next_keycode, record);
+        return replace_next_key(*next_keycode, next_keycode, record);
       }
       break;
 
@@ -125,49 +128,49 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
         case FG_T:
           invoke_key(FG_I, record);
         case FG_I:
-          return finish_magic((uint16_t[]) {FG_O, FG_N}, 2, record);
+          return finish_word((uint16_t[]) {FG_O, FG_N}, 2, next_keycode, record);
         
         case FG_C:
-          return finish_magic((uint16_t[]) {FG_APOS, FG_E, FG_S, FG_T}, 4, record);
+          return finish_word((uint16_t[]) {FG_APOS, FG_E, FG_S, FG_T}, 4, next_keycode, record);
         
         case FG_D:
-          return finish_magic((uint16_t[]) {FG_A, FG_N, FG_S}, 3, record);
+          return finish_word((uint16_t[]) {FG_A, FG_N, FG_S}, 3, next_keycode, record);
         
         case FG_P:
-          return finish_magic((uint16_t[]) {FG_L, FG_U, FG_S}, 3, record);
+          return finish_word((uint16_t[]) {FG_L, FG_U, FG_S}, 3, next_keycode, record);
 
         case FG_O:
-          return finish_magic((uint16_t[]) {FG_N, FG_T}, 2, record);
+          return finish_word((uint16_t[]) {FG_N, FG_T}, 2, next_keycode, record);
         
         case FG_A:
           if (isLetter(recent[RECENT_SIZE - 2])) {
             // "ant"
-            return finish_magic((uint16_t[]) {FG_N, FG_T}, 2, record);
+            return finish_word((uint16_t[]) {FG_N, FG_T}, 2, next_keycode, record);
           } else {
             // "avec"
-            return finish_magic((uint16_t[]) {FG_V, FG_E, FG_C}, 3, record);
+            return finish_word((uint16_t[]) {FG_V, FG_E, FG_C}, 3, next_keycode, record);
           }
         
         case FG_S:
-          return finish_magic((uint16_t[]) {FG_U, FG_R}, 2, record);
+          return finish_word((uint16_t[]) {FG_U, FG_R}, 2, next_keycode, record);
         
         case FG_B:
           process_word((uint16_t[]) {FG_O, FG_N, FG_J}, 3, record);
         
         case FG_J:
-          return finish_magic((uint16_t[]) {FG_O, FG_U, FG_R}, 3, record);
+          return finish_word((uint16_t[]) {FG_O, FG_U, FG_R}, 3, next_keycode, record);
         
         case FG_M:
           if (isLetter(recent[RECENT_SIZE - 2])) {
             // "ment"
-            return finish_magic((uint16_t[]) {FG_E, FG_N, FG_T}, 3, record);
+            return finish_word((uint16_t[]) {FG_E, FG_N, FG_T}, 3, next_keycode, record);
           } else {
             // "même"
-            return finish_magic((uint16_t[]) {FG_ODK, FG_O, FG_M, FG_E}, 4, record);
+            return finish_word((uint16_t[]) {FG_ODK, FG_O, FG_M, FG_E}, 4, next_keycode, record);
           }
         
         default:
-          return false;
+          return;
       }
 
     case FG_AROB:
@@ -177,32 +180,32 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
           case FG_T:
             // "t@" -> "toujours"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {FG_O, FG_U, FG_J, FG_O, FG_U, FG_R, FG_S}, 7, record);
+            return finish_word((uint16_t[]) {FG_O, FG_U, FG_J, FG_O, FG_U, FG_R, FG_S}, 7, next_keycode, record);
 
           case FG_P:
             // "p@" -> "peut-être"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {FG_E, FG_U, FG_T, FG_MOIN, FG_ODK, FG_O, FG_T, FG_R, FG_E}, 9, record);
+            return finish_word((uint16_t[]) {FG_E, FG_U, FG_T, FG_MOIN, FG_ODK, FG_O, FG_T, FG_R, FG_E}, 9, next_keycode, record);
 
           case FG_A:
             // "a@" -> "aujourd'hui"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {FG_U, FG_J, FG_O, FG_U, FG_R, FG_D, FG_APOS, FG_H, FG_U, FG_I}, 10, record);
+            return finish_word((uint16_t[]) {FG_U, FG_J, FG_O, FG_U, FG_R, FG_D, FG_APOS, FG_H, FG_U, FG_I}, 10, next_keycode, record);
           
           case FG_B:
             // "b@" -> "beaucoup"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {FG_E, FG_A, FG_U, FG_C, FG_O, FG_U, FG_P}, 7, record);
+            return finish_word((uint16_t[]) {FG_E, FG_A, FG_U, FG_C, FG_O, FG_U, FG_P}, 7, next_keycode, record);
           
           case FG_E:
             // "e@" -> "est-ce qu"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {FG_S, FG_T, FG_MOIN, FG_C, FG_E, KC_SPC, FG_Q}, 7, record);
+            return finish_word((uint16_t[]) {FG_S, FG_T, FG_MOIN, FG_C, FG_E, KC_SPC, FG_Q}, 7, next_keycode, record);
           
           case FG_D:
             // "d@" -> "déjà"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_ODK, FG_A}, 4, record);
+            return finish_word((uint16_t[]) {FG_EACU, FG_J, FG_ODK, FG_A}, 4, next_keycode, record);
         }          
       }
       break;
@@ -211,6 +214,8 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       if (prev_keycode == FG_J) {
           // "jq" -> "jusqu"
           process_word((uint16_t[]) {FG_U, FG_S}, 2, record);
+          set_last_keycode(*next_keycode);
+          return;
       }
       break;
 
@@ -218,8 +223,7 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       //if (prev_keycode == FG_O && !isCaps) {
       if (prev_keycode == FG_O) {
         // "oa" -> "oi"
-        clear_recent_keys();  // To prevent infinite loop
-        return replace_next_key(FG_I, record);
+        return replace_next_key(FG_I, next_keycode, record);
       }
       break;
 
@@ -227,34 +231,25 @@ bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record) {
       //if (prev_keycode == FG_O && !isCaps && recent[RECENT_SIZE - 3] != FG_Q) {
       if (prev_keycode == FG_O && recent[RECENT_SIZE - 3] != FG_Q) {
         // "oi" -> "oa", for "keyboard"
-        clear_recent_keys();  // To prevent infinite loop
-        return replace_next_key(FG_A, record);
+        return replace_next_key(FG_A, next_keycode, record);
       }
       break;
 
     case FG_O:
       if (prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
         // "uo" -> "un"
-        return replace_next_key(FG_N, record);
+        return replace_next_key(FG_N, next_keycode, record);
       }
       break;
 
     case OU_GRV:
       layer_off(_ODK);
-      return finish_word((uint16_t[]) {FG_O, FG_ODK, FG_T}, 3, record);
+      return finish_word((uint16_t[]) {FG_O, FG_ODK, FG_T}, 3, next_keycode, record);
 
     case AGRV_SPC:
       layer_off(_ODK);
-      return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, record);
-  } */
-  switch (next_keycode) {
-    case FG_O:
-      if (prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
-        // "uo" -> "un"
-        return replace_next_key(FG_N, record);
-      }
-      break;
+      return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, next_keycode, record);
   }
 
-  return false; // Process next keycode normally
+  //return KC_NO; // Process next keycode normally
 }

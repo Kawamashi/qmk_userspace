@@ -18,6 +18,7 @@
 
 uint16_t recent[RECENT_SIZE] = {KC_NO};
 uint16_t deadline = 0;
+//static unsigned short int bkspc_countdown = RECENT_SIZE + 1;
 unsigned short int bkspc_countdown = RECENT_SIZE + 1;
 
 // Copy of the record argument for the clever key.
@@ -37,7 +38,6 @@ void recent_keys_task(void) {
 
 // Handles one event. Returns false if the key was appended to `recent`.
 uint16_t get_next_keycode(uint16_t keycode, keyrecord_t* record) {
-  //if (!record->event.pressed) { return KC_NO; }
 
   uint8_t mods = get_mods() | get_oneshot_mods();
 
@@ -151,33 +151,25 @@ void invoke_key(uint16_t keycode, keyrecord_t* record) {
   bkspc_countdown = 1;
 }
 
-bool replace_next_key(uint16_t new_keycode, keyrecord_t* record) {
+void replace_next_key(uint16_t clever_keycode, uint16_t* next_keycode, keyrecord_t* record) {
   //store_keycode(new_keycode, record);
-  record->keycode = new_keycode;
-  return true;
+  record->keycode = clever_keycode;
+  *next_keycode = clever_keycode;
+  set_last_keycode(clever_keycode);
+  //set_last_keycode(*next_keycode);
+  processingCK = true;
 }
-
-/* bool replace_next_key(uint16_t keycode, keyrecord_t* record) {
-  invoke_key(keycode, record);
-  return true;
-} */
 
 void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
   for (int i = 0; i < num_keycodes; ++i) {
-    invoke_key(keycodes[i], record);
+    process_key(keycodes[i], record);
   }
   bkspc_countdown = num_keycodes;
 }
 
-bool finish_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
-  process_word(keycodes, num_keycodes, record);
-  return true;
-}
-
-bool finish_magic(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
-  // Set the keycode to be repeated to match the key buffer.
-  set_last_keycode(keycodes[num_keycodes - 1]);
-  return finish_word(keycodes, num_keycodes, record);
+void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* next_keycode, keyrecord_t* record) {
+  process_word(keycodes, num_keycodes - 1, record);
+  replace_next_key(keycodes[num_keycodes - 1], next_keycode, record);
 }
 
 
@@ -188,31 +180,13 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     uint16_t next_keycode = get_next_keycode(keycode, record);
 
     if (next_keycode != KC_NO) {
-      if (clever_key_finder(next_keycode, record)) { 
-        processingCK = true;
-        //return false; 
-        }
+      get_clever_keycode(&next_keycode, record);
       store_keycode(next_keycode, record);
     }
     //return true; // If no clever key was found, process keycode normally.
   } 
   return true;
 }
-
-
-/* bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
-
-  if (record->event.pressed) {
-    uint16_t next_keycode = get_next_keycode(keycode, record);
-
-    if (next_keycode != KC_NO) {
-
-      if (clever_key_finder(next_keycode, record)) { return false; }
-      store_keycode(next_keycode, record);
-    }
-  }
-  return true; // If no clever key was found, process keycode normally.
-} */
 
 void end_CK(keyrecord_t* record) {
   if (processingCK) {
