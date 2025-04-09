@@ -118,7 +118,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       // Il ne faut pas tester cette fonctionnalité avec Word, qui ajoute cet espace automatiquement.
       if (isLetter(recent[RECENT_SIZE - 1])) {
         invoke_key(KC_SPC, record);
-        return replace_next_key(*next_keycode, next_keycode, record);
+        return replace_ongoing_key(*next_keycode, next_keycode, record);
       }
       break;
 
@@ -223,7 +223,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       //if (prev_keycode == FG_O && !isCaps) {
       if (prev_keycode == FG_O) {
         // "oa" -> "oi"
-        return replace_next_key(FG_I, next_keycode, record);
+        return replace_ongoing_key(FG_I, next_keycode, record);
       }
       break;
 
@@ -231,14 +231,14 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       //if (prev_keycode == FG_O && !isCaps && recent[RECENT_SIZE - 3] != FG_Q) {
       if (prev_keycode == FG_O && recent[RECENT_SIZE - 3] != FG_Q) {
         // "oi" -> "oa", for "keyboard"
-        return replace_next_key(FG_A, next_keycode, record);
+        return replace_ongoing_key(FG_A, next_keycode, record);
       }
       break;
 
     case FG_O:
       if (prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
         // "uo" -> "un"
-        return replace_next_key(FG_N, next_keycode, record);
+        return replace_ongoing_key(FG_N, next_keycode, record);
       }
       break;
 

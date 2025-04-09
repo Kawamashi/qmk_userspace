@@ -151,7 +151,7 @@ void invoke_key(uint16_t keycode, keyrecord_t* record) {
   bkspc_countdown = 1;
 }
 
-void replace_next_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, keyrecord_t* record) {
+void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, keyrecord_t* record) {
   record->keycode = clever_keycode;
   *ongoing_keycode = clever_keycode;
   set_last_keycode(clever_keycode);
@@ -167,7 +167,7 @@ void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record
 
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
   process_word(keycodes, num_keycodes - 1, record);
-  replace_next_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
+  replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
 }
 
 
