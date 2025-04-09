@@ -37,7 +37,7 @@ void recent_keys_task(void) {
 }
 
 // Handles one event. Returns false if the key was appended to `recent`.
-uint16_t get_next_keycode(uint16_t keycode, keyrecord_t* record) {
+uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   uint8_t mods = get_mods() | get_oneshot_mods();
 
@@ -151,12 +151,10 @@ void invoke_key(uint16_t keycode, keyrecord_t* record) {
   bkspc_countdown = 1;
 }
 
-void replace_next_key(uint16_t clever_keycode, uint16_t* next_keycode, keyrecord_t* record) {
-  //store_keycode(new_keycode, record);
+void replace_next_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, keyrecord_t* record) {
   record->keycode = clever_keycode;
-  *next_keycode = clever_keycode;
+  *ongoing_keycode = clever_keycode;
   set_last_keycode(clever_keycode);
-  //set_last_keycode(*next_keycode);
   processingCK = true;
 }
 
@@ -167,9 +165,9 @@ void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record
   bkspc_countdown = num_keycodes;
 }
 
-void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* next_keycode, keyrecord_t* record) {
+void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
   process_word(keycodes, num_keycodes - 1, record);
-  replace_next_key(keycodes[num_keycodes - 1], next_keycode, record);
+  replace_next_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
 }
 
 
@@ -177,11 +175,11 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
 
   //if (record->event.pressed && !processingCK) {
   if (record->event.pressed) {
-    uint16_t next_keycode = get_next_keycode(keycode, record);
+    uint16_t ongoing_keycode = get_ongoing_keycode(keycode, record);
 
-    if (next_keycode != KC_NO) {
-      get_clever_keycode(&next_keycode, record);
-      store_keycode(next_keycode, record);
+    if (ongoing_keycode != KC_NO) {
+      get_clever_keycode(&ongoing_keycode, record);
+      store_keycode(ongoing_keycode, record);
     }
     //return true; // If no clever key was found, process keycode normally.
   } 
