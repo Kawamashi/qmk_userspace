@@ -246,9 +246,9 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       layer_off(_ODK);
       return finish_word((uint16_t[]) {FG_O, FG_ODK, FG_T}, 3, next_keycode, record);
 
-    case AGRV_SPC:
+/*     case AGRV_SPC:
       layer_off(_ODK);
-      return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, next_keycode, record);
+      return finish_word((uint16_t[]) {FG_AGR, KC_SPC}, 2, next_keycode, record); */
   }
 
   //return KC_NO; // Process next keycode normally

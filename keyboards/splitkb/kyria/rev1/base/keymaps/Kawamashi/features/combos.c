@@ -33,7 +33,8 @@ enum combos {
   PANIC,
   NUMWRD,
   ALTTAB,
-  CTRLALT
+  //CTRLALT,
+
 };
 
 const uint16_t PROGMEM del_combo_d[] = {FG_S, FG_N, COMBO_END};
@@ -50,7 +51,7 @@ const uint16_t PROGMEM help_combo[] = {FG_VIRG, FG_APOS, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {FG_EACU, FG_L, COMBO_END};
 const uint16_t PROGMEM numword_combo[] = {FG_S, FG_R, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {FG_D, FG_Y, COMBO_END};
-const uint16_t PROGMEM ctrlaFG_Combo[] = {FG_A, FG_I, FG_T, COMBO_END};
+//const uint16_t PROGMEM ctrlalt_Combo[] = {FG_A, FG_I, FG_T, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
@@ -67,7 +68,7 @@ combo_t key_combos[] = {
     [PANIC] = COMBO(panic_combo, RAZ),
     [NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
-    [CTRLALT] = COMBO(ctrlaFG_Combo, RCTL(RALT(KC_DEL)))
+    //[CTRLALT] = COMBO(ctrlalt_Combo, RCTL(RALT(KC_DEL)))
     };
 
 /* uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
@@ -120,13 +121,15 @@ bool process_combo_key_repress(uint16_t combo_index, combo_t *combo, uint8_t key
   switch (combo_index) {
       case ALTTAB:
           switch (keycode) {
-              case FG_Y:
-                  tap_code16(S(KC_TAB));
-                  return true;
-              case FG_D:
-                  tap_code(KC_TAB);
-                  return true;
+            case FG_Y:
+                tap_code16(S(KC_TAB));
+                return true;
+            case FG_D:
+                tap_code(KC_TAB);
+                return true;
           }
+          break;
+
   }
   return false;
 }
