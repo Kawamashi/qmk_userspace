@@ -37,7 +37,8 @@ bool isLetter(uint16_t keycode) {
 
 bool isSendStringMacro(uint16_t keycode) {
   switch (keycode) {
-    case AGRV_SPC:
+    //case AGRV_SPC:
+    //case CA_CED:
     case OU_GRV:
     case MAGIC:
       return true;
@@ -217,6 +218,9 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     case C(FG_Y):
       return C(FG_Z);
   }
+  if ((get_mods() | get_weak_mods()) & MOD_BIT(KC_ALGR)) {
+    return KC_SPC;
+  } 
 
   keycode = tap_hold_extractor(keycode);
   if (isLetter(keycode)) { return MAGIC; }

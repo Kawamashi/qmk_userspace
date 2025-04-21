@@ -66,7 +66,8 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 case FG_ECIR:
                 case OU_GRV:
                 case FG_CCED:
-                case AGRV_SPC:
+                //case CA_CED:
+                //case AGRV_SPC:
                 case KC_SPC:    // When space is added by Clever Keys
                 case FG_3PTS:
                 case CNL_ODK:

@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-bool clever_key_finder(uint16_t next_keycode, keyrecord_t* record);
+void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record);
 
 
 #ifdef __cplusplus
