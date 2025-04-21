@@ -101,12 +101,12 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       }
       break;
     
-    case FG_CCED:
+/*     case FG_CCED:
       if (!isLetter(*next_keycode)) {
         invoke_key(FG_A, record);
         set_last_keycode(*next_keycode);
       }
-      break;
+      break; */
   }
 
   
@@ -245,6 +245,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
     case OU_GRV:
       layer_off(_ODK);
       return finish_word((uint16_t[]) {FG_O, FG_ODK, FG_T}, 3, next_keycode, record);
+
+/*     case CA_CED:
+      layer_off(_ODK);
+      return finish_word((uint16_t[]) {FG_CCED, FG_A}, 2, next_keycode, record); */
 
 /*     case AGRV_SPC:
       layer_off(_ODK);

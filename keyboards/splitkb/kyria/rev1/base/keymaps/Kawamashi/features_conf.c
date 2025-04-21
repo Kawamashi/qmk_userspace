@@ -38,6 +38,7 @@ bool isLetter(uint16_t keycode) {
 bool isSendStringMacro(uint16_t keycode) {
   switch (keycode) {
     //case AGRV_SPC:
+    //case CA_CED:
     case OU_GRV:
     case MAGIC:
       return true;
