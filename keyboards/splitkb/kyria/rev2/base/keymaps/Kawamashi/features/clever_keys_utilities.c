@@ -161,7 +161,6 @@ void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, key
 void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
   for (int i = 0; i < num_keycodes; ++i) {
     process_key(keycodes[i], record);   // Better solution, if there is enought space in the chip.
-    //tap_code(keycodes[i]);
   }
   bkspc_countdown = num_keycodes;
 }

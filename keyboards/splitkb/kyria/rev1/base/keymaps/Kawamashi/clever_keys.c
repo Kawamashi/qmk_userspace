@@ -124,6 +124,9 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
 
     case MAGIC:
       switch (prev_keycode) {
+        case FG_U:
+          bkspc_countdown = 0;
+          return replace_ongoing_key(FG_I, next_keycode, record);
 
         case FG_T:
           invoke_key(FG_I, record);
@@ -138,18 +141,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
         
         case FG_P:
           return finish_word((uint16_t[]) {FG_L, FG_U, FG_S}, 3, next_keycode, record);
-
-        case FG_O:
-          return finish_word((uint16_t[]) {FG_N, FG_T}, 2, next_keycode, record);
         
         case FG_A:
-          if (isLetter(recent[RECENT_SIZE - 2])) {
-            // "ant"
-            return finish_word((uint16_t[]) {FG_N, FG_T}, 2, next_keycode, record);
-          } else {
-            // "avec"
-            return finish_word((uint16_t[]) {FG_V, FG_E, FG_C}, 3, next_keycode, record);
-          }
+          // "avec"
+          return finish_word((uint16_t[]) {FG_V, FG_E, FG_C}, 3, next_keycode, record);
         
         case FG_S:
           return finish_word((uint16_t[]) {FG_U, FG_R}, 2, next_keycode, record);
@@ -223,6 +218,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       //if (prev_keycode == FG_O && !isCaps) {
       if (prev_keycode == FG_O) {
         // "oa" -> "oi"
+        bkspc_countdown = 0;
         return replace_ongoing_key(FG_I, next_keycode, record);
       }
       break;
@@ -231,6 +227,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       //if (prev_keycode == FG_O && !isCaps && recent[RECENT_SIZE - 3] != FG_Q) {
       if (prev_keycode == FG_O && recent[RECENT_SIZE - 3] != FG_Q) {
         // "oi" -> "oa", for "keyboard"
+        bkspc_countdown = 0;
         return replace_ongoing_key(FG_A, next_keycode, record);
       }
       break;
@@ -238,6 +235,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
     case FG_O:
       if (prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
         // "uo" -> "un"
+        bkspc_countdown = 0;
         return replace_ongoing_key(FG_N, next_keycode, record);
       }
       break;
