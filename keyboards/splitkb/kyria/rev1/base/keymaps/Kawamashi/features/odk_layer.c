@@ -16,7 +16,7 @@
 
  #include "odk_layer.h"
 
- static uint16_t odk_keycode = KC_NO;
+//static uint16_t odk_keycode = KC_NO;
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
@@ -39,9 +39,9 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 del_oneshot_mods(MOD_MASK_SHIFT);
                 unregister_mods(MOD_MASK_SHIFT);
             }
-            layer_on(_ODK);
+            /*layer_on(_ODK);
             odk_keycode = KC_NO;
-            return false;
+            return false; */
 
         } else if (keycode == FG_ODK) {
             // Special behaviour of FR_ODK when shifted
@@ -56,7 +56,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             return true;
 
         } else if (IS_LAYER_ON(_ODK)) {
-            if (odk_keycode == KC_NO) { odk_keycode = keycode; }
+            //if (odk_keycode == KC_NO) { odk_keycode = keycode; }
                 //if (!IS_QK_USER(keycode)) { odk_keycode = keycode; }
 
             switch (keycode) {
@@ -95,10 +95,10 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 is_shifted = false;
             }
             //exit_odk = true;
-        } else {
-            odk_keycode = KC_NO;
+/*         } else {
+            odk_keycode = KC_NO; */
         }
-    } else {    // On release
+/*     } else {    // On release
         switch (keycode) {
             case OS_ODK:
             case FG_ODK:
@@ -109,14 +109,14 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                     layer_off(_ODK);
                     odk_keycode = KC_NO;
                 }
-        }
+        } */
     }
     return true;
 }
 
-void odk_layer_exit_check(uint16_t keycode) {
+/* void odk_layer_exit_check(uint16_t keycode) {
     if (keycode == odk_keycode) {
         layer_off(_ODK);
         odk_keycode = KC_NO;
     }
-}
+} */

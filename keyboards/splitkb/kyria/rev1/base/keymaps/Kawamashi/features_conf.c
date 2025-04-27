@@ -63,7 +63,7 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
 bool caps_word_press_user(uint16_t keycode) {
 
   // Caps Word shouldn't be applied with Alt-gr
-  // Managing underscore on alt gr + E/T.
+  // Managing underscore and slash on alt gr + E/T.
   // Underscore and slash must continue Caps Word, without shifting.
   if ((get_mods() & MOD_BIT(KC_ALGR))) {
     switch (keycode) {
@@ -96,10 +96,9 @@ bool caps_word_press_user(uint16_t keycode) {
     }
   }
 
-  // 
-
   // Keycodes that continue Caps Word, with shift applied.
-  if (isLetter(keycode)) {
+  // @ must be shifted, bc of CleverKeys using it.
+  if (isLetter(keycode) || isSendStringMacro(keycode) || keycode == FG_AROB) {
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
   } 

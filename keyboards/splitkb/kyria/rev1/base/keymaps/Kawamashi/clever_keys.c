@@ -128,10 +128,20 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           bkspc_countdown = 0;
           return replace_ongoing_key(FG_I, next_keycode, record);
 
-        case FG_T:
+        case FG_EACU:
+          bkspc_countdown = 0;
+          return replace_ongoing_key(FG_I, next_keycode, record);
+
+        case FG_VIRG:
+          // éa SFB
+          bkspc_countdown = 0;
+          return replace_ongoing_key(FG_A, next_keycode, record);
+
+        case FG_S:
           invoke_key(FG_I, record);
         case FG_I:
-          return finish_word((uint16_t[]) {FG_O, FG_N}, 2, next_keycode, record);
+          return finish_word((uint16_t[]) {FG_O, FG_T}, 2, next_keycode, record);
+          //return finish_word((uint16_t[]) {FG_O, FG_N}, 2, next_keycode, record);
         
         case FG_C:
           return finish_word((uint16_t[]) {FG_APOS, FG_E, FG_S, FG_T}, 4, next_keycode, record);
@@ -146,8 +156,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           // "avec"
           return finish_word((uint16_t[]) {FG_V, FG_E, FG_C}, 3, next_keycode, record);
         
-        case FG_S:
-          return finish_word((uint16_t[]) {FG_U, FG_R}, 2, next_keycode, record);
+        case FG_N:
+          // sc SFB
+          bkspc_countdown = 0;
+          return replace_ongoing_key(FG_L, next_keycode, record);
         
         case FG_B:
           process_word((uint16_t[]) {FG_O, FG_N, FG_J}, 3, record);
@@ -232,13 +244,13 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       }
       break;
 
-    case FG_O:
+/*     case FG_O:
       if (prev_keycode == FG_U && recent[RECENT_SIZE - 2] != FG_Q) {
         // "uo" -> "un"
         bkspc_countdown = 0;
         return replace_ongoing_key(FG_N, next_keycode, record);
       }
-      break;
+      break; */
 
     case OU_GRV:
       layer_off(_ODK);

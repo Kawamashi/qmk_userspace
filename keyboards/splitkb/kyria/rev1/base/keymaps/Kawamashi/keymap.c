@@ -115,7 +115,7 @@ void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
   //if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
   os4a_layer_exit_check();
   numword_exit_check();
-  odk_layer_exit_check(keycode);
+  //odk_layer_exit_check(keycode);
   end_CK(record);
 }
 
@@ -223,10 +223,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, _______, FG_ASTX, FG_EGAL, KC_7,    FG_PERC,                                     S(FG_ACIR), _______, FG_PLUS, FG_MOIN, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    _______,                                     FG_CARN,    MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, _______, KC_5,    _______, _______, _______, _______, _______, _______,    KC_9,    KC_6,    _______, FG_ODK, _______,
-                                  _______, _______, KC_PDOT, KC_0   , NUMWORD, LT_REPT, KC_SPC,  _______,    _______, _______
+       _______, _______, FG_MOIN, FG_PLUS, KC_7,    S(FG_ACIR),                                        FG_PERC, _______, FG_EGAL, FG_ASTX, _______, _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    FG_CARN,                                           _______, MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
+       _______, _______, _______, _______, KC_5,    _______,    _______, _______,    _______, _______, _______, KC_9,    KC_6,    _______, FG_ODK,  _______,
+                                  _______, _______, KC_PDOT,    KC_0   , LT_NUMWORD, LT_REPT, KC_SPC,  _______, _______, _______
      ),
 
 
@@ -247,7 +247,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_ODK] = LAYOUT(
        _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
        _______, OU_GRV,  _______, _______, FG_3PTS, _______,                                     _______, FG_J,    FG_D,    FG_AROB, _______, _______,
-       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, FG_CCED, _______, FG_K,    CNL_ODK, _______,
+       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, FG_K,    CNL_ODK, _______,
                                   _______, _______, _______, _______, FG_ECIR, _______, _______, _______, _______, _______
      ),
 

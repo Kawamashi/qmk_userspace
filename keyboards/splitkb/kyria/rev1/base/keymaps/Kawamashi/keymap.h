@@ -68,22 +68,23 @@ enum custom_keycodes {
   OS_RALT,
   OS_LALT,
   OS_WIN,
-  OS_ODK,
+  //OS_ODK,
   CNL_ODK
 };
 
 // Layer taps
 #define LT_SPC ALGR_T(KC_SPC)
 #define LT_E ALGR_T(FG_E)
-#define LT_REPT LT(_NUMBERS, KC_0)
-#define LT_MGC LT(_SHORTNAV, KC_0)
+#define LT_REPT LT(_NUMBERS, KC_1)
+#define LT_MGC LT(_SHORTNAV, KC_1)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
 #define TG_APOD TG(_APOS_DR)
 #define MT_SLSH SFT_T(FG_SLSH)
 #define MT_1 SFT_T(KC_1)
+#define LT_NUMWORD LT(_SHORTNAV, NUMWORD)
 #define E_CIRC S(FG_0)
-//#define OS_ODK OSL(_ODK)
+#define OS_ODK OSL(_ODK)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)
