@@ -30,7 +30,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             // It's timerless, to avoid problems when rolling with an other key, when shift is on.
             // Custom behaviour when alt-gr
             if (mods & MOD_BIT(KC_ALGR)) {
-                tap_code16(ALGR(PG_ODK));
+                tap_code16(ALGR(FG_ODK));
                 return false;
             }
             is_shifted = mods & MOD_MASK_SHIFT;
@@ -43,7 +43,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             odk_keycode = KC_NO;
             return false; */
 
-        } else if (keycode == PG_ODK) {
+        } else if (keycode == FG_ODK) {
             // Special behaviour of FR_ODK when shifted
             // Shift must apply to the next keycode
 /*             is_shifted = mods & MOD_MASK_SHIFT;
@@ -60,16 +60,16 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 //if (!IS_QK_USER(keycode)) { odk_keycode = keycode; }
 
             switch (keycode) {
-                case PG_AROB:
-                case PG_K:
-                case PG_J:
-                case PG_ECIR:
+                case FG_AROB:
+                case FG_K:
+                case FG_J:
+                case FG_ECIR:
                 case OU_GRV:
-                case PG_CCED:
+                case FG_CCED:
                 //case CA_CED:
                 //case AGRV_SPC:
                 case KC_SPC:    // When space is added by Clever Keys
-                case PG_3PTS:
+                case FG_3PTS:
                 case CNL_ODK:
                     break;
           
@@ -80,12 +80,12 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                         del_oneshot_mods(MOD_MASK_SHIFT);
                         unregister_mods(MOD_MASK_SHIFT);
                     } */
-                    tap_code(PG_ODK);
+                    tap_code(FG_ODK);
             }
             if (!IS_LAYER_ON(_APOS_DR)) {
                 switch (keycode) {
-                    case PG_M:
-                    case PG_C:
+                    case FG_M:
+                    case FG_L:
                         is_shifted = true;
                 }
             }
@@ -101,7 +101,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 /*     } else {    // On release
         switch (keycode) {
             case OS_ODK:
-            case PG_ODK:
+            case FG_ODK:
                 break;
             default:
                 //if (exit_odk) { odk_layer_exit_check(); }

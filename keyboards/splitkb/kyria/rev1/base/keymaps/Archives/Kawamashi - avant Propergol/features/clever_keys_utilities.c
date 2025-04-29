@@ -74,19 +74,19 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   // Handles custom keycodes.
   if (isSendStringMacro(keycode)) { return keycode; }
-  //if (keycode == PG_CCED) { return PG_CCED; }
+  //if (keycode == FG_CCED) { return FG_CCED; }
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
-      case PG_K:
-      case PG_J:
-      case PG_AROB:
-      case PG_ECIR:
-      case PG_CCED:
-      case PG_3PTS:
+      case FG_K:
+      case FG_J:
+      case FG_AROB:
+      case FG_ECIR:
+      case FG_CCED:
+      case FG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.
         return keycode;
-/*       case PG_D:
-        return PG_CCED; */
+/*       case FG_C:
+        return FG_CCED; */
       default:
         return KC_NO;
     }
@@ -98,7 +98,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
-    case PG_E:
+    case FG_E:
 
       if (isLetter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
           // Shift doesn't matter for letters.

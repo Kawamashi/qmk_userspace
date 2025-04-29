@@ -138,9 +138,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-      KC_NO, PG_POIN,  PG_EACU, PG_U, PG_P,   PG_B,                                   PG_V,   PG_M,    PG_C, PG_APOS, PG_X,   KC_NO,
-      KC_NO, PG_O,  PG_A,    PG_I,    PG_N,   PG_VIRG,                                PG_G,   PG_T,    PG_S, PG_R,    PG_L,   KC_NO,
-      KC_NO, PG_Q,  PG_Z,    PG_Y,    PG_H,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W,    OS_ODK, KC_NO,
+      KC_NO, FG_X,  FG_VIRG, FG_EACU, FG_P,   FG_B,                                   FG_F,   FG_M,    FG_L, FG_APOS, FG_POIN,  KC_NO,
+      KC_NO, FG_O,  FG_A,    FG_I,    FG_T,   FG_G,                                   FG_V,   FG_S,    FG_N, FG_R,    FG_U,     KC_NO,
+      KC_NO, FG_Q,  FG_Z,    FG_Y,    FG_D,   KC_NO,  KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  FG_C,    FG_H, FG_W,    OS_ODK,  KC_NO,
                              KC_NO,   KC_SPC, L_OS4A, LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
     ),
 
@@ -158,7 +158,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //  *                        `----------------------------------'  `----------------------------------'
 //  */
     [_APOS_DR] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, PG_APOD, _______, _______,
+      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, FG_APOD, _______, _______,
       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
@@ -201,7 +201,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  TG_APOD, KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, PG_ODK,  KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, FG_ODK,  KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO
     ),
@@ -223,9 +223,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, _______, PG_MOIN, PG_PLUS, KC_7,    S(PG_ACIR),                                        PG_PERC, _______, PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_CARN,                                           _______, MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, _______, KC_5,    _______,    _______, _______,    _______, _______, _______, KC_9,    KC_6,    _______, PG_ODK,  _______,
+       _______, _______, FG_MOIN, FG_PLUS, KC_7,    S(FG_ACIR),                                        FG_PERC, _______, FG_EGAL, FG_ASTX, _______, _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    FG_CARN,                                           _______, MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
+       _______, _______, _______, _______, KC_5,    _______,    _______, _______,    _______, _______, _______, KC_9,    KC_6,    _______, FG_ODK,  _______,
                                   _______, _______, KC_PDOT,    KC_0   , LT_NUMWORD, LT_REPT, KC_SPC,  _______, _______, _______
      ),
 
@@ -246,9 +246,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ODK] = LAYOUT(
        _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-       _______, OU_GRV,  _______, _______, PG_3PTS, _______,                                     _______, PG_J,    PG_H,    PG_AROB, _______, _______,
-       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, PG_K,    CNL_ODK, _______,
-                                  _______, _______, _______, _______, PG_ECIR, _______, _______, _______, _______, _______
+       _______, OU_GRV,  _______, _______, FG_3PTS, _______,                                     _______, FG_J,    FG_D,    FG_AROB, _______, _______,
+       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, FG_K,    CNL_ODK, _______,
+                                  _______, _______, _______, _______, FG_ECIR, _______, _______, _______, _______, _______
      ),
 
 
@@ -267,9 +267,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      _______, KC_BSPC, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
-      _______, C(PG_A), C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
-      _______, KC_SPC,  KC_SPC,       KC_MUTE,    C(PG_Z),     C(PG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
+      _______, KC_BSPC, LWIN(KC_TAB), LWIN(FG_V), RCS(FG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
+      _______, C(FG_A), C(FG_X),      C(FG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
+      _______, KC_SPC,  KC_SPC,       KC_MUTE,    C(FG_Z),     C(FG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(FG_W),    _______, _______,
                                       _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
     ),
 

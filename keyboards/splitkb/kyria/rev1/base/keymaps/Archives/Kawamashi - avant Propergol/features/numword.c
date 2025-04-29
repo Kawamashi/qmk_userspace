@@ -55,23 +55,23 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
         // Numpad keycodes
          case KC_1 ... KC_0:
          case KC_PDOT:
-         case PG_X:
-         //case PG_EACU:
-         case PG_MOIN:
-         case PG_ASTX: 
-         case PG_PLUS:
-         case PG_TLSH:
-         case PG_ACIR:
-         case PG_CARN:
+         case FG_POIN:
+         //case FG_VIRG:
+         case FG_MOIN:
+         case FG_ASTX: 
+         case FG_PLUS:
+         case FG_SLSH:
+         case FG_ACIR:
+         case FG_CARN:
 
         // Misc
         case KC_BSPC:
-        case PG_ODK:   // Not to exit Numword when chording it with ODK
+        case FG_ODK:   // Not to exit Numword when chording it with ODK
         case NUMWORD:   // For the combo NUMWORD to work
 
 /*         
-        case PG_EGAL:
-        case PG_BSLS:*/
+        case FG_EGAL:
+        case FG_BSLS:*/
             return false;
     }
 

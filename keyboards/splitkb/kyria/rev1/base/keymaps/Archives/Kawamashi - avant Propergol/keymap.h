@@ -18,7 +18,7 @@
 
 #include QMK_KEYBOARD_H
 
-#include "keymap_french_propergol.h"
+#include "keymap_french_frgo.h"
 #include "features_conf.h"
 #include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
@@ -74,13 +74,13 @@ enum custom_keycodes {
 
 // Layer taps
 #define LT_SPC ALGR_T(KC_SPC)
-#define LT_E ALGR_T(PG_E)
+#define LT_E ALGR_T(FG_E)
 #define LT_REPT LT(_NUMBERS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
 #define TG_APOD TG(_APOS_DR)
-#define MT_SLSH SFT_T(PG_TLSH)
+#define MT_SLSH SFT_T(FG_SLSH)
 #define MT_1 SFT_T(KC_1)
 #define LT_NUMWORD LT(_SHORTNAV, NUMWORD)
 #define E_CIRC S(FG_0)
