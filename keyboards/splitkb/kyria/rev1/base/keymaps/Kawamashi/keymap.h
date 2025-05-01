@@ -32,7 +32,7 @@
 
 enum layers {
     _BASE = 0,
-    _APOS_DR,
+    //_APOS_DR,
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
@@ -69,7 +69,8 @@ enum custom_keycodes {
   OS_LALT,
   OS_WIN,
   //OS_ODK,
-  CNL_ODK
+  CNL_ODK,
+  TG_APOS
 };
 
 // Layer taps
@@ -79,8 +80,8 @@ enum custom_keycodes {
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
-#define TG_APOD TG(_APOS_DR)
-#define MT_SLSH SFT_T(PG_TLSH)
+//#define TG_APOD TG(_APOS_DR)
+#define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
 #define LT_NUMWORD LT(_SHORTNAV, NUMWORD)
 #define E_CIRC S(FG_0)

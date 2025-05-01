@@ -22,7 +22,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern bool is_odk_shifted;
+
+extern bool is_apos_dr;
 
 bool process_macros(uint16_t keycode, keyrecord_t *record);
 

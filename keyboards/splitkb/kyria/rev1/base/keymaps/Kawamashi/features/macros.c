@@ -16,7 +16,7 @@
 
 #include "macros.h"
 
-bool is_odk_shifted = false;
+bool is_apos_dr = false;
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
     //const uint8_t mods = get_mods();
@@ -65,6 +65,10 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                 // Deactivating Caps Lock when Caps Word activates.
                 if (is_caps_lock_on()) { tap_code(KC_CAPS); }
                 caps_word_toggle();
+                return false;
+
+            case TG_APOS:
+                is_apos_dr = !is_apos_dr;
                 return false;
         }
     }

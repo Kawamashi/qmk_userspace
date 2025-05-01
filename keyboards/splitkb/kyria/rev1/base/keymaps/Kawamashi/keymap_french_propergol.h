@@ -24,7 +24,7 @@
 
 /*
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │   │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │ 0 │ / │ * │       │
+ * │   │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │ 0 │ / │ ' │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
  * │     │ . │ É │ U │ P │ B │ V │ M │ C │ ' │ X │ = │ + │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
@@ -37,7 +37,7 @@
  */
 
 // Row 1
-#define PG_CCED KC_GRV  // ç
+//#define PG_CCED KC_GRV  // ç
 #define FG_1 KC_1       // 1
 #define FG_2 KC_2       // 2
 #define FG_3 KC_3       // 3
@@ -48,8 +48,8 @@
 #define FG_8 KC_8       // 8
 #define FG_9 KC_9       // 9
 #define FG_0 KC_0       // 0
-#define PG_TLSH KC_MINS // /
-#define PG_ASTX KC_EQL  // *
+#define PG_SLSH KC_MINS // /
+#define PG_APOD KC_EQL  // *
 
 // Row 2
 #define PG_POIN KC_Q    // .
@@ -77,7 +77,7 @@
 #define PG_R    KC_L    // R
 #define PG_L    KC_SCLN // L
 #define PG_MOIN KC_QUOT // -
-#define PG_APOD KC_NUHS // '
+//#define PG_APOD KC_NUHS // '
 
 // Row 4
 #define PG_E    KC_NUBS // E
@@ -107,8 +107,12 @@
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
 
-// Row 3
-#define PG_3PTS S(FG_0) // …
+// Row 1
+#define PG_DLR S(KC_4)       // $
+#define PG_ASTX S(KC_MINS)   // *
+
+ // Row 3
+//#define PG_3PTS S(FG_0) // …
 
 // Row 2
 #define PG_EXCL S(PG_APOS) // !
@@ -127,7 +131,7 @@
 
 /* AltGr symbols
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │   │ ₁ │ ₂ │ ₃ │ ₄ │ ₅ │ ₆ │ ₇ │ ₈ │ ₉ │ ₀ │ à │ ê │       │
+ * │ … │ ₁ │ ₂ │ ₃ │ ₄ │ ₅ │ ₆ │ ₇ │ ₈ │ ₉ │ ₀ │ à │ ê │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
  * │     │ ^ │ ! │ = │ $ │ % │ # │ ; │ ' │ ? │ : │   │   │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
@@ -141,14 +145,15 @@
 
 
 // Row 1
-#define PG_AGR ALGR(PG_TLSH)
+#define PG_3PTS ALGR(KC_GRV)  // …
+#define PG_AGR ALGR(PG_SLSH)
 #define PG_ECIR ALGR(PG_ASTX)
 
 // Row 2
 #define PG_ACIR ALGR(PG_POIN)    // ^
 //#define PG_EXCL ALGR(PG_EACU) // !
 //#define PG_EGAL ALGR(PG_U) // =
-#define PG_DLR  ALGR(PG_P)    // $
+//#define PG_DLR  ALGR(PG_P)    // $
 #define PG_PERC ALGR(PG_B)    // %
 #define PG_HASH ALGR(PG_V)    // #
 #define PG_PVIR ALGR(PG_M)    // ;
@@ -158,7 +163,7 @@
 // Row 3
 /* #define PG_ASTX ALGR(PG_O)    // *
 #define PG_PLUS ALGR(PG_A)    // +
-#define PG_TLSH ALGR(PG_N)    // /
+#define PG_SLSH ALGR(PG_N)    // /
 #define PG_MOIN ALGR(PG_I)    // - */
 #define PG_BSLS ALGR(PG_VIRG)    // '\'
 #define PG_GRV  ALGR(PG_G)    // `
@@ -212,7 +217,7 @@
 #define PG_HDAG S(ALGR(PG_PLUS)) // ‡
 // Row 3
 #define PG_MACB S(ALGR(PG_F))    // ˍ (dead)
-#define PG_TQRT S(ALGR(PG_TLSH)) // √
+#define PG_TQRT S(ALGR(PG_SLSH)) // √
 #define PG_QRTR S(ALGR(PG_ASTX)) // ¼
 // Row 4
 #define PG_VIRGEQL S(ALGR(PG_INF)) // ≥

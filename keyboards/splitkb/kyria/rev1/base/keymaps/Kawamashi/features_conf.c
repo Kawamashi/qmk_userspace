@@ -23,6 +23,7 @@ bool isLetter(uint16_t keycode) {
     case KC_A ... KC_F:
     case KC_H ... KC_N:
     case KC_R ... KC_Z:
+    case PG_L:
     case PG_X:
     case PG_E:
     //case PG_AGR:
@@ -136,7 +137,7 @@ bool os4a_layer_changer(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case TG_APOD:
+    //case TG_APOD:
       return true;
     default:
       return false;
@@ -173,9 +174,9 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
   // Autrement, la touche typo est ignorée par les Callum mods.
   // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  //uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
   //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
-  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
+  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
 
   switch (keycode) {
     //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté

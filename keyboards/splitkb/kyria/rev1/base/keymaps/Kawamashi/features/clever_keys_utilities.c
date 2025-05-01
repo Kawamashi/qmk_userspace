@@ -81,7 +81,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
       case PG_J:
       case PG_AROB:
       case PG_ECIR:
-      case PG_CCED:
+      //case PG_CCED:
       case PG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.
         return keycode;

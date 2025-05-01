@@ -63,9 +63,9 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 case PG_AROB:
                 case PG_K:
                 case PG_J:
-                case PG_ECIR:
+                //case PG_ECIR:
                 case OU_GRV:
-                case PG_CCED:
+                //case PG_CCED:
                 //case CA_CED:
                 //case AGRV_SPC:
                 case KC_SPC:    // When space is added by Clever Keys
@@ -82,7 +82,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                     } */
                     tap_code(PG_ODK);
             }
-            if (!IS_LAYER_ON(_APOS_DR)) {
+            if (!is_apos_dr) {
                 switch (keycode) {
                     case PG_M:
                     case PG_C:

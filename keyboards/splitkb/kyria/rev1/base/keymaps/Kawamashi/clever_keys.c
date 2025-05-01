@@ -38,7 +38,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
               case PG_EXCL:
               case PG_QUES:
               case PG_3PTS:
-              case PG_X:
+              case PG_POIN:
                 // Add OS shift at the beginning of sentences.
                 if (!is_caps_lock_on()) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
                 break;
@@ -57,25 +57,25 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
         case PG_I:
         case PG_A:
         case PG_O:
-        case PG_U:
+        case PG_EACU:
         case PG_APOS:
-          invoke_key(PG_L, record);
+          invoke_key(PG_U, record);
           set_last_keycode(*next_keycode);
           break;
 
         // Raccourci pour "quelq"
         case PG_Q:
-          process_word((uint16_t[]) {PG_L, PG_E, PG_C}, 3, record);
+          process_word((uint16_t[]) {PG_U, PG_E, PG_L}, 3, record);
           break;
 
         // Raccourci pour "quoi", ça évite un aller-retour sur la main gauche.
         case PG_Z:
-          finish_word((uint16_t[]) {PG_L, PG_O, PG_I}, 3, next_keycode, record);
+          finish_word((uint16_t[]) {PG_U, PG_O, PG_I}, 3, next_keycode, record);
           break;
 
         // Raccourci pour "quand"
-        case PG_H:
-          process_word((uint16_t[]) {PG_L, PG_A, PG_S}, 3, record);
+        case PG_D:
+          process_word((uint16_t[]) {PG_U, PG_A, PG_N}, 3, record);
           set_last_keycode(*next_keycode);
           break;
       }
@@ -153,6 +153,14 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           bkspc_countdown = 0;
           return replace_ongoing_key(PG_VIRG, next_keycode, record);
 
+        case PG_P:
+          // ph SFB
+          bkspc_countdown = 0;
+          return replace_ongoing_key(PG_H, next_keycode, record);
+
+        case PG_Q:
+          return finish_word((uint16_t[]) {PG_U, PG_EACU}, 2, next_keycode, record);
+
         case PG_T:
           invoke_key(PG_I, record);
         case PG_I:
@@ -207,17 +215,17 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           case PG_P:
             // "p@" -> "peut-être"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_E, PG_L, PG_N, PG_MOIN, PG_ODK, PG_O, PG_N, PG_R, PG_E}, 9, next_keycode, record);
+            return finish_word((uint16_t[]) {PG_E, PG_U, PG_T, PG_MOIN, PG_ODK, PG_O, PG_T, PG_R, PG_E}, 9, next_keycode, record);
 
           case PG_A:
             // "a@" -> "aujourd'hui"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_L, PG_J, PG_O, PG_L, PG_R, PG_H, PG_APOS, PG_F, PG_L, PG_I}, 10, next_keycode, record);
+            return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, next_keycode, record);
           
           case PG_B:
             // "b@" -> "beaucoup"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_E, PG_A, PG_L, PG_D, PG_O, PG_L, PG_P}, 7, next_keycode, record);
+            return finish_word((uint16_t[]) {PG_E, PG_A, PG_U, PG_C, PG_O, PG_U, PG_P}, 7, next_keycode, record);
           
 /*           case PG_E:
             // "e@" -> "est-ce qu"
@@ -235,9 +243,17 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
     case PG_Q:
       if (prev_keycode == PG_J) {
           // "jq" -> "jusqu"
-          process_word((uint16_t[]) {PG_L, PG_T}, 2, record);
+          process_word((uint16_t[]) {PG_U, PG_S}, 2, record);
           set_last_keycode(*next_keycode);
           return;
+      }
+      break;
+
+      case PG_M:
+      if (prev_keycode == PG_C) {
+          // "cm" -> "ch"
+          bkspc_countdown = 0;
+          return replace_ongoing_key(PG_H, next_keycode, record);
       }
       break;
 
@@ -262,6 +278,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
     case OU_GRV:
       layer_off(_ODK);
       return finish_word((uint16_t[]) {PG_O, PG_ODK, PG_N}, 3, next_keycode, record);
+
+    case PG_APOS:
+      if (is_apos_dr) { return replace_ongoing_key(PG_APOD, next_keycode, record); }
+      break;
 
 /*     case CA_CED:
       layer_off(_ODK);

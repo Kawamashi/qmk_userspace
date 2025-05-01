@@ -60,7 +60,7 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
          case PG_MOIN:
          case PG_ASTX: 
          case PG_PLUS:
-         case PG_TLSH:
+         case PG_SLSH:
          case PG_ACIR:
          case PG_CARN:
 
