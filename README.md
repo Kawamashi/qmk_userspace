@@ -4,6 +4,16 @@ This is a template repository which allows for an external set of QMK keymaps to
 
 ![kb](https://github.com/Kawamashi/qmk_userspace/blob/main/GMKyria-min.jpg)
 
+## Custom features
+* [Positional Tap-Hold](#positional-tap-hold)
+* [One-shot for All](#one-shot-for-all-mods) modifiers
+
+&nbsp;</br> &nbsp;</br>
+
+# Positional Tap-Hold
+
+blabla
+
 ## Howto configure your build targets
 
 1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
