@@ -72,14 +72,17 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
     switch (keycode) {
 
-/*         case ALGR_T(FG_LACL):
-            return process_tap_hold(FG_LACL, record); */
+/*         case ALGR_T(PG_CACL):
+            return process_tap_hold(PG_CACL, record); */
 
         case RCTL_T(FEN_B):
             return process_tap_hold(LWIN(KC_DOWN), record);
 
         case SFT_T(COPY):
-            return process_tap_hold(C(FG_C), record);
+            return process_tap_hold(C(PG_C), record);
+
+        case LT_NUMWORD:
+            return process_numword(NUMWORD, record);
 
         case LT_REPT:
             repeat_key_invoke(&record->event);

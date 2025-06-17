@@ -14,9 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- #include "odk_layer.h"
+#include "odk_layer.h"
 
- static uint16_t odk_keycode = KC_NO;
+//static uint16_t odk_keycode = KC_NO;
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
@@ -29,94 +29,61 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             // Handle the custom OSL that go with this feature
             // It's timerless, to avoid problems when rolling with an other key, when shift is on.
             // Custom behaviour when alt-gr
-            if (mods & MOD_BIT(KC_ALGR)) {
-                tap_code16(ALGR(FG_ODK));
+/*             if (mods & MOD_BIT(KC_ALGR)) {
+                tap_code16(ALGR(PG_ODK));
                 return false;
-            }
+            } */
             is_shifted = mods & MOD_MASK_SHIFT;
             if (is_shifted) {
                 del_weak_mods(MOD_MASK_SHIFT);
                 del_oneshot_mods(MOD_MASK_SHIFT);
                 unregister_mods(MOD_MASK_SHIFT);
             }
-            layer_on(_ODK);
-            odk_keycode = KC_NO;
-            return false;
 
-        } else if (keycode == FG_ODK) {
+        } else if (keycode == PG_ODK) {
             // Special behaviour of FR_ODK when shifted
             // Shift must apply to the next keycode
-/*             is_shifted = mods & MOD_MASK_SHIFT;
-            if (is_shifted) {
-                del_weak_mods(MOD_MASK_SHIFT);
-                del_oneshot_mods(MOD_MASK_SHIFT);
-                unregister_mods(MOD_MASK_SHIFT);
-            } */
-            //tap_code(FR_ODK);
             return true;
 
         } else if (IS_LAYER_ON(_ODK)) {
-            if (odk_keycode == KC_NO) { odk_keycode = keycode; }
-                //if (!IS_QK_USER(keycode)) { odk_keycode = keycode; }
-
             switch (keycode) {
-                case FG_AROB:
-                case FG_K:
-                case FG_J:
-                case FG_ECIR:
+                case PG_3PTS:   // For Clever Keys
+                case PG_AROB:
+                case PG_K:
+                case PG_J:
+                //case PG_ECIR:
+                case J_APOS:
                 case OU_GRV:
-                case FG_CCED:
-                //case CA_CED:
-                //case AGRV_SPC:
+                //case PG_CCED:
+
                 case KC_SPC:    // When space is added by Clever Keys
-                case FG_3PTS:
+                
                 case CNL_ODK:
                     break;
           
                 default:
-/*                     is_shifted = mods & MOD_MASK_SHIFT;
-                    if (is_shifted) {
-                        del_weak_mods(MOD_MASK_SHIFT);
-                        del_oneshot_mods(MOD_MASK_SHIFT);
-                        unregister_mods(MOD_MASK_SHIFT);
-                    } */
-                    tap_code(FG_ODK);
+                    tap_code(PG_ODK);
             }
-            if (!IS_LAYER_ON(_APOS_DR)) {
+            if (!is_apos_dr) {
                 switch (keycode) {
-                    case FG_M:
-                    case FG_L:
+                    case PG_M:
+                    case PG_C:
                         is_shifted = true;
                 }
             }
             if (is_shifted) {
+                is_shifted = false;
                 //set_mods(mods);
                 set_oneshot_mods(MOD_BIT(KC_LSFT));
-                is_shifted = false;
             }
-            //exit_odk = true;
-        } else {
-            odk_keycode = KC_NO;
-        }
-    } else {    // On release
-        switch (keycode) {
-            case OS_ODK:
-            case FG_ODK:
-                break;
-            default:
-                //if (exit_odk) { odk_layer_exit_check(); }
-                if (keycode == odk_keycode) {
-                    layer_off(_ODK);
-                    odk_keycode = KC_NO;
-                }
         }
     }
     return true;
 }
 
-void odk_layer_exit_check(uint16_t keycode) {
+/* void odk_layer_exit_check(uint16_t keycode) {
     if (keycode == odk_keycode) {
         layer_off(_ODK);
         odk_keycode = KC_NO;
     }
-}
+} */

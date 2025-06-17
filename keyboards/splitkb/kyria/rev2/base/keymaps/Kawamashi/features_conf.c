@@ -20,13 +20,14 @@ bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
 bool isLetter(uint16_t keycode) {
   switch (keycode) {
-    case KC_A ... KC_N:
-    case KC_Q ... KC_V:
-    case KC_X ... KC_Z:
-    case FG_U:
-    case FG_E:
-    case FG_AGR:
-    case FG_ECIR:
+    case KC_A ... KC_F:
+    case KC_H ... KC_N:
+    case KC_R ... KC_Z:
+    case PG_L:
+    case PG_X:
+    case PG_E:
+    //case PG_AGR:
+    //case PG_ECIR:
     case KC_GRV ... KC_DOT:
       return true;
 
@@ -39,7 +40,10 @@ bool isSendStringMacro(uint16_t keycode) {
   switch (keycode) {
     //case AGRV_SPC:
     //case CA_CED:
+    case L_APOS:
+    case D_APOS:
     case OU_GRV:
+    case J_APOS:
     case MAGIC:
       return true;
     
@@ -63,12 +67,12 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
 bool caps_word_press_user(uint16_t keycode) {
 
   // Caps Word shouldn't be applied with Alt-gr
-  // Managing underscore on alt gr + E/T.
+  // Managing underscore and slash on alt gr + E/T.
   // Underscore and slash must continue Caps Word, without shifting.
   if ((get_mods() & MOD_BIT(KC_ALGR))) {
     switch (keycode) {
-      case FG_E:
-      case FG_T:
+      case PG_E:
+      case PG_N:
         return true;
       default:
         return false;
@@ -77,44 +81,44 @@ bool caps_word_press_user(uint16_t keycode) {
 
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
-      case FG_VIRG:
+      case PG_EACU:
         add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
         return true;
-      case FG_I:
-      case FG_H:
+      case PG_I:
+      case PG_F:
         return true;
-      case FG_U:
-      case FG_D:
-      case FG_G:
-      case FG_B:
-      case FG_F:
-      case FG_M:
-      case FG_L:
-      case FG_S:
-      case FG_N:
+      case PG_L:
+      case PG_H:
+      case PG_VIRG:
+      case PG_B:
+      case PG_V:
+      case PG_M:
+      case PG_C:
+      case PG_T:
+      case PG_S:
         return false;
     }
   }
 
-  // 
-
   // Keycodes that continue Caps Word, with shift applied.
-  if (isLetter(keycode)) {
+  // @ must be shifted, bc of CleverKeys using it.
+  if (isLetter(keycode) || isSendStringMacro(keycode) || keycode == PG_AROB) {
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
   } 
 
   switch (keycode) {
     // Keycodes that continue Caps Word, without shifting.
-    case FG_ODK:
-    //case FG_GRV:
-    case FG_MOIN:
+    case PG_ODK:
+    //case PG_GRV:
+    case PG_UNDS:
+    case PG_MOIN:
     case KC_KP_1 ... KC_KP_0:
     case KC_LEFT:
     case KC_RIGHT:
     case KC_BSPC:
     case KC_DEL:
-    case FG_APOS:
+    case PG_APOS:
       return true;
 
     default:
@@ -137,7 +141,7 @@ bool os4a_layer_changer(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case TG_APOD:
+    //case TG_APOD:
       return true;
     default:
       return false;
@@ -174,9 +178,9 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
   // Autrement, la touche typo est ignorée par les Callum mods.
   // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  //uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
   //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
-  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
+  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
 
   switch (keycode) {
     //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
@@ -190,7 +194,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case FG_ODK:
+    case PG_ODK:
         return true;
     default:
         return false;
@@ -213,17 +217,17 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
   switch (keycode) {
-    case C(FG_Z):
-      return C(FG_Y);
-    case C(FG_Y):
-      return C(FG_Z);
+    case C(PG_Z):
+      return C(PG_Y);
+    case C(PG_Y):
+      return C(PG_Z);
   }
-  if ((get_mods() | get_weak_mods()) & MOD_BIT(KC_ALGR)) {
+/*   if ((get_mods() | get_weak_mods()) & MOD_BIT(KC_ALGR)) {
     return KC_SPC;
-  } 
+  }  */
 
   keycode = tap_hold_extractor(keycode);
-  if (isLetter(keycode)) { return MAGIC; }
+  if (isLetter(keycode) || keycode == PG_APOS) { return MAGIC; }
 
   return KC_TRNS;  // Defer to default definitions.
 }

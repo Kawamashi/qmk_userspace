@@ -37,6 +37,7 @@ enum layers {
     _L_MODS,
     _R_MODS,
     _ODK,
+    _SYMBOLS,
     _NUMBERS,
     _SHORTNAV,
     _FUNCAPPS,
@@ -50,18 +51,14 @@ enum custom_keycodes {
   OS4A,
   RAZ,
   CAPSWORD,
-  //AGRV_SPC,
   OU_GRV,
+  //J_APOS,
   //E_CIRC,
 /*  I_CIRC,
   A_CIRC,
   O_CIRC,
   U_CIRC,
-  I_TREM,
-  CA_CED,
-   CIRC,
-  TILDE,
-  GRAVE, */
+  I_TREM,*/
   MAGIC,
   OS_SHFT,
   OS_CTRL,
@@ -70,12 +67,15 @@ enum custom_keycodes {
   OS_WIN,
   //OS_ODK,
   CNL_ODK,
-  TG_APOS
+  TG_APOS,
+  //PG_BL
+/*   L_APOS,
+  D_APOS */
 };
 
 // Layer taps
-#define LT_SPC ALGR_T(KC_SPC)
-#define LT_E ALGR_T(PG_E)
+#define LT_SPC LT(_SYMBOLS, KC_SPC)
+#define LT_E LT(_SYMBOLS, PG_E)
 #define LT_REPT LT(_NUMBERS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define OS_FA OSL(_FUNCAPPS)

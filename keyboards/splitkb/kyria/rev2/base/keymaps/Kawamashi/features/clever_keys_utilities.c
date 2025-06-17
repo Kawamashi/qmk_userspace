@@ -74,20 +74,21 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   // Handles custom keycodes.
   if (isSendStringMacro(keycode)) { return keycode; }
-  //if (keycode == FG_CCED) { return FG_CCED; }
+  //if (keycode == PG_CCED) { return PG_CCED; }
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
-      case FG_K:
-      case FG_J:
-      case FG_AROB:
-      case FG_ECIR:
-      case FG_CCED:
-      case FG_3PTS:
+      case PG_K:
+      case PG_J:
+      case PG_AROB:
+      case PG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.
         return keycode;
-/*       case FG_C:
-        return FG_CCED; */
+      case PG_VIRG:
+        return PG_3PTS;
+/*       case PG_T:
+        return PG_MOIN; */
       default:
+        clear_recent_keys();
         return KC_NO;
     }
   }
@@ -98,7 +99,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
-    case FG_E:
+    case PG_E:
 
       if (isLetter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
           // Shift doesn't matter for letters.
@@ -161,6 +162,7 @@ void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, key
 void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
   for (int i = 0; i < num_keycodes; ++i) {
     process_key(keycodes[i], record);   // Better solution, if there is enought space in the chip.
+    //tap_code(keycodes[i]);
   }
   bkspc_countdown = num_keycodes;
 }

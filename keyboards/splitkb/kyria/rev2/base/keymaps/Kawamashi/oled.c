@@ -41,7 +41,7 @@ bool oled_task_user(void) {
         oled_write_P(PSTR("Layer: "), false);
         switch (get_highest_layer(layer_state|default_layer_state)) {
             case _BASE:
-                oled_write_P(PSTR("FR-Go\n"), false);
+                oled_write_P(PSTR("Propergol\n"), false);
                 break;
             case _L_MODS:
                 oled_write_P(PSTR("Mods G\n"), false);
@@ -49,8 +49,11 @@ bool oled_task_user(void) {
             case _R_MODS:
                 oled_write_P(PSTR("Mods D\n"), false);
                 break;
-/*             case _SYMBOLS:
-                oled_write_P(PSTR("SymNum\n"), false); */
+            case _SYMBOLS:
+                oled_write_P(PSTR("Symboles\n"), false);
+                break;
+            case _NUMBERS:
+                oled_write_P(PSTR("Nombres\n"), false);
                 break;
             case _SHORTNAV:
                 oled_write_P(PSTR("ShortNav\n"), false);
@@ -59,7 +62,7 @@ bool oled_task_user(void) {
                 oled_write_P(PSTR("FuncApps\n"), false);
                 break;
             case _ODK:
-                oled_write_P(PSTR("Accents\n"), false);
+                oled_write_P(PSTR("1DK\n"), false);
                 break;
             default:
                 oled_write_P(PSTR("Undefined\n"), false);
@@ -76,7 +79,7 @@ bool oled_task_user(void) {
         oled_write_P(((mods & MOD_BIT(KC_LALT)) == MOD_BIT(KC_LALT)) ? PSTR("ALT ") : PSTR("    "), false);
 
         oled_write_P(is_caps_word_on() ? PSTR("CAPSWORD\n") : PSTR("        \n"), false);
-        //oled_write_P(is_num_word_on() ? PSTR("NUMWORD\n") : PSTR("        \n"), false);
+        oled_write_P(is_num_word_on ? PSTR("NUMWORD\n") : PSTR("        \n"), false);
 
         // Write host Keyboard LED Status to OLEDs
         led_t led_usb_state = host_keyboard_led_state();

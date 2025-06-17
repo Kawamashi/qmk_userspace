@@ -18,7 +18,7 @@
 
 #include QMK_KEYBOARD_H
 
-#include "keymap_french_frgo.h"
+#include "keymap_french_propergol.h"
 #include "features_conf.h"
 #include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
@@ -32,11 +32,12 @@
 
 enum layers {
     _BASE = 0,
-    _APOS_DR,
+    //_APOS_DR,
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
     _ODK,
+    _SYMBOLS,
     _NUMBERS,
     _SHORTNAV,
     _FUNCAPPS,
@@ -50,40 +51,40 @@ enum custom_keycodes {
   OS4A,
   RAZ,
   CAPSWORD,
-  //AGRV_SPC,
   OU_GRV,
+  J_APOS,
   //E_CIRC,
 /*  I_CIRC,
   A_CIRC,
   O_CIRC,
   U_CIRC,
-  I_TREM,
-  CA_CED,
-   CIRC,
-  TILDE,
-  GRAVE, */
+  I_TREM,*/
   MAGIC,
   OS_SHFT,
   OS_CTRL,
   OS_RALT,
   OS_LALT,
   OS_WIN,
-  OS_ODK,
-  CNL_ODK
+  //OS_ODK,
+  CNL_ODK,
+  TG_APOS,
+  L_APOS,
+  D_APOS
 };
 
 // Layer taps
-#define LT_SPC ALGR_T(KC_SPC)
-#define LT_E ALGR_T(FG_E)
-#define LT_REPT LT(_NUMBERS, KC_0)
-#define LT_MGC LT(_SHORTNAV, KC_0)
+#define LT_SPC LT(_SYMBOLS, KC_SPC)
+#define LT_E LT(_SYMBOLS, PG_E)
+#define LT_REPT LT(_NUMBERS, KC_1)
+#define LT_MGC LT(_SHORTNAV, KC_1)
 #define OS_FA OSL(_FUNCAPPS)
 #define TT_FA TT(_FUNCAPPS)
-#define TG_APOD TG(_APOS_DR)
-#define MT_SLSH SFT_T(FG_SLSH)
+//#define TG_APOD TG(_APOS_DR)
+#define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
+#define LT_NUMWORD LT(_SHORTNAV, NUMWORD)
 #define E_CIRC S(FG_0)
-//#define OS_ODK OSL(_ODK)
+#define OS_ODK OSL(_ODK)
 
 // One shot mods
 #define L_OS4A LSFT_T(OS4A)

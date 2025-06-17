@@ -1,6 +1,8 @@
-# QMK Userspace
+# Kawamashi’s QMK configuration
 
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the main QMK repository.
+
+![kb](https://github.com/filterpaper/filterpaper.github.io/raw/main/images/cradio_pink.png)
 
 ## Howto configure your build targets
 

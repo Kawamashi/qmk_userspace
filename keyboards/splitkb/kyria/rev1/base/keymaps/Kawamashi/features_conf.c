@@ -40,7 +40,11 @@ bool isSendStringMacro(uint16_t keycode) {
   switch (keycode) {
     //case AGRV_SPC:
     //case CA_CED:
+/*     case L_APOS:
+    case D_APOS: */
     case OU_GRV:
+    //case J_APOS:
+    //case PG_BL:
     case MAGIC:
       return true;
     
@@ -69,7 +73,7 @@ bool caps_word_press_user(uint16_t keycode) {
   if ((get_mods() & MOD_BIT(KC_ALGR))) {
     switch (keycode) {
       case PG_E:
-      case PG_N:
+      case PG_T:
         return true;
       default:
         return false;
@@ -79,19 +83,20 @@ bool caps_word_press_user(uint16_t keycode) {
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
       case PG_EACU:
+      case PG_B:
         add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
         return true;
       case PG_I:
       case PG_F:
+      case PG_T:
         return true;
       case PG_L:
       case PG_H:
       case PG_VIRG:
-      case PG_B:
       case PG_V:
       case PG_M:
       case PG_C:
-      case PG_T:
+      //case PG_T:
       case PG_S:
         return false;
     }
@@ -108,6 +113,7 @@ bool caps_word_press_user(uint16_t keycode) {
     // Keycodes that continue Caps Word, without shifting.
     case PG_ODK:
     //case PG_GRV:
+    case PG_UNDS:
     case PG_MOIN:
     case KC_KP_1 ... KC_KP_0:
     case KC_LEFT:
@@ -218,12 +224,21 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     case C(PG_Y):
       return C(PG_Z);
   }
-  if ((get_mods() | get_weak_mods()) & MOD_BIT(KC_ALGR)) {
+/*   if ((get_mods() | get_weak_mods()) & MOD_BIT(KC_ALGR)) {
     return KC_SPC;
-  } 
+  }  */
 
-  keycode = tap_hold_extractor(keycode);
+  if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
+
+/*   keycode = tap_hold_extractor(keycode);
   if (isLetter(keycode)) { return MAGIC; }
+
+  switch (keycode) {
+  case PG_APOS:
+  case KC_SPC:
+  case 
+
+  } */
 
   return KC_TRNS;  // Defer to default definitions.
 }

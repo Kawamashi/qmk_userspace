@@ -78,16 +78,17 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
       case PG_K:
-      case PG_J:
+      case PG_B:
       case PG_AROB:
-      case PG_ECIR:
-      //case PG_CCED:
       case PG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.
         return keycode;
-/*       case PG_D:
-        return PG_CCED; */
+      case PG_VIRG:
+        return PG_3PTS;
+/*       case PG_T:
+        return PG_MOIN; */
       default:
+        clear_recent_keys();
         return KC_NO;
     }
   }

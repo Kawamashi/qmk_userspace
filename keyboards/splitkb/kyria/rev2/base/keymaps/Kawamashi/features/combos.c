@@ -33,25 +33,26 @@ enum combos {
   PANIC,
   NUMWRD,
   ALTTAB,
-  //CTRLALT,
-
+  L_APOST,
+  D_APOST,
 };
 
-const uint16_t PROGMEM del_combo_d[] = {FG_S, FG_N, COMBO_END};
-const uint16_t PROGMEM bkspc_combo_d[] = {FG_N, FG_R, COMBO_END};
-const uint16_t PROGMEM del_word_combo[] = {FG_M, FG_L, COMBO_END};
-const uint16_t PROGMEM bk_word_combo[] = {FG_L, FG_APOS, COMBO_END};
-const uint16_t PROGMEM enter_combo[] = {FG_P, FG_EACU, COMBO_END};
-const uint16_t PROGMEM tab_combo[] = {FG_T, FG_I, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {FG_T, FG_A, COMBO_END};
-const uint16_t PROGMEM bkspc_combo_g[] = {FG_A, FG_I, COMBO_END};
-const uint16_t PROGMEM home_combo[] = {FG_Z, FG_Y, COMBO_END};
-const uint16_t PROGMEM end_combo[] = {FG_EACU, FG_VIRG, COMBO_END};
-const uint16_t PROGMEM help_combo[] = {FG_VIRG, FG_APOS, COMBO_END};
-const uint16_t PROGMEM panic_combo[] = {FG_EACU, FG_L, COMBO_END};
-const uint16_t PROGMEM numword_combo[] = {FG_S, FG_R, COMBO_END};
-const uint16_t PROGMEM alttab_combo[] = {FG_D, FG_Y, COMBO_END};
-//const uint16_t PROGMEM ctrlalt_Combo[] = {FG_A, FG_I, FG_T, COMBO_END};
+const uint16_t PROGMEM del_combo_d[] = {PG_T, PG_S, COMBO_END};
+const uint16_t PROGMEM bkspc_combo_d[] = {PG_S, PG_R, COMBO_END};
+const uint16_t PROGMEM del_word_combo[] = {PG_M, PG_C, COMBO_END};
+const uint16_t PROGMEM bk_word_combo[] = {PG_C, PG_APOS, COMBO_END};
+const uint16_t PROGMEM enter_combo[] = {PG_P, PG_U, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {PG_N, PG_I, COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {PG_N, PG_A, COMBO_END};
+const uint16_t PROGMEM bkspc_combo_g[] = {PG_A, PG_I, COMBO_END};
+const uint16_t PROGMEM home_combo[] = {PG_Z, PG_Y, COMBO_END};
+const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
+const uint16_t PROGMEM help_combo[] = {PG_EACU, PG_APOS, COMBO_END};
+const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
+const uint16_t PROGMEM numword_combo[] = {PG_T, PG_R, COMBO_END};
+const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
+const uint16_t PROGMEM l_apost_combo[] = {PG_X, PG_APOS, COMBO_END};
+const uint16_t PROGMEM d_apost_combo[] = {PG_D, PG_F, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
@@ -68,17 +69,19 @@ combo_t key_combos[] = {
     [PANIC] = COMBO(panic_combo, RAZ),
     [NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
-    //[CTRLALT] = COMBO(ctrlalt_Combo, RCTL(RALT(KC_DEL)))
+    [L_APOST] = COMBO(l_apost_combo, L_APOS),
+    [D_APOST] = COMBO(d_apost_combo, D_APOS)
     };
 
-/* uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
+uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
     switch (combo_index) {
-        case HOME:
-            return COMBO_TERM - 10;
+        case L_APOST:
+        case D_APOST:
+            return 100;
         default:
             return COMBO_TERM;
     }
-} */
+}
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     // Chorded mods shouldn't be considered as combos.
@@ -92,6 +95,8 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         case ENTER:
         case HOME:
         case END:
+        case L_APOST:
+        case D_APOST:
           return true;
 
         default:
@@ -121,10 +126,10 @@ bool process_combo_key_repress(uint16_t combo_index, combo_t *combo, uint8_t key
   switch (combo_index) {
       case ALTTAB:
           switch (keycode) {
-            case FG_Y:
+            case PG_Y:
                 tap_code16(S(KC_TAB));
                 return true;
-            case FG_D:
+            case PG_H:
                 tap_code(KC_TAB);
                 return true;
           }
