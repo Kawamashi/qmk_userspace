@@ -206,7 +206,7 @@
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
 
- #define PG_CARN S(ALGR(PG_X)) // ˇ (dead)
+ #define PG_CARN S(ALGR(PG_O)) // ˇ (dead)
 /* // Row 1
 #define PG_IBRV S(ALGR(PG_AROB))   //  ̑ (dead)
 #define PG_HACU S(ALGR(PG_LPRN)) // ˝ (dead)

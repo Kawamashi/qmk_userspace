@@ -138,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-      KC_NO, PG_POIN, PG_EACU, PG_U,  PG_P,   PG_B,                                    PG_V,   PG_M,    PG_C, PG_APOS, PG_X,   KC_NO,
+      KC_NO, PG_POIN, PG_EACU, PG_U,  PG_P,   PG_APOS,                                 PG_V,   PG_M,    PG_C, PG_J,    PG_X,   KC_NO,
       KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_VIRG,                                 PG_G,   PG_T,    PG_S, PG_R,    PG_L,   KC_NO,
       KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W,    OS_ODK, KC_NO,
                                KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
@@ -205,7 +205,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_HASH,                                           PG_PERC, PG_DQUO, PG_EGAL, ALGR(PG_APOS), PG_GRV,  _______,
       _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, ALGR(PG_VIRG),                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,       PG_ASTX, _______,
       _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,       _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,       PG_TILD, _______,
-                                    _______, _______, _______,       PG_UNDS, KC_SPC,  _______, _______, _______, _______, _______
+                                    _______, _______, _______,       PG_UNDS, KC_SPC,  PG_APOS, _______, _______, _______, _______
     ),
 
 
@@ -247,9 +247,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ODK] = LAYOUT(
        _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-       _______, OU_GRV,  PG_R,    _______, PG_T,    _______,                                     _______, PG_A,    _______, PG_AROB, _______, _______,
+       _______, OU_GRV,  _______, _______, PG_T,    _______,                                     _______, PG_R,    _______, PG_AROB, _______, _______,
        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, PG_K,    CNL_ODK, _______,
-                                  _______, _______, _______, _______, PG_O,    J_APOS,  PG_J,    _______, _______, _______
+                                  _______, _______, _______, _______, PG_O,    PG_APOS, PG_B,    _______, _______, _______
      ),
 
 

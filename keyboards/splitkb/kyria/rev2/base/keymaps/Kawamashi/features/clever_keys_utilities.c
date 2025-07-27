@@ -78,7 +78,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
       case PG_K:
-      case PG_J:
+      case PG_B:
       case PG_AROB:
       case PG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.

@@ -13,7 +13,7 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     uint16_t prev_keycode = recent[RECENT_SIZE - 1];
     //const uint8_t mods = get_mods();
 
-    if (isLetter(next_keycode) || next_keycode == E_CIRC) {
+    if (is_letter(next_keycode) || next_keycode == E_CIRC) {
       switch (prev_keycode) {
           case PG_EXCL:
           case PG_QUES:
@@ -66,7 +66,7 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
         }
 
 
-    } else if (next_keycode == PG_AROB && !isLetter(recent[RECENT_SIZE - 2])) {
+    } else if (next_keycode == PG_AROB && !is_letter(recent[RECENT_SIZE - 2])) {
         switch (prev_keycode) {
 
           case PG_N:
@@ -106,7 +106,7 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
             return finish_word((uint16_t[]) {PG_A, PG_R}, 2, record);
           
           case PG_X:
-            if (!isLetter(recent[RECENT_SIZE - 2])) {
+            if (!is_letter(recent[RECENT_SIZE - 2])) {
               // "pour"
               return finish_word((uint16_t[]) {PG_O, PG_L, PG_R}, 3, record);
             }
@@ -129,7 +129,7 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
       case PG_EXCL:
         // On ajoute un espace insécable s'il n'a pas été entré avant le point d'exclamation.
         // Il ne faut pas tester cette fonctionnalité avec Word, qui ajoute cet espace automatiquement.
-        if (isLetter(recent[RECENT_SIZE - 1])) {
+        if (is_letter(recent[RECENT_SIZE - 1])) {
           
           if ((mods | get_oneshot_mods() | get_weak_mods()) & MOD_MASK_SHIFT) {
             del_weak_mods(MOD_MASK_SHIFT);

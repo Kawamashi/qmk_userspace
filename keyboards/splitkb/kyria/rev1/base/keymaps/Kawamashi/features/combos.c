@@ -33,8 +33,7 @@ enum combos {
   PANIC,
   NUMWRD,
   ALTTAB,
-/*   L_APOST,
-  D_APOST, */
+  ALTESC
 };
 
 const uint16_t PROGMEM del_combo_d[] = {PG_T, PG_S, COMBO_END};
@@ -51,8 +50,7 @@ const uint16_t PROGMEM help_combo[] = {PG_EACU, PG_J, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
 const uint16_t PROGMEM numword_combo[] = {PG_T, PG_R, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
-/* const uint16_t PROGMEM l_apost_combo[] = {PG_X, PG_APOS, COMBO_END};
-const uint16_t PROGMEM d_apost_combo[] = {PG_D, PG_F, COMBO_END}; */
+const uint16_t PROGMEM altesc_combo[] = {PG_A, PG_I, PG_N, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
@@ -69,8 +67,7 @@ combo_t key_combos[] = {
     [PANIC] = COMBO(panic_combo, RAZ),
     [NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
-/*     [L_APOST] = COMBO(l_apost_combo, L_APOS),
-    [D_APOST] = COMBO(d_apost_combo, D_APOS) */
+    [ALTESC] = COMBO(altesc_combo, LALT(KC_ESC))
     };
 
 /* uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
@@ -95,8 +92,6 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         case ENTER:
         case HOME:
         case END:
-/*         case L_APOST:
-        case D_APOST: */
           return true;
 
         default:

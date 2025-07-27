@@ -52,7 +52,7 @@ enum custom_keycodes {
   RAZ,
   CAPSWORD,
   OU_GRV,
-  J_APOS,
+  //J_APOS,
   //E_CIRC,
 /*  I_CIRC,
   A_CIRC,
@@ -68,8 +68,9 @@ enum custom_keycodes {
   //OS_ODK,
   CNL_ODK,
   TG_APOS,
-  L_APOS,
-  D_APOS
+  //PG_BL
+/*   L_APOS,
+  D_APOS */
 };
 
 // Layer taps

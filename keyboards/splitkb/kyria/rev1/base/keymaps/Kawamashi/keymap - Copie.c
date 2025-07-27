@@ -20,7 +20,7 @@
 
 bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
-bool isLetter(uint16_t keycode) {
+bool is_letter(uint16_t keycode) {
   switch (keycode) {
     case KC_A ... KC_L:
     case PG_M:
@@ -58,7 +58,7 @@ bool achordion_eager_mod(uint8_t mod) {
 
 bool caps_word_press_user(uint16_t keycode) {
   // Keycodes that continue Caps Word, with shift applied.
-  if (isLetter(keycode)) {
+  if (is_letter(keycode)) {
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
   } else {

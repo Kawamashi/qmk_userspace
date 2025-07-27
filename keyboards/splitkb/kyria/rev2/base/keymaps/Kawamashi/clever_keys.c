@@ -32,10 +32,21 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
     if (inversion == false && *next_keycode == PG_VIRG) { replace_ongoing_key(PG_POIN, next_keycode, record); }
     inversion = false;
 
+    static bool apostrophe = false;
+    if (IS_LAYER_ON(_BASE) && *next_keycode == PG_APOS) {
+      if (apostrophe) {
+        apostrophe = false;
+      } else {
+        replace_ongoing_key(PG_MOIN, next_keycode, record);
+      }
+    }
+    apostrophe = false;
+
     // Apostrophe
     switch (*next_keycode) {
       case PG_Q:
         set_last_keycode(PG_APOS);
+        apostrophe = true;
         break;
       case PG_L:
       case PG_T:
@@ -45,7 +56,12 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       case PG_S:
       case PG_M:
       case PG_Y:
-        if (!isLetter(prev_keycode)) { set_last_keycode(PG_APOS); }
+      case PG_J:
+        //if (!isLetter(prev_keycode)) { set_last_keycode(PG_APOS); }
+        if (!isLetter(prev_keycode)) {
+          set_last_keycode(PG_APOS);
+          apostrophe = true;
+        }
     }
 
 
@@ -100,10 +116,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           break;
 
         // Raccourci pour "quand"
-        case PG_D:
-          process_word((uint16_t[]) {PG_U, PG_A, PG_N}, 3, record);
-          set_last_keycode(*next_keycode);
-          break;
+        case PG_N:
+          return finish_word((uint16_t[]) {PG_U, PG_A, PG_N, PG_D}, 4, next_keycode, record);
+          //set_last_keycode(*next_keycode);
+          //break;
       }
       break;
 
@@ -118,7 +134,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           // "pas"
           return finish_word((uint16_t[]) {PG_A, PG_S}, 2, next_keycode, record);
         
-        case PG_APOS:
+        case PG_J:
           if (!isLetter(recent[RECENT_SIZE - 2])) {
             // "pour"
             return finish_word((uint16_t[]) {PG_O, PG_U, PG_R}, 3, next_keycode, record);
@@ -130,13 +146,6 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           return finish_word((uint16_t[]) {PG_L, PG_U, PG_S}, 3, next_keycode, record);
       }
       break;
-    
-/*     case PG_CCED:
-      if (!isLetter(*next_keycode)) {
-        invoke_key(PG_A, record);
-        set_last_keycode(*next_keycode);
-      }
-      break; */
   }
 
   
@@ -153,6 +162,11 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       break;
 
     case MAGIC:
+/*       if (!isLetter(prev_keycode)) {
+          // "je"
+          return finish_word((uint16_t[]) {PG_J, PG_E}, 2, next_keycode, record);
+      } */
+
       switch (prev_keycode) {
         case PG_O:
           // oui
@@ -176,6 +190,11 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           bkspc_countdown = 0;
           return replace_ongoing_key(PG_C, next_keycode, record);
 
+        case PG_C:
+          // cs SFB
+          bkspc_countdown = 0;
+          return replace_ongoing_key(PG_S, next_keycode, record);
+
         case PG_N:
           // n. SFB
           bkspc_countdown = 0;
@@ -186,6 +205,11 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           bkspc_countdown = 0;
           return replace_ongoing_key(PG_H, next_keycode, record);
 
+        case PG_G:
+          // gt SFB
+          bkspc_countdown = 0;
+          return replace_ongoing_key(PG_T, next_keycode, record);
+
         case PG_Q:
           // qué scissor
           return finish_word((uint16_t[]) {PG_U, PG_EACU}, 2, next_keycode, record);
@@ -195,30 +219,6 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
         case PG_I:
           return finish_word((uint16_t[]) {PG_O, PG_N}, 2, next_keycode, record);
         
-/*         case PG_D:
-          // "c’est" 
-          return finish_word((uint16_t[]) {PG_APOS, PG_E, PG_T, PG_N}, 4, next_keycode, record); 
-        
-        case PG_H:
-          // "dans"
-          return finish_word((uint16_t[]) {PG_A, PG_S, PG_T}, 3, next_keycode, record);
-        
-        case PG_P:
-          // "plus"
-          return finish_word((uint16_t[]) {PG_C, PG_L, PG_T}, 3, next_keycode, record);
-        
-        case PG_A:
-          // "avec"
-          return finish_word((uint16_t[]) {PG_G, PG_E, PG_D}, 3, next_keycode, record); */
-        
-/*         case PG_B:
-          // "bonjour"
-          process_word((uint16_t[]) {PG_O, PG_S, PG_J}, 3, record);
-        
-        case PG_J:
-          // "jour"
-          return finish_word((uint16_t[]) {PG_O, PG_L, PG_R}, 3, next_keycode, record); */
-        
         case PG_M:
           if (isLetter(recent[RECENT_SIZE - 2])) {
             // "ment"
@@ -227,6 +227,16 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
             // "même"
             return finish_word((uint16_t[]) {PG_ODK, PG_O, PG_M, PG_E}, 4, next_keycode, record);
           }
+
+        case PG_B:
+          // "beaucoup"
+          //layer_off(_ODK);
+          return finish_word((uint16_t[]) {PG_E, PG_A, PG_U, PG_C, PG_O, PG_U, PG_P}, 7, next_keycode, record);
+
+        case PG_D:
+          // "déjà"
+          //layer_off(_ODK);
+          return finish_word((uint16_t[]) {PG_EACU, PG_J, PG_ODK, PG_A}, 4, next_keycode, record);
         
         default:
           return;
@@ -236,53 +246,32 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       if (!isLetter(recent[RECENT_SIZE - 2])) {
         switch (prev_keycode) {
 
-/*           case PG_T:
-            // "t@" -> "toujours"
-            layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_O, PG_L, PG_J, PG_O, PG_L, PG_R, PG_T}, 7, next_keycode, record); */
-
           case PG_P:
-            // "p@" -> "peut-être"
+            // "p@" -> "problème"
             layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_E, PG_U, PG_T, PG_MOIN, PG_ODK, PG_O, PG_T, PG_R, PG_E}, 9, next_keycode, record);
+            return finish_word((uint16_t[]) {PG_R, PG_O, PG_B, PG_L, PG_ODK, PG_E, PG_M, PG_E}, 8, next_keycode, record);
 
           case PG_A:
             // "a@" -> "aujourd'hui"
             layer_off(_ODK);
             return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, next_keycode, record);
-          
-          case PG_B:
-            // "b@" -> "beaucoup"
-            layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_E, PG_A, PG_U, PG_C, PG_O, PG_U, PG_P}, 7, next_keycode, record);
-          
-/*           case PG_E:
-            // "e@" -> "est-ce qu"
-            layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_T, PG_N, PG_MOIN, PG_D, PG_E, KC_SPC, PG_Q}, 7, next_keycode, record); */
-          
-          case PG_D:
-            // "d@" -> "déjà"
-            layer_off(_ODK);
-            return finish_word((uint16_t[]) {PG_EACU, PG_J, PG_ODK, PG_A}, 4, next_keycode, record);
-        }          
+        }
       }
       break;
 
-/*     case PG_Q:
-      if (prev_keycode == PG_J) {
-          // "jq" -> "jusqu"
-          process_word((uint16_t[]) {PG_U, PG_S}, 2, record);
-          set_last_keycode(*next_keycode);
-          return;
-      }
-      break; */
-
     case PG_M:
       if (prev_keycode == PG_C) {
-          // "cm" -> "ch"
-          bkspc_countdown = 0;
-          return replace_ongoing_key(PG_H, next_keycode, record);
+        // "cm" -> "ch"
+        bkspc_countdown = 0;
+        return replace_ongoing_key(PG_H, next_keycode, record);
+      }
+      break;
+
+    case PG_H:
+      if (prev_keycode == PG_M) {
+        // "mh" -> "mb"
+        bkspc_countdown = 0;
+        return replace_ongoing_key(PG_B, next_keycode, record);
       }
       break;
 
@@ -316,28 +305,27 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       layer_off(_ODK);
       return finish_word((uint16_t[]) {PG_O, PG_ODK, PG_N}, 3, next_keycode, record);
 
-    case J_APOS:
+/*      case PG_BL:
       layer_off(_ODK);
-      return finish_word((uint16_t[]) {PG_J, PG_APOS}, 2, next_keycode, record);
+      return finish_word((uint16_t[]) {PG_B, PG_L}, 2, next_keycode, record); */
 
-    case L_APOS:
+/*     case J_APOS:
+      layer_off(_ODK);
+      return finish_word((uint16_t[]) {PG_J, PG_APOS}, 2, next_keycode, record); */
+
+/*     case L_APOS:
       return finish_word((uint16_t[]) {PG_L, PG_APOS}, 2, next_keycode, record);
 
     case D_APOS:
-      return finish_word((uint16_t[]) {PG_D, PG_APOS}, 2, next_keycode, record);
+      return finish_word((uint16_t[]) {PG_D, PG_APOS}, 2, next_keycode, record); */
 
     case PG_APOS:
       if (is_apos_dr) { return replace_ongoing_key(PG_APOD, next_keycode, record); }
       break;
-
-/*     case CA_CED:
-      layer_off(_ODK);
-      return finish_word((uint16_t[]) {PG_CCED, PG_A}, 2, next_keycode, record); */
 
 /*     case AGRV_SPC:
       layer_off(_ODK);
       return finish_word((uint16_t[]) {PG_AGR, KC_SPC}, 2, next_keycode, record); */
   }
 
-  //return KC_NO; // Process next keycode normally
 }

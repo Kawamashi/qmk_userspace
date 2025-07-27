@@ -73,7 +73,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   }
 
   // Handles custom keycodes.
-  if (isSendStringMacro(keycode)) { return keycode; }
+  if (is_send_string_macro(keycode)) { return keycode; }
   //if (keycode == PG_CCED) { return PG_CCED; }
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
@@ -101,7 +101,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
     case PG_E:
 
-      if (isLetter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
+      if (is_letter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
           // Shift doesn't matter for letters.
           return basic_keycode;
 

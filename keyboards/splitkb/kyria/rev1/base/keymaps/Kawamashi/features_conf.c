@@ -18,7 +18,7 @@
 
 bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
-bool isLetter(uint16_t keycode) {
+bool is_letter(uint16_t keycode) {
   switch (keycode) {
     case KC_A ... KC_F:
     case KC_H ... KC_N:
@@ -36,14 +36,9 @@ bool isLetter(uint16_t keycode) {
   }
 }
 
-bool isSendStringMacro(uint16_t keycode) {
+bool is_send_string_macro(uint16_t keycode) {
   switch (keycode) {
-    //case AGRV_SPC:
-    //case CA_CED:
-/*     case L_APOS:
-    case D_APOS: */
     case OU_GRV:
-    //case J_APOS:
     //case PG_BL:
     case MAGIC:
       return true;
@@ -51,6 +46,25 @@ bool isSendStringMacro(uint16_t keycode) {
     default:
       return false;
   }
+}
+
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
+  switch (keycode) {
+    case PG_Q:
+      return true;
+      
+    case PG_L:
+    case PG_T:
+    case PG_D:
+    case PG_C:
+    case PG_N:
+    case PG_S:
+    case PG_M:
+    case PG_Y:
+    case PG_J:
+      if (!is_letter(prev_keycode)) { return true; }
+  }
+  return false;
 }
 
 // This function extracts the base keycode of MT and LT,
@@ -104,7 +118,7 @@ bool caps_word_press_user(uint16_t keycode) {
 
   // Keycodes that continue Caps Word, with shift applied.
   // @ must be shifted, bc of CleverKeys using it.
-  if (isLetter(keycode) || isSendStringMacro(keycode) || keycode == PG_AROB) {
+  if (is_letter(keycode) || is_send_string_macro(keycode) || keycode == PG_AROB) {
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
   } 
@@ -143,7 +157,8 @@ bool os4a_layer_changer(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    //case TG_APOD:
+    case OS_RSA:
+    case NUM_ODK:
       return true;
     default:
       return false;
@@ -180,9 +195,9 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
   // Autrement, la touche typo est ignorée par les Callum mods.
   // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true;}
-  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true;}
+  //uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
+  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
 
   switch (keycode) {
     //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
@@ -196,7 +211,8 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case PG_ODK:
+    case NUM_ODK:
+    //case PG_ODK:
         return true;
     default:
         return false;
@@ -231,7 +247,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
   if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
 
 /*   keycode = tap_hold_extractor(keycode);
-  if (isLetter(keycode)) { return MAGIC; }
+  if (is_letter(keycode)) { return MAGIC; }
 
   switch (keycode) {
   case PG_APOS:

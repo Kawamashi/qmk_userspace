@@ -50,9 +50,11 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 case PG_3PTS:   // For Clever Keys
                 case PG_AROB:
                 case PG_K:
-                case PG_J:
+                case PG_B:
+                case PG_APOS:
+                //case PG_BL:
                 //case PG_ECIR:
-                case J_APOS:
+                //case J_APOS:
                 case OU_GRV:
                 //case PG_CCED:
 
