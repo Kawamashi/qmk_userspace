@@ -82,7 +82,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                 tap_code(PG_ODK);
 
                 if (is_shifted) {
-                    //is_shifted = false;
+                    is_shifted = false;
                     set_oneshot_mods(MOD_BIT(KC_LSFT));
                 }
                 return true;

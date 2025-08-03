@@ -52,8 +52,8 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
               case PG_QUES:
               case PG_3PTS:
               case PG_POIN:
-                // Add OS shift at the beginning of sentences.
-                if (!is_caps_lock_on()) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+                // Shift the letter at the beginning of sentences.
+                if (!is_caps_lock_on()) { add_weak_mods(MOD_BIT(KC_LSFT)); }
                 break;
             }
       }
@@ -131,17 +131,11 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
     case MAGIC:
       if (!is_letter(prev_keycode)) {
           // "à"
-          bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-          if (is_shifted) {
-              del_weak_mods(MOD_MASK_SHIFT);
-              del_oneshot_mods(MOD_MASK_SHIFT);
-              unregister_mods(MOD_MASK_SHIFT);
-          }
           process_key(PG_ODK,record);
 
           if (is_shifted) {
-              //is_shifted = false;
-              set_oneshot_mods(MOD_BIT(KC_LSFT));
+              is_shifted = false;
+              add_weak_mods(MOD_BIT(KC_LSFT));
           }
           return replace_ongoing_key(PG_A, next_keycode, record);
       }

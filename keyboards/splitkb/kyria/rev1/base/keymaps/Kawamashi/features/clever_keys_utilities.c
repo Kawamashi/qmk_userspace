@@ -39,7 +39,7 @@ void recent_keys_task(void) {
 // Handles one event. Returns false if the key was appended to `recent`.
 uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
-  uint8_t mods = get_mods() | get_oneshot_mods();
+  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
 
   if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
     clear_recent_keys();  // Avoid interfering with ctrl, left alt and gui.

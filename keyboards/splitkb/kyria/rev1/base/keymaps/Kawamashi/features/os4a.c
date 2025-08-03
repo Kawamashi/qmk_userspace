@@ -68,7 +68,7 @@ bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
     // to be processed (ex: custom altgr, clever keys).
     uint8_t mods = get_mods() | get_oneshot_mods();
     if (!exit_os4a_layer && !pending_OSL && to_be_shifted(keycode, record) && mods == 0) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT));
+      add_weak_mods(MOD_BIT(KC_LSFT));
     }
     return true;
 }

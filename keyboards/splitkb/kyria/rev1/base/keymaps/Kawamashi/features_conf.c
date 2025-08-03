@@ -190,6 +190,8 @@ bool to_be_shifted(uint16_t keycode, keyrecord_t *record) {
   if (!IS_KEYEVENT(record->event)) { return true; }
   
   switch (keycode) {
+    case OS_ODK:
+      is_shifted = true;
     case KC_CAPS:
     case CAPSWORD:
       return false;
@@ -232,7 +234,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case NUM_ODK:
+    //case NUM_ODK:
     //case PG_ODK:
         return true;
     default:
