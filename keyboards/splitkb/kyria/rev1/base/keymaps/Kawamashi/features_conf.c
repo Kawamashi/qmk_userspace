@@ -21,13 +21,11 @@ bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 bool is_letter(uint16_t keycode) {
   switch (keycode) {
     case KC_A ... KC_F:
-    case KC_H ... KC_N:
-    case KC_R ... KC_Z:
+    case KC_H ... KC_P:
+    case KC_R ... KC_S:
+    case KC_U ... KC_Z:
     case PG_L:
-    case PG_X:
     case PG_E:
-    //case PG_AGR:
-    //case PG_ECIR:
     case KC_GRV ... KC_DOT:
       return true;
 
@@ -39,7 +37,6 @@ bool is_letter(uint16_t keycode) {
 bool is_send_string_macro(uint16_t keycode) {
   switch (keycode) {
     case OU_GRV:
-    //case PG_BL:
     case MAGIC:
       return true;
     
@@ -84,7 +81,7 @@ bool caps_word_press_user(uint16_t keycode) {
   // Caps Word shouldn't be applied with Alt-gr
   // Managing underscore and slash on alt gr + E/T.
   // Underscore and slash must continue Caps Word, without shifting.
-  if ((get_mods() & MOD_BIT(KC_ALGR))) {
+/*   if ((get_mods() & MOD_BIT(KC_ALGR))) {
     switch (keycode) {
       case PG_E:
       case PG_T:
@@ -92,26 +89,20 @@ bool caps_word_press_user(uint16_t keycode) {
       default:
         return false;
     }
-  }
+  } */
 
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
-      case PG_EACU:
-      case PG_B:
+
+      case PG_VIRG:
         add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
         return true;
-      case PG_I:
-      case PG_F:
+  
+      case PG_Y:
       case PG_T:
         return true;
-      case PG_L:
-      case PG_H:
-      case PG_VIRG:
-      case PG_V:
-      case PG_M:
-      case PG_C:
-      //case PG_T:
-      case PG_S:
+
+      case PG_POIN:
         return false;
     }
   }
@@ -128,11 +119,13 @@ bool caps_word_press_user(uint16_t keycode) {
     case PG_ODK:
     //case PG_GRV:
     case PG_UNDS:
-    case PG_MOIN:
+    case PG_TIRE:
+    case PG_SLSH:
     case KC_KP_1 ... KC_KP_0:
     case KC_LEFT:
     case KC_RIGHT:
     case KC_BSPC:
+    case LCTL(KC_BSPC):
     case KC_DEL:
     case PG_APOS:
       return true;
@@ -140,6 +133,33 @@ bool caps_word_press_user(uint16_t keycode) {
     default:
       return false;  // Deactivate Caps Word.
     }
+}
+
+
+// Clever keys configuration
+
+uint16_t get_ongoing_keycode_user(uint16_t keycode) {
+  // Handles custom keycodes to be processed for Clever Keys
+
+  if (is_send_string_macro(keycode)) { return keycode; }
+
+  if (IS_LAYER_ON(_ODK)) {
+    switch (keycode) {
+      case PG_K:
+      case PG_B:
+      case PG_AROB:
+      case PG_3PTS:
+      case KC_SPC:  // In order to uppercase J after '?' for ex.
+        return keycode;
+      case PG_Q:
+        return PG_OE;
+
+      default:
+        clear_recent_keys();
+        return KC_NO;
+    }
+  }
+  return KC_TRNS;
 }
 
 // One-shot 4 all configuration
@@ -192,12 +212,13 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 }
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
-  // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
-  // Autrement, la touche typo est ignorée par les Callum mods.
+  // On veut que la touche typo soit ignorée par tous les Callum mods sauf Alt-gr.
   // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  //uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
+  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
   //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
-  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
+
+  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
 
   switch (keycode) {
     //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté

@@ -138,9 +138,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-      KC_NO, PG_POIN, PG_EACU, PG_U,  PG_P,   PG_APOS,                                 PG_V,   PG_M,    PG_C, PG_J,    PG_X,   KC_NO,
-      KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_VIRG,                                 PG_G,   PG_T,    PG_S, PG_R,    PG_L,   KC_NO,
-      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W,    OS_ODK, KC_NO,
+      KC_NO, PG_VIRG, PG_EACU, PG_U,  PG_P,   PG_TIRE,                                 PG_V,   PG_M,    PG_C, PG_J, PG_X,   KC_NO,
+      KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_POIN,                                 PG_G,   PG_T,    PG_S, PG_R, PG_L,   KC_NO,
+      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W, OS_ODK, KC_NO,
                                KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
     ),
 
@@ -202,10 +202,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SYMBOLS] = LAYOUT(
-      _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                           PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_APOS), PG_GRV,  _______,
-      _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, ALGR(PG_VIRG),                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,       PG_ASTX, _______,
-      _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,       _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,       PG_TILD, _______,
-                                    _______, _______, _______,       PG_UNDS, KC_SPC,  PG_APOS, _______, _______, _______, _______
+      _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                           PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_J), PG_GRV,  _______,
+      _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, ALGR(PG_POIN),                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
+      _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,       _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
+                                    _______, _______, _______,       PG_UNDS, KC_SPC,  _______, _______, _______, _______, _______
     ),
 
 
@@ -224,10 +224,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, KC_7,    PG_PERC,                                           SAGR(PG_POIN), _______, PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    ALGR(PG_VIRG),                                     PG_CARN,       MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, PG_H,    KC_5,    _______,    _______, _______,    _______, _______, _______,       KC_9,    _______, _______, PG_ODK,  _______,
-                                  _______, _______, KC_PDOT,    KC_0   , LT_NUMWORD, LT_REPT, KC_SPC,  KC_PDOT,       _______, _______
+       _______, PG_DLR,  PG_MOIN, PG_PLUS, _______, PG_PERC,                                           PG_EXP,  _______, PG_EGAL, PG_ASTX, _______, _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    ALGR(PG_POIN),                                     PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
+       _______, _______, _______, PG_H,    KC_5,    _______,       _______, _______, _______, _______, _______, KC_9,    _______, _______, PG_ODK,  _______,
+                                  _______, _______, KC_PDOT,       KC_0   , LT_EURO, LT_REPT, KC_SPC,  KC_PDOT, _______, _______
      ),
 
 
@@ -246,8 +246,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ODK] = LAYOUT(
-       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-       _______, OU_GRV,  _______, _______, PG_T,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
+       _______, _______, _______, _______, _______, PG_T,                                        _______, _______, _______, _______, _______, _______,
+       _______, OU_GRV,  _______, _______, _______, PG_3PTS,                                     _______, PG_K,    _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
                                   _______, _______, _______, _______, PG_O,    PG_APOS, PG_B,    _______, _______, _______
      ),

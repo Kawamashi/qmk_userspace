@@ -24,51 +24,11 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
   uint16_t prev_keycode = recent[RECENT_SIZE - 1];
   //static bool is_shifted = false;
 
-    // Inversion du point et de la virgule
-    static bool inversion = false;
-    if (*next_keycode == PG_POIN) { 
-      replace_ongoing_key(PG_VIRG, next_keycode, record);
-      inversion = true;
-    }
-    if (inversion == false && *next_keycode == PG_VIRG) { replace_ongoing_key(PG_POIN, next_keycode, record); }
-    inversion = false;
-
-    static bool apostrophe = false;
-    if (IS_LAYER_ON(_BASE) && *next_keycode == PG_APOS) {
-      if (apostrophe) {
-        apostrophe = false;
-      } else {
-        replace_ongoing_key(PG_MOIN, next_keycode, record);
-      }
-    }
-    apostrophe = false;
-
     // Apostrophe
     if (is_followed_by_apos(*next_keycode, prev_keycode)) {
       set_last_keycode(PG_APOS);
-      apostrophe = true;
+      //apostrophe = true;
     }
-/*     switch (*next_keycode) {
-      case PG_Q:
-        set_last_keycode(PG_APOS);
-        apostrophe = true;
-        break;
-      case PG_L:
-      case PG_T:
-      case PG_D:
-      case PG_C:
-      case PG_N:
-      case PG_S:
-      case PG_M:
-      case PG_Y:
-      case PG_J:
-        //if (!is_letter(prev_keycode)) { set_last_keycode(PG_APOS); }
-        if (!is_letter(prev_keycode)) {
-          set_last_keycode(PG_APOS);
-          apostrophe = true;
-        }
-    } */
-
 
     if (is_letter(*next_keycode) || is_send_string_macro(*next_keycode)) {
       switch (prev_keycode) {
@@ -81,7 +41,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
             
             if (is_followed_by_apos(*next_keycode, prev_keycode)) {
               set_last_keycode(PG_APOS);
-              apostrophe = true;
+              //apostrophe = true;
             } else {
               set_last_keycode(*next_keycode);
             }
@@ -145,6 +105,14 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           return finish_word((uint16_t[]) {PG_L, PG_U, PG_S}, 3, next_keycode, record);
       }
       break;
+    
+/*     case PG_OE:
+      // "œu"
+      if (*next_keycode == PG_Z) {
+        bkspc_countdown = 0;
+        return replace_ongoing_key(PG_U, next_keycode, record);
+      }
+      break; */
   }
 
   
@@ -229,8 +197,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
           // you bad redirection
           return finish_word((uint16_t[]) {PG_O, PG_U}, 2, next_keycode, record);
 
-        case PG_T:
-          invoke_key(PG_I, record);
+/*         case PG_T:
+          return finish_word((uint16_t[]) {PG_I, PG_Q, PG_U, PG_E}, 4, next_keycode, record); */
+          //invoke_key(PG_I, record);
+          
         case PG_I:
           return finish_word((uint16_t[]) {PG_O, PG_N}, 2, next_keycode, record);
         
@@ -285,6 +255,9 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
         // "mh" -> "mb"
         bkspc_countdown = 0;
         return replace_ongoing_key(PG_B, next_keycode, record);
+      } else if (prev_keycode == PG_I) {
+        // "ih" -> "ique"
+        return finish_word((uint16_t[]) {PG_Q, PG_U, PG_E}, 3, next_keycode, record);
       }
       break;
 
@@ -310,6 +283,14 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
 
     case PG_APOS:
       if (is_apos_dr) { return replace_ongoing_key(PG_APOD, next_keycode, record); }
+      break;
+
+    case PG_Z:
+      // "œu"
+      if (prev_keycode == PG_OE) {
+        bkspc_countdown = 0;
+        return replace_ongoing_key(PG_U, next_keycode, record);
+      }
       break;
   }
 

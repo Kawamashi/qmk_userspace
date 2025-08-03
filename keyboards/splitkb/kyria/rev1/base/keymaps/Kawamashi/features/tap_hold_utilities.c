@@ -81,8 +81,8 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
         case SFT_T(COPY):
             return process_tap_hold(C(PG_C), record);
 
-        case LT_NUMWORD:
-            return process_numword(NUMWORD, record);
+/*         case LT_NUMWORD:
+            return process_numword(NUMWORD, record); */
 
         case LT_REPT:
             repeat_key_invoke(&record->event);

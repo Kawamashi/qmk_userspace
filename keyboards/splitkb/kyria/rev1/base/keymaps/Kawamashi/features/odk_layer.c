@@ -60,13 +60,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 default:
                     tap_code(PG_ODK);
             }
-            if (!is_apos_dr) {
-                switch (keycode) {
-                    case PG_M:
-                    case PG_C:
-                        is_shifted = true;
-                }
-            }
+
             if (is_shifted) {
                 is_shifted = false;
                 //set_mods(mods);

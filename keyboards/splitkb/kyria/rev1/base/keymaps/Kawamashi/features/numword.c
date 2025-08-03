@@ -55,14 +55,17 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
         // Numpad keycodes
          case KC_1 ... KC_0:
          case KC_PDOT:
-         case PG_X:
+         //case PG_X:
          //case PG_EACU:
          case PG_MOIN:
          case PG_ASTX: 
          case PG_PLUS:
          case PG_SLSH:
-         case PG_ACIR:
-         case PG_CARN:
+         case PG_EXP:
+         case PG_IND:
+         case PG_H:
+         case ALGR(PG_POIN):
+         case LT_EURO:
 
         // Misc
         case KC_BSPC:
