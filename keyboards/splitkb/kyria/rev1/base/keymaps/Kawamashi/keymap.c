@@ -111,11 +111,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
-  
-  //if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
+
   os4a_layer_exit_check();
   numword_exit_check();
-  //odk_layer_exit_check(keycode);
   end_CK(record);
 }
 
@@ -183,7 +181,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
       _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
-                                 _______, _______, _______, _______, _______, TG_APOS, _______, _______, KC_NO,   KC_NO
+                                 _______, _______, _______, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
 
     
@@ -203,7 +201,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_SYMBOLS] = LAYOUT(
       _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                           PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_J), PG_GRV,  _______,
-      _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, ALGR(PG_POIN),                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
+      _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, PG_2PTS,                                           PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
       _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,       _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
                                     _______, _______, _______,       PG_UNDS, KC_SPC,  _______, _______, _______, _______, _______
     ),
@@ -225,9 +223,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NUMBERS] = LAYOUT(
        _______, PG_DLR,  PG_MOIN, PG_PLUS, _______, PG_PERC,                                           PG_EXP,  _______, PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    ALGR(PG_POIN),                                     PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, PG_H,    KC_5,    _______,       _______, _______, _______, _______, _______, KC_9,    _______, _______, PG_ODK,  _______,
-                                  _______, _______, KC_PDOT,       KC_0   , LT_EURO, LT_REPT, KC_SPC,  KC_PDOT, _______, _______
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                           PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
+       _______, _______, _______, PG_H,    KC_5,    _______,       _______, _______, _______, _______, _______, KC_9,    PG_DEG,  _______, PG_ODK,  _______,
+                                  _______, _______, KC_PDOT,       KC_0   , LT_EURO, NNB_SPC, KC_SPC,  KC_PDOT, _______, _______
      ),
 
 
@@ -247,7 +245,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ODK] = LAYOUT(
        _______, _______, _______, _______, _______, PG_T,                                        _______, _______, _______, _______, _______, _______,
-       _______, OU_GRV,  _______, _______, _______, PG_3PTS,                                     _______, PG_K,    _______, _______, _______, _______,
+       _______, OU_GRV,  _______, _______, PG_PVIR, PG_3PTS,                                     _______, PG_K,    _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
                                   _______, _______, _______, _______, PG_O,    PG_APOS, PG_B,    _______, _______, _______
      ),

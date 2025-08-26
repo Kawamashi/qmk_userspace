@@ -47,6 +47,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             if (IS_LAYER_ON(_ODK)) {
                 switch (keycode) {
                     case PG_3PTS:   // For Clever Keys
+                    case PG_PVIR:
                     case PG_AROB:
                     case PG_K:
                     case PG_B:

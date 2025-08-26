@@ -25,6 +25,8 @@ bool is_send_string_macro(uint16_t keycode);
 bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);
 
 uint16_t tap_hold_extractor(uint16_t keycode);
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
+
 uint16_t get_ongoing_keycode_user(uint16_t keycode);
 
 uint8_t get_os4a_layer(uint16_t keycode);

@@ -86,6 +86,11 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                     set_oneshot_mods(MOD_BIT(KC_LSFT));
                 }
                 return true;
+
+            case PG_DEG:
+                tap_code(PG_ODK);
+                tap_code(KC_9);
+                return false;
         }
     }
     return true; // Process all other keycodes normally

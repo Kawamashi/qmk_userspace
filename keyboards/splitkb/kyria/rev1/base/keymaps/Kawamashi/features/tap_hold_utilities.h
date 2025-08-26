@@ -29,7 +29,7 @@ bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t
 
 void tap_converter(uint16_t keycode, keyrecord_t *record);
 
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
+bool process_tap_hold(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus
 }

@@ -76,8 +76,8 @@
 #define PG_S    KC_K    // S
 #define PG_R    KC_L    // R
 #define PG_L    KC_SCLN // L
-#define PG_APOS KC_QUOT // ’
-#define PG_EURO KC_NUHS // €
+#define PG_EURO KC_QUOT // €
+#define PG_APOS KC_NUHS // ’
 
 // Row 4
 #define PG_E    KC_NUBS // E
@@ -131,14 +131,14 @@
 
 // Row 3
 #define PG_2PTS S(PG_POIN) // :
-#define PG_LSBR S(PG_APOS) // [
-#define PG_RSBR S(PG_EURO) // ]
+#define PG_RSBR S(PG_APOS) // ]
+#define PG_LSBR S(PG_EURO) // [
 
 // Row 4
 #define PG_PVIR S(PG_ODK)
 
 // Row 5
-#define PG_NBSP S(KC_SPC)  // Espace insecable
+#define NNB_SPC S(KC_SPC)  // Espace fine insecable
 
 
 

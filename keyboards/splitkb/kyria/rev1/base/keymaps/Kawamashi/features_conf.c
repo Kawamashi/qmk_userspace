@@ -38,6 +38,7 @@ bool is_send_string_macro(uint16_t keycode) {
   switch (keycode) {
     case OU_GRV:
     case MAGIC:
+    //case PG_DEG:
       return true;
     
     default:
@@ -71,6 +72,32 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
     default:
       return keycode &= 0xff;
   }
+}
+
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
+
+  if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
+    switch (keycode) {
+
+        case RCTL_T(FEN_B):
+            return process_tap_hold(LWIN(KC_DOWN), record);
+
+        case SFT_T(COPY):
+            return process_tap_hold(C(PG_C), record);
+
+/*         case LT_NUMWORD:
+            return process_numword(NUMWORD, record); */
+
+        case LT_REPT:
+            repeat_key_invoke(&record->event);
+            return false;
+
+        case LT_MGC:
+            alt_repeat_key_invoke(&record->event);
+            return false;
+    }
+  }
+  return true; // Process all other keycodes normally
 }
 
 
@@ -151,8 +178,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
       case PG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.
         return keycode;
-      case PG_Q:
-        return PG_OE;
 
       default:
         clear_recent_keys();
@@ -263,21 +288,10 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     case C(PG_Y):
       return C(PG_Z);
   }
-/*   if ((get_mods() | get_weak_mods()) & MOD_BIT(KC_ALGR)) {
-    return KC_SPC;
-  }  */
 
   if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
-
-/*   keycode = tap_hold_extractor(keycode);
-  if (is_letter(keycode)) { return MAGIC; }
-
-  switch (keycode) {
-  case PG_APOS:
-  case KC_SPC:
-  case 
-
-  } */
+  if (get_last_keycode() == KC_NO) { return MAGIC; }
+  
 
   return KC_TRNS;  // Defer to default definitions.
 }
