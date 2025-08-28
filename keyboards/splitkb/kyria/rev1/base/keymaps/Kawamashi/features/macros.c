@@ -52,6 +52,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
                 layer_clear();
                 clear_oneshot_mods();
+                clear_weak_mods();
                 caps_word_off();
                 disable_num_word();
                 clear_recent_keys();

@@ -18,7 +18,6 @@
 
 uint16_t recent[RECENT_SIZE] = {KC_NO};
 uint16_t deadline = 0;
-//static unsigned short int bkspc_countdown = RECENT_SIZE + 1;
 unsigned short int bkspc_countdown = RECENT_SIZE + 1;
 
 // Copy of the record argument for the clever key.

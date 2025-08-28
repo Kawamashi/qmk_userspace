@@ -32,6 +32,7 @@ SRC += oled.c
 SRC += features/clever_keys_utilities.c
 SRC += clever_keys.c
 SRC += features/numword.c
+SRC += features/capslist.c
 SRC += features/macros.c
 SRC += features/oneshot.c
 SRC += features_conf.c

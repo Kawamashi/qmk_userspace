@@ -41,8 +41,7 @@ void disable_num_word(void) {
 void toggle_num_word(void) {
     if (is_num_word_on) {
         disable_num_word();
-    }
-    else {
+    } else {
         enable_num_word();
     }
 }

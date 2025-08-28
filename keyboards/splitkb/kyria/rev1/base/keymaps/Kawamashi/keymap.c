@@ -97,6 +97,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Custom tap-hold keys
   if (!process_custom_tap_hold(keycode, record)) { return false; }
 
+  // Caps List
+  if (!process_caps_list(keycode, record)) { return false; }
+
   // Macros
   if (!process_macros(keycode, record)) { return false; }
 
@@ -138,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       KC_NO, PG_VIRG, PG_EACU, PG_U,  PG_P,   PG_TIRE,                                 PG_V,   PG_M,    PG_C, PG_J, PG_X,   KC_NO,
       KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_POIN,                                 PG_G,   PG_T,    PG_S, PG_R, PG_L,   KC_NO,
-      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W, OS_ODK, KC_NO,
+      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   CAPSLIST,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W, OS_ODK, KC_NO,
                                KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
     ),
 
@@ -157,10 +160,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_L_MODS] = LAYOUT(
-      KC_NO, KC_NO,   KC_NO,  OS_WIN,  KC_RGUI, KC_NO,                                        _______, _______, _______, _______, _______, _______,
-      KC_NO, OS_RSA,  OS_FA,  OS_CTRL, OS_SHFT, KC_NO,                                        _______, _______, _______, _______, _______, _______,
-      KC_NO, OS_LALT, KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______, _______, _______, _______, _______, _______,
-                              KC_NO,   KC_NO,   _______, _______, _______, CAPSWORD, _______, KC_CAPS, _______, _______
+      KC_NO, KC_NO,   KC_NO,  OS_WIN,  KC_RGUI, KC_NO,                                        _______,  _______, _______, _______, _______, _______,
+      KC_NO, OS_RSA,  OS_FA,  OS_CTRL, OS_SHFT, KC_NO,                                        _______,  _______, _______, _______, _______, _______,
+      KC_NO, OS_LALT, KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______,  _______, _______, _______, _______, _______,
+                              KC_NO,   KC_NO,   _______, _______, _______, CAPSWORD, _______, CAPSLIST, _______, _______
     ),
 
 /*
@@ -181,7 +184,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
       _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
-                                 _______, _______, _______, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
+                                 _______, _______, KC_CAPS, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
 
     

@@ -219,6 +219,7 @@ bool to_be_shifted(uint16_t keycode, keyrecord_t *record) {
       is_shifted = true;
     case KC_CAPS:
     case CAPSWORD:
+    case CAPSLIST:
       return false;
     default:
       return (os4a_layer == _R_MODS) == on_left_hand(record->event.key);

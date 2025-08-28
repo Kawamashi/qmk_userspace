@@ -30,6 +30,17 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
       //apostrophe = true;
     }
 
+    //if (is_caps_lock_on()) {
+/*       if (is_letter(*next_keycode) || is_send_string_macro(*next_keycode)) {
+        if (recent[RECENT_SIZE - 3] == PG_E && recent[RECENT_SIZE - 2] == PG_T && prev_keycode == KC_SPC) {
+          caps_word_on();
+        }
+        if (recent[RECENT_SIZE - 2] == PG_VIRG && prev_keycode == KC_SPC && is_letter(*next_keycode)) {
+          caps_word_on();
+        }
+      } */
+    //}
+
   
   switch (prev_keycode) {
 
@@ -52,9 +63,10 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
         case PG_POIN:
           // Shift the letter at the beginning of sentences.
           if (is_letter(*next_keycode) || is_send_string_macro(*next_keycode)) {
-            if (!is_caps_lock_on()) { add_weak_mods(MOD_BIT(KC_LSFT)); }
-            break;
+            //if (!is_caps_lock_on()) { add_weak_mods(MOD_BIT(KC_LSFT)); }
+            add_weak_mods(MOD_BIT(KC_LSFT));
           }
+          break;
       }
       break;
 
