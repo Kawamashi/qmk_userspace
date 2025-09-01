@@ -69,6 +69,8 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
 // even if the tap/hold key is a custom one, with non-basic tap keycode.
 uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
+    case LT_NBSPC:
+      return NNB_SPC;
     default:
       return keycode &= 0xff;
   }
@@ -80,21 +82,21 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
         case RCTL_T(FEN_B):
-            return process_tap_hold(LWIN(KC_DOWN), record);
+          return process_tap_hold(LWIN(KC_DOWN), record);
 
         case SFT_T(COPY):
-            return process_tap_hold(C(PG_C), record);
+          return process_tap_hold(C(PG_C), record);
 
-/*         case LT_NUMWORD:
-            return process_numword(NUMWORD, record); */
+        case LT_NBSPC:
+          return process_tap_hold(NNB_SPC, record);
 
         case LT_REPT:
-            repeat_key_invoke(&record->event);
-            return false;
+          repeat_key_invoke(&record->event);
+          return false;
 
         case LT_MGC:
-            alt_repeat_key_invoke(&record->event);
-            return false;
+          alt_repeat_key_invoke(&record->event);
+          return false;
     }
   }
   return true; // Process all other keycodes normally

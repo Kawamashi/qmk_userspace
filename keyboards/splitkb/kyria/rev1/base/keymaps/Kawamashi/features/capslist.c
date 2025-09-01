@@ -1,7 +1,6 @@
 #include "capslist.h"
 
 static bool caps_list_active = false;
-//static bool last_word = false;
 static unsigned short int capslist_countdown = 0;
 static unsigned short int countdown_end = 5;
 
@@ -11,7 +10,6 @@ void enable_caps_list(void) {
     if (is_caps_lock_on()) { tap_code(KC_CAPS); }
     caps_word_on();
     caps_list_active = true;
-    //last_word = false;
     capslist_countdown = 0;
     countdown_end = 5;
 }
@@ -34,7 +32,6 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
     if (keycode == CAPSLIST) {
         if (record->event.pressed) {
           toggle_caps_list();
-          //enable_caps_list();
         }
         return false;
     }
@@ -55,12 +52,11 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
         case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
           // Earlier return if this has not been considered tapped yet
           if (record->tap.count == 0) { return true; }
-          keycode = keycode & 0xFF;    // Get tapping keycode.
+          keycode = tap_hold_extractor(keycode);    // Get tapping keycode.
           break;
     }
     
     if (should_continue_caps_list(keycode)) {
-        //if (is_caps_lock_on()) { return true; }
         if (caps_word_reactivation()) {
             caps_word_on();  // Reactivate Caps Word for a new word
             capslist_countdown = 0;
@@ -71,7 +67,7 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-//bool caps_list_press_user(uint16_t keycode) {
+
 bool should_continue_caps_list(uint16_t keycode) {
     if (keycode == KC_BSPC) {
         capslist_countdown--;
@@ -96,6 +92,7 @@ bool should_continue_caps_list(uint16_t keycode) {
     }
     return false;  // Deactivate Caps List.
 }
+
 
 bool caps_word_reactivation(void) {
 

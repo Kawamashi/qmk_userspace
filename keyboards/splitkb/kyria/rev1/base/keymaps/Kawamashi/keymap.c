@@ -106,17 +106,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Custom behaviour of the typo dead-key
   if (!process_odk_layer(keycode, record)) { return false; }
 
-    // Clever keys
+  // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
 
-    // Process all other keycodes normally
+  // Process all other keycodes normally
   return true;
 }
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
 
   os4a_layer_exit_check();
-  numword_exit_check();
+  //numword_exit_check();
   end_CK(record);
 }
 
@@ -203,10 +203,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SYMBOLS] = LAYOUT(
-      _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                           PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_J), PG_GRV,  _______,
-      _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, PG_2PTS,                                           PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
-      _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,       _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
-                                    _______, _______, _______,       PG_UNDS, KC_SPC,  _______, _______, _______, _______, _______
+      _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                     PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_J), PG_GRV,  _______,
+      _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, PG_2PTS,                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
+      _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______, _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
+                                    _______, _______, _______, PG_UNDS, KC_SPC,  _______, _______, _______, _______, _______
     ),
 
 
@@ -225,10 +225,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, _______, PG_PERC,                                           PG_EXP,  _______, PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                           PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, PG_H,    KC_5,    _______,       _______, _______, _______, _______, _______, KC_9,    PG_DEG,  _______, PG_ODK,  _______,
-                                  _______, _______, KC_PDOT,       KC_0   , LT_EURO, NNB_SPC, KC_SPC,  KC_PDOT, _______, _______
+       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  _______, PG_EGAL, PG_ASTX, _______, _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
+       _______, _______, _______, PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, KC_9,    PG_DEG,  _______, PG_ODK,  _______,
+                                  _______, _______, KC_PDOT, KC_0   , LT_NBSPC, _______, KC_SPC,  _______, _______, _______
      ),
 
 
@@ -269,7 +269,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      _______, KC_BSPC, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
+      _______, _______, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
       _______, C(PG_A), C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
       _______, KC_SPC,  KC_SPC,       KC_MUTE,    C(PG_Z),     C(PG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
                                       _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______

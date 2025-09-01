@@ -28,7 +28,7 @@
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
  * │     │ , │ É │ U │ P │ - │ V │ M │ C │ J │ X │ ' │ - │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │ O │ A │ I │ N │ . │ G │ T │ S │ R │ L │ ’ │ € │    │
+ * │      │ O │ A │ I │ N │ . │ G │ T │ S │ R │ L │ _ │ ’ │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
  * │    │ E │ Q │ Z │ Y │ H │ B │ K │ D │ F │ W │ **│          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
@@ -76,7 +76,7 @@
 #define PG_S    KC_K    // S
 #define PG_R    KC_L    // R
 #define PG_L    KC_SCLN // L
-#define PG_EURO KC_QUOT // €
+#define PG_UNDS KC_QUOT // _
 #define PG_APOS KC_NUHS // ’
 
 // Row 4
@@ -95,7 +95,7 @@
 
 /* Shifted symbols
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │ ~ │ | │ < │ > │ $ │ % │ ^ │ & │ _ │ # │ @ │ * │ \ │       │
+ * │ ~ │ € │ < │ > │ $ │ % │ ^ │ & │ | │ # │ @ │ * │ \ │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
  * │     │ ? │   │   │   │ ! │   │   │   │   │   │ " │ + │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
@@ -109,14 +109,14 @@
 
 // Row 1
 #define PG_TILD S(KC_GRV)  // ~
-#define PG_PIPE S(KC_1)    // |
+#define PG_EURO S(KC_1)    // €
 #define PG_INF  S(KC_2)    // <
 #define PG_SUP  S(KC_3)    // >
 #define PG_DLR  S(KC_4)    // $
 #define PG_PERC S(KC_5)    // %
 #define PG_ACIR S(KC_6)    // ^
 #define PG_ESPR S(KC_7)    // &
-#define PG_UNDS S(KC_8)    // _
+#define PG_PIPE S(KC_8)    // |
 #define PG_HASH S(KC_9)    // #
 #define PG_AROB S(KC_0)    // @
 #define PG_ASTX S(PG_SLSH) // *
@@ -132,7 +132,7 @@
 // Row 3
 #define PG_2PTS S(PG_POIN) // :
 #define PG_RSBR S(PG_APOS) // ]
-#define PG_LSBR S(PG_EURO) // [
+#define PG_LSBR S(PG_UNDS) // [
 
 // Row 4
 #define PG_PVIR S(PG_ODK)

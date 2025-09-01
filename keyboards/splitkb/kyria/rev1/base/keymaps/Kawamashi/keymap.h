@@ -53,20 +53,12 @@ enum custom_keycodes {
   RAZ,
   CAPSWORD,
   OU_GRV,
-  //PG_OE,
-  //E_CIRC,
-/*  I_CIRC,
-  A_CIRC,
-  O_CIRC,
-  U_CIRC,
-  I_TREM,*/
   MAGIC,
   OS_SHFT,
   OS_CTRL,
   OS_RALT,
   OS_LALT,
   OS_WIN,
-  //OS_ODK,
   CNL_ODK,
   TG_APOS,
   PG_DEG
@@ -81,8 +73,7 @@ enum custom_keycodes {
 #define TT_FA TT(_FUNCAPPS)
 #define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
-//#define LT_NUMWORD LT(_SHORTNAV, NUMWORD)
-#define LT_EURO LT(_SHORTNAV, PG_EURO)
+#define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
 #define E_CIRC S(FG_0)
 #define OS_ODK OSL(_ODK)
 #define OS_RSA OSM(MOD_RALT | MOD_LSFT)
