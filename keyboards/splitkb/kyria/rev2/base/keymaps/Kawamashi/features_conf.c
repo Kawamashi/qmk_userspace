@@ -196,7 +196,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    case PG_ODK:
+    //case PG_ODK:
         return true;
     default:
         return false;

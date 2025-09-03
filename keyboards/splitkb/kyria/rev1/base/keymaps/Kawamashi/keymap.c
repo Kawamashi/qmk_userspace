@@ -46,7 +46,10 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
       if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
-          tap_converter(keycode, record);
+          //tap_converter(keycode, record);
+          record->tap.interrupted = false;
+          record->tap.count       = 1;
+          return true;
       }
     }
     return false;
@@ -115,7 +118,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
 
-  os4a_layer_exit_check();
+  //os4a_layer_exit_check();
   //numword_exit_check();
   end_CK(record);
 }
@@ -139,10 +142,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_BASE] = LAYOUT(
-      KC_NO, PG_VIRG, PG_EACU, PG_U,  PG_P,   PG_TIRE,                                 PG_V,   PG_M,    PG_C, PG_J, PG_X,   KC_NO,
-      KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_POIN,                                 PG_G,   PG_T,    PG_S, PG_R, PG_L,   KC_NO,
-      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   CAPSLIST,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,    PG_F, PG_W, OS_ODK, KC_NO,
-                               KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_RGUI, KC_NO
+      KC_NO, PG_VIRG, PG_EACU, PG_U,  PG_P,   PG_TIRE,                                 PG_V,   PG_M,  PG_C, PG_J, PG_X,   KC_NO,
+      KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_POIN,                                 PG_G,   PG_T,  PG_S, PG_R, PG_L,   KC_NO,
+      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,  PG_F, PG_W, OS_ODK, KC_NO,
+                               KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_NO, KC_NO
     ),
 
 /*

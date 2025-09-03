@@ -262,8 +262,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TT_FA:
-    //case NUM_ODK:
-    //case PG_ODK:
+    //case NUM_ODK:  // Ne sert à rien, car NUM_ODK est un vrai one-shot : les mods sont transmis même sans paramétrage.
         return true;
     default:
         return false;

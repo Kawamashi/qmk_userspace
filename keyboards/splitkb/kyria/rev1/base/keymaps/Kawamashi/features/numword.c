@@ -113,10 +113,10 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
                 }
                 break; */
         }
-
         exit_num_word = should_exit_num_word(keycode, record);
-    } else {
-        if (exit_num_word) { disable_num_word(); }
+
+    } else if (exit_num_word) {
+        disable_num_word();
     }
     return true;
 }
