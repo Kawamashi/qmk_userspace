@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 
 #pragma once
 
@@ -23,13 +24,26 @@
 extern "C" {
 #endif
 
-bool on_left_hand(keypos_t pos);
+extern uint8_t os4a_layer;
+//extern bool exit_os4a_layer;
+//extern bool pending_OSL;
 
-bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record);
+void os4a_layer_off(uint8_t layer);
+void os4a_layer_on(uint8_t layer);
 
-void tap_converter(uint16_t keycode, keyrecord_t *record);
+void os4a_tap(uint16_t keycode);
 
-bool process_tap_hold(uint16_t keycode, keyrecord_t *record);
+bool process_os4a_keys(uint16_t keycode, keyrecord_t *record);
+
+void update_osl(uint16_t keycode);
+
+bool process_os4a_layers(uint16_t keycode, keyrecord_t *record);
+
+void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record);
+
+bool process_mods(uint16_t keycode, keyrecord_t *record);
+
+void os4a_layer_exit_check(void);
 
 #ifdef __cplusplus
 }

@@ -60,22 +60,20 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
          case PG_ASTX: 
          case PG_PLUS:
          case PG_SLSH:
-         case PG_EGAL:
          case PG_EXP:
          case PG_IND:
          case PG_H:
          case PG_2PTS:
-         //case PG_EURO:
-         //case LT_NBSPC:
+         case LT_EURO:
          case NNB_SPC:
 
         // Misc
         case KC_BSPC:
         case PG_ODK:   // Not to exit Numword when chording it with ODK
-        //case NUMWORD:   // For the combo NUMWORD to work
+        case NUMWORD:   // For the combo NUMWORD to work
 
 /*         
-        
+        case PG_EGAL:
         case PG_BSLS:*/
             return false;
     }
@@ -95,30 +93,27 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
     // if the behavior is not on, so allow QMK to handle the event as usual.
     if (!is_num_word_on) { return true; }
     // Nothing else acts on key release, either
-    if (record->event.pressed) {
+    if (!record->event.pressed) { return true; }
 
-        // Get the base keycode of a mod or layer tap key
-        switch (keycode) {
-            case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-                // Earlier return if this has not been considered tapped yet
-                if (record->tap.count == 0) { return true; }
-                keycode = tap_hold_extractor(keycode);
-                break;
-    /*         case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:  // `LT(layer, key)` keys.
-                // Release event on a held layer-tap key when numword is on.
-                if (record->tap.count == 0 && !record->event.pressed) {     
-                    return false;  // Skip default handling so that layer stays on.
-                } else {
-                    keycode = keycode & 0xFF;    // Get tapping keycode.
-                }
-                break; */
-        }
-        exit_num_word = should_exit_num_word(keycode, record);
-
-    } else if (exit_num_word) {  // On keyrelease
-        disable_num_word();
+    // Get the base keycode of a mod or layer tap key
+    switch (keycode) {
+        case QK_MOD_TAP ... QK_MOD_TAP_MAX:
+        case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
+            // Earlier return if this has not been considered tapped yet
+            if (record->tap.count == 0) { return true; }
+            keycode = keycode & 0xFF;
+            break;
+/*         case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:  // `LT(layer, key)` keys.
+            // Release event on a held layer-tap key when numword is on.
+            if (record->tap.count == 0 && !record->event.pressed) {     
+                return false;  // Skip default handling so that layer stays on.
+            } else {
+                keycode = keycode & 0xFF;    // Get tapping keycode.
+            }
+            break; */
     }
+
+    exit_num_word = should_exit_num_word(keycode, record);
     return true;
 }
 

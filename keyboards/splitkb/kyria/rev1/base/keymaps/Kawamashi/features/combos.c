@@ -31,7 +31,7 @@ enum combos {
   ESC, 
   HELP, 
   PANIC,
-  NUMWRD,
+  //NUMWRD,
   ALTTAB,
   ALTESC
 };
@@ -48,7 +48,7 @@ const uint16_t PROGMEM home_combo[] = {PG_Z, PG_Y, COMBO_END};
 const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
 const uint16_t PROGMEM help_combo[] = {PG_EACU, PG_J, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
-const uint16_t PROGMEM numword_combo[] = {PG_T, PG_R, COMBO_END};
+//const uint16_t PROGMEM numword_combo[] = {PG_T, PG_R, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
 const uint16_t PROGMEM altesc_combo[] = {PG_A, PG_I, PG_N, COMBO_END};
 
@@ -65,7 +65,7 @@ combo_t key_combos[] = {
     [ESC] = COMBO(esc_combo, KC_ESC),
     [HELP] = COMBO(help_combo, AIDE_MEM), 
     [PANIC] = COMBO(panic_combo, RAZ),
-    [NUMWRD] = COMBO(numword_combo, NUMWORD),
+    //[NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
     [ALTESC] = COMBO(altesc_combo, LALT(KC_ESC))
     };

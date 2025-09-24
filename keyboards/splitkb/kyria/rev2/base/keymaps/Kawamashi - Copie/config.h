@@ -33,7 +33,7 @@
 #    define RGBLIGHT_LIMIT_VAL 150
 #endif
 
-#define TAPPING_TOGGLE 1
+//#define TAPPING_TOGGLE 1
 
 // combo
 #define COMBO_TERM 50
@@ -49,6 +49,8 @@
 #define PERMISSIVE_HOLD
 //#define PERMISSIVE_HOLD_PER_KEY
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+
+#define TAPPING_TOGGLE 1
 
 // EC11K encoders have a different resolution than other EC11 encodeisrs.
 // When using the default resolution of 4, if you notice your encoder skipping

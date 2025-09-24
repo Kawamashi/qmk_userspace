@@ -25,6 +25,7 @@ oneshot_state os_win_state = os_up_unqueued;
 
 uint8_t os4a_layer = 0;
 static bool exit_os4a_layer = false;
+//static bool pending_OSL = false;
 
 void os4a_layer_on(uint8_t layer) {
   layer_on(layer);
@@ -68,7 +69,6 @@ bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
     // to be processed (ex: custom altgr, clever keys).
     uint8_t mods = get_mods() | get_oneshot_mods();
     if (!exit_os4a_layer && to_be_shifted(keycode, record) && mods == 0) {
-      // Don't use weak mods, it interferes with Capsword.
       set_oneshot_mods(MOD_BIT(KC_LSFT));
     }
     return true;
@@ -101,12 +101,12 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   // Behaviour of the OS4A layers
   if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
 
+  // Updating OSL status on OS4A layers
+  //pending_OSL = os4a_layer_changer(keycode);
+
   // When Ctrl or Shift are released, for mouse use.
   //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
 
-  if (!record->event.pressed) {
-    if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
-  }
   return true;
 }
 

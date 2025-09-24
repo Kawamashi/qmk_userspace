@@ -18,18 +18,15 @@
 
 #include "quantum.h"
 #include "keymap.h"
+//#include <string.h>
+//#include "keymap_french_frgo.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool on_left_hand(keypos_t pos);
+void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record);
 
-bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record);
-
-void tap_converter(uint16_t keycode, keyrecord_t *record);
-
-bool process_tap_hold(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus
 }

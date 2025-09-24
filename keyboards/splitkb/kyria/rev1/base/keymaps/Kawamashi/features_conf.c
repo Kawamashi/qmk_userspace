@@ -150,9 +150,9 @@ bool caps_word_press_user(uint16_t keycode) {
     case PG_UNDS:
     case PG_TIRE:
     case PG_SLSH:
-    case KC_KP_1 ... KC_KP_0:
-    case KC_LEFT:
-    case KC_RIGHT:
+    case KC_1 ... KC_0:
+    //case KC_LEFT:
+    //case KC_RIGHT:
     case KC_BSPC:
     case LCTL(KC_BSPC):
     case KC_DEL:
@@ -177,9 +177,12 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
       case PG_K:
       case PG_B:
       case PG_AROB:
-      case PG_3PTS:
+      //case PG_3PTS:
       case KC_SPC:  // In order to uppercase J after '?' for ex.
         return keycode;
+
+      case PG_POIN:
+        return PG_3PTS;
 
       default:
         clear_recent_keys();
@@ -202,8 +205,9 @@ uint8_t get_os4a_layer(uint16_t keycode) {
 bool os4a_layer_changer(uint16_t keycode) {
   switch (keycode) {
     case OS_FA:
+    //case OS_WMNT:
     case NUMWORD:
-    case TT_FA:
+    case TG_FA:
     case OS_RSA:
     case NUM_ODK:
       return true;
@@ -217,8 +221,8 @@ bool to_be_shifted(uint16_t keycode, keyrecord_t *record) {
   if (!IS_KEYEVENT(record->event)) { return true; }
   
   switch (keycode) {
-    case OS_ODK:
-      is_shifted = true;
+/*     case OS_ODK:
+      is_shifted = true; */
     case KC_CAPS:
     case CAPSWORD:
     case CAPSLIST:
@@ -261,7 +265,8 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_WIN:
     case OS_FA:
     case NUMWORD:
-    case TT_FA:
+    case TG_FA:
+    //case OS_WMNT:
     //case NUM_ODK:  // Ne sert à rien, car NUM_ODK est un vrai one-shot : les mods sont transmis même sans paramétrage.
         return true;
     default:

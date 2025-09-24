@@ -59,10 +59,39 @@ __attribute__((weak)) bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_
 }
 
 
-bool process_tap_hold(uint16_t keycode, keyrecord_t *record) {
+static bool process_tap_hold(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {    // On press
       tap_code16(keycode);
       return false;
   }
   return true;
+}
+
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
+
+  if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
+    switch (keycode) {
+
+/*         case ALGR_T(PG_CACL):
+            return process_tap_hold(PG_CACL, record); */
+
+        case RCTL_T(FEN_B):
+            return process_tap_hold(LWIN(KC_DOWN), record);
+
+        case SFT_T(COPY):
+            return process_tap_hold(C(PG_C), record);
+
+        case LT_NUMWORD:
+            return process_numword(NUMWORD, record);
+
+        case LT_REPT:
+            repeat_key_invoke(&record->event);
+            return false;
+
+        case LT_MGC:
+            alt_repeat_key_invoke(&record->event);
+            return false;
+    }
+  }
+  return true; // Process all other keycodes normally
 }

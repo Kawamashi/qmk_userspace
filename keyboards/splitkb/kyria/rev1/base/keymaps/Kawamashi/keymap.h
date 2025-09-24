@@ -70,7 +70,7 @@ enum custom_keycodes {
 #define LT_REPT LT(_NUMBERS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define OS_FA OSL(_FUNCAPPS)
-#define TT_FA TT(_FUNCAPPS)
+#define TG_FA TT(_FUNCAPPS)
 #define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
 #define LT_NBSPC LT(_SHORTNAV, NNB_SPC)

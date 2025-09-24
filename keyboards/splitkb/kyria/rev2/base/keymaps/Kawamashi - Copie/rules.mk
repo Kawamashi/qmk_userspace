@@ -14,9 +14,6 @@ RGBLIGHT_ENABLE = no      # Disable keyboard RGB underglow
 #CONSOLE_ENABLE = yes 
 
 LTO_ENABLE = yes
-CONSOLE_ENABLE = no
-COMMAND_ENABLE = no
-MOUSEKEY_ENABLE = no
 
 ENCODER_MAP_ENABLE = no
 
@@ -35,7 +32,6 @@ SRC += oled.c
 SRC += features/clever_keys_utilities.c
 SRC += clever_keys.c
 SRC += features/numword.c
-SRC += features/capslist.c
 SRC += features/macros.c
 SRC += features/oneshot.c
 SRC += features_conf.c
@@ -46,5 +42,3 @@ INTROSPECTION_KEYMAP_C = features/combos.c
 MUSIC_ENABLE = no
 SPACE_CADET_ENABLE = no
 GRAVE_ESC_ENABLE = no 
-
-MAGIC_ENABLE = no

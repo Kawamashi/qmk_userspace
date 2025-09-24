@@ -50,8 +50,6 @@
 //#define PERMISSIVE_HOLD_PER_KEY
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
-#define TAPPING_TOGGLE 1
-
 // EC11K encoders have a different resolution than other EC11 encodeisrs.
 // When using the default resolution of 4, if you notice your encoder skipping
 // every other tick, lower the resolution to 2.

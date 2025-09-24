@@ -26,11 +26,11 @@
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
  * │ ` │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │ 0 │ / │ = │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
- * │     │ , │ É │ U │ P │ - │ V │ M │ C │ J │ X │ ' │ - │     │
+ * │     │ . │ É │ U │ P │ B │ V │ M │ C │ ’ │ X │ ' │ - │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │ O │ A │ I │ N │ . │ G │ T │ S │ R │ L │ _ │ ’ │    │
+ * │      │ O │ A │ I │ N │ , │ G │ T │ S │ R │ L │ [ │ ] │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
- * │    │ E │ Q │ Z │ Y │ H │ B │ K │ D │ F │ W │ **│          │
+ * │    │ E │ Q │ Z │ Y │ H │ J │ K │ D │ F │ W │ **│          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
  * │    │    │    │                        │    │    │    │    │
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
@@ -52,15 +52,15 @@
 #define PG_EGAL KC_EQL  // =
 
 // Row 2
-#define PG_VIRG KC_Q    // ,
+#define PG_POIN KC_Q    // .
 #define PG_EACU KC_W    // É    
 #define PG_U    KC_E    // U
 #define PG_P    KC_R    // P
-#define PG_TIRE KC_T    // -
+#define PG_B    KC_T    // B
 #define PG_V    KC_Y    // V
 #define PG_M    KC_U    // M
 #define PG_C    KC_I    // C
-#define PG_J    KC_O    // J
+#define PG_APOS KC_O    // ’
 #define PG_X    KC_P    // X
 #define PG_APOD KC_LBRC // '
 #define PG_MOIN KC_RBRC // -
@@ -70,14 +70,14 @@
 #define PG_A    KC_S    // A
 #define PG_I    KC_D    // I
 #define PG_N    KC_F    // N
-#define PG_POIN KC_G    // .
+#define PG_VIRG KC_G    // ,
 #define PG_G    KC_H    // G
 #define PG_T    KC_J    // T
 #define PG_S    KC_K    // S
 #define PG_R    KC_L    // R
 #define PG_L    KC_SCLN // L
-#define PG_UNDS KC_QUOT // _
-#define PG_APOS KC_NUHS // ’
+#define PG_LSBR KC_QUOT // [
+#define PG_RSBR KC_NUHS // ]
 
 // Row 4
 #define PG_E    KC_NUBS // E
@@ -85,7 +85,7 @@
 #define PG_Z    KC_X    // Z
 #define PG_Y    KC_C    // Y
 #define PG_H    KC_V    // H
-#define PG_B    KC_B    // B
+#define PG_J    KC_B    // J
 #define PG_K    KC_N    // K
 #define PG_D    KC_M    // C
 #define PG_F    KC_COMM // H
@@ -95,11 +95,11 @@
 
 /* Shifted symbols
  * ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
- * │ ~ │ € │ < │ > │ $ │ % │ ^ │ & │ | │ # │ @ │ * │ \ │       │
+ * │ ~ │ | │ < │ > │ $ │ % │ ^ │ & │ _ │ # │ @ │ * │ \ │       │
  * ├───┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─────┤
- * │     │ ? │   │   │   │ ! │   │   │   │   │   │ " │ + │     │
+ * │     │ ? │   │   │   │   │   │   │   │ ! │   │ " │ + │     │
  * ├─────┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┐    │
- * │      │   │   │   │   │ : │   │   │   │   │   │ [ │ ] │    │
+ * │      │   │   │   │   │ : │   │   │   │   │   │   │   │    │
  * ├────┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴────┤
  * │    │   │   │   │   │   │   │   │   │   │   │ ; │          │
  * ├────┼───┴┬──┴─┬─┴───┴───┴───┴───┴───┴──┬┴───┼───┴┬────┬────┤
@@ -109,36 +109,34 @@
 
 // Row 1
 #define PG_TILD S(KC_GRV)  // ~
-#define PG_EURO S(KC_1)    // €
+#define PG_PIPE S(KC_1)    // |
 #define PG_INF  S(KC_2)    // <
 #define PG_SUP  S(KC_3)    // >
 #define PG_DLR  S(KC_4)    // $
 #define PG_PERC S(KC_5)    // %
 #define PG_ACIR S(KC_6)    // ^
 #define PG_ESPR S(KC_7)    // &
-#define PG_PIPE S(KC_8)    // |
+#define PG_UNDS S(KC_8)    // _
 #define PG_HASH S(KC_9)    // #
 #define PG_AROB S(KC_0)    // @
 #define PG_ASTX S(PG_SLSH) // *
 #define PG_BSLS S(PG_EGAL)  // '\'
 
 // Row 2
-#define PG_QUES S(PG_VIRG) // ?
-#define PG_EXCL S(PG_TIRE) // !
+#define PG_QUES S(PG_POIN) // ?
+#define PG_EXCL S(PG_APOS) // !
 #define PG_DQUO S(PG_APOD) // "
 #define PG_PLUS S(PG_MOIN) // +
 //#define PG_DIFF S(PG_EGAL) // ≠
 
-// Row 3
-#define PG_2PTS S(PG_POIN) // :
-#define PG_RSBR S(PG_APOS) // ]
-#define PG_LSBR S(PG_UNDS) // [
+ // Row 3
+ #define PG_2PTS S(PG_VIRG) // :
 
 // Row 4
 #define PG_PVIR S(PG_ODK)
 
 // Row 5
-#define NNB_SPC S(KC_SPC)  // Espace fine insecable
+#define PG_NBSP S(KC_SPC)  // Espace insecable
 
 
 
@@ -208,8 +206,7 @@
  * └────┴────┴────┴────────────────────────┴────┴────┴────┴────┘
  */
 
- #define PG_EXP S(ALGR(PG_VIRG)) // ^ (dead)
- #define PG_IND S(ALGR(PG_O)) // ˇ (dead)
+ #define PG_CARN S(ALGR(PG_X)) // ˇ (dead)
 /* // Row 1
 #define PG_IBRV S(ALGR(PG_AROB))   //  ̑ (dead)
 #define PG_HACU S(ALGR(PG_LPRN)) // ˝ (dead)

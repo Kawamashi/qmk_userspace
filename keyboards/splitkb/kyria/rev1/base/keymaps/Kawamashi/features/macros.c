@@ -40,9 +40,9 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                     case _SHORTNAV:
                         tap_code(KC_F15);
                         return false;
-                    case _FUNCAPPS:
+/*                     case _FUNCAPPS:
                         tap_code(KC_F16);
-                        return false;
+                        return false; */
                 }
 
             case RAZ:

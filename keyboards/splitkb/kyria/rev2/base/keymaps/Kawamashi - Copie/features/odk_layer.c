@@ -16,26 +16,23 @@
 
 #include "odk_layer.h"
 
-bool is_shifted = false;
+//static uint16_t odk_keycode = KC_NO;
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed) {    // On press
 
         const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-        //const uint8_t mods = get_mods() | get_oneshot_mods();
-        //static bool is_shifted = false;
+        static bool is_shifted = false;
 
         if (keycode == OS_ODK) {
+            // Handle the custom OSL that go with this feature
+            // It's timerless, to avoid problems when rolling with an other key, when shift is on.
             // Custom behaviour when alt-gr
-            if (mods & MOD_BIT(KC_ALGR)) {
+/*             if (mods & MOD_BIT(KC_ALGR)) {
                 tap_code16(ALGR(PG_ODK));
                 return false;
-            }
-
-        } else if (keycode == PG_ODK) {
-            // Special behaviour of PG_ODK when shifted
-            // Shift must apply to the next keycode
+            } */
             is_shifted = mods & MOD_MASK_SHIFT;
             if (is_shifted) {
                 del_weak_mods(MOD_MASK_SHIFT);
@@ -43,28 +40,43 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 unregister_mods(MOD_MASK_SHIFT);
             }
 
-        } else {
-            if (IS_LAYER_ON(_ODK)) {
+        } else if (keycode == PG_ODK) {
+            // Special behaviour of FR_ODK when shifted
+            // Shift must apply to the next keycode
+            return true;
+
+        } else if (IS_LAYER_ON(_ODK)) {
+            switch (keycode) {
+                case PG_3PTS:   // For Clever Keys
+                case PG_AROB:
+                case PG_K:
+                case PG_B:
+                case PG_APOS:
+                //case PG_BL:
+                //case PG_ECIR:
+                //case J_APOS:
+                case OU_GRV:
+                //case PG_CCED:
+
+                case KC_SPC:    // When space is added by Clever Keys
+                
+                case CNL_ODK:
+                    break;
+          
+                default:
+                    tap_code(PG_ODK);
+            }
+            if (!is_apos_dr) {
                 switch (keycode) {
-                    case PG_3PTS:   // For Clever Keys
-                    case PG_PVIR:
-                    case PG_AROB:
-                    case PG_K:
-                    case PG_B:
-                    case PG_APOS:
-                    case OU_GRV:
-                    case KC_SPC:    // When space is added by Clever Keys
-                    case CNL_ODK:
-                        break;
-            
-                    default:
-                        tap_code(PG_ODK);
+                    case PG_M:
+                    case PG_C:
+                        is_shifted = true;
                 }
             }
             if (is_shifted) {
                 is_shifted = false;
                 //set_mods(mods);
-                add_weak_mods(MOD_BIT(KC_LSFT));
+                set_oneshot_mods(MOD_BIT(KC_LSFT));
             }
         }
     }

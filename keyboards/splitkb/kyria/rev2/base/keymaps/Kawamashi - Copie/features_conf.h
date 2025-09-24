@@ -19,18 +19,12 @@
 #include "quantum.h"
 #include "keymap.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+bool isLetter(uint16_t keycode);
+bool isSendStringMacro(uint16_t keycode);
+bool is_caps_lock_on(void);
+uint16_t tap_hold_extractor(uint16_t keycode);
 
-bool on_left_hand(keypos_t pos);
-
-bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record);
-
-void tap_converter(uint16_t keycode, keyrecord_t *record);
-
-bool process_tap_hold(uint16_t keycode, keyrecord_t *record);
-
-#ifdef __cplusplus
-}
-#endif
+uint8_t get_os4a_layer(uint16_t keycode);
+bool os4a_layer_changer(uint16_t keycode);
+bool to_be_shifted(uint16_t keycode, keyrecord_t *record);
+//bool mods_for_mouse(uint16_t keycode);
