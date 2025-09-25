@@ -76,22 +76,6 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   uint16_t custom_keycode = get_ongoing_keycode_user(keycode);
   if (custom_keycode != KC_TRNS) { return custom_keycode; }
 
-/*    if (is_send_string_macro(keycode)) { return keycode; }
-
-  if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-      case PG_K:
-      case PG_B:
-      case PG_AROB:
-      case PG_3PTS:
-      case KC_SPC:  // In order to uppercase J after '?' for ex.
-        return keycode;
-
-      default:
-        clear_recent_keys();
-        return KC_NO;
-    }
-  } */
 
   uint8_t basic_keycode = keycode;
   // Handle keys carrying a modifier, for ex on layers(! and ?).

@@ -41,6 +41,9 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 del_weak_mods(MOD_MASK_SHIFT);
                 del_oneshot_mods(MOD_MASK_SHIFT);
                 unregister_mods(MOD_MASK_SHIFT);
+                tap_code(PG_ODK);
+                add_weak_mods(MOD_BIT(KC_LSFT));
+                return false;
             }
 
         } else {
@@ -58,14 +61,15 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                         break;
             
                     default:
-                        tap_code(PG_ODK);
+                        //tap_code(PG_ODK);
+                        invoke_key(PG_ODK, record);
                 }
             }
-            if (is_shifted) {
+/*             if (is_shifted) {
                 is_shifted = false;
                 //set_mods(mods);
                 add_weak_mods(MOD_BIT(KC_LSFT));
-            }
+            } */
         }
     }
     return true;
