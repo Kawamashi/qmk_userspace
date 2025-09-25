@@ -40,6 +40,7 @@ void invoke_key(uint16_t keycode, keyrecord_t* record);
 void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, keyrecord_t* record);
 void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record);
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record);
+void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record);
 
 bool process_clever_keys(uint16_t keycode, keyrecord_t* record);
 void end_CK(keyrecord_t* record);

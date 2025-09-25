@@ -133,7 +133,6 @@ void process_key(uint16_t keycode, keyrecord_t* record) {
 
 void invoke_key(uint16_t keycode, keyrecord_t* record) {
   process_key(keycode, record);  // tap_code doesn't work with caps word.
-  //record->keycode = keycode;
   bkspc_countdown = 1;
 }
 
@@ -148,10 +147,15 @@ void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record
   for (int i = 0; i < num_keycodes; ++i) {
     process_key(keycodes[i], record);  // tap_code doesn't work with caps word.
   }
-  bkspc_countdown = num_keycodes;
 }
 
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
+  process_word(keycodes, num_keycodes - 1, record);
+  bkspc_countdown = num_keycodes - 1;
+  replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
+}
+
+void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
   process_word(keycodes, num_keycodes - 1, record);
   replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
 }

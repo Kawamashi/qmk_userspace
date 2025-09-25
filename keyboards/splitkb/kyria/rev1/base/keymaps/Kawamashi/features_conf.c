@@ -299,6 +299,5 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
   if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
   if (get_last_keycode() == KC_NO) { return MAGIC; }
   
-
   return KC_TRNS;  // Defer to default definitions.
 }
