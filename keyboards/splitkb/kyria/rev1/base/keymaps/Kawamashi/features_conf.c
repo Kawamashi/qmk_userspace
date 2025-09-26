@@ -252,9 +252,10 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
   uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
   //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
 
-  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
-
   switch (keycode) {
+    case OS_ODK:
+      if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
+      break;
     //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
     case L_OS4A:
     case R_OS4A:
@@ -267,11 +268,11 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case NUMWORD:
     case TG_FA:
     //case OS_WMNT:
-    //case NUM_ODK:  // Ne sert à rien, car NUM_ODK est un vrai one-shot : les mods sont transmis même sans paramétrage.
-        return true;
-    default:
-        return false;
+      return true;
+/*     default:
+      return false; */
   }
+  return false;
 }
 
 

@@ -228,10 +228,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMBERS] = LAYOUT(
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  _______, PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, KC_9,    PG_DEG,  _______, PG_ODK,  _______,
-                                  _______, _______, KC_PDOT, KC_0   , LT_NBSPC, _______, KC_SPC,  _______, _______, _______
+      // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
+       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  S(PG_EGAL), PG_EGAL, PG_ASTX, _______, _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_SLSH,    KC_6,    KC_7,    KC_8,    _______,
+       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, KC_9,       PG_DEG,  _______, PG_ODK,  _______,
+                                  _______, _______, KC_PDOT, KC_0   , LT_NBSPC, _______, KC_SPC,  _______, _______,    _______
      ),
 
 

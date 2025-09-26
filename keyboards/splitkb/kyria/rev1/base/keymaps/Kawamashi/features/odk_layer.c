@@ -37,30 +37,30 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 del_weak_mods(MOD_MASK_SHIFT);
                 del_oneshot_mods(MOD_MASK_SHIFT);
                 unregister_mods(MOD_MASK_SHIFT);
+
                 tap_code(PG_ODK);
+
                 set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
                 return false;
             }
-
-        } else {
-            if (IS_LAYER_ON(_ODK)) {
-                switch (keycode) {
-                    //case PG_3PTS:   // For Clever Keys
-                    case PG_PVIR:
-                    case PG_AROB:
-                    case PG_K:
-                    case PG_B:
-                    case PG_APOS:
-                    case OU_GRV:
-                    case KC_SPC:    // When space is added by Clever Keys
-                    case CNL_ODK:
-                        break;
             
-                    default:
-                        // Don't use tap_code, it doesn't go through process_record.
-                        // therefore it doesn't trigger the special behaviour of PG_ODK described above
-                        invoke_key(PG_ODK, record);
-                }
+        } else if (IS_LAYER_ON(_ODK)) {
+            switch (keycode) {
+                //case PG_3PTS:   // For Clever Keys
+                case PG_PVIR:
+                case PG_AROB:
+                case PG_K:
+                case PG_B:
+                case PG_APOS:
+                case OU_GRV:
+                case KC_SPC:    // When space is added by Clever Keys
+                case CNL_ODK:
+                    break;
+        
+                default:
+                    // Don't use tap_code, it doesn't go through process_record.
+                    // therefore it doesn't trigger the special behaviour of PG_ODK described above
+                    invoke_key(PG_ODK, record);
             }
         }
     }
