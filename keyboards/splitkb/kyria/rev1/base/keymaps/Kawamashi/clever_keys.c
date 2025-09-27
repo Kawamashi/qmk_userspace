@@ -178,7 +178,7 @@ void get_clever_keycode(uint16_t* next_keycode, keyrecord_t* record) {
         
         default:
           // "à"
-          process_key(PG_ODK,record);
+          process_key(MOD_ODK, record);
           return replace_ongoing_key(PG_A, next_keycode, record);
       }
 
