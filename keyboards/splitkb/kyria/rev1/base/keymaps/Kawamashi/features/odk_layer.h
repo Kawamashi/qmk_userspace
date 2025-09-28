@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record);
+void mod_odk(void);
 
 #ifdef __cplusplus
 }

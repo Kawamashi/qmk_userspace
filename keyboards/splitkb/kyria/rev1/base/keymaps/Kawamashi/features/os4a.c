@@ -66,7 +66,7 @@ bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
     // Add OS Shift when no other mods are active.
     // Testing exit_os4a_layer is necessary to prevent OS shift to be added when other features create keyrecords
     // to be processed (ex: custom altgr, clever keys).
-    uint8_t mods = get_mods() | get_oneshot_mods();
+    const uint8_t mods = get_mods() | get_oneshot_mods();
     if (!exit_os4a_layer && to_be_shifted(keycode, record) && mods == 0) {
       // Don't use weak mods, it interferes with Capsword.
       set_oneshot_mods(MOD_BIT(KC_LSFT));

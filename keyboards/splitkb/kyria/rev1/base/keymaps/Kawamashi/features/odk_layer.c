@@ -21,7 +21,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {    // On press
 
         const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-        bool mod_odk = false;
+        //bool mod_odk = false;
         //const uint8_t mods = get_mods() | get_oneshot_mods();
 
         if (keycode == OS_ODK) {
@@ -32,12 +32,12 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
 
-        } else if (keycode == MOD_ODK) {
-            mod_odk = true;
+        } else if (keycode == PG_ODK) {
+            //mod_odk = true;
+            return true;
 
         } else if (IS_LAYER_ON(_ODK)) {
             switch (keycode) {
-                //case PG_3PTS:   // For Clever Keys
                 case PG_PVIR:
                 case PG_AROB:
                 case PG_K:
@@ -46,10 +46,12 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 case OU_GRV:
                 case KC_SPC:    // When space is added by Clever Keys
                 case CNL_ODK:
+                case PG_ODK:
                     return true;
         
                 default:
-                    mod_odk = true;
+                    mod_odk();
+                    //mod_odk = true;
                     //process_odk_layer(MOD_ODK, record);
                     // Don't use tap_code, it doesn't go through process_record.
                     // therefore it doesn't trigger the special behaviour of PG_ODK described above
@@ -57,7 +59,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             }
         }
 
-        if (mod_odk) {
+/*         if (mod_odk) {
             // Special behaviour of PG_ODK when shifted
             // Shift must apply to the next keycode
             mod_odk = false;
@@ -74,9 +76,31 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
             if (is_shifted) {
                 set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
+                is_shifted = false;
             }
             if (keycode == MOD_ODK) { return false; }
-        }
+        } */
     }
     return true;
+}
+
+void mod_odk(void) {
+    // Special behaviour of PG_ODK when shifted
+    // Shift must apply to the next keycode
+    bool is_shifted = false;
+    const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+
+    if (mods & MOD_MASK_SHIFT) {
+        del_weak_mods(MOD_MASK_SHIFT);
+        del_oneshot_mods(MOD_MASK_SHIFT);
+        unregister_mods(MOD_MASK_SHIFT);
+        is_shifted = true;
+    }
+
+    tap_code(PG_ODK);
+
+    if (is_shifted) {
+        set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
+        is_shifted = false;
+    }
 }
