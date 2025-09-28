@@ -202,7 +202,7 @@ uint8_t get_os4a_layer(uint16_t keycode) {
   }
 }
 
-bool os4a_layer_changer(uint16_t keycode) {
+bool should_exit_os4a_layer(uint16_t keycode) {
   switch (keycode) {
     case OS_FA:
     case NUMWORD:
@@ -247,7 +247,6 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 bool is_oneshot_ignored_key(uint16_t keycode) {
 
   const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
   //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
 
   switch (keycode) {
@@ -266,12 +265,11 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_RALT:
     case OS_LALT:
     case OS_WIN:
+    // OS_FA must be on the list, to be combined with Alt
     case OS_FA:
     case NUMWORD:
     case TG_FA:
       return true;
-/*     default:
-      return false; */
   }
   return false;
 }

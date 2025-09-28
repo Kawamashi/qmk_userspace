@@ -57,10 +57,12 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
+bool os4a_layer_process_outcome(uint16_t keycode, keyrecord_t *record) {
 
-    // Should keycode exit the OS4A layer ?
-    if (os4a_layer_changer(keycode)) { return true; }
+      // Should keycode exit the OS4A layer without further process ?
+    if (should_exit_os4a_layer(keycode)) { return true; }
+
+      // Should keycode stay on the OS4A layer, e.g. Callum mod ? 
     if (is_oneshot_ignored_key(keycode)) { return false; }
 
     // Add OS Shift when no other mods are active.
@@ -81,7 +83,7 @@ void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
     //if (get_mods() & QK_ONE_SHOT_MOD_GET_MODS(keycode)) { 
 
     // When ctrl or shift are released after being held, exit the OS4A layer.
-    if (!record->event.pressed && !record->tap.count) {
+    if (!record->tap.count) {
       os4a_layer_off(os4a_layer);
     }
 }
@@ -99,13 +101,15 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
 
   // Behaviour of the OS4A layers
-  if (record->event.pressed) {
-    if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
-
-  } else {
-    // When Ctrl or Shift are released, for mouse use.
-    //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
-    if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
+  if (os4a_layer != 0) {
+    
+    if (record->event.pressed) {
+        exit_os4a_layer = os4a_layer_process_outcome(keycode, record);
+    } else {
+      // When Ctrl or Shift are released, for mouse use.
+      //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
+      if (exit_os4a_layer) { os4a_layer_off(os4a_layer); }
+    }
   }
   return true;
 }

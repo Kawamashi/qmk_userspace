@@ -45,7 +45,6 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                 case OU_GRV:
                 case KC_SPC:    // When space is added by Clever Keys
                 case CNL_ODK:
-                case PG_ODK:
                     return true;
         
                 default:

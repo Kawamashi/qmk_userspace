@@ -30,6 +30,6 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 uint16_t get_ongoing_keycode_user(uint16_t keycode);
 
 uint8_t get_os4a_layer(uint16_t keycode);
-bool os4a_layer_changer(uint16_t keycode);
+bool should_exit_os4a_layer(uint16_t keycode);
 bool to_be_shifted(uint16_t keycode, keyrecord_t *record);
 //bool mods_for_mouse(uint16_t keycode);
