@@ -24,10 +24,7 @@
 extern "C" {
 #endif
 
-extern bool is_shifted;
-
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record);
-//void odk_layer_exit_check(uint16_t keycode);
 
 #ifdef __cplusplus
 }

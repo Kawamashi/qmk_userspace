@@ -205,7 +205,6 @@ uint8_t get_os4a_layer(uint16_t keycode) {
 bool os4a_layer_changer(uint16_t keycode) {
   switch (keycode) {
     case OS_FA:
-    //case OS_WMNT:
     case NUMWORD:
     case TG_FA:
     case OS_RSA:
@@ -246,16 +245,20 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 }
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
-  // On veut que la touche typo soit ignorée par tous les Callum mods sauf Alt-gr.
-  // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
-  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
 
-  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
+  const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
+  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
 
   switch (keycode) {
-    //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
+    case OS_ODK:
+      // On veut que la touche typo soit ignorée par tous les Callum mods sauf Alt-gr.
+      // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
+      // Alt-gr doit pouvoir s’appliquer à la touche typo, pour permettre de faire la touche morte "~" avec.
+      // OS_ODK ne doit être ignored_key que lorsqu’elle est employée avec Alt-gr
+      // sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
+      if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
+      break;
     case L_OS4A:
     case R_OS4A:
     case OS_SHFT:
@@ -266,12 +269,11 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_FA:
     case NUMWORD:
     case TG_FA:
-    //case OS_WMNT:
-    //case NUM_ODK:  // Ne sert à rien, car NUM_ODK est un vrai one-shot : les mods sont transmis même sans paramétrage.
-        return true;
-    default:
-        return false;
+      return true;
+/*     default:
+      return false; */
   }
+  return false;
 }
 
 
@@ -299,6 +301,5 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
   if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
   if (get_last_keycode() == KC_NO) { return MAGIC; }
   
-
   return KC_TRNS;  // Defer to default definitions.
 }

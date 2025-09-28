@@ -42,7 +42,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   //if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
   if (mods & ~MOD_MASK_SHIFT) {
-    clear_recent_keys();  // Avoid interfering with ctrl, left alt, alt-gr and gui.
+    clear_recent_keys();  // Avoid interfering with ctrl, alt, alt-gr and gui.
     return KC_NO;
   }
 
@@ -76,22 +76,6 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   uint16_t custom_keycode = get_ongoing_keycode_user(keycode);
   if (custom_keycode != KC_TRNS) { return custom_keycode; }
 
-/*    if (is_send_string_macro(keycode)) { return keycode; }
-
-  if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-      case PG_K:
-      case PG_B:
-      case PG_AROB:
-      case PG_3PTS:
-      case KC_SPC:  // In order to uppercase J after '?' for ex.
-        return keycode;
-
-      default:
-        clear_recent_keys();
-        return KC_NO;
-    }
-  } */
 
   uint8_t basic_keycode = keycode;
   // Handle keys carrying a modifier, for ex on layers(! and ?).
@@ -149,7 +133,6 @@ void process_key(uint16_t keycode, keyrecord_t* record) {
 
 void invoke_key(uint16_t keycode, keyrecord_t* record) {
   process_key(keycode, record);  // tap_code doesn't work with caps word.
-  //record->keycode = keycode;
   bkspc_countdown = 1;
 }
 
@@ -164,10 +147,15 @@ void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record
   for (int i = 0; i < num_keycodes; ++i) {
     process_key(keycodes[i], record);  // tap_code doesn't work with caps word.
   }
-  bkspc_countdown = num_keycodes;
 }
 
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
+  process_word(keycodes, num_keycodes - 1, record);
+  bkspc_countdown = num_keycodes - 1;
+  replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
+}
+
+void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
   process_word(keycodes, num_keycodes - 1, record);
   replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
 }

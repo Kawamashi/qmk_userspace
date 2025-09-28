@@ -66,7 +66,7 @@ bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
     // Add OS Shift when no other mods are active.
     // Testing exit_os4a_layer is necessary to prevent OS shift to be added when other features create keyrecords
     // to be processed (ex: custom altgr, clever keys).
-    uint8_t mods = get_mods() | get_oneshot_mods();
+    const uint8_t mods = get_mods() | get_oneshot_mods();
     if (!exit_os4a_layer && to_be_shifted(keycode, record) && mods == 0) {
       // Don't use weak mods, it interferes with Capsword.
       set_oneshot_mods(MOD_BIT(KC_LSFT));
@@ -99,12 +99,12 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
 
   // Behaviour of the OS4A layers
-  if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
+  if (record->event.pressed) {
+    if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
 
-  // When Ctrl or Shift are released, for mouse use.
-  //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
-
-  if (!record->event.pressed) {
+  } else {
+    // When Ctrl or Shift are released, for mouse use.
+    //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
     if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
   }
   return true;

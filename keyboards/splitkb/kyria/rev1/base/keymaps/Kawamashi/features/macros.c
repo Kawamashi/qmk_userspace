@@ -19,8 +19,6 @@
 bool is_apos_dr = false;
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
-    //const uint8_t mods = get_mods();
-    //static bool is_shifted = false;
 
     if (record->event.pressed) {    // Handling of other macros (on press).
         switch (keycode) {
@@ -52,7 +50,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
                 layer_clear();
                 clear_oneshot_mods();
-                clear_weak_mods();
+                //clear_weak_mods();
                 caps_word_off();
                 disable_num_word();
                 clear_recent_keys();
@@ -74,18 +72,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                 return false;
 
             case NUM_ODK:
-                bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-                if (is_shifted) {
-                    del_weak_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    unregister_mods(MOD_MASK_SHIFT);
-                }
                 tap_code(PG_ODK);
-
-                if (is_shifted) {
-                    is_shifted = false;
-                    set_oneshot_mods(MOD_BIT(KC_LSFT));
-                }
                 return true;
 
             case PG_DEG:
