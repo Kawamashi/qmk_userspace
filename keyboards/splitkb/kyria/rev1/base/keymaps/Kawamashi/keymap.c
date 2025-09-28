@@ -40,8 +40,8 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.key.col != next_record.event.key.col) {
 
-      // La ligne suivante n'est nécessaire que si on a besoin de doubler rapidement un caractère présent sur la moitié droite du clavier.
-      // Ce n'est pas nécessaire pour l'instant, vu que les guillemets sont passés à gauche.
+      // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
+      // Fait également gagner pas mal de place sur le FW.
       if (keycode == OS_ODK) { return true; }
 
       if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
@@ -55,16 +55,11 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     return false;
 }
 
-/* bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
-  return !forbidden_chord(keycode, record, next_keycode, &next_record);
-} */
-
 
 // Matrix scan
 
 void matrix_scan_user(void) {
   recent_keys_task();
-  //swapper_task();
 }
 
 

@@ -52,7 +52,6 @@ enum custom_keycodes {
   OS4A,
   RAZ,
   CAPSWORD,
-  MOD_ODK,
   OU_GRV,
   MAGIC,
   OS_SHFT,

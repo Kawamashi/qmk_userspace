@@ -99,12 +99,12 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
 
   // Behaviour of the OS4A layers
-  if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
+  if (record->event.pressed) {
+    if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
 
-  // When Ctrl or Shift are released, for mouse use.
-  //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
-
-  if (!record->event.pressed) {
+  } else {
+    // When Ctrl or Shift are released, for mouse use.
+    //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
     if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
   }
   return true;

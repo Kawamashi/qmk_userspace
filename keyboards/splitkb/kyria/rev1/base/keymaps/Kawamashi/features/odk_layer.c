@@ -21,7 +21,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {    // On press
 
         const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-        //bool mod_odk = false;
+        bool invoke_odk = false;
         //const uint8_t mods = get_mods() | get_oneshot_mods();
 
         if (keycode == OS_ODK) {
@@ -33,8 +33,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
             return true;
 
         } else if (keycode == PG_ODK) {
-            //mod_odk = true;
-            return true;
+            invoke_odk = true;
 
         } else if (IS_LAYER_ON(_ODK)) {
             switch (keycode) {
@@ -50,19 +49,14 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
                     return true;
         
                 default:
-                    mod_odk();
-                    //mod_odk = true;
-                    //process_odk_layer(MOD_ODK, record);
-                    // Don't use tap_code, it doesn't go through process_record.
-                    // therefore it doesn't trigger the special behaviour of PG_ODK described above
-                    //invoke_key(PG_ODK, record);
+                    invoke_odk = true;
             }
         }
 
-/*         if (mod_odk) {
+        if (invoke_odk) {
             // Special behaviour of PG_ODK when shifted
             // Shift must apply to the next keycode
-            mod_odk = false;
+            //invoke_odk = false;
             bool is_shifted = false;
 
             if (mods & MOD_MASK_SHIFT) {
@@ -76,31 +70,10 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
             if (is_shifted) {
                 set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
-                is_shifted = false;
+                //is_shifted = false;
             }
-            if (keycode == MOD_ODK) { return false; }
-        } */
+            if (keycode == PG_ODK) { return false; }
+        }
     }
     return true;
-}
-
-void mod_odk(void) {
-    // Special behaviour of PG_ODK when shifted
-    // Shift must apply to the next keycode
-    bool is_shifted = false;
-    const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-
-    if (mods & MOD_MASK_SHIFT) {
-        del_weak_mods(MOD_MASK_SHIFT);
-        del_oneshot_mods(MOD_MASK_SHIFT);
-        unregister_mods(MOD_MASK_SHIFT);
-        is_shifted = true;
-    }
-
-    tap_code(PG_ODK);
-
-    if (is_shifted) {
-        set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
-        is_shifted = false;
-    }
 }

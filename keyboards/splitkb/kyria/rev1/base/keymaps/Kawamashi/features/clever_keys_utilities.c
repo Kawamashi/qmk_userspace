@@ -42,7 +42,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   //if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
   if (mods & ~MOD_MASK_SHIFT) {
-    clear_recent_keys();  // Avoid interfering with ctrl, left alt, alt-gr and gui.
+    clear_recent_keys();  // Avoid interfering with ctrl, alt, alt-gr and gui.
     return KC_NO;
   }
 
