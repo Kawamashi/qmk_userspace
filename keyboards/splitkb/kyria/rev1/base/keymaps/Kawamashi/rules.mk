@@ -36,6 +36,7 @@ SRC += features/capslist.c
 SRC += features/macros.c
 SRC += features/oneshot.c
 SRC += features_conf.c
+SRC += word_conf.c
 SRC += features/odk_layer.c
 
 INTROSPECTION_KEYMAP_C = features/combos.c

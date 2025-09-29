@@ -16,54 +16,9 @@
 
 #include "features_conf.h"
 
+
 bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
-bool is_letter(uint16_t keycode) {
-  switch (keycode) {
-    case KC_A ... KC_F:
-    case KC_H ... KC_P:
-    case KC_R ... KC_S:
-    case KC_U ... KC_Z:
-    case PG_L:
-    case PG_E:
-    case KC_GRV ... KC_DOT:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-bool is_send_string_macro(uint16_t keycode) {
-  switch (keycode) {
-    case OU_GRV:
-    case MAGIC:
-    //case PG_DEG:
-      return true;
-    
-    default:
-      return false;
-  }
-}
-
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
-  switch (keycode) {
-    case PG_Q:
-      return true;
-      
-    case PG_L:
-    case PG_T:
-    case PG_D:
-    case PG_C:
-    case PG_N:
-    case PG_S:
-    case PG_M:
-    case PG_Y:
-    case PG_J:
-      if (!is_letter(prev_keycode)) { return true; }
-  }
-  return false;
-}
 
 // This function extracts the base keycode of MT and LT,
 // even if the tap/hold key is a custom one, with non-basic tap keycode.
@@ -103,68 +58,6 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-// Caps Word
-
-bool caps_word_press_user(uint16_t keycode) {
-
-  // Caps Word shouldn't be applied with Alt-gr
-  // Managing underscore and slash on alt gr + E/T.
-  // Underscore and slash must continue Caps Word, without shifting.
-/*   if ((get_mods() & MOD_BIT(KC_ALGR))) {
-    switch (keycode) {
-      case PG_E:
-      case PG_T:
-        return true;
-      default:
-        return false;
-    }
-  } */
-
-  if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-
-      case PG_VIRG:
-        add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
-        return true;
-  
-      case PG_Y:
-      case PG_T:
-        return true;
-
-      case PG_POIN:
-        return false;
-    }
-  }
-
-  // Keycodes that continue Caps Word, with shift applied.
-  // @ must be shifted, bc of CleverKeys using it.
-  if (is_letter(keycode) || is_send_string_macro(keycode) || keycode == PG_AROB) {
-    add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
-    return true;
-  } 
-
-  switch (keycode) {
-    // Keycodes that continue Caps Word, without shifting.
-    case PG_ODK:
-    //case PG_GRV:
-    case PG_UNDS:
-    case PG_TIRE:
-    case PG_SLSH:
-    case KC_1 ... KC_0:
-    //case KC_LEFT:
-    //case KC_RIGHT:
-    case KC_BSPC:
-    case LCTL(KC_BSPC):
-    case KC_DEL:
-    case PG_APOS:
-      return true;
-
-    default:
-      return false;  // Deactivate Caps Word.
-    }
-}
-
-
 // Clever keys configuration
 
 uint16_t get_ongoing_keycode_user(uint16_t keycode) {
@@ -176,9 +69,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
     switch (keycode) {
       case PG_K:
       case PG_B:
-      case PG_AROB:
-      //case PG_3PTS:
-      case KC_SPC:  // In order to uppercase J after '?' for ex.
+      case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
         return keycode;
 
       case PG_POIN:
@@ -191,6 +82,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
   }
   return KC_TRNS;
 }
+
 
 // One-shot 4 all configuration
 
@@ -220,8 +112,6 @@ bool to_be_shifted(uint16_t keycode, keyrecord_t *record) {
   if (!IS_KEYEVENT(record->event)) { return true; }
   
   switch (keycode) {
-/*     case OS_ODK:
-      is_shifted = true; */
     case KC_CAPS:
     case CAPSWORD:
     case CAPSLIST:

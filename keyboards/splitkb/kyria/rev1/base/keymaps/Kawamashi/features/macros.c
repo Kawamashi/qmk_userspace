@@ -71,10 +71,6 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                 is_apos_dr = !is_apos_dr;
                 return false;
 
-            case NUM_ODK:
-                tap_code(PG_ODK);
-                return true;
-
             case PG_DEG:
                 tap_code(PG_ODK);
                 tap_code(KC_9);

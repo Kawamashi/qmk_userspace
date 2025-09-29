@@ -34,6 +34,11 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
         } else if (keycode == PG_ODK) {
             invoke_odk = true;
+            //return deferred_shift_after_dead_key(keycode, mods);
+
+        } else if (keycode == NUM_ODK) {
+            invoke_odk = true;
+            //return deferred_shift_after_dead_key(keycode, mods);
 
         } else if (IS_LAYER_ON(_ODK)) {
             switch (keycode) {
@@ -49,6 +54,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
         
                 default:
                     invoke_odk = true;
+                    //return deferred_shift_after_dead_key(keycode, mods);
             }
         }
 
@@ -69,10 +75,26 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
             if (is_shifted) {
                 set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
-                //is_shifted = false;
             }
             if (keycode == PG_ODK) { return false; }
         }
     }
     return true;
+}
+
+bool deferred_shift_after_dead_key(uint16_t keycode, uint8_t mods) {
+    bool is_shifted = false;
+
+    if (mods & MOD_MASK_SHIFT) {
+        del_weak_mods(MOD_MASK_SHIFT);
+        del_oneshot_mods(MOD_MASK_SHIFT);
+        unregister_mods(MOD_MASK_SHIFT);
+        is_shifted = true;
+    }
+
+    tap_code(PG_ODK);
+
+    if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
+    
+    return !(keycode == PG_ODK);
 }

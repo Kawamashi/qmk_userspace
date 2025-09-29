@@ -19,7 +19,6 @@
 #include "keymap.h"
 
 bool is_num_word_enabled(void);
-//extern bool exit_num_word;
 extern bool is_num_word_on;
 
 void enable_num_word(void);

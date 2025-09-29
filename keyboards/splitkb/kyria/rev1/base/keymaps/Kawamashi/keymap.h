@@ -20,6 +20,7 @@
 
 #include "keymap_french_propergol.h"
 #include "features_conf.h"
+#include "word_conf.h"
 #include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
@@ -37,8 +38,8 @@ enum layers {
     _L_MODS,
     _R_MODS,
     _ODK,
-    _SYMBOLS,
     _NUMBERS,
+    _SYMBOLS,
     _SHORTNAV,
     _FUNCAPPS,
 };
@@ -73,6 +74,7 @@ enum custom_keycodes {
 #define TG_FA TT(_FUNCAPPS)
 #define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
+#define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
 #define E_CIRC S(FG_0)
 #define OS_ODK OSL(_ODK)

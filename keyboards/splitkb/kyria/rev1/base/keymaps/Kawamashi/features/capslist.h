@@ -3,6 +3,9 @@
 #include "quantum.h"
 #include "keymap.h"
 
+extern unsigned short int capslist_countdown;
+extern unsigned short int countdown_end;
+
 bool is_caps_list_on(void);
 
 void enable_caps_list(void);

@@ -13,20 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 
 #pragma once
 
 #include "quantum.h"
 #include "keymap.h"
 
-bool is_caps_lock_on(void);
+bool is_letter(uint16_t keycode);
+bool is_send_string_macro(uint16_t keycode);
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);
 
-uint16_t tap_hold_extractor(uint16_t keycode);
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
-
-uint16_t get_ongoing_keycode_user(uint16_t keycode);
-
-uint8_t get_os4a_layer(uint16_t keycode);
-bool should_exit_os4a_layer(uint16_t keycode);
-bool to_be_shifted(uint16_t keycode, keyrecord_t *record);
-//bool mods_for_mouse(uint16_t keycode);
+bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record);

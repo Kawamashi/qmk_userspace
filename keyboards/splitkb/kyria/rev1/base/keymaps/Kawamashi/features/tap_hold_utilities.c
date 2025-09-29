@@ -26,8 +26,7 @@ void tap_converter(uint16_t keycode, keyrecord_t *record) {
   } else {
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
       // Tranform the record to send the tap event
-      //record->keycode = tap_hold_extractor(keycode);
-      record->keycode = (keycode &= 0xff);
+      record->keycode = tap_hold_extractor(keycode);
     }
     process_record(record);
   }

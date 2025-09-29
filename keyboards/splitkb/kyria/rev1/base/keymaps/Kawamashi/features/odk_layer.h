@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record);
+bool deferred_shift_after_dead_key(uint16_t keycode, uint8_t mods);
 
 #ifdef __cplusplus
 }

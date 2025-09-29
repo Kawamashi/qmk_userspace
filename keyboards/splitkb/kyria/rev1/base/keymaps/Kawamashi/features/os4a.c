@@ -62,7 +62,7 @@ bool os4a_layer_process_outcome(uint16_t keycode, keyrecord_t *record) {
       // Should keycode exit the OS4A layer without further process ?
     if (should_exit_os4a_layer(keycode)) { return true; }
 
-      // Should keycode stay on the OS4A layer, e.g. Callum mod ? 
+      // Should keycode stay on the OS4A layer, to be possibly combined with another one, e.g. Callum mod ? 
     if (is_oneshot_ignored_key(keycode)) { return false; }
 
     // Add OS Shift when no other mods are active.
@@ -70,8 +70,8 @@ bool os4a_layer_process_outcome(uint16_t keycode, keyrecord_t *record) {
     // to be processed (ex: custom altgr, clever keys).
     const uint8_t mods = get_mods() | get_oneshot_mods();
     if (!exit_os4a_layer && to_be_shifted(keycode, record) && mods == 0) {
-      // Don't use weak mods, it interferes with Capsword.
       set_oneshot_mods(MOD_BIT(KC_LSFT));
+      // Don't use weak mods, it interferes with Capsword.
     }
     return true;
 }
@@ -94,8 +94,8 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   update_oneshot(&os_shft_state, KC_LSFT, OS_SHFT, keycode, record);
   update_oneshot(&os_ctrl_state, KC_LCTL, OS_CTRL, keycode, record);
   update_oneshot(&os_alt_state, KC_LALT, OS_LALT, keycode, record);
-  update_oneshot(&os_altgr_state, KC_RALT, OS_RALT, keycode, record);
   update_oneshot(&os_win_state, KC_LWIN, OS_WIN, keycode, record);
+  //update_oneshot(&os_altgr_state, KC_RALT, OS_RALT, keycode, record);
   
   // Handling OS4A keys
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
