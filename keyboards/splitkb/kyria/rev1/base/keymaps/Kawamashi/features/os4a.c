@@ -23,8 +23,12 @@ oneshot_state os_alt_state = os_up_unqueued;
 oneshot_state os_altgr_state = os_up_unqueued;
 oneshot_state os_win_state = os_up_unqueued;
 
-uint8_t os4a_layer = 0;
+static uint8_t os4a_layer = 0;
 static bool exit_os4a_layer = false;
+
+uint8_t get_os4a_layer(void) {
+  return (os4a_layer);
+}
 
 void os4a_layer_on(uint8_t layer) {
   layer_on(layer);
@@ -40,7 +44,7 @@ void os4a_layer_off(uint8_t layer) {
 void os4a_tap(uint16_t keycode) {
   if (os4a_layer == 0) {
       // Activate OS4A layer
-      os4a_layer_on(get_os4a_layer(keycode));
+      os4a_layer_on(os4a_layer_from_trigger(keycode));
   } else {
       // Press again an OS4A key to exit the OS4A layer and clear the OS mods.
       os4a_layer_off(os4a_layer);
@@ -57,24 +61,26 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-bool os4a_layer_process_outcome(uint16_t keycode, keyrecord_t *record) {
 
-      // Should keycode exit the OS4A layer without further process ?
-    if (should_exit_os4a_layer(keycode)) { return true; }
+bool add_shift(uint16_t keycode, keyrecord_t *record) {
 
-      // Should keycode stay on the OS4A layer, to be possibly combined with another one, e.g. Callum mod ? 
-    if (is_oneshot_ignored_key(keycode)) { return false; }
+  // Testing exit_os4a_layer is necessary to prevent OS shift to be added in case of rolled keys
+  // or when other features invoke keycodes to be processed (ex: custom altgr, clever keys).
+  if (exit_os4a_layer) { return false; }
 
-    // Add OS Shift when no other mods are active.
-    // Testing exit_os4a_layer is necessary to prevent OS shift to be added when other features create keyrecords
-    // to be processed (ex: custom altgr, clever keys).
-    const uint8_t mods = get_mods() | get_oneshot_mods();
-    if (!exit_os4a_layer && to_be_shifted(keycode, record) && mods == 0) {
-      set_oneshot_mods(MOD_BIT(KC_LSFT));
-      // Don't use weak mods, it interferes with Capsword.
-    }
-    return true;
+  // Shift shouldn't be added if other mods are active
+  if ((get_mods() | get_oneshot_mods()) != 0) { return false; }
+
+  // Combos and encoder events.
+  if (!IS_KEYEVENT(record->event)) { return true; }
+
+  // Specific exceptions
+  if (not_to_be_shifted(keycode)) { return false; }
+
+  // Otherwise, add shift if the key is on the other side of the keyboard.
+  return (os4a_layer == _R_MODS) == on_left_hand(record->event.key);
 }
+
 
 void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
     
@@ -104,7 +110,14 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   if (os4a_layer != 0) {
     
     if (record->event.pressed) {
-        exit_os4a_layer = os4a_layer_process_outcome(keycode, record);
+
+        if (should_stay_os4a_layer(keycode)) {
+            exit_os4a_layer = false;
+        } else {
+            if (add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+            exit_os4a_layer = true;
+        }
+        
     } else {
       // When Ctrl or Shift are released, for mouse use.
       //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }

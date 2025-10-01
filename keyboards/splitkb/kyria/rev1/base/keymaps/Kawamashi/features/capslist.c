@@ -1,10 +1,8 @@
 #include "capslist.h"
 
 static bool caps_list_active = false;
-//static unsigned short int capslist_countdown = 0;
-unsigned short int capslist_countdown = 0;
-//static unsigned short int countdown_end = 5;
-unsigned short int countdown_end = 5;
+static signed char capslist_countdown = 1;
+static unsigned char countdown_end = 6;
 
 bool is_caps_list_on(void) { return caps_list_active; }
 
@@ -12,8 +10,8 @@ void enable_caps_list(void) {
     if (is_caps_lock_on()) { tap_code(KC_CAPS); }
     caps_word_on();
     caps_list_active = true;
-    capslist_countdown = 0;
-    countdown_end = 5;
+    capslist_countdown = 1;
+    countdown_end = 6;
 }
 
 void disable_caps_list(void) {
@@ -27,6 +25,19 @@ void toggle_caps_list(void) {
     } else {
       enable_caps_list();
     }
+}
+
+bool update_capslist_countdown(signed char i) {
+    capslist_countdown = capslist_countdown + i;
+    return true;
+}
+
+bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_countdown_end) {
+  for (int i = 0; i < num_keycodes; ++i) {
+    if (get_recent_keycode(- 2 - i) != keycodes[num_keycodes - 1 - i]) { return false; }
+  }
+  countdown_end = new_countdown_end;
+  return true;
 }
 
 bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
@@ -59,9 +70,11 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
     }
     
     if (should_continue_caps_list(keycode)) {
+
         if (caps_word_reactivation()) {
             caps_word_on();  // Reactivate Caps Word for a new word
-            capslist_countdown = 0;
+            capslist_countdown = 1;
+            return true;
         }
         if (capslist_countdown < countdown_end) { return true; }
     }

@@ -20,7 +20,14 @@
 #include "keymap.h"
 
 
-uint16_t global_quick_tap_timer = 0;
+static uint16_t global_quick_tap_timer = 0;
+
+bool enough_time_before_combo(void) {
+  return timer_elapsed(global_quick_tap_timer) > TAP_INTERVAL;
+}
+
+static uint16_t next_keycode;
+static keyrecord_t next_record;
 
 
 // Tap-hold configuration
@@ -64,9 +71,6 @@ void matrix_scan_user(void) {
 
 
 // Key processing
-
-uint16_t next_keycode;
-keyrecord_t next_record;
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
@@ -113,8 +117,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
 
-  //os4a_layer_exit_check();
-  //numword_exit_check();
   end_CK(record);
 }
 

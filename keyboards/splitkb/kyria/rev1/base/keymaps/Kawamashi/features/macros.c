@@ -16,7 +16,11 @@
 
 #include "macros.h"
 
-bool is_apos_dr = false;
+static bool is_apos_dr = false;
+
+bool replace_apos(void) {
+    return is_apos_dr;
+}
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
 

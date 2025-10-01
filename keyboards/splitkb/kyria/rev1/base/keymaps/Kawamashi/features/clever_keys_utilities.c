@@ -16,13 +16,21 @@
 
 #include "clever_keys_utilities.h"
 
-uint16_t recent[RECENT_SIZE] = {KC_NO};
+static uint16_t recent[RECENT_SIZE] = {KC_NO};
 uint16_t deadline = 0;
-unsigned short int bkspc_countdown = RECENT_SIZE + 1;
+static unsigned char bkspc_countdown = RECENT_SIZE + 1;
 
 // Copy of the record argument for the clever key.
 static keyrecord_t mod_record;
 static bool processingCK = false;
+
+uint16_t get_recent_keycode(signed char i) {
+  return recent[RECENT_SIZE + i];
+}
+
+void update_bkspc_countdown(unsigned char i) {
+  bkspc_countdown = i;
+}
 
 void clear_recent_keys(void) {
   memset(recent, 0, sizeof(recent));  // Set all zeros (KC_NO).

@@ -23,8 +23,7 @@
 extern "C" {
 #endif
 
-extern bool is_apos_dr;
-
+bool replace_apos(void);
 bool process_macros(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus

@@ -3,14 +3,15 @@
 #include "quantum.h"
 #include "keymap.h"
 
-extern unsigned short int capslist_countdown;
-extern unsigned short int countdown_end;
 
 bool is_caps_list_on(void);
 
 void enable_caps_list(void);
 void disable_caps_list(void);
 void toggle_caps_list(void);
+
+bool update_capslist_countdown(signed char i);
+bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_countdown_end);
 
 bool process_caps_list(uint16_t keycode, keyrecord_t *record);
 

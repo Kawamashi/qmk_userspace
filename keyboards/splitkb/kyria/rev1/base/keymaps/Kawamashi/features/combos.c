@@ -70,20 +70,11 @@ combo_t key_combos[] = {
     [ALTESC] = COMBO(altesc_combo, LALT(KC_ESC))
     };
 
-/* uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
-    switch (combo_index) {
-        case L_APOST:
-        case D_APOST:
-            return 100;
-        default:
-            return COMBO_TERM;
-    }
-} */
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     // Chorded mods shouldn't be considered as combos.
-    if (os4a_layer != 0) {
-      return (os4a_layer == _R_MODS) == on_left_hand(record->event.key);
+    if (get_os4a_layer() != 0) {
+      return (get_os4a_layer() == _R_MODS) == on_left_hand(record->event.key);
     }
     // Some combos shouldn't be affected by global_quick_tap_timer.
     switch (combo_index) {
@@ -95,10 +86,8 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
           return true;
 
         default:
-          //return timer_elapsed(global_quick_tap_timer) > TAP_INTERVAL;
-          if (timer_elapsed(global_quick_tap_timer) < TAP_INTERVAL) {
-            return false;
-          }
+          //return enough_time_before_combo();    // takes more space
+          if (!enough_time_before_combo()) { return false; }
     }
     return true;
 }
@@ -107,29 +96,28 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 void process_combo_event(uint16_t combo_index, bool pressed) {
   switch (combo_index) {
       case ALTTAB:
-          if (pressed) {
-              register_mods(MOD_LALT);
-              tap_code(KC_TAB);
-          } else {
-              unregister_mods(MOD_LALT);
-          }
-          break;
+        if (pressed) {
+            register_mods(MOD_LALT);
+            tap_code(KC_TAB);
+        } else {
+            unregister_mods(MOD_LALT);
+        }
+        break;
   }
 }
 
 bool process_combo_key_repress(uint16_t combo_index, combo_t *combo, uint8_t key_index, uint16_t keycode) {
   switch (combo_index) {
       case ALTTAB:
-          switch (keycode) {
-            case PG_Y:
-                tap_code16(S(KC_TAB));
-                return true;
-            case PG_H:
-                tap_code(KC_TAB);
-                return true;
-          }
-          break;
-
+        switch (keycode) {
+          case PG_Y:
+              tap_code16(S(KC_TAB));
+              return true;
+          case PG_H:
+              tap_code(KC_TAB);
+              return true;
+        }
+        break;
   }
   return false;
 }

@@ -27,7 +27,7 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
     case LT_NBSPC:
       return NNB_SPC;
     default:
-      return keycode &= 0xff;
+      return keycode &= 0xff;   //QK_MOD_TAP_GET_TAP_KEYCODE(keycode)
   }
 }
 
@@ -86,7 +86,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
 
 // One-shot 4 all configuration
 
-uint8_t get_os4a_layer(uint16_t keycode) {
+uint8_t os4a_layer_from_trigger(uint16_t keycode) {
   switch (keycode) {
     case L_OS4A: return _L_MODS;
     case R_OS4A: return _R_MODS;
@@ -94,30 +94,31 @@ uint8_t get_os4a_layer(uint16_t keycode) {
   }
 }
 
-bool should_exit_os4a_layer(uint16_t keycode) {
+bool should_stay_os4a_layer(uint16_t keycode) {
+  // keycodes that stay on os4a layers w/o being shifted
   switch (keycode) {
-    case OS_FA:
-    case NUMWORD:
-    case TG_FA:
-    case OS_RSA:
-    case NUM_ODK:
+    case OS_SHFT:
+    case OS_CTRL:
+    case OS_RALT:
+    case OS_LALT:
+    case OS_WIN:
       return true;
+
     default:
       return false;
   }
 }
 
-bool to_be_shifted(uint16_t keycode, keyrecord_t *record) {
-  // Combos and encoder events.
-  if (!IS_KEYEVENT(record->event)) { return true; }
-  
+bool not_to_be_shifted(uint16_t keycode) {
+  // keycodes that exit os4a layers w/o being shifted
   switch (keycode) {
-    case KC_CAPS:
-    case CAPSWORD:
-    case CAPSLIST:
-      return false;
-    default:
-      return (os4a_layer == _R_MODS) == on_left_hand(record->event.key);
+      case KC_CAPS:
+      case CAPSWORD:
+      case CAPSLIST:
+        return true;
+
+      default:
+        return false;
   }
 }
 
@@ -155,10 +156,10 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_RALT:
     case OS_LALT:
     case OS_WIN:
-    // OS_FA must be on the list, to be combined with Alt
-    case OS_FA:
-    case NUMWORD:
+    case OS_FA:       // to be combined with Alt
     case TG_FA:
+    case NUMWORD:     // to combine numbers with mods
+    //case NUM_ODK:   // NUM_ODK sends PG_ODK when pressed. When shifted, PG_ODK sends one-shot shift.
       return true;
   }
   return false;
@@ -186,7 +187,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
       return C(PG_Z);
   }
 
-  if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
+  if (get_recent_keycode(-1) != KC_NO) { return MAGIC; }
   if (get_last_keycode() == KC_NO) { return MAGIC; }
   
   return KC_TRNS;  // Defer to default definitions.

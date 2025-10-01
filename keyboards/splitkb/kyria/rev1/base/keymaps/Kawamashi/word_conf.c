@@ -146,28 +146,20 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
 // Caps List
 
 bool should_continue_caps_list(uint16_t keycode) {
-    if (keycode == KC_BSPC) {
-        capslist_countdown--;
-        return true;
-    }
-    if (is_letter(keycode) || is_send_string_macro(keycode)) {
-        capslist_countdown++;
-        return true;
-    }
-    if (caps_word_press_user(keycode)) {
-        // This condition can't be merged with the previous one
-        // because caps_word_press_user adds shift to letters and send-string macros.
-        capslist_countdown++;
-        return true;
-    }
+    if (keycode == KC_BSPC) { return update_capslist_countdown(-1); }
+
+    if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
+
+    // This condition can't be merged with the previous one
+    // because caps_word_press_user adds shift to letters and send-string macros.
+    if (caps_word_press_user(keycode)) { return update_capslist_countdown(1); }
 
     // Keycodes that continue Caps List, but not Caps Word.
     // These keycodes trigger the countdown to end Caps List.
     switch (keycode) {
         case PG_VIRG:
         case KC_SPC:
-            capslist_countdown++;
-            return true;
+            return update_capslist_countdown(1);
     }
     return false;  // Deactivate Caps List.
 }
@@ -176,18 +168,23 @@ bool should_continue_caps_list(uint16_t keycode) {
 bool caps_word_reactivation(void) {
 
     // Words that continue Caps List.
-    if (recent[RECENT_SIZE - 1] == KC_SPC) {
-        if (recent[RECENT_SIZE - 4] == KC_SPC && recent[RECENT_SIZE - 3] == PG_E && recent[RECENT_SIZE - 2] == PG_T) {
-            countdown_end = 1;
+    if (get_recent_keycode(-1) == KC_SPC) {
+
+        if (get_recent_keycode(-2) == PG_VIRG) { return true; }
+
+        if (word_check((uint16_t[]) {KC_SPC, PG_E, PG_T}, 3, 2)) { return true; }
+
+        if (word_check((uint16_t[]) {KC_SPC, PG_O, PG_U}, 3, 2)) { return true; }
+
+/*         if (get_recent_keycode(-4) == KC_SPC && get_recent_keycode(-3) == PG_E && get_recent_keycode(-2) == PG_T) {
+            countdown_end = 2;
             return true;
         }
-        if (recent[RECENT_SIZE - 4] == KC_SPC && recent[RECENT_SIZE - 3] == PG_O && recent[RECENT_SIZE - 2] == PG_U) {
-            countdown_end = 1;
+        if (get_recent_keycode(-4) == KC_SPC && get_recent_keycode(-3) == PG_O && get_recent_keycode(-2) == PG_U) {
+            countdown_end = 2;
             return true;
-        }
-        if (recent[RECENT_SIZE - 2] == PG_VIRG) {
-            return true;
-        }
+        } */
+
     }
     return false;
 }

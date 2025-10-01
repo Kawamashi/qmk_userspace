@@ -24,18 +24,15 @@
 extern "C" {
 #endif
 
-extern uint8_t os4a_layer;
+uint8_t get_os4a_layer(void);
 
 void os4a_layer_off(uint8_t layer);
 void os4a_layer_on(uint8_t layer);
 
 void os4a_tap(uint16_t keycode);
-
 bool process_os4a_keys(uint16_t keycode, keyrecord_t *record);
 
-void update_osl(uint16_t keycode);
-
-bool os4a_layer_process_outcome(uint16_t keycode, keyrecord_t *record);
+bool add_shift(uint16_t keycode, keyrecord_t *record);
 
 void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record);
 

@@ -18,7 +18,7 @@
 
 //static uint16_t num_word_timer = 0;
 //static bool is_num_word_on = false;
-bool is_num_word_on = false;
+static bool is_num_word_on = false;
 static bool exit_num_word = false;
 
 bool is_num_word_enabled(void) {
