@@ -20,7 +20,6 @@
 oneshot_state os_shft_state = os_up_unqueued;
 oneshot_state os_ctrl_state = os_up_unqueued;
 oneshot_state os_alt_state = os_up_unqueued;
-oneshot_state os_altgr_state = os_up_unqueued;
 oneshot_state os_win_state = os_up_unqueued;
 
 static uint8_t os4a_layer = 0;
@@ -66,7 +65,7 @@ bool add_shift(uint16_t keycode, keyrecord_t *record) {
 
   // Testing exit_os4a_layer is necessary to prevent OS shift to be added in case of rolled keys
   // or when other features invoke keycodes to be processed (ex: custom altgr, clever keys).
-  if (exit_os4a_layer) { return false; }
+  //if (exit_os4a_layer) { return false; }
 
   // Shift shouldn't be added if other mods are active
   if ((get_mods() | get_oneshot_mods()) != 0) { return false; }
@@ -101,29 +100,31 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   update_oneshot(&os_ctrl_state, KC_LCTL, OS_CTRL, keycode, record);
   update_oneshot(&os_alt_state, KC_LALT, OS_LALT, keycode, record);
   update_oneshot(&os_win_state, KC_LWIN, OS_WIN, keycode, record);
-  //update_oneshot(&os_altgr_state, KC_RALT, OS_RALT, keycode, record);
   
   // Handling OS4A keys
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
 
-  // Behaviour of the OS4A layers
-  if (os4a_layer != 0) {
-    
-    if (record->event.pressed) {
+  if (os4a_layer == 0) { return true; }
 
-        if (should_stay_os4a_layer(keycode)) {
-            exit_os4a_layer = false;
-        } else {
-            if (add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
-            exit_os4a_layer = true;
-        }
-        
-    } else {
-      // When Ctrl or Shift are released, for mouse use.
-      //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
-      if (exit_os4a_layer) { os4a_layer_off(os4a_layer); }
-    }
+  // Exiting OS4A layers on keyrelease or on 2nd keypress of a roll
+  if (exit_os4a_layer) { 
+      os4a_layer_off(os4a_layer);
+      return true;
   }
+
+  // Behaviour of the OS4A layers
+  if (record->event.pressed) {
+
+      if (!should_stay_os4a_layer(keycode)) {
+          if (add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+          exit_os4a_layer = true;
+      }
+
+  } else {  // On release
+    // When Ctrl or Shift are released, for mouse use.
+    //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
+  }
+
   return true;
 }
 

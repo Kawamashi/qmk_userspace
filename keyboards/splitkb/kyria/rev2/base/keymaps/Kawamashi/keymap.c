@@ -20,7 +20,14 @@
 #include "keymap.h"
 
 
-uint16_t global_quick_tap_timer = 0;
+static uint16_t global_quick_tap_timer = 0;
+
+bool enough_time_before_combo(void) {
+  return timer_elapsed(global_quick_tap_timer) > TAP_INTERVAL;
+}
+
+static uint16_t next_keycode;
+static keyrecord_t next_record;
 
 
 // Tap-hold configuration
@@ -40,9 +47,9 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.key.col != next_record.event.key.col) {
 
-      // La ligne suivante n'est nécessaire que si on a besoin de doubler rapidement un caractère présent sur la moitié droite du clavier.
-      // Ce n'est pas nécessaire pour l'instant, vu que les guillemets sont passés à gauche.
-      //if (keycode == OS_ODK) { return true; }
+      // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
+      // Fait également gagner pas mal de place sur le FW.
+      if (keycode == OS_ODK) { return true; }
 
       if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
@@ -55,23 +62,15 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     return false;
 }
 
-/* bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
-  return !forbidden_chord(keycode, record, next_keycode, &next_record);
-} */
-
 
 // Matrix scan
 
 void matrix_scan_user(void) {
   recent_keys_task();
-  //swapper_task();
 }
 
 
 // Key processing
-
-uint16_t next_keycode;
-keyrecord_t next_record;
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
@@ -112,14 +111,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
 
+  //if (!process_caps_word(keycode, record)) {return false; }
+
   // Process all other keycodes normally
   return true;
 }
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
-
-  //os4a_layer_exit_check();
-  //numword_exit_check();
+  
+  if (is_caps_word_on()) { clear_weak_mods(); }
   end_CK(record);
 }
 
@@ -131,7 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Base Layer: ALPHAS
  *»\
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |   X  |   È  |   É  |   .  |   K  |                              |   V  |   B  |   L  |   M  |   X  |        |
+ * |        |   À  |   È  |   É  |   .  |   K  |                              |   V  |   B  |   L  |   M  |   X  |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |  Enter |   O  |   U  |   A  |   I  |   J  |                              |   G  |   T  |   S  |   N  |   R  |    F   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
@@ -190,7 +190,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______, KC_CAPS, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
 
-    
+
+/*
+ * Layer 1 : Numpad
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |  !   |  ?   |  &   |  ;   |  |   |                              |   ⁻  |  7   |  8   |  9   |  *   |NumLock |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |  {   |  }   |  (   |  )   | LOCK |                              |   =  |  4   |  5   |  6   |  /   |   \    |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |  [   |  ]   |  <   |  >   |Indice|      |      |  |      |      |Expos.|  1   |  2   |  3   |  +   |   %    |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |      |      |      |  |      |   0  |   .  |      |      |
+ *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_NUMBERS] = LAYOUT(
+      // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
+       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  S(PG_EGAL), PG_EGAL, PG_ASTX, _______, _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_SLSH,    KC_6,    KC_7,    KC_8,    _______,
+       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, KC_9,       PG_DEG,  _______, PG_ODK,  _______,
+                                  _______, _______, KC_PDOT, LT_0   , LT_NBSPC, _______, KC_SPC,  _______, _______,    _______
+     ),
+
 /*
  * Layer : Symbols
  *
@@ -214,28 +236,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 /*
- * Layer 1 : Numpad
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |  !   |  ?   |  &   |  ;   |  |   |                              |   ⁻  |  7   |  8   |  9   |  *   |NumLock |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  {   |  }   |  (   |  )   | LOCK |                              |   =  |  4   |  5   |  6   |  /   |   \    |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |  [   |  ]   |  <   |  >   |Indice|      |      |  |      |      |Expos.|  1   |  2   |  3   |  +   |   %    |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |      |      |      |  |      |   0  |   .  |      |      |
- *                        |      |      |      |      |      |  |   ,  |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [_NUMBERS] = LAYOUT(
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  _______, PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_SLSH, KC_6,    KC_7,    KC_8,    _______,
-       _______, _______, _______, PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, KC_9,    PG_DEG,  _______, PG_ODK,  _______,
-                                  _______, _______, KC_PDOT, KC_0   , LT_NBSPC, _______, KC_SPC,  _______, _______, _______
-     ),
-
-
-/*
  * Layer 2 : Symbols
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
@@ -251,7 +251,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ODK] = LAYOUT(
        _______, _______, _______, _______, _______, PG_T,                                        _______, _______, _______, _______, _______, _______,
-       _______, OU_GRV,  _______, _______, PG_PVIR, PG_3PTS,                                     _______, PG_K,    _______, _______, _______, _______,
+       _______, OU_GRV,  _______, _______, PG_PVIR, _______,                                     _______, PG_K,    _______, _______, _______, _______,
        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
                                   _______, _______, _______, _______, PG_O,    PG_APOS, PG_B,    _______, _______, _______
      ),

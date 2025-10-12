@@ -99,7 +99,6 @@ bool should_stay_os4a_layer(uint16_t keycode) {
   switch (keycode) {
     case OS_SHFT:
     case OS_CTRL:
-    case OS_RALT:
     case OS_LALT:
     case OS_WIN:
       return true;
@@ -149,11 +148,10 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
       // sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
       if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
       break;
-    case L_OS4A:
-    case R_OS4A:
+    //case L_OS4A:
+    //case R_OS4A:
     case OS_SHFT:
     case OS_CTRL:
-    case OS_RALT:
     case OS_LALT:
     case OS_WIN:
     case OS_FA:       // to be combined with Alt

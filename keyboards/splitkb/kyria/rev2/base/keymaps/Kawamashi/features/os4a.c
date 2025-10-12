@@ -23,8 +23,12 @@ oneshot_state os_alt_state = os_up_unqueued;
 oneshot_state os_altgr_state = os_up_unqueued;
 oneshot_state os_win_state = os_up_unqueued;
 
-uint8_t os4a_layer = 0;
+static uint8_t os4a_layer = 0;
 static bool exit_os4a_layer = false;
+
+uint8_t get_os4a_layer(void) {
+  return (os4a_layer);
+}
 
 void os4a_layer_on(uint8_t layer) {
   layer_on(layer);
@@ -40,7 +44,7 @@ void os4a_layer_off(uint8_t layer) {
 void os4a_tap(uint16_t keycode) {
   if (os4a_layer == 0) {
       // Activate OS4A layer
-      os4a_layer_on(get_os4a_layer(keycode));
+      os4a_layer_on(os4a_layer_from_trigger(keycode));
   } else {
       // Press again an OS4A key to exit the OS4A layer and clear the OS mods.
       os4a_layer_off(os4a_layer);
@@ -57,22 +61,26 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-bool process_os4a_layers(uint16_t keycode, keyrecord_t *record) {
 
-    // Should keycode exit the OS4A layer ?
-    if (os4a_layer_changer(keycode)) { return true; }
-    if (is_oneshot_ignored_key(keycode)) { return false; }
+bool add_shift(uint16_t keycode, keyrecord_t *record) {
 
-    // Add OS Shift when no other mods are active.
-    // Testing exit_os4a_layer is necessary to prevent OS shift to be added when other features create keyrecords
-    // to be processed (ex: custom altgr, clever keys).
-    uint8_t mods = get_mods() | get_oneshot_mods();
-    if (!exit_os4a_layer && to_be_shifted(keycode, record) && mods == 0) {
-      // Don't use weak mods, it interferes with Capsword.
-      set_oneshot_mods(MOD_BIT(KC_LSFT));
-    }
-    return true;
+  // Testing exit_os4a_layer is necessary to prevent OS shift to be added in case of rolled keys
+  // or when other features invoke keycodes to be processed (ex: custom altgr, clever keys).
+  //if (exit_os4a_layer) { return false; }
+
+  // Shift shouldn't be added if other mods are active
+  if ((get_mods() | get_oneshot_mods()) != 0) { return false; }
+
+  // Combos and encoder events.
+  if (!IS_KEYEVENT(record->event)) { return true; }
+
+  // Specific exceptions
+  if (not_to_be_shifted(keycode)) { return false; }
+
+  // Otherwise, add shift if the key is on the other side of the keyboard.
+  return (os4a_layer == _R_MODS) == on_left_hand(record->event.key);
 }
+
 
 void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
     
@@ -81,7 +89,7 @@ void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
     //if (get_mods() & QK_ONE_SHOT_MOD_GET_MODS(keycode)) { 
 
     // When ctrl or shift are released after being held, exit the OS4A layer.
-    if (!record->event.pressed && !record->tap.count) {
+    if (!record->tap.count) {
       os4a_layer_off(os4a_layer);
     }
 }
@@ -92,21 +100,30 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   update_oneshot(&os_shft_state, KC_LSFT, OS_SHFT, keycode, record);
   update_oneshot(&os_ctrl_state, KC_LCTL, OS_CTRL, keycode, record);
   update_oneshot(&os_alt_state, KC_LALT, OS_LALT, keycode, record);
-  update_oneshot(&os_altgr_state, KC_RALT, OS_RALT, keycode, record);
   update_oneshot(&os_win_state, KC_LWIN, OS_WIN, keycode, record);
+  //update_oneshot(&os_altgr_state, KC_RALT, OS_RALT, keycode, record);
   
   // Handling OS4A keys
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
 
+  if (os4a_layer == 0) { return true; }
+
   // Behaviour of the OS4A layers
-  if (os4a_layer != 0) { exit_os4a_layer = process_os4a_layers(keycode, record); }
+  if (exit_os4a_layer) { 
+      os4a_layer_off(os4a_layer);
 
-  // When Ctrl or Shift are released, for mouse use.
-  //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
+  } else if (record->event.pressed) {
 
-  if (!record->event.pressed) {
-    if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
+      if (!should_stay_os4a_layer(keycode)) {
+          if (add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+          exit_os4a_layer = true;
+      }
+
+  } else {  // On release
+    // When Ctrl or Shift are released, for mouse use.
+    //if (mods_for_mouse(keycode)) { mouse_mods_key_up(keycode, record); }
   }
+
   return true;
 }
 

@@ -26,9 +26,10 @@ extern "C" {
 
 #define RECENT_SIZE 8    // Number of keys in `recent` buffer.
 
-extern uint16_t recent[RECENT_SIZE];
 uint16_t deadline;
-extern unsigned short int bkspc_countdown;
+
+uint16_t get_recent_keycode(signed char);
+void update_bkspc_countdown(unsigned char i);
 
 void clear_recent_keys(void);
 void recent_keys_task(void);
@@ -40,6 +41,7 @@ void invoke_key(uint16_t keycode, keyrecord_t* record);
 void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, keyrecord_t* record);
 void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record);
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record);
+void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record);
 
 bool process_clever_keys(uint16_t keycode, keyrecord_t* record);
 void end_CK(keyrecord_t* record);

@@ -16,13 +16,21 @@
 
 #include "clever_keys_utilities.h"
 
-uint16_t recent[RECENT_SIZE] = {KC_NO};
+static uint16_t recent[RECENT_SIZE] = {KC_NO};
 uint16_t deadline = 0;
-unsigned short int bkspc_countdown = RECENT_SIZE + 1;
+static unsigned char bkspc_countdown = RECENT_SIZE + 1;
 
 // Copy of the record argument for the clever key.
 static keyrecord_t mod_record;
 static bool processingCK = false;
+
+uint16_t get_recent_keycode(signed char i) {
+  return recent[RECENT_SIZE + i];
+}
+
+void update_bkspc_countdown(unsigned char i) {
+  bkspc_countdown = i;
+}
 
 void clear_recent_keys(void) {
   memset(recent, 0, sizeof(recent));  // Set all zeros (KC_NO).
@@ -40,8 +48,9 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
 
-  if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
-    clear_recent_keys();  // Avoid interfering with ctrl, left alt and gui.
+  //if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+  if (mods & ~MOD_MASK_SHIFT) {
+    clear_recent_keys();  // Avoid interfering with ctrl, alt, alt-gr and gui.
     return KC_NO;
   }
 
@@ -75,22 +84,6 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   uint16_t custom_keycode = get_ongoing_keycode_user(keycode);
   if (custom_keycode != KC_TRNS) { return custom_keycode; }
 
-/*    if (is_send_string_macro(keycode)) { return keycode; }
-
-  if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-      case PG_K:
-      case PG_B:
-      case PG_AROB:
-      case PG_3PTS:
-      case KC_SPC:  // In order to uppercase J after '?' for ex.
-        return keycode;
-
-      default:
-        clear_recent_keys();
-        return KC_NO;
-    }
-  } */
 
   uint8_t basic_keycode = keycode;
   // Handle keys carrying a modifier, for ex on layers(! and ?).
@@ -100,7 +93,8 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
     case PG_E:
 
-      if (is_letter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
+      //if (is_letter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
+      if (is_letter(basic_keycode)) {
           // Shift doesn't matter for letters.
           return basic_keycode;
 
@@ -146,9 +140,7 @@ void process_key(uint16_t keycode, keyrecord_t* record) {
 }
 
 void invoke_key(uint16_t keycode, keyrecord_t* record) {
-  tap_code(keycode);
-  //process_key(keycode, record);
-  //record->keycode = keycode;
+  process_key(keycode, record);  // tap_code doesn't work with caps word.
   bkspc_countdown = 1;
 }
 
@@ -161,13 +153,17 @@ void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, key
 
 void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
   for (int i = 0; i < num_keycodes; ++i) {
-    //process_key(keycodes[i], record);   // Better solution, if there is enought space in the chip.
-    tap_code(keycodes[i]);
+    process_key(keycodes[i], record);  // tap_code doesn't work with caps word.
   }
-  bkspc_countdown = num_keycodes;
 }
 
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
+  process_word(keycodes, num_keycodes - 1, record);
+  bkspc_countdown = num_keycodes - 1;
+  replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
+}
+
+void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
   process_word(keycodes, num_keycodes - 1, record);
   replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
 }

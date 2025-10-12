@@ -16,11 +16,13 @@
 
 #include "macros.h"
 
-bool is_apos_dr = false;
+static bool is_apos_dr = false;
+
+bool replace_apos(void) {
+    return is_apos_dr;
+}
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
-    //const uint8_t mods = get_mods();
-    //static bool is_shifted = false;
 
     if (record->event.pressed) {    // Handling of other macros (on press).
         switch (keycode) {
@@ -40,9 +42,9 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                     case _SHORTNAV:
                         tap_code(KC_F15);
                         return false;
-                    case _FUNCAPPS:
+/*                     case _FUNCAPPS:
                         tap_code(KC_F16);
-                        return false;
+                        return false; */
                 }
 
             case RAZ:
@@ -52,41 +54,15 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
                 layer_clear();
                 clear_oneshot_mods();
-                clear_weak_mods();
+                //clear_weak_mods();
                 caps_word_off();
                 disable_num_word();
                 clear_recent_keys();
                 break;
 
-            case KC_CAPS:
-                caps_word_off();
-                return true;
-
-            case CAPSWORD:
-                // I can't use CW_TOGG because QMK dosn't reach process_record_user when processing it.
-                // Deactivating Caps Lock when Caps Word activates.
-                if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-                caps_word_toggle();
-                return false;
-
             case TG_APOS:
                 is_apos_dr = !is_apos_dr;
                 return false;
-
-            case NUM_ODK:
-                bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-                if (is_shifted) {
-                    del_weak_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    unregister_mods(MOD_MASK_SHIFT);
-                }
-                tap_code(PG_ODK);
-
-                if (is_shifted) {
-                    is_shifted = false;
-                    set_oneshot_mods(MOD_BIT(KC_LSFT));
-                }
-                return true;
 
             case PG_DEG:
                 tap_code(PG_ODK);

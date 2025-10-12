@@ -20,6 +20,7 @@
 
 #include "keymap_french_propergol.h"
 #include "features_conf.h"
+#include "word_conf.h"
 #include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
@@ -37,8 +38,8 @@ enum layers {
     _L_MODS,
     _R_MODS,
     _ODK,
-    _SYMBOLS,
     _NUMBERS,
+    _SYMBOLS,
     _SHORTNAV,
     _FUNCAPPS,
 };
@@ -64,29 +65,28 @@ enum custom_keycodes {
   PG_DEG
 };
 
-// Layer taps
+  // Layer changers
 #define LT_SPC LT(_SYMBOLS, KC_SPC)
 #define LT_E LT(_SYMBOLS, PG_E)
 #define LT_REPT LT(_NUMBERS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
+#define LT_0 LT(_SYMBOLS, KC_0)
+#define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
+
+#define OS_ODK OSL(_ODK)
+#define NUM_ODK OSL(_NUMBERS)
 #define OS_FA OSL(_FUNCAPPS)
-#define TG_FA TG(_FUNCAPPS)
+#define TG_FA TT(_FUNCAPPS)
+
+  // Mods
 #define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
-#define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
-#define E_CIRC S(FG_0)
-#define OS_ODK OSL(_ODK)
 #define OS_RSA OSM(MOD_RALT | MOD_LSFT)
-#define NUM_ODK OSL(_NUMBERS)
 
-// One shot mods
+  // OS4A
 #define L_OS4A LSFT_T(OS4A)
 #define R_OS4A RSFT_T(OS4A)
-#define IS_OS4A_KEY(keycode) (get_os4a_layer(keycode) != 0)
+#define IS_OS4A_KEY(keycode) (os4a_layer_from_trigger(keycode) != 0)
 
+bool enough_time_before_combo(void);
 bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record);
-
-extern uint16_t global_quick_tap_timer;
-
-extern uint16_t next_keycode;
-extern keyrecord_t next_record;

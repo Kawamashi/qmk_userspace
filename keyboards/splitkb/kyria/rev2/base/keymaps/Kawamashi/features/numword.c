@@ -18,7 +18,7 @@
 
 //static uint16_t num_word_timer = 0;
 //static bool is_num_word_on = false;
-bool is_num_word_on = false;
+static bool is_num_word_on = false;
 static bool exit_num_word = false;
 
 bool is_num_word_enabled(void) {
@@ -26,13 +26,13 @@ bool is_num_word_enabled(void) {
 }
 
 void enable_num_word(void) {
-    //if (is_num_word_on) return;
+    if (is_num_word_on) return;
     is_num_word_on = true;
     layer_on(_NUMBERS);
 }
 
 void disable_num_word(void) {
-    //if (!is_num_word_on) return;
+    if (!is_num_word_on) return;
     is_num_word_on = false;
     layer_off(_NUMBERS);
     exit_num_word = false;
@@ -46,42 +46,6 @@ void toggle_num_word(void) {
     }
 }
 
-bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
-
-    switch (keycode) {
-        // Keycodes which should not disable num word mode.
-
-        // Numpad keycodes
-         case KC_1 ... KC_0:
-         case KC_PDOT:
-         //case PG_X:
-         //case PG_EACU:
-         case PG_MOIN:
-         case PG_ASTX: 
-         case PG_PLUS:
-         case PG_SLSH:
-         case PG_EXP:
-         case PG_IND:
-         case PG_H:
-         case PG_2PTS:
-         case PG_EURO:
-         //case LT_NBSPC:
-         case NNB_SPC:
-
-        // Misc
-        case KC_BSPC:
-        case PG_ODK:   // Not to exit Numword when chording it with ODK
-        case NUMWORD:   // For the combo NUMWORD to work
-
-/*         
-        case PG_EGAL:
-        case PG_BSLS:*/
-            return false;
-    }
-
-    return true;
-}
-
 
 bool process_numword(uint16_t keycode, const keyrecord_t *record) {
     // Handle the custom keycodes that go with this feature
@@ -93,8 +57,13 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
     // Other than the custom keycodes, nothing else in this feature will activate
     // if the behavior is not on, so allow QMK to handle the event as usual.
     if (!is_num_word_on) { return true; }
-    // Nothing else acts on key release, either
-    if (record->event.pressed) {
+
+    // Should exit num word on key release 
+    // in case of rolled keys as well (take the press of the 2nd one into account !)
+    if (exit_num_word) {
+        disable_num_word();
+
+    } else if (record->event.pressed) {
 
         // Get the base keycode of a mod or layer tap key
         switch (keycode) {
@@ -115,8 +84,8 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
         }
         exit_num_word = should_exit_num_word(keycode, record);
 
-    } else if (exit_num_word) {
-        disable_num_word();
+    } else {  // On keyrelease
+        
     }
     return true;
 }

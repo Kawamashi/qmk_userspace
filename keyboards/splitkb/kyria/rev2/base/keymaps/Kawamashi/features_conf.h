@@ -20,16 +20,13 @@
 #include "keymap.h"
 
 bool is_caps_lock_on(void);
-bool is_letter(uint16_t keycode);
-bool is_send_string_macro(uint16_t keycode);
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);
 
 uint16_t tap_hold_extractor(uint16_t keycode);
 bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
 uint16_t get_ongoing_keycode_user(uint16_t keycode);
 
-uint8_t get_os4a_layer(uint16_t keycode);
-bool os4a_layer_changer(uint16_t keycode);
-bool to_be_shifted(uint16_t keycode, keyrecord_t *record);
+uint8_t os4a_layer_from_trigger(uint16_t keycode);
+bool should_stay_os4a_layer(uint16_t keycode);
+bool not_to_be_shifted(uint16_t keycode);
 //bool mods_for_mouse(uint16_t keycode);

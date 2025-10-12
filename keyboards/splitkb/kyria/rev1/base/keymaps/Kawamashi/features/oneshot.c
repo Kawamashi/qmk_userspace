@@ -25,27 +25,40 @@ void update_oneshot(oneshot_state *state, uint16_t mod, uint16_t trigger, uint16
                     break;
             }
         }
-    } else {
-        if (record->event.pressed) {
-            if (is_oneshot_cancel_key(keycode) && *state != os_up_unqueued) {
-                // Cancel oneshot on designated cancel keydown.
-                *state = os_up_unqueued;
-                unregister_code(mod);
+    } else if (is_oneshot_cancel_key(keycode)) {
+        if (record->event.pressed && *state != os_up_unqueued) {
+            // Cancel oneshot on designated cancel keydown.
+            *state = os_up_unqueued;
+            unregister_code(mod);
+        }
+
+    } else if (!is_oneshot_ignored_key(keycode)) {
+        
+        // Regular key released / roll between two regular keys
+        if (*state == os_up_queued_used) {
+            *state = os_up_unqueued;
+            unregister_code(mod);
+
+        } else if (record->event.pressed) {
+            // Regular key pressed
+            if (*state == os_up_queued) {
+                *state = os_up_queued_used;
             }
+
         } else {
-            if (!is_oneshot_ignored_key(keycode)) {
-                // On non-ignored keyup, consider the oneshot used.
-                switch (*state) {
-                    case os_down_unused:
-                        *state = os_down_used;
-                        break;
-                    case os_up_queued:
-                        *state = os_up_unqueued;
-                        unregister_code(mod);
-                        break;
-                    default:
-                        break;
-                }
+            // Regular key release
+            switch (*state) {
+                // When the mod key is still pressed
+                case os_down_unused:
+                    *state = os_down_used;
+                    break;
+                // Roll between a mod key and a regular key
+                case os_up_queued:
+                    *state = os_up_unqueued;
+                    unregister_code(mod);
+                    break;
+                default:
+                    break;
             }
         }
     }

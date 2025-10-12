@@ -67,6 +67,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_scan_user(void) {
   recent_keys_task();
+  caps_word_task();
 }
 
 
@@ -111,12 +112,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
 
+  if (!process_caps_word(keycode, record)) {return false; }
+
   // Process all other keycodes normally
   return true;
 }
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
-
+  
+  if (is_caps_word_on()) { clear_weak_mods(); }
   end_CK(record);
 }
 

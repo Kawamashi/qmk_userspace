@@ -33,7 +33,7 @@
 #    define RGBLIGHT_LIMIT_VAL 150
 #endif
 
-//#define TAPPING_TOGGLE 1
+#define TAPPING_TOGGLE 1
 
 // combo
 #define COMBO_TERM 50

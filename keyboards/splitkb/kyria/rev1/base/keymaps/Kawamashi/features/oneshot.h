@@ -2,10 +2,11 @@
 
 #include QMK_KEYBOARD_H
 
-// Represents the four states a oneshot key can be in
+// Represents the five states a oneshot key can be in
 typedef enum {
     os_up_unqueued,
     os_up_queued,
+    os_up_queued_used,
     os_down_unused,
     os_down_used,
 } oneshot_state;

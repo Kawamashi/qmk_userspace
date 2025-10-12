@@ -60,17 +60,6 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
                 clear_recent_keys();
                 break;
 
-            case KC_CAPS:
-                caps_word_off();
-                return true;
-
-            case CAPSWORD:
-                // I can't use CW_TOGG because QMK dosn't reach process_record_user when processing it.
-                // Deactivating Caps Lock when Caps Word activates.
-                if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-                caps_word_toggle();
-                return false;
-
             case TG_APOS:
                 is_apos_dr = !is_apos_dr;
                 return false;

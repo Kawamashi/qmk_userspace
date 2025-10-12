@@ -29,6 +29,7 @@ extern "C" {
 uint16_t deadline;
 
 uint16_t get_recent_keycode(signed char);
+bool was_keycode_replaced(void);
 void update_bkspc_countdown(unsigned char i);
 
 void clear_recent_keys(void);

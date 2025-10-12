@@ -26,13 +26,13 @@ bool is_num_word_enabled(void) {
 }
 
 void enable_num_word(void) {
-    //if (is_num_word_on) return;
+    if (is_num_word_on) return;
     is_num_word_on = true;
     layer_on(_NUMBERS);
 }
 
 void disable_num_word(void) {
-    //if (!is_num_word_on) return;
+    if (!is_num_word_on) return;
     is_num_word_on = false;
     layer_off(_NUMBERS);
     exit_num_word = false;
@@ -58,6 +58,13 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
     // if the behavior is not on, so allow QMK to handle the event as usual.
     if (!is_num_word_on) { return true; }
 
+    // Should exit num word on key release 
+    // in case of rolled keys as well (take the press of the 2nd one into account !)
+    if (exit_num_word) {
+        disable_num_word();
+        return true;
+    }
+
     if (record->event.pressed) {
 
         // Get the base keycode of a mod or layer tap key
@@ -79,8 +86,8 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
         }
         exit_num_word = should_exit_num_word(keycode, record);
 
-    } else if (exit_num_word) {  // On keyrelease
-        disable_num_word();
+    } else {  // On keyrelease
+        
     }
     return true;
 }

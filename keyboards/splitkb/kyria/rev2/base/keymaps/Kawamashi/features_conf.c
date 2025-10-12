@@ -16,54 +16,9 @@
 
 #include "features_conf.h"
 
+
 bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
-bool is_letter(uint16_t keycode) {
-  switch (keycode) {
-    case KC_A ... KC_F:
-    case KC_H ... KC_P:
-    case KC_R ... KC_S:
-    case KC_U ... KC_Z:
-    case PG_L:
-    case PG_E:
-    case KC_GRV ... KC_DOT:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-bool is_send_string_macro(uint16_t keycode) {
-  switch (keycode) {
-    case OU_GRV:
-    case MAGIC:
-    //case PG_DEG:
-      return true;
-    
-    default:
-      return false;
-  }
-}
-
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
-  switch (keycode) {
-    case PG_Q:
-      return true;
-      
-    case PG_L:
-    case PG_T:
-    case PG_D:
-    case PG_C:
-    case PG_N:
-    case PG_S:
-    case PG_M:
-    case PG_Y:
-    case PG_J:
-      if (!is_letter(prev_keycode)) { return true; }
-  }
-  return false;
-}
 
 // This function extracts the base keycode of MT and LT,
 // even if the tap/hold key is a custom one, with non-basic tap keycode.
@@ -72,7 +27,7 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
     case LT_NBSPC:
       return NNB_SPC;
     default:
-      return keycode &= 0xff;
+      return keycode &= 0xff;   //QK_MOD_TAP_GET_TAP_KEYCODE(keycode)
   }
 }
 
@@ -103,68 +58,6 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-// Caps Word
-
-bool caps_word_press_user(uint16_t keycode) {
-
-  // Caps Word shouldn't be applied with Alt-gr
-  // Managing underscore and slash on alt gr + E/T.
-  // Underscore and slash must continue Caps Word, without shifting.
-/*   if ((get_mods() & MOD_BIT(KC_ALGR))) {
-    switch (keycode) {
-      case PG_E:
-      case PG_T:
-        return true;
-      default:
-        return false;
-    }
-  } */
-
-  if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-
-      case PG_VIRG:
-        add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
-        return true;
-  
-      case PG_Y:
-      case PG_T:
-        return true;
-
-      case PG_POIN:
-        return false;
-    }
-  }
-
-  // Keycodes that continue Caps Word, with shift applied.
-  // @ must be shifted, bc of CleverKeys using it.
-  if (is_letter(keycode) || is_send_string_macro(keycode) || keycode == PG_AROB) {
-    add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
-    return true;
-  } 
-
-  switch (keycode) {
-    // Keycodes that continue Caps Word, without shifting.
-    case PG_ODK:
-    //case PG_GRV:
-    case PG_UNDS:
-    case PG_TIRE:
-    case PG_SLSH:
-    case KC_KP_1 ... KC_KP_0:
-    //case KC_LEFT:
-    //case KC_RIGHT:
-    case KC_BSPC:
-    case LCTL(KC_BSPC):
-    case KC_DEL:
-    case PG_APOS:
-      return true;
-
-    default:
-      return false;  // Deactivate Caps Word.
-    }
-}
-
-
 // Clever keys configuration
 
 uint16_t get_ongoing_keycode_user(uint16_t keycode) {
@@ -176,10 +69,11 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
     switch (keycode) {
       case PG_K:
       case PG_B:
-      case PG_AROB:
-      case PG_3PTS:
-      case KC_SPC:  // In order to uppercase J after '?' for ex.
+      case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
         return keycode;
+
+      case PG_POIN:
+        return PG_3PTS;
 
       default:
         clear_recent_keys();
@@ -189,9 +83,10 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode) {
   return KC_TRNS;
 }
 
+
 // One-shot 4 all configuration
 
-uint8_t get_os4a_layer(uint16_t keycode) {
+uint8_t os4a_layer_from_trigger(uint16_t keycode) {
   switch (keycode) {
     case L_OS4A: return _L_MODS;
     case R_OS4A: return _R_MODS;
@@ -199,32 +94,31 @@ uint8_t get_os4a_layer(uint16_t keycode) {
   }
 }
 
-bool os4a_layer_changer(uint16_t keycode) {
+bool should_stay_os4a_layer(uint16_t keycode) {
+  // keycodes that stay on os4a layers w/o being shifted
   switch (keycode) {
-    case OS_FA:
-    case NUMWORD:
-    case TG_FA:
-    case OS_RSA:
-    case NUM_ODK:
+    case OS_SHFT:
+    case OS_CTRL:
+    case OS_RALT:
+    case OS_LALT:
+    case OS_WIN:
       return true;
+
     default:
       return false;
   }
 }
 
-bool to_be_shifted(uint16_t keycode, keyrecord_t *record) {
-  // Combos and encoder events.
-  if (!IS_KEYEVENT(record->event)) { return true; }
-  
+bool not_to_be_shifted(uint16_t keycode) {
+  // keycodes that exit os4a layers w/o being shifted
   switch (keycode) {
-    case OS_ODK:
-      is_shifted = true;
-    case KC_CAPS:
-    case CAPSWORD:
-    case CAPSLIST:
-      return false;
-    default:
-      return (os4a_layer == _R_MODS) == on_left_hand(record->event.key);
+      case KC_CAPS:
+      case CAPSWORD:
+      case CAPSLIST:
+        return true;
+
+      default:
+        return false;
   }
 }
 
@@ -242,16 +136,19 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 }
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
-  // On veut que la touche typo soit ignorée par tous les Callum mods sauf Alt-gr.
-  // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-  // Alt-gr et shift s'appliquent à la touche typo, pour permettre de faire les majuscules plus facilement ainsi que ] avec.
-  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_ODK && (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR)))) { return true; }
 
-  if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
+  const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
 
   switch (keycode) {
-    //case OS_ODK:  /!\ A ne pas remettre, sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
+    case OS_ODK:
+      // On veut que la touche typo soit ignorée par tous les Callum mods sauf Alt-gr.
+      // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
+      // Alt-gr doit pouvoir s’appliquer à la touche typo, pour permettre de faire la touche morte "~" avec.
+      // OS_ODK ne doit être ignored_key que lorsqu’elle est employée avec Alt-gr
+      // sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
+      if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
+      break;
     case L_OS4A:
     case R_OS4A:
     case OS_SHFT:
@@ -259,14 +156,13 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_RALT:
     case OS_LALT:
     case OS_WIN:
-    case OS_FA:
-    case NUMWORD:
+    case OS_FA:       // to be combined with Alt
     case TG_FA:
-    //case NUM_ODK:  // Ne sert à rien, car NUM_ODK est un vrai one-shot : les mods sont transmis même sans paramétrage.
-        return true;
-    default:
-        return false;
+    case NUMWORD:     // to combine numbers with mods
+    //case NUM_ODK:   // NUM_ODK sends PG_ODK when pressed. When shifted, PG_ODK sends one-shot shift.
+      return true;
   }
+  return false;
 }
 
 
@@ -291,9 +187,8 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
       return C(PG_Z);
   }
 
-  if (recent[RECENT_SIZE - 1] != KC_NO) { return MAGIC; }
+  if (get_recent_keycode(-1) != KC_NO) { return MAGIC; }
   if (get_last_keycode() == KC_NO) { return MAGIC; }
   
-
   return KC_TRNS;  // Defer to default definitions.
 }

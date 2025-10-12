@@ -57,7 +57,6 @@ enum custom_keycodes {
   MAGIC,
   OS_SHFT,
   OS_CTRL,
-  OS_RALT,
   OS_LALT,
   OS_WIN,
   CNL_ODK,
