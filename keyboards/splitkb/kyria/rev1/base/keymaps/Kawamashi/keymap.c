@@ -91,8 +91,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     global_quick_tap_timer = timer_read();
   }
 
+  // Callum Mods 
+  if (!process_oneshot(keycode, record)) { return false; }
+
   // Multi One-Shot Mods
-  if (!process_mods(keycode, record)) { return false; }
+  if (!process_os4a(keycode, record)) { return false; }
 
   // Numword
   if (!process_numword(keycode, record)) { return false; }

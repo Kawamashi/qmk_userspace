@@ -34,7 +34,9 @@ void update_bkspc_countdown(unsigned char i);
 
 void clear_recent_keys(void);
 void recent_keys_task(void);
+
 uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record);
+uint16_t get_ongoing_keycode_user(uint16_t keycode);
 
 void store_keycode(uint16_t keycode, keyrecord_t* record);
 void process_key(uint16_t keycode, keyrecord_t* record);

@@ -17,11 +17,6 @@
 #include "os4a.h"
 
 
-oneshot_state os_shft_state = os_up_unqueued;
-oneshot_state os_ctrl_state = os_up_unqueued;
-oneshot_state os_alt_state = os_up_unqueued;
-oneshot_state os_win_state = os_up_unqueued;
-
 static uint8_t os4a_layer = 0;
 static bool exit_os4a_layer = false;
 
@@ -61,11 +56,7 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-bool add_shift(uint16_t keycode, keyrecord_t *record) {
-
-  // Testing exit_os4a_layer is necessary to prevent OS shift to be added in case of rolled keys
-  // or when other features invoke keycodes to be processed (ex: custom altgr, clever keys).
-  //if (exit_os4a_layer) { return false; }
+bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
 
   // Shift shouldn't be added if other mods are active
   if ((get_mods() | get_oneshot_mods()) != 0) { return false; }
@@ -93,13 +84,7 @@ void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-bool process_mods(uint16_t keycode, keyrecord_t *record) {
-
-  // Handling Callum's OSM on OS4A layers
-  update_oneshot(&os_shft_state, KC_LSFT, OS_SHFT, keycode, record);
-  update_oneshot(&os_ctrl_state, KC_LCTL, OS_CTRL, keycode, record);
-  update_oneshot(&os_alt_state, KC_LALT, OS_LALT, keycode, record);
-  update_oneshot(&os_win_state, KC_LWIN, OS_WIN, keycode, record);
+bool process_os4a(uint16_t keycode, keyrecord_t *record) {
   
   // Handling OS4A keys
   if (IS_OS4A_KEY(keycode)) { return process_os4a_keys(keycode, record); }
@@ -116,7 +101,7 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
 
       if (!should_stay_os4a_layer(keycode)) {
-          if (add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
+          if (should_add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
           exit_os4a_layer = true;
       }
 
@@ -126,8 +111,4 @@ bool process_mods(uint16_t keycode, keyrecord_t *record) {
   }
 
   return true;
-}
-
-void os4a_layer_exit_check(void) {
-  if (os4a_layer != 0 && exit_os4a_layer) { os4a_layer_off(os4a_layer); }
 }
