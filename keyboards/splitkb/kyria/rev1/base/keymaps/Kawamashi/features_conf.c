@@ -134,21 +134,21 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
   }
 }
 
-uint8_t one_shot_get_mod(uint16_t keycode) {
+/* uint8_t one_shot_get_mod(uint16_t keycode) {
   switch (keycode) {
     case OS_SHFT:
-      return MOD_BIT(KC_LSFT);
+      return KC_LSFT;
     case OS_CTRL:
-      return MOD_BIT(KC_LCTL);
+      return KC_LCTL;
     case OS_LALT:
-      return MOD_BIT(KC_LALT);
+      return KC_LALT;
     case OS_WIN:
-      return MOD_BIT(KC_LWIN);  
-      
+      return KC_LWIN;
+
     default:
-      return 0;
+      return KC_NO;
   }
-}
+} */
 
 bool is_oneshot_ignored_key(uint16_t keycode) {
 

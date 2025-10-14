@@ -92,7 +92,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   // Callum Mods 
-  if (!process_oneshot(keycode, record)) { return false; }
+  //if (!process_oneshot(keycode, record)) { return false; }
+  if (!process_oneshot_old(keycode, record)) { return false; };
 
   // Multi One-Shot Mods
   if (!process_os4a(keycode, record)) { return false; }
