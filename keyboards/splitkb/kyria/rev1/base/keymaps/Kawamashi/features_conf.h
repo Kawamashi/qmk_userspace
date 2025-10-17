@@ -23,6 +23,5 @@ bool replace_apos(void);
 bool is_caps_lock_on(void);
 
 uint16_t tap_hold_extractor(uint16_t keycode);
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
 bool process_macros(uint16_t keycode, keyrecord_t *record);

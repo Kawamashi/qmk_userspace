@@ -26,46 +26,18 @@ bool replace_apos(void) {
 bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
 
-// This function extracts the base keycode of MT and LT,
-// even if the tap/hold key is a custom one, with non-basic tap keycode.
 uint16_t tap_hold_extractor(uint16_t keycode) {
+
+  // This function extracts the base keycode of MT and LT,
+  // even if the tap/hold key is a custom one, with non-basic tap keycode.
   switch (keycode) {
-    case LT_NBSPC:
-      return NNB_SPC;
-    default:
-      return keycode &= 0xff;   //QK_MOD_TAP_GET_TAP_KEYCODE(keycode)
+      case LT_NBSPC:
+        return NNB_SPC;
+      default:
+        return keycode &= 0xff;   //QK_MOD_TAP_GET_TAP_KEYCODE(keycode)
   }
 }
 
-/* bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
-
-  if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
-    switch (keycode) {
-
-        case RCTL_T(FEN_B):
-          return process_tap_hold(LWIN(KC_DOWN), record);
-
-        case SFT_T(COPY):
-          return process_tap_hold(C(PG_C), record);
-
-        case LT_NBSPC:
-          return process_tap_hold(NNB_SPC, record);
-
-        case LT_REPT:
-          repeat_key_invoke(&record->event);
-          return false;
-
-        case LT_MGC:
-          alt_repeat_key_invoke(&record->event);
-          return false;
-    }
-  } else if (!record->event.pressed) {
-    if (keycode == LT_MGC && is_select_word()) {
-        end_select_word();
-    }
-  }
-  return true; // Process all other keycodes normally
-} */
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
@@ -115,7 +87,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 
   if (is_send_string_macro(keycode)) { return keycode; }
 
-  switch (get_highest_layer(layer_state|default_layer_state)) {
+  switch (get_highest_layer(layer_state)) {
 
     case _ODK:
       switch (keycode) {
@@ -128,8 +100,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
           return PG_3PTS;
 
         default:
-          clear_recent_keys();
-          return KC_NO;
+          return ODK;
       }
       
     case _SHORTNAV:
@@ -145,7 +116,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 
   if (keycode == PG_E) { return PG_E; }   // because PG_E is not a basic keycode
 
-/*   if (!IS_KEYEVENT(record->event)) {
+  if (!IS_KEYEVENT(record->event)) {
     switch (keycode) {
       case KC_BSPC:
         break;
@@ -154,7 +125,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
         clear_recent_keys();
         return KC_NO;
     }
-  } */
+  }
 
   return KC_TRNS;
 }

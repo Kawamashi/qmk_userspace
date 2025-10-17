@@ -21,7 +21,7 @@
 #include "keymap_french_propergol.h"
 #include "features_conf.h"
 #include "word_conf.h"
-#include "clever_keys.h"
+//#include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
 #include "features/numword.h"
@@ -49,7 +49,7 @@ enum custom_keycodes {
   CAPSLIST,
   FEN_B,
   COPY,
-  AIDE_MEM,
+  //AIDE_MEM,
   OS4A,
   CAPSWORD,
   OU_GRV,
@@ -58,6 +58,7 @@ enum custom_keycodes {
   OS_CTRL,
   OS_LALT,
   OS_WIN,
+  ODK,
   CNL_ODK,
   TG_APOS,
   PG_DEG,
@@ -88,5 +89,4 @@ enum custom_keycodes {
 #define R_OS4A RSFT_T(OS4A)
 #define IS_OS4A_KEY(keycode) (os4a_layer_from_trigger(keycode) != 0)
 
-bool enough_time_before_combo(void);
 bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record);

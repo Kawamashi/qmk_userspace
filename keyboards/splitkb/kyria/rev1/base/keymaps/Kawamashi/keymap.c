@@ -20,12 +20,6 @@
 #include "keymap.h"
 
 
-static uint16_t global_quick_tap_timer = 0;
-
-bool enough_time_before_combo(void) {
-  return timer_elapsed(global_quick_tap_timer) > TAP_INTERVAL;
-}
-
 static uint16_t next_keycode;
 static keyrecord_t next_record;
 
@@ -45,7 +39,7 @@ bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
-    if (record->event.key.col != next_record.event.key.col) {
+    //if (record->event.key.col != next_record.event.key.col) {
 
       // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
       // Fait également gagner pas mal de place sur le FW.
@@ -55,10 +49,10 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
           //tap_converter(keycode, record);
           record->tap.interrupted = false;
-          record->tap.count       = 1;
+          record->tap.count = 1;
           return true;
       }
-    }
+    //}
     return false;
 }
 
@@ -86,16 +80,9 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-  // Global quick tap for combos.
-  // IS_KEYEVENT prevents combos from updating global_quick_tap_timer, to allow combos to be chained.
-  if ((IS_KEYEVENT(record->event) && get_highest_layer(layer_state) == _BASE) && !IS_OS4A_KEY(keycode)) {
-    global_quick_tap_timer = timer_read();
-  }
-
   // Callum Mods 
-  //if (!process_oneshot(keycode, record)) { return false; }
-  if (!process_oneshot_old(keycode, record)) { return false; };
-  //process_oneshot_old(keycode, record);
+  if (!process_oneshot(keycode, record)) { return false; }
+  //if (!process_oneshot_old(keycode, record)) { return false; };
 
   // Multi One-Shot Mods
   if (!process_os4a(keycode, record)) { return false; }

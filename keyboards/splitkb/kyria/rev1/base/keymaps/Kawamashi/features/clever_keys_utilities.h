@@ -46,7 +46,10 @@ void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record
 void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record);
 void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record);
 
+bool enough_time_before_combo(void);
+
 bool process_clever_keys(uint16_t keycode, keyrecord_t* record);
+void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record);
 void end_CK(keyrecord_t* record);
 
 //bool process_accent(uint16_t accent, uint16_t letter, keyrecord_t* record);

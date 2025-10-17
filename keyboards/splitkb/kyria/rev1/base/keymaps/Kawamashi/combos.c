@@ -46,7 +46,7 @@ const uint16_t PROGMEM esc_combo[] = {PG_N, PG_A, COMBO_END};
 const uint16_t PROGMEM bkspc_combo_g[] = {PG_A, PG_I, COMBO_END};
 const uint16_t PROGMEM home_combo[] = {PG_Z, PG_Y, COMBO_END};
 const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
-const uint16_t PROGMEM help_combo[] = {PG_EACU, PG_J, COMBO_END};
+//const uint16_t PROGMEM help_combo[] = {PG_EACU, PG_J, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
 //const uint16_t PROGMEM numword_combo[] = {PG_T, PG_R, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
@@ -63,7 +63,7 @@ combo_t key_combos[] = {
     [ENTER] = COMBO(enter_combo, KC_ENT),
     [TAB] = COMBO(tab_combo, KC_TAB),
     [ESC] = COMBO(esc_combo, KC_ESC),
-    [HELP] = COMBO(help_combo, AIDE_MEM), 
+    //[HELP] = COMBO(help_combo, AIDE_MEM), 
     [PANIC] = COMBO(panic_combo, KC_NO),
     //[NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
@@ -76,7 +76,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
     if (get_os4a_layer() != 0) {
       return (get_os4a_layer() == _R_MODS) == on_left_hand(record->event.key);
     }
-    // Some combos shouldn't be affected by global_quick_tap_timer.
+    // Some combos shouldn't be affected by last_keypress_timer.
     switch (combo_index) {
         case R_BKSPC:
         case BK_WORD:

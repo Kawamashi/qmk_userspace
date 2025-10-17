@@ -12,12 +12,8 @@ typedef enum {
     os_down_used,
 } oneshot_state;
 
-uint8_t one_shot_get_mod(uint16_t keycode);
 
-bool process_oneshot_old(uint16_t keycode, keyrecord_t *record);
 bool process_oneshot(uint16_t keycode, keyrecord_t *record);
-bool process_oneshot_keys(keyrecord_t *record, uint8_t mod, oneshot_state *state);
-void process_mods(uint16_t keycode, keyrecord_t *record, uint8_t mod, oneshot_state *state);
 
 // Custom oneshot mod implementation that doesn't rely on timers. If a mod is
 // used while it is held it will be unregistered on keyup as normal, otherwise
@@ -29,7 +25,6 @@ bool update_oneshot(
     uint16_t keycode,
     keyrecord_t *record
 );
-void update_oneshot_old(oneshot_state *state, uint16_t mod, uint16_t trigger, uint16_t keycode, keyrecord_t *record);
 
 // To be implemented by the consumer. Defines keys to cancel oneshot mods.
 bool is_oneshot_cancel_key(uint16_t keycode);

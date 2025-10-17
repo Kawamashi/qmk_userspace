@@ -24,6 +24,9 @@ static unsigned char bkspc_countdown = RECENT_SIZE + 1;
 static keyrecord_t mod_record;
 static bool processingCK = false;
 
+static uint16_t last_keypress_timer = 0;
+
+
 uint16_t get_recent_keycode(signed char i) {
   return recent[RECENT_SIZE + i];
 }
@@ -111,12 +114,10 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
           keycode = (mods << 8) | basic_keycode;
           return keycode;
       }
-
-    default:  // Avoid acting otherwise, particularly on navigation keys.
-      clear_recent_keys();
-      return KC_NO;
   }
 
+  // Avoid acting otherwise, particularly on navigation keys.
+  clear_recent_keys();
   return KC_NO;
 }
 
@@ -176,6 +177,10 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     if (ongoing_keycode != KC_NO) {
       get_clever_keycode(&ongoing_keycode, record);
       store_keycode(ongoing_keycode, record);
+
+      // Global quick tap for combos.
+      // IS_KEYEVENT prevents combos from updating last_keypress_timer, to allow combos to be chained.
+      if (IS_KEYEVENT(record->event)) { last_keypress_timer = timer_read(); }
     }
     //return true; // If no clever key was found, process keycode normally.
     
@@ -184,6 +189,10 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     record->keycode = recent[RECENT_SIZE - 1]; */
   }
   return true;
+}
+
+bool enough_time_before_combo(void) {
+  return timer_elapsed(last_keypress_timer) > TAP_INTERVAL;
 }
 
 void end_CK(keyrecord_t* record) {
