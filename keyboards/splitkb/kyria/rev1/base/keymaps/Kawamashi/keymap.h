@@ -51,7 +51,6 @@ enum custom_keycodes {
   COPY,
   AIDE_MEM,
   OS4A,
-  RAZ,
   CAPSWORD,
   OU_GRV,
   MAGIC,
@@ -61,7 +60,9 @@ enum custom_keycodes {
   OS_WIN,
   CNL_ODK,
   TG_APOS,
-  PG_DEG
+  PG_DEG,
+  SEL_WORD,
+  SEL_LINE
 };
 
   // Layer changers

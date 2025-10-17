@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+void os4a_task(void);
+
 uint8_t get_os4a_layer(void);
 
 void os4a_layer_off(uint8_t layer);
@@ -32,13 +34,16 @@ void os4a_layer_on(uint8_t layer);
 void os4a_tap(uint16_t keycode);
 bool process_os4a_keys(uint16_t keycode, keyrecord_t *record);
 
-bool add_shift(uint16_t keycode, keyrecord_t *record);
+bool should_add_shift(uint16_t keycode, keyrecord_t *record);
 
 void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record);
 
-bool process_mods(uint16_t keycode, keyrecord_t *record);
+bool process_os4a(uint16_t keycode, keyrecord_t *record);
 
-void os4a_layer_exit_check(void);
+uint8_t os4a_layer_from_trigger(uint16_t keycode);
+bool should_stay_os4a_layer(uint16_t keycode);
+bool not_to_be_shifted(uint16_t keycode);
+//bool mods_for_mouse(uint16_t keycode);
 
 #ifdef __cplusplus
 }

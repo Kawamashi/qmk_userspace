@@ -17,25 +17,6 @@
 #include "tap_hold_utilities.h"
 
 
-void tap_converter(uint16_t keycode, keyrecord_t *record) {
-
-  if (IS_OS4A_KEY(keycode)) {
-    // Instant OS4A processing
-    os4a_tap(keycode);
-
-  } else {
-    if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
-      // Tranform the record to send the tap event
-      record->keycode = tap_hold_extractor(keycode);
-    }
-    process_record(record);
-  }
-
-  // Send the base keycode key up event
-  record->event.pressed = false;
-  process_record(record);
-}
-
 // Returns true if `pos` on the left hand of the keyboard, false if right.
 bool on_left_hand(keypos_t pos) {
 #ifdef SPLIT_KEYBOARD
@@ -58,7 +39,7 @@ __attribute__((weak)) bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_
 }
 
 
-bool process_tap_hold(uint16_t keycode, keyrecord_t *record) {
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {    // On press
       tap_code16(keycode);
       return false;

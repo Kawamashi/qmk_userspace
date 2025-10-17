@@ -16,6 +16,12 @@
 
 #include "features_conf.h"
 
+static bool is_apos_dr = false;
+
+bool replace_apos(void) {
+  return is_apos_dr;
+}
+
 
 bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
 
@@ -31,7 +37,7 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   }
 }
 
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
+/* bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
 
   if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
     switch (keycode) {
@@ -53,6 +59,50 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
           alt_repeat_key_invoke(&record->event);
           return false;
     }
+  } else if (!record->event.pressed) {
+    if (keycode == LT_MGC && is_select_word()) {
+        end_select_word();
+    }
+  }
+  return true; // Process all other keycodes normally
+} */
+
+bool process_macros(uint16_t keycode, keyrecord_t *record) {
+
+  if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
+    switch (keycode) {
+
+        case RCTL_T(FEN_B):
+          return process_custom_tap_hold(LWIN(KC_DOWN), record);
+
+        case SFT_T(COPY):
+          return process_custom_tap_hold(C(PG_C), record);
+
+        case LT_NBSPC:
+          return process_custom_tap_hold(NNB_SPC, record);
+
+        case LT_REPT:
+          repeat_key_invoke(&record->event);
+          return false;
+
+        case LT_MGC:
+          alt_repeat_key_invoke(&record->event);
+          return false;
+    }
+  }
+
+  if (record->event.pressed) {    // Handling of other macros (on press).
+      switch (keycode) {
+
+          case TG_APOS:
+              is_apos_dr = !is_apos_dr;
+              return false;
+
+          case PG_DEG:
+              tap_code(PG_ODK);
+              tap_code(KC_9);
+              return false;
+      }
   }
   return true; // Process all other keycodes normally
 }
@@ -60,26 +110,52 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
 
 // Clever keys configuration
 
-uint16_t get_ongoing_keycode_user(uint16_t keycode) {
+uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   // Handles custom keycodes to be processed for Clever Keys
 
   if (is_send_string_macro(keycode)) { return keycode; }
 
-  if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-      case PG_K:
-      case PG_B:
-      case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
-        return keycode;
+  switch (get_highest_layer(layer_state|default_layer_state)) {
 
-      case PG_POIN:
-        return PG_3PTS;
+    case _ODK:
+      switch (keycode) {
+        case PG_K:
+        case PG_B:
+        case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
+          return keycode;
+
+        case PG_POIN:
+          return PG_3PTS;
+
+        default:
+          clear_recent_keys();
+          return KC_NO;
+      }
+      
+    case _SHORTNAV:
+      switch (keycode) {
+        case KC_SPC:
+          return keycode;
+        
+        default:
+          clear_recent_keys();
+          return KC_NO;
+      }
+  }
+
+  if (keycode == PG_E) { return PG_E; }   // because PG_E is not a basic keycode
+
+/*   if (!IS_KEYEVENT(record->event)) {
+    switch (keycode) {
+      case KC_BSPC:
+        break;
 
       default:
         clear_recent_keys();
         return KC_NO;
     }
-  }
+  } */
+
   return KC_TRNS;
 }
 
@@ -148,8 +224,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
       // sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
       if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
       break;
-    //case L_OS4A:
-    //case R_OS4A:
+      
     case OS_SHFT:
     case OS_CTRL:
     case OS_LALT:

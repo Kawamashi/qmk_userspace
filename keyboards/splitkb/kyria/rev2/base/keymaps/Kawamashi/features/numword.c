@@ -62,8 +62,10 @@ bool process_numword(uint16_t keycode, const keyrecord_t *record) {
     // in case of rolled keys as well (take the press of the 2nd one into account !)
     if (exit_num_word) {
         disable_num_word();
+        return true;
+    }
 
-    } else if (record->event.pressed) {
+    if (record->event.pressed) {
 
         // Get the base keycode of a mod or layer tap key
         switch (keycode) {

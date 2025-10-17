@@ -130,7 +130,7 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
          case PG_IND:
          case PG_H:
          case PG_2PTS:
-         case NNB_SPC:
+         //case NNB_SPC:
 
         // Misc
         case KC_BSPC:

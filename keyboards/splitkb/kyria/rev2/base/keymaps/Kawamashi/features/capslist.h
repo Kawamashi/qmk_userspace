@@ -6,9 +6,9 @@
 
 bool is_caps_list_on(void);
 
-void enable_caps_list(void);
-void disable_caps_list(void);
-void toggle_caps_list(void);
+void caps_list_on(void);
+void caps_list_off(void);
+void caps_list_toggle(void);
 
 bool update_capslist_countdown(signed char i);
 bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_countdown_end);

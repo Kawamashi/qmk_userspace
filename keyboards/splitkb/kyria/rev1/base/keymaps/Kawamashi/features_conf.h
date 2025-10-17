@@ -19,14 +19,10 @@
 #include "quantum.h"
 #include "keymap.h"
 
+bool replace_apos(void);
 bool is_caps_lock_on(void);
 
 uint16_t tap_hold_extractor(uint16_t keycode);
 bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
-uint16_t get_ongoing_keycode_user(uint16_t keycode);
-
-uint8_t os4a_layer_from_trigger(uint16_t keycode);
-bool should_stay_os4a_layer(uint16_t keycode);
-bool not_to_be_shifted(uint16_t keycode);
-//bool mods_for_mouse(uint16_t keycode);
+bool process_macros(uint16_t keycode, keyrecord_t *record);

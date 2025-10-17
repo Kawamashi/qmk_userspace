@@ -64,7 +64,7 @@ combo_t key_combos[] = {
     [TAB] = COMBO(tab_combo, KC_TAB),
     [ESC] = COMBO(esc_combo, KC_ESC),
     [HELP] = COMBO(help_combo, AIDE_MEM), 
-    [PANIC] = COMBO(panic_combo, RAZ),
+    [PANIC] = COMBO(panic_combo, KC_NO),
     //[NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
     [ALTESC] = COMBO(altesc_combo, LALT(KC_ESC))
@@ -101,6 +101,20 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             tap_code(KC_TAB);
         } else {
             unregister_mods(MOD_LALT);
+        }
+        break;
+      case PANIC:
+        if (pressed) {
+          if (is_caps_lock_on()) { tap_code(KC_CAPS); }
+          if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
+
+          layer_clear();
+          clear_mods();
+          //clear_oneshot_mods();
+          //clear_weak_mods();
+          caps_word_off();
+          //disable_num_word();
+          clear_recent_keys();
         }
         break;
   }

@@ -28,6 +28,10 @@ uint16_t get_recent_keycode(signed char i) {
   return recent[RECENT_SIZE + i];
 }
 
+bool was_keycode_replaced(void) {
+  return processingCK;
+}
+
 void update_bkspc_countdown(unsigned char i) {
   bkspc_countdown = i;
 }

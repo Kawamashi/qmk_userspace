@@ -1,26 +1,35 @@
 #pragma once
 
 #include QMK_KEYBOARD_H
+#include "keymap.h"
 
 // Represents the five states a oneshot key can be in
 typedef enum {
-    os_up_unqueued,
+    os_idle,
     os_up_queued,
     os_up_queued_used,
     os_down_unused,
     os_down_used,
 } oneshot_state;
 
+uint8_t one_shot_get_mod(uint16_t keycode);
+
+bool process_oneshot_old(uint16_t keycode, keyrecord_t *record);
+bool process_oneshot(uint16_t keycode, keyrecord_t *record);
+bool process_oneshot_keys(keyrecord_t *record, uint8_t mod, oneshot_state *state);
+void process_mods(uint16_t keycode, keyrecord_t *record, uint8_t mod, oneshot_state *state);
+
 // Custom oneshot mod implementation that doesn't rely on timers. If a mod is
 // used while it is held it will be unregistered on keyup as normal, otherwise
 // it will be queued and only released after the next non-mod keyup.
-void update_oneshot(
+bool update_oneshot(
     oneshot_state *state,
     uint16_t mod,
     uint16_t trigger,
     uint16_t keycode,
     keyrecord_t *record
 );
+void update_oneshot_old(oneshot_state *state, uint16_t mod, uint16_t trigger, uint16_t keycode, keyrecord_t *record);
 
 // To be implemented by the consumer. Defines keys to cancel oneshot mods.
 bool is_oneshot_cancel_key(uint16_t keycode);

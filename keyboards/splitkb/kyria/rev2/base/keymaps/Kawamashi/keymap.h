@@ -57,12 +57,12 @@ enum custom_keycodes {
   MAGIC,
   OS_SHFT,
   OS_CTRL,
-  OS_RALT,
   OS_LALT,
   OS_WIN,
   CNL_ODK,
   TG_APOS,
-  PG_DEG
+  PG_DEG,
+  SEL_WORD
 };
 
   // Layer changers
