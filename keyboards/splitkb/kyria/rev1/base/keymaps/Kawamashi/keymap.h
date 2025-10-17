@@ -26,7 +26,7 @@
 #include "features/clever_keys_utilities.h"
 #include "features/numword.h"
 #include "features/capslist.h"
-#include "features/macros.h"
+#include "features/word_selection.h"
 #include "features/os4a.h"
 #include "features/oneshot.h"
 #include "features/odk_layer.h"

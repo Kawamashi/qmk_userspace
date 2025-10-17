@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "macros.h"
+#include "word_selection.h"
 
 
 static bool sel_word = false;
