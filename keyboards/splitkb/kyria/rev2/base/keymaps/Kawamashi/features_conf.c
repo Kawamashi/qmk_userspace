@@ -53,6 +53,10 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
           alt_repeat_key_invoke(&record->event);
           return false;
     }
+  } else if (!record->event.pressed) {
+    if (keycode == LT_MGC && is_select_word()) {
+        end_select_word();
+    }
   }
   return true; // Process all other keycodes normally
 }
@@ -99,7 +103,6 @@ bool should_stay_os4a_layer(uint16_t keycode) {
   switch (keycode) {
     case OS_SHFT:
     case OS_CTRL:
-    case OS_RALT:
     case OS_LALT:
     case OS_WIN:
       return true;
@@ -135,6 +138,22 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
   }
 }
 
+/* uint8_t one_shot_get_mod(uint16_t keycode) {
+  switch (keycode) {
+    case OS_SHFT:
+      return KC_LSFT;
+    case OS_CTRL:
+      return KC_LCTL;
+    case OS_LALT:
+      return KC_LALT;
+    case OS_WIN:
+      return KC_LWIN;
+
+    default:
+      return KC_NO;
+  }
+} */
+
 bool is_oneshot_ignored_key(uint16_t keycode) {
 
   const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
@@ -149,11 +168,10 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
       // sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
       if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
       break;
-    case L_OS4A:
-    case R_OS4A:
+    //case L_OS4A:
+    //case R_OS4A:
     case OS_SHFT:
     case OS_CTRL:
-    case OS_RALT:
     case OS_LALT:
     case OS_WIN:
     case OS_FA:       // to be combined with Alt

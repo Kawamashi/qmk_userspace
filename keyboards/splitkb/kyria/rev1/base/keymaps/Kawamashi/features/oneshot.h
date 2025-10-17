@@ -29,6 +29,7 @@ bool update_oneshot(
     uint16_t keycode,
     keyrecord_t *record
 );
+void update_oneshot_old(oneshot_state *state, uint16_t mod, uint16_t trigger, uint16_t keycode, keyrecord_t *record);
 
 // To be implemented by the consumer. Defines keys to cancel oneshot mods.
 bool is_oneshot_cancel_key(uint16_t keycode);

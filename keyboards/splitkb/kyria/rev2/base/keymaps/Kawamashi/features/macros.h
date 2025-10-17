@@ -24,6 +24,8 @@ extern "C" {
 #endif
 
 bool replace_apos(void);
+bool is_select_word(void);
+void end_select_word(void);
 bool process_macros(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus

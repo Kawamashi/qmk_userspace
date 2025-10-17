@@ -16,59 +16,65 @@
 
 #include "macros.h"
 
-static bool is_apos_dr = false;
 
-bool replace_apos(void) {
-    return is_apos_dr;
+static bool sel_word = false;
+
+bool is_select_word(void) {
+  return sel_word;
 }
 
-bool process_macros(uint16_t keycode, keyrecord_t *record) {
+void end_select_word(void) {
+  clear_weak_mods();
+  sel_word = false;
+}
 
-    if (record->event.pressed) {    // Handling of other macros (on press).
-        switch (keycode) {
-/*             case ALT_TAB:
-                return process_swapper(KC_TAB);
-            case REV_TAB:
-                return process_swapper(S(KC_TAB)); */
+bool process_select_word(uint16_t keycode, keyrecord_t *record) {
 
-            case AIDE_MEM:                    
-                switch(get_highest_layer(layer_state|default_layer_state)) {
-                    case _BASE:
-                        tap_code(KC_F13);
-                        return false;
-/*                     case _SYMBOLS:
-                        tap_code(KC_F14); */
-                        return false;
-                    case _SHORTNAV:
-                        tap_code(KC_F15);
-                        return false;
-/*                     case _FUNCAPPS:
-                        tap_code(KC_F16);
-                        return false; */
-                }
-
-            case RAZ:
-                //led_t led_usb_state = host_keyboard_led_state();
-                if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-                if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
-
-                layer_clear();
-                clear_oneshot_mods();
-                //clear_weak_mods();
-                caps_word_off();
-                disable_num_word();
-                clear_recent_keys();
-                break;
-
-            case TG_APOS:
-                is_apos_dr = !is_apos_dr;
-                return false;
-
-            case PG_DEG:
-                tap_code(PG_ODK);
-                tap_code(KC_9);
-                return false;
+  switch (keycode) {
+    case SEL_WORD:
+        if (record->event.pressed) {    // Handling of other macros (on press).
+            if (!sel_word) {
+                tap_code16(C(KC_RIGHT));
+                tap_code16(C(KC_LEFT));
+                tap_code16(RCS(KC_RIGHT));
+                sel_word = true;
+            } else {
+                end_select_word();
+            }
         }
-    }
-    return true; // Process all other keycodes normally
+        return false;
+    
+    case SEL_LINE:
+        if (record->event.pressed) {    // Handling of other macros (on press).
+            if (!sel_word) {
+                tap_code(KC_HOME);
+                tap_code16(S(KC_END));
+                sel_word = true;
+            } else {
+                end_select_word();
+            }
+        }
+        return false;
+  }
+
+  if (!sel_word) { return true;}
+
+  switch (keycode) {
+    case KC_LEFT:
+    case KC_RIGHT:
+        if (record->event.pressed) {
+            set_weak_mods(MOD_BIT_LCTRL);
+        }
+    case KC_DOWN:
+    case KC_UP:
+        if (record->event.pressed) {
+            add_weak_mods(MOD_BIT_LSHIFT);
+        } else {
+            clear_weak_mods();
+        }
+        return true;
+  }
+
+  end_select_word();
+  return true; // Process all other keycodes normally
 }

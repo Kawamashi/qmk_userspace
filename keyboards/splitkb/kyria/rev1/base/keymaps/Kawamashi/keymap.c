@@ -68,6 +68,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 void matrix_scan_user(void) {
   recent_keys_task();
   caps_word_task();
+  os4a_task();
 }
 
 
@@ -94,6 +95,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Callum Mods 
   //if (!process_oneshot(keycode, record)) { return false; }
   if (!process_oneshot_old(keycode, record)) { return false; };
+  //process_oneshot_old(keycode, record);
 
   // Multi One-Shot Mods
   if (!process_os4a(keycode, record)) { return false; }
@@ -102,7 +104,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_numword(keycode, record)) { return false; }
 
   // Custom tap-hold keys
-  if (!process_custom_tap_hold(keycode, record)) { return false; }
+  if (!process_select_word(keycode, record)) { return false; }
 
   // Caps List
   if (!process_caps_list(keycode, record)) { return false; }
@@ -277,10 +279,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      _______, _______, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
-      _______, C(PG_A), C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
-      _______, KC_SPC,  KC_SPC,       KC_MUTE,    C(PG_Z),     C(PG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
-                                      _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
+      _______, SEL_LINE, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
+      _______, C(PG_A),  C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
+      _______, SEL_WORD, KC_SPC,       KC_MUTE,    C(PG_Z),     C(PG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
+                                       _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
     ),
 
 /*

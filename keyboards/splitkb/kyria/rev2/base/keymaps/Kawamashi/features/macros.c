@@ -17,43 +17,47 @@
 #include "macros.h"
 
 static bool is_apos_dr = false;
+static bool sel_word = false;
 
 bool replace_apos(void) {
-    return is_apos_dr;
+  return is_apos_dr;
+}
+
+bool is_select_word(void) {
+  return sel_word;
+}
+
+void end_select_word(void) {
+  clear_mods();
+  sel_word = false;
 }
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed) {    // Handling of other macros (on press).
         switch (keycode) {
-/*             case ALT_TAB:
-                return process_swapper(KC_TAB);
-            case REV_TAB:
-                return process_swapper(S(KC_TAB)); */
 
-            case AIDE_MEM:                    
-                switch(get_highest_layer(layer_state|default_layer_state)) {
-                    case _BASE:
-                        tap_code(KC_F13);
-                        return false;
-/*                     case _SYMBOLS:
-                        tap_code(KC_F14); */
-                        return false;
-                    case _SHORTNAV:
-                        tap_code(KC_F15);
-                        return false;
-/*                     case _FUNCAPPS:
-                        tap_code(KC_F16);
-                        return false; */
+            case SEL_WORD:
+                if (!sel_word) {
+                    register_mods(MOD_BIT_LCTRL);
+                    tap_code(KC_RIGHT);
+                    tap_code(KC_LEFT);
+                    register_mods(MOD_BIT_LSHIFT);
+                    //tap_code(KC_LEFT);
+                    tap_code(KC_RIGHT);
+                    sel_word = true;
+                } else {
+                    end_select_word();
                 }
+                return false;
 
             case RAZ:
-                //led_t led_usb_state = host_keyboard_led_state();
                 if (is_caps_lock_on()) { tap_code(KC_CAPS); }
                 if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
 
                 layer_clear();
-                clear_oneshot_mods();
+                clear_mods();
+                //clear_oneshot_mods();
                 //clear_weak_mods();
                 caps_word_off();
                 disable_num_word();

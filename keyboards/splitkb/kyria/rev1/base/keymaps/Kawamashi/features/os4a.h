@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+void os4a_task(void);
+
 uint8_t get_os4a_layer(void);
 
 void os4a_layer_off(uint8_t layer);

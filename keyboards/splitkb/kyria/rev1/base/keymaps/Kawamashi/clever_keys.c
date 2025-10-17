@@ -83,7 +83,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       break;
 
     case PG_P:
-      switch (*ongoing_keycode) {        
+      switch (*ongoing_keycode) {
         case PG_C:
           // "pas"
           return finish_word((uint16_t[]) {PG_A, PG_S}, 2, ongoing_keycode, record);
@@ -95,6 +95,25 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_X:
           // "plus"
           return finish_word((uint16_t[]) {PG_L, PG_U, PG_S}, 3, ongoing_keycode, record);
+      }
+      break;
+
+    case PG_M:
+    case PG_R:
+    case PG_A:
+    case PG_E:
+    case PG_EACU:
+    case PG_I:
+    case PG_O:
+    case PG_U:
+    case PG_Y:
+      switch (*ongoing_keycode) {
+        case PG_H:
+          update_bkspc_countdown(0);
+          return replace_ongoing_key(PG_B, ongoing_keycode, record);
+        case PG_B:
+          update_bkspc_countdown(0);
+          return replace_ongoing_key(PG_H, ongoing_keycode, record);
       }
       break;
   }
@@ -206,7 +225,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       }
       break;
 
-    case PG_H:
+/*     case PG_H:
       switch (prev_keycode) {
         case PG_M:
         case PG_R:
@@ -219,7 +238,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_Y:
           update_bkspc_countdown(0);
           return replace_ongoing_key(PG_B, ongoing_keycode, record);
-      }
+      } */
 /*       if (prev_keycode == PG_M) {
         // "mh" -> "mb"
         update_bkspc_countdown(0);
@@ -232,7 +251,8 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
     case OU_GRV:
       layer_off(_ODK);
-      return finish_word((uint16_t[]) {PG_O, PG_ODK, PG_N}, 3, ongoing_keycode, record);
+      //return finish_word((uint16_t[]) {PG_O, PG_ODK, PG_N}, 3, ongoing_keycode, record);
+      replace_ongoing_key(prev_keycode, ongoing_keycode, record);
 
     case PG_APOS:
       if (replace_apos()) { return replace_ongoing_key(PG_APOD, ongoing_keycode, record); }

@@ -20,6 +20,15 @@
 static uint8_t os4a_layer = 0;
 static bool exit_os4a_layer = false;
 
+static uint16_t idle_timer = 0;
+
+void os4a_task(void) {
+  if (os4a_layer != 0 && timer_expired(timer_read(), idle_timer)) {
+    os4a_layer_off(os4a_layer);
+    clear_mods();
+  }
+}
+
 uint8_t get_os4a_layer(void) {
   return (os4a_layer);
 }
@@ -27,6 +36,7 @@ uint8_t get_os4a_layer(void) {
 void os4a_layer_on(uint8_t layer) {
   layer_on(layer);
   os4a_layer = layer;
+  idle_timer = timer_read() + OS4A_EXIT_TIMEOUT;
 }
 
 void os4a_layer_off(uint8_t layer) {
@@ -51,7 +61,7 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
       os4a_tap(keycode);
       return false;
     }
-    // normal processing if held
+    // normal processing otherwise
     return true;
 }
 
@@ -99,6 +109,7 @@ bool process_os4a(uint16_t keycode, keyrecord_t *record) {
 
   // Behaviour of the OS4A layers
   if (record->event.pressed) {
+      idle_timer = record->event.time + OS4A_EXIT_TIMEOUT;
 
       if (!should_stay_os4a_layer(keycode)) {
           if (should_add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }

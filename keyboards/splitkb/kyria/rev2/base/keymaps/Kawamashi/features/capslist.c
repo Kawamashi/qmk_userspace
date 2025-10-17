@@ -1,24 +1,33 @@
 #include "capslist.h"
 
-//static bool caps_word_active = false;
+static bool caps_word_active = false;
 static bool caps_list_active = false;
 
 static signed char capslist_countdown = 1;
 static unsigned char countdown_end = 6;
 
+static uint16_t idle_timer = 0;
 
-//bool is_caps_word_on(void) { return caps_word_active; }
+void caps_word_task(void) {
+  if (caps_word_active && timer_expired(timer_read(), idle_timer)) {
+    caps_word_off();
+  }
+}
+
+bool is_caps_word_on(void) { return caps_word_active; }
 bool is_caps_list_on(void) { return caps_list_active; }
 
-/* void caps_word_on(void) {
+void caps_word_on(void) {
     if (caps_word_active) { return; }
 
     clear_mods();
     clear_oneshot_mods();
-    caps_word_active = true;
-} */
 
-void enable_caps_list(void) {
+    idle_timer = timer_read() + CAPS_WORD_IDLE_TIMEOUT;
+    caps_word_active = true;
+}
+
+void caps_list_on(void) {
     if (is_caps_lock_on()) { tap_code(KC_CAPS); }
     caps_word_on();
     caps_list_active = true;
@@ -26,31 +35,31 @@ void enable_caps_list(void) {
     countdown_end = 6;
 }
 
-/* void caps_word_off(void) {
+void caps_word_off(void) {
   if (!caps_word_active) { return; }
 
   unregister_weak_mods(MOD_BIT(KC_LSFT));  // Make sure weak shift is off.
   caps_word_active = false;
-} */
+}
 
-void disable_caps_list(void) {
+void caps_list_off(void) {
     caps_word_off();
     caps_list_active = false;
 }
 
-/* void caps_word_toggle(void) {
+void caps_word_toggle(void) {
   if (caps_word_active) {
     caps_word_off();
   } else {
     caps_word_on();
   }
-} */
+}
 
-void toggle_caps_list(void) {
+void caps_list_toggle(void) {
     if (caps_list_active) {
-      disable_caps_list();
+      caps_list_off();
     } else {
-      enable_caps_list();
+      caps_list_on();
     }
 }
 
@@ -67,14 +76,14 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
   return true;
 }
 
-/* bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
+bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
 
   if (keycode == CAPSWORD) {
     // I can't use CW_TOGG because QMK dosn't reach process_record_user when processing it.
     if (record->event.pressed) {
         // Deactivating Caps Lock and Caps List when Caps Word activates.
         if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-        if (is_caps_list_on()) { disable_caps_list(); }
+        if (is_caps_list_on()) { caps_list_off(); }
         caps_word_toggle();
     }
     return false;
@@ -82,7 +91,7 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
   } else if (keycode == KC_CAPS) {
     if (record->event.pressed) {
         caps_word_off();
-        disable_caps_list();
+        caps_list_off();
     }
     return true;
   }
@@ -90,52 +99,65 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
   if (!caps_word_active) { return true; }
 
   // Caps word is active //
-
   clear_weak_mods();
 
-  if (record->event.pressed) {
+  // No action on keyrelease
+  if (!record->event.pressed) { return true; }
 
-//    if (!IS_LAYER_ON(_ODK)) {
-//        keycode = get_recent_keycode(-1);
-//    } else {
-
-        switch (keycode) {
-            case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
-            return true;
-            case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-            // Earlier return if this has not been considered tapped yet
-            if (record->tap.count == 0) { return true; }
-            keycode = tap_hold_extractor(keycode);    // Get tapping keycode.
-            break;
-        }
-    //}
-
-    //clear_weak_mods();
-    if (caps_word_press_user(keycode)) { return true; }
+  const uint8_t mods = get_mods() | get_oneshot_mods();
+  if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+    // Avoid interfering with ctrl, alt and gui.
     caps_word_off();
-
-  } else {  // On release
-
+    return true;
   }
+
+  idle_timer = record->event.time + CAPS_WORD_IDLE_TIMEOUT;
+  
+  if (was_keycode_replaced()) {
+      keycode = get_recent_keycode(-1);
+  } else {
+      switch (keycode) {
+        case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
+          return true;
+        case QK_MOD_TAP ... QK_MOD_TAP_MAX:
+        case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
+          // Earlier return if this has not been considered tapped yet
+          if (record->tap.count == 0) { return true; }
+          keycode = tap_hold_extractor(keycode);    // Get tapping keycode.
+          break;
+      }
+  }
+
+  //clear_weak_mods();
+  if (caps_word_press_user(keycode)) {
+      // Invert on shift
+      if (get_oneshot_mods() & MOD_MASK_SHIFT) {
+        set_weak_mods(get_weak_mods() ^ MOD_BIT(KC_LSFT));
+        del_oneshot_mods(MOD_MASK_SHIFT);
+      }
+      send_keyboard_report();
+      return true;
+  }
+
+  caps_word_off();
   return true;
-} */
+}
 
 bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
     // Handle the custom keycodes that go with this feature
     if (keycode == CAPSLIST) {
         if (record->event.pressed) {
             if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-            toggle_caps_list();
+            caps_list_toggle();
         }
         return false;
     }
-    if (keycode == CAPSWORD) {
+/*     if (keycode == CAPSWORD) {
         // I can't use CW_TOGG because QMK dosn't reach process_record_user when processing it.
         if (record->event.pressed) {
             // Deactivating Caps Lock and Caps List when Caps Word activates.
             if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-            if (is_caps_list_on()) { disable_caps_list(); }
+            if (is_caps_list_on()) { caps_list_off(); }
             caps_word_toggle();
         }
         return false;
@@ -143,10 +165,10 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
     } else if (keycode == KC_CAPS) {
         if (record->event.pressed) {
             caps_word_off();
-            disable_caps_list();
+            caps_list_off();
         }
         return true;
-    }
+    } */
     
 
     // Other than the custom keycodes, nothing else in this feature will activate
@@ -156,6 +178,13 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
     if (!record->event.pressed) { return true; }
     // If Caps Word is on, Caps List stays on as well.
     if (is_caps_word_on()) { return true; }
+
+    const uint8_t mods = get_mods() | get_oneshot_mods();
+    if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+      // Avoid interfering with ctrl, alt and gui.
+      caps_word_off();
+      return true;
+    }
 
     // Get the base keycode of a mod or layer tap key
     switch (keycode) {
@@ -178,6 +207,6 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
         }
         if (capslist_countdown < countdown_end) { return true; }
     }
-    disable_caps_list();
+    caps_list_off();
     return true;
 }

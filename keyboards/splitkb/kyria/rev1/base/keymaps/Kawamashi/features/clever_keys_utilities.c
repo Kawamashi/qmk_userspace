@@ -52,14 +52,25 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
 
-  //if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
-  if (mods & ~MOD_MASK_SHIFT) {
-    clear_recent_keys();  // Avoid interfering with ctrl, alt, alt-gr and gui.
+  if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+    clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
     return KC_NO;
   }
 
   // Sticky keys don't type anything on their own.
   if (IS_QK_ONE_SHOT_MOD(keycode) || IS_QK_ONE_SHOT_LAYER(keycode)) { return KC_NO; }
+
+  // Extract keycode from regular tap-hold keys.
+  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
+      if (record->tap.count == 0) { return KC_NO; }
+      // Get tapping keycode.
+      keycode = tap_hold_extractor(keycode);
+  }
+
+  // Handles custom keycodes.
+  uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
+  if (custom_keycode != KC_TRNS) { return custom_keycode; }
+
 
     // Handle backspace.
   if (keycode == KC_BSPC) {
@@ -77,36 +88,20 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
       return KC_NO;
   }
 
-  // Extract keycode from regular tap-hold keys.
-  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
-      if (record->tap.count == 0) { return KC_NO; }
-      // Get tapping keycode.
-      keycode = tap_hold_extractor(keycode);
-  }
 
-  // Handles custom keycodes.
-  uint16_t custom_keycode = get_ongoing_keycode_user(keycode);
-  if (custom_keycode != KC_TRNS) { return custom_keycode; }
-
-
-  uint8_t basic_keycode = keycode;
-  // Handle keys carrying a modifier, for ex on layers(! and ?).
-  if (IS_QK_MODS(keycode)) { basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode); }
+  uint8_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
-    case PG_E:
+      if (basic_keycode != keycode) {
+        // Handle keys carrying a modifier, for ex on symbols layer
+          return keycode;
 
-      //if (is_letter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
-      if (is_letter(basic_keycode)) {
-          // Shift doesn't matter for letters.
-          return basic_keycode;
-
-      } else if (basic_keycode != keycode) {
-          // For keys carrying a modifier, for ex on layers.
+      } else if (is_letter(basic_keycode)) {
           return keycode;
 
       } else {
+          // Handle shifted symbols (ex shift + '-' = '!')
           // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
           // left and right handed mods were mixed, they all become right handed.
           mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
