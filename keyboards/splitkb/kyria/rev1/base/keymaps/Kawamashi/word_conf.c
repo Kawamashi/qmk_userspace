@@ -146,7 +146,16 @@ bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
 // Caps List
 
 bool should_continue_caps_list(uint16_t keycode) {
-    if (keycode == KC_BSPC) { return update_capslist_countdown(-1); }
+
+    // Keycodes that continue Caps List, but not Caps Word.
+    // These keycodes trigger the countdown to end Caps List.
+    switch (keycode) {
+      case KC_BSPC:
+        return update_capslist_countdown(-1);
+      case PG_VIRG:
+      case KC_SPC:
+          return update_capslist_countdown(1);
+    }
 
     if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
 
@@ -154,18 +163,11 @@ bool should_continue_caps_list(uint16_t keycode) {
     // because caps_word_press_user adds shift to letters and send-string macros.
     if (caps_word_press_user(keycode)) { return update_capslist_countdown(1); }
 
-    // Keycodes that continue Caps List, but not Caps Word.
-    // These keycodes trigger the countdown to end Caps List.
-    switch (keycode) {
-        case PG_VIRG:
-        case KC_SPC:
-            return update_capslist_countdown(1);
-    }
     return false;  // Deactivate Caps List.
 }
 
 
-bool caps_word_reactivation(void) {
+bool list_separator(void) {
 
     // Words that continue Caps List.
     if (get_recent_keycode(-1) == KC_SPC) {

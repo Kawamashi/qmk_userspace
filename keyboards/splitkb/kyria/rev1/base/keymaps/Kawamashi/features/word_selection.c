@@ -59,19 +59,20 @@ bool process_select_word(uint16_t keycode, keyrecord_t *record) {
 
   if (!sel_word) { return true;}
 
+  clear_weak_mods();
+
+  if (!record->event.pressed) { return true; }
+
   switch (keycode) {
     case KC_LEFT:
     case KC_RIGHT:
-        if (record->event.pressed) {
-            set_weak_mods(MOD_BIT_LCTRL);
-        }
+        set_weak_mods(MOD_BIT_LCTRL);
+
     case KC_DOWN:
     case KC_UP:
-        if (record->event.pressed) {
-            add_weak_mods(MOD_BIT_LSHIFT);
-        } else {
-            clear_weak_mods();
-        }
+    case C(KC_LEFT):
+    case C(KC_RGHT):
+        add_weak_mods(MOD_BIT_LSHIFT);
         return true;
   }
 

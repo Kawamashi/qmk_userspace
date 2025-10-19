@@ -82,7 +82,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Callum Mods 
   if (!process_oneshot(keycode, record)) { return false; }
-  //if (!process_oneshot_old(keycode, record)) { return false; };
 
   // Multi One-Shot Mods
   if (!process_os4a(keycode, record)) { return false; }
@@ -90,11 +89,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Numword
   if (!process_numword(keycode, record)) { return false; }
 
-  // Custom tap-hold keys
+  // Word selection
   if (!process_select_word(keycode, record)) { return false; }
 
   // Caps List
-  if (!process_caps_list(keycode, record)) { return false; }
+  //if (!process_caps_list(keycode, record)) { return false; }
 
   // Macros
   if (!process_macros(keycode, record)) { return false; }
@@ -268,7 +267,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_SHORTNAV] = LAYOUT(
       _______, SEL_LINE, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
       _______, C(PG_A),  C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
-      _______, SEL_WORD, KC_SPC,       KC_MUTE,    C(PG_Z),     C(PG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
+      _______, SEL_WORD, KC_SPC,       KC_MUTE,    C(PG_Z),     _______,  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
                                        _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
     ),
 

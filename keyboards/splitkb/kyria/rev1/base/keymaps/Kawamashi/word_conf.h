@@ -23,5 +23,3 @@
 bool is_letter(uint16_t keycode);
 bool is_send_string_macro(uint16_t keycode);
 bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);
-
-bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record);

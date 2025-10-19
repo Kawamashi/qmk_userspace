@@ -105,7 +105,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         break;
       case PANIC:
         if (pressed) {
-          if (is_caps_lock_on()) { tap_code(KC_CAPS); }
+          caps_lock_off();
           if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
 
           layer_clear();

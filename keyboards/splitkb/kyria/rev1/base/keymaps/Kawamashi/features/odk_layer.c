@@ -18,71 +18,46 @@
 
 bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
-    if (record->event.pressed) {    // On press
+    if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
-        const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-        bool invoke_odk = false;
-        //const uint8_t mods = get_mods() | get_oneshot_mods();
+    const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
 
-        if (keycode == OS_ODK) {
-            // Custom behaviour when alt-gr
-            if (mods & MOD_BIT(KC_ALGR)) {
-                tap_code16(ALGR(PG_ODK));
-                return false;
-            }
-            return true;
+    switch (keycode) {
+        case OS_ODK:
+          // Custom behaviour when alt-gr
+          if (mods & MOD_BIT(KC_ALGR)) {
+              tap_code16(ALGR(PG_ODK));
+              return false;
+          }
+          return true;
 
-        } else if (keycode == PG_ODK) {
-            invoke_odk = true;
-            //return deferred_shift_after_dead_key(keycode, mods);
-
-        } else if (keycode == NUM_ODK) {
-            invoke_odk = true;
-            //return deferred_shift_after_dead_key(keycode, mods);
-
-        } else if (IS_LAYER_ON(_ODK)) {
-            switch (keycode) {
-                case PG_PVIR:
-                case PG_AROB:
-                case PG_K:
-                case PG_B:
-                case PG_APOS:
-                case OU_GRV:
-                case KC_SPC:    // When space is added by Clever Keys
-                case CNL_ODK:
-                    return true;
-        
-                default:
-                    invoke_odk = true;
-                    //return deferred_shift_after_dead_key(keycode, mods);
-            }
-        }
-
-        if (invoke_odk) {
-            // Special behaviour of PG_ODK when shifted
-            // Shift must apply to the next keycode
-            //invoke_odk = false;
-            bool is_shifted = false;
-
-            if (mods & MOD_MASK_SHIFT) {
-                del_weak_mods(MOD_MASK_SHIFT);
-                del_oneshot_mods(MOD_MASK_SHIFT);
-                unregister_mods(MOD_MASK_SHIFT);
-                is_shifted = true;
-            }
-
-            tap_code(PG_ODK);
-
-            if (is_shifted) {
-                set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
-            }
-            if (keycode == PG_ODK) { return false; }
-        }
+        case PG_ODK:
+        case NUM_ODK:
+          return deferred_shift_after_dead_key(keycode, mods);
     }
-    return true;
+
+    if (IS_LAYER_OFF(_ODK)) { return true; }
+
+    // Handling keys on _ODK layer
+    switch (keycode) {
+        case PG_PVIR:
+        case PG_AROB:
+        case PG_K:
+        case PG_B:
+        case PG_APOS:
+        case OU_GRV:
+        case KC_SPC:    // When space is added by Clever Keys
+        case CNL_ODK:
+          return true;
+
+        default:
+          return deferred_shift_after_dead_key(keycode, mods);
+    }
 }
 
 bool deferred_shift_after_dead_key(uint16_t keycode, uint8_t mods) {
+    // Special behaviour of PG_ODK when shifted
+    // Shift must apply to the next keycode
     bool is_shifted = false;
 
     if (mods & MOD_MASK_SHIFT) {
@@ -95,6 +70,6 @@ bool deferred_shift_after_dead_key(uint16_t keycode, uint8_t mods) {
     tap_code(PG_ODK);
 
     if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
-    
-    return !(keycode == PG_ODK);
+
+    return keycode != PG_ODK;
 }

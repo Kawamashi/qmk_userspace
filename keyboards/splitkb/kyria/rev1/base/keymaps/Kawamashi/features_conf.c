@@ -23,9 +23,6 @@ bool replace_apos(void) {
 }
 
 
-bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
-
-
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
   // This function extracts the base keycode of MT and LT,

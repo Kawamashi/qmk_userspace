@@ -20,7 +20,6 @@
 #include "keymap.h"
 
 bool replace_apos(void);
-bool is_caps_lock_on(void);
 
 uint16_t tap_hold_extractor(uint16_t keycode);
 

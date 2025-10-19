@@ -96,24 +96,23 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
-      if (basic_keycode != keycode) {
-        // Handle keys carrying a modifier, for ex on symbols layer
-          return keycode;
 
-      } else if (is_letter(basic_keycode)) {
-          return keycode;
+      if (mods & MOD_BIT(KC_ALGR)) { return ALGR(keycode); }
 
-      } else {
-          // Handle shifted symbols (ex shift + '-' = '!')
-          // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
-          // left and right handed mods were mixed, they all become right handed.
-          mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
-                // Combine right and left hand mods.
-                | (((mods >> 4) | mods) & 0xf);
-          // Combine basic keycode with mods.
-          keycode = (mods << 8) | basic_keycode;
-          return keycode;
-      }
+      // Handle keys carrying a modifier, for ex on symbols layer
+      if (basic_keycode != keycode) { return keycode; }
+
+      if (is_letter(basic_keycode)) { return keycode; }
+      
+      // Handle shifted symbols (ex shift + '-' = '!')
+      // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
+      // left and right handed mods were mixed, they all become right handed.
+      mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
+            // Combine right and left hand mods.
+            | (((mods >> 4) | mods) & 0xf);
+      // Combine basic keycode with mods.
+      keycode = (mods << 8) | basic_keycode;
+      return keycode;
   }
 
   // Avoid acting otherwise, particularly on navigation keys.
