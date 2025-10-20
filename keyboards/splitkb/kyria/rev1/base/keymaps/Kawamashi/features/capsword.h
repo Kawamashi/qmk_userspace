@@ -18,10 +18,10 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
 
 //bool process_caps_list(uint16_t keycode, keyrecord_t *record);
 
-void update_caps_word(uint16_t keycode);
-void reactivate_caps_word(uint16_t keycode);
+void update_caps_word(uint16_t keycode, keyrecord_t* record);
+void reactivate_caps_word(uint16_t keycode, keyrecord_t* record);
 
-bool should_continue_caps_list(uint16_t keycode);
+bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record);
 bool list_separator(void);
 //bool caps_word_reactivation(void);
 
@@ -191,7 +191,7 @@ void caps_word_set_user(bool active);
  * @note Outside of this callback, you can use `caps_word_off()` to deactivate
  * Caps Word.
  */
-bool caps_word_press_user(uint16_t keycode);
+bool caps_word_press_user(uint16_t keycode, keyrecord_t* record);
 
 // Deprecated APIs.
 

@@ -60,8 +60,18 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
     return KC_NO;
   }
 
-  // Sticky keys don't type anything on their own.
-  if (IS_QK_ONE_SHOT_MOD(keycode) || IS_QK_ONE_SHOT_LAYER(keycode)) { return KC_NO; }
+  switch (keycode) {
+    // Sticky keys don't type anything on their own.
+    case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
+    // Ignore MO, TO, TG, TT, and OSL layer switch keys.
+    case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
+    case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
+/*     case QK_MOMENTARY ... QK_MOMENTARY_MAX:
+    case QK_TO ... QK_TO_MAX:
+    case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
+    case QK_TRI_LAYER_LOWER ... QK_TRI_LAYER_UPPER: */
+        return KC_NO;
+  }
 
   // Extract keycode from regular tap-hold keys.
   if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {

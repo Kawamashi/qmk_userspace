@@ -90,7 +90,6 @@ void caps_lock_toggle(void) {
       caps_word_off();
       caps_list_off();
   }
-  tap_code(KC_CAPS);
 }
 
 bool update_capslist_countdown(signed char i) {
@@ -163,15 +162,15 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
 
   idle_timer = record->event.time + CAPS_WORD_IDLE_TIMEOUT;
 
-  if (caps_word_active) { update_caps_word(keycode); }
-  if (caps_list_active && !caps_word_active) { reactivate_caps_word(keycode); }     // Do not merge into a single 'if' block !
+  if (caps_word_active) { update_caps_word(keycode, record); }
+  if (caps_list_active && !caps_word_active) { reactivate_caps_word(keycode, record); }     // Do not merge into a single 'if' block !
 
   return true;
 }
 
-void update_caps_word(uint16_t keycode) {
+void update_caps_word(uint16_t keycode, keyrecord_t* record) {
 
-  if (caps_word_press_user(keycode)) {
+  if (caps_word_press_user(keycode, record)) {
       // Invert on shift
       if (get_oneshot_mods() & MOD_MASK_SHIFT) {
         set_weak_mods(get_weak_mods() ^ MOD_BIT(KC_LSFT));
@@ -184,9 +183,9 @@ void update_caps_word(uint16_t keycode) {
   caps_word_off();
 }
 
-void reactivate_caps_word(uint16_t keycode) {
+void reactivate_caps_word(uint16_t keycode, keyrecord_t* record) {
     
-  if (should_continue_caps_list(keycode)) {
+  if (should_continue_caps_list(keycode, record)) {
 
       if (list_separator()) {
         caps_word_on();  // Reactivate Caps Word for a new word

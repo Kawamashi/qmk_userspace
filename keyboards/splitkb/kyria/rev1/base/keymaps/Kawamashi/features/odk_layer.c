@@ -40,13 +40,13 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
 
     // Handling keys on _ODK layer
     switch (keycode) {
-        case PG_PVIR:
         case PG_AROB:
         case PG_K:
         case PG_B:
+        case PG_H:
         case PG_APOS:
         case OU_GRV:
-        case KC_SPC:    // When space is added by Clever Keys
+        //case KC_SPC:    // When space is added by Clever Keys
         case CNL_ODK:
           return true;
 

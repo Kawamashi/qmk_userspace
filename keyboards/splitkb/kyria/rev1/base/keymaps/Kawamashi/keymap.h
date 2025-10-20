@@ -46,13 +46,14 @@ enum layers {
 
 enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
+  CAPSWORD,
   CAPSLIST,
   FEN_B,
   COPY,
   //AIDE_MEM,
   OS4A,
-  CAPSWORD,
   OU_GRV,
+  N_TILD,
   MAGIC,
   OS_SHFT,
   OS_CTRL,
@@ -77,7 +78,7 @@ enum custom_keycodes {
 #define OS_ODK OSL(_ODK)
 #define NUM_ODK OSL(_NUMBERS)
 #define OS_FA OSL(_FUNCAPPS)
-#define TG_FA TT(_FUNCAPPS)
+#define TT_FA TT(_FUNCAPPS)
 
   // Mods
 #define MT_SLSH SFT_T(PG_SLSH)

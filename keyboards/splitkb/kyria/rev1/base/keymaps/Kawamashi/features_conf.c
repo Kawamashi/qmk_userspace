@@ -90,7 +90,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
       switch (keycode) {
         case PG_K:
         case PG_B:
-        case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
+        //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
           return keycode;
 
         case PG_POIN:
@@ -99,16 +99,12 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
         default:
           return ODK;
       }
-      
+    
+    // There are no symbols on _SHORTNAV or _FUNCAPPS
     case _SHORTNAV:
-      switch (keycode) {
-        case KC_SPC:
-          return keycode;
-        
-        default:
-          clear_recent_keys();
-          return KC_NO;
-      }
+    case _FUNCAPPS:
+      clear_recent_keys();
+      return KC_NO;
   }
 
   if (keycode == PG_E) { return PG_E; }   // because PG_E is not a basic keycode
@@ -116,7 +112,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   if (!IS_KEYEVENT(record->event)) {
     switch (keycode) {
       case KC_BSPC:
-        break;
+        return KC_TRNS;
 
       default:
         clear_recent_keys();
@@ -198,7 +194,7 @@ bool is_oneshot_ignored_key(uint16_t keycode) {
     case OS_LALT:
     case OS_WIN:
     case OS_FA:       // to be combined with Alt
-    case TG_FA:
+    case TT_FA:
     case NUMWORD:     // to combine numbers with mods
     //case NUM_ODK:   // NUM_ODK sends PG_ODK when pressed. When shifted, PG_ODK sends one-shot shift.
       return true;
