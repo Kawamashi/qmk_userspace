@@ -26,3 +26,5 @@ void toggle_num_word(void);
 
 bool process_numword(uint16_t keycode, const keyrecord_t *record);
 void numword_exit_check(void);
+
+bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record);

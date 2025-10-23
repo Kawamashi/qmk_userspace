@@ -21,12 +21,12 @@
 #include "keymap_french_propergol.h"
 #include "features_conf.h"
 #include "word_conf.h"
-#include "clever_keys.h"
+//#include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
 #include "features/numword.h"
-#include "features/capslist.h"
-#include "features/macros.h"
+#include "features/capsword.h"
+#include "features/word_selection.h"
 #include "features/os4a.h"
 #include "features/oneshot.h"
 #include "features/odk_layer.h"
@@ -46,23 +46,25 @@ enum layers {
 
 enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
+  CAPSWORD,
   CAPSLIST,
   FEN_B,
   COPY,
-  AIDE_MEM,
+  //AIDE_MEM,
   OS4A,
-  RAZ,
-  CAPSWORD,
   OU_GRV,
+  N_TILD,
   MAGIC,
   OS_SHFT,
   OS_CTRL,
   OS_LALT,
   OS_WIN,
+  ODK,
   CNL_ODK,
   TG_APOS,
   PG_DEG,
-  SEL_WORD
+  SEL_WORD,
+  SEL_LINE
 };
 
   // Layer changers
@@ -76,7 +78,7 @@ enum custom_keycodes {
 #define OS_ODK OSL(_ODK)
 #define NUM_ODK OSL(_NUMBERS)
 #define OS_FA OSL(_FUNCAPPS)
-#define TG_FA TT(_FUNCAPPS)
+#define TT_FA TT(_FUNCAPPS)
 
   // Mods
 #define MT_SLSH SFT_T(PG_SLSH)
@@ -88,5 +90,4 @@ enum custom_keycodes {
 #define R_OS4A RSFT_T(OS4A)
 #define IS_OS4A_KEY(keycode) (os4a_layer_from_trigger(keycode) != 0)
 
-bool enough_time_before_combo(void);
 bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record);

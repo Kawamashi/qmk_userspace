@@ -69,7 +69,7 @@ bool process_os4a_keys(uint16_t keycode, keyrecord_t *record) {
 bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
 
   // Shift shouldn't be added if other mods are active
-  if ((get_mods() | get_oneshot_mods()) != 0) { return false; }
+  if (get_mods() | get_oneshot_mods()) { return false; }
 
   // Combos and encoder events.
   if (!IS_KEYEVENT(record->event)) { return true; }

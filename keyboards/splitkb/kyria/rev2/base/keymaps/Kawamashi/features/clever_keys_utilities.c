@@ -24,6 +24,9 @@ static unsigned char bkspc_countdown = RECENT_SIZE + 1;
 static keyrecord_t mod_record;
 static bool processingCK = false;
 
+static uint16_t last_keypress_timer = 0;
+
+
 uint16_t get_recent_keycode(signed char i) {
   return recent[RECENT_SIZE + i];
 }
@@ -52,14 +55,35 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
 
-  //if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
-  if (mods & ~MOD_MASK_SHIFT) {
-    clear_recent_keys();  // Avoid interfering with ctrl, alt, alt-gr and gui.
+  if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+    clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
     return KC_NO;
   }
 
-  // Sticky keys don't type anything on their own.
-  if (IS_QK_ONE_SHOT_MOD(keycode) || IS_QK_ONE_SHOT_LAYER(keycode)) { return KC_NO; }
+  switch (keycode) {
+    // Sticky keys don't type anything on their own.
+    case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
+    // Ignore MO, TO, TG, TT, and OSL layer switch keys.
+    case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
+    case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
+/*     case QK_MOMENTARY ... QK_MOMENTARY_MAX:
+    case QK_TO ... QK_TO_MAX:
+    case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
+    case QK_TRI_LAYER_LOWER ... QK_TRI_LAYER_UPPER: */
+        return KC_NO;
+  }
+
+  // Extract keycode from regular tap-hold keys.
+  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
+      if (record->tap.count == 0) { return KC_NO; }
+      // Get tapping keycode.
+      keycode = tap_hold_extractor(keycode);
+  }
+
+  // Handles custom keycodes.
+  uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
+  if (custom_keycode != KC_TRNS) { return custom_keycode; }
+
 
     // Handle backspace.
   if (keycode == KC_BSPC) {
@@ -77,51 +101,32 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
       return KC_NO;
   }
 
-  // Extract keycode from regular tap-hold keys.
-  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
-      if (record->tap.count == 0) { return KC_NO; }
-      // Get tapping keycode.
-      keycode = tap_hold_extractor(keycode);
-  }
 
-  // Handles custom keycodes.
-  uint16_t custom_keycode = get_ongoing_keycode_user(keycode);
-  if (custom_keycode != KC_TRNS) { return custom_keycode; }
-
-
-  uint8_t basic_keycode = keycode;
-  // Handle keys carrying a modifier, for ex on layers(! and ?).
-  if (IS_QK_MODS(keycode)) { basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode); }
+  uint8_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
-    case PG_E:
 
-      //if (is_letter(basic_keycode) && (mods & ~MOD_BIT(KC_ALGR))) {
-      if (is_letter(basic_keycode)) {
-          // Shift doesn't matter for letters.
-          return basic_keycode;
+      if (mods & MOD_BIT(KC_ALGR)) { return ALGR(keycode); }
 
-      } else if (basic_keycode != keycode) {
-          // For keys carrying a modifier, for ex on layers.
-          return keycode;
+      // Handle keys carrying a modifier, for ex on symbols layer
+      if (basic_keycode != keycode) { return keycode; }
 
-      } else {
-          // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
-          // left and right handed mods were mixed, they all become right handed.
-          mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
-                // Combine right and left hand mods.
-                | (((mods >> 4) | mods) & 0xf);
-          // Combine basic keycode with mods.
-          keycode = (mods << 8) | basic_keycode;
-          return keycode;
-      }
-
-    default:  // Avoid acting otherwise, particularly on navigation keys.
-      clear_recent_keys();
-      return KC_NO;
+      if (is_letter(basic_keycode)) { return keycode; }
+      
+      // Handle shifted symbols (ex shift + '-' = '!')
+      // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
+      // left and right handed mods were mixed, they all become right handed.
+      mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
+            // Combine right and left hand mods.
+            | (((mods >> 4) | mods) & 0xf);
+      // Combine basic keycode with mods.
+      keycode = (mods << 8) | basic_keycode;
+      return keycode;
   }
 
+  // Avoid acting otherwise, particularly on navigation keys.
+  clear_recent_keys();
   return KC_NO;
 }
 
@@ -181,6 +186,10 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     if (ongoing_keycode != KC_NO) {
       get_clever_keycode(&ongoing_keycode, record);
       store_keycode(ongoing_keycode, record);
+
+      // Global quick tap for combos.
+      // IS_KEYEVENT prevents combos from updating last_keypress_timer, to allow combos to be chained.
+      if (IS_KEYEVENT(record->event)) { last_keypress_timer = timer_read(); }
     }
     //return true; // If no clever key was found, process keycode normally.
     
@@ -189,6 +198,10 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     record->keycode = recent[RECENT_SIZE - 1]; */
   }
   return true;
+}
+
+bool enough_time_before_combo(void) {
+  return timer_elapsed(last_keypress_timer) > TAP_INTERVAL;
 }
 
 void end_CK(keyrecord_t* record) {

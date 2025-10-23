@@ -24,7 +24,7 @@
 //#include "clever_keys.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
-#include "features/numword.h"
+#include "features/layerword.h"
 #include "features/capsword.h"
 #include "features/word_selection.h"
 #include "features/os4a.h"
@@ -46,19 +46,23 @@ enum layers {
 
 enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
+  NAVWORD,
+  FUNWORD,
   CAPSWORD,
   CAPSLIST,
+  FEN_G,
   FEN_B,
   COPY,
-  //AIDE_MEM,
   OS4A,
   OU_GRV,
   N_TILD,
+  E_GRV,
   MAGIC,
   OS_SHFT,
   OS_CTRL,
   OS_LALT,
   OS_WIN,
+  L_ODK,
   ODK,
   CNL_ODK,
   TG_APOS,

@@ -25,7 +25,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
   uint16_t prev_keycode = get_recent_keycode(-1);
 
     // Apostrophe
-    if (is_followed_by_apos(*ongoing_keycode, prev_keycode)) {
+    if (is_followed_by_apos(*ongoing_keycode, prev_keycode, record)) {
       set_last_keycode(PG_APOS);
     }
   
@@ -51,7 +51,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_3PTS:
         case PG_POIN:
           // Shift the letter at the beginning of sentences.
-          if (is_letter(*ongoing_keycode) || is_send_string_macro(*ongoing_keycode)) {
+          if (is_letter(*ongoing_keycode, record) || is_send_string_macro(*ongoing_keycode)) {
             set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
           }
           break;
@@ -108,13 +108,10 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case PG_O:
     case PG_U:
     case PG_Y:
-      switch (*ongoing_keycode) {
-        case PG_H:
+    case E_GRV:
+      if (*ongoing_keycode == PG_H) {
           update_bkspc_countdown(0);
           return replace_ongoing_key(PG_B, ongoing_keycode, record);
-/*         case PG_B:
-          update_bkspc_countdown(0);
-          return replace_ongoing_key(PG_H, ongoing_keycode, record); */
       }
       break;
   }
@@ -179,7 +176,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           return replace_ongoing_key(PG_N, ongoing_keycode, record);
 
         case PG_M:
-          if (is_letter(get_recent_keycode(-2))) {
+          if (is_letter(get_recent_keycode(-2), record)) {
             // "ment"
             return finish_word((uint16_t[]) {PG_E, PG_N, PG_T}, 3, ongoing_keycode, record);
           } else {
@@ -197,12 +194,13 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         
         default:
           // "à"
-          process_key(PG_ODK, record);
+          tap_code(PG_ODK);
+          //process_key(PG_ODK, record);
           return replace_ongoing_key(PG_A, ongoing_keycode, record);
       }
 
     case PG_AROB:
-      if (!is_letter(get_recent_keycode(-2))) {
+      if (!is_letter(get_recent_keycode(-2), record)) {
         switch (prev_keycode) {
 
 /*           case PG_P:

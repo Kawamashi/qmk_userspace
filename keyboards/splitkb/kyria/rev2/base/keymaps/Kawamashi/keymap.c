@@ -20,12 +20,6 @@
 #include "keymap.h"
 
 
-static uint16_t global_quick_tap_timer = 0;
-
-bool enough_time_before_combo(void) {
-  return timer_elapsed(global_quick_tap_timer) > TAP_INTERVAL;
-}
-
 static uint16_t next_keycode;
 static keyrecord_t next_record;
 
@@ -45,7 +39,7 @@ bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
-    if (record->event.key.col != next_record.event.key.col) {
+    //if (record->event.key.col != next_record.event.key.col) {
 
       // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
       // Fait également gagner pas mal de place sur le FW.
@@ -55,10 +49,10 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
           //tap_converter(keycode, record);
           record->tap.interrupted = false;
-          record->tap.count       = 1;
+          record->tap.count = 1;
           return true;
       }
-    }
+    //}
     return false;
 }
 
@@ -86,16 +80,8 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-  // Global quick tap for combos.
-  // IS_KEYEVENT prevents combos from updating global_quick_tap_timer, to allow combos to be chained.
-  if ((IS_KEYEVENT(record->event) && get_highest_layer(layer_state) == _BASE) && !IS_OS4A_KEY(keycode)) {
-    global_quick_tap_timer = timer_read();
-  }
-
   // Callum Mods 
-  //if (!process_oneshot(keycode, record)) { return false; }
-  if (!process_oneshot_old(keycode, record)) { return false; };
-  //process_oneshot_old(keycode, record);
+  if (!process_oneshot(keycode, record)) { return false; }
 
   // Multi One-Shot Mods
   if (!process_os4a(keycode, record)) { return false; }
@@ -103,11 +89,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Numword
   if (!process_numword(keycode, record)) { return false; }
 
-  // Custom tap-hold keys
-  if (!process_custom_tap_hold(keycode, record)) { return false; }
-
-  // Caps List
-  if (!process_caps_list(keycode, record)) { return false; }
+  // Word selection
+  if (!process_select_word(keycode, record)) { return false; }
 
   // Macros
   if (!process_macros(keycode, record)) { return false; }
@@ -118,6 +101,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
 
+  // Caps Word
   if (!process_caps_word(keycode, record)) {return false; }
 
   // Process all other keycodes normally
@@ -126,7 +110,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
   
-  if (is_caps_word_on()) { clear_weak_mods(); }
   end_CK(record);
 }
 
@@ -192,7 +175,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TG_FA,   OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, KC_CAPS, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
@@ -257,10 +240,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ODK] = LAYOUT(
-       _______, _______, _______, _______, _______, PG_T,                                        _______, _______, _______, _______, _______, _______,
-       _______, OU_GRV,  _______, _______, PG_PVIR, _______,                                     _______, PG_K,    _______, _______, _______, _______,
-       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
-                                  _______, _______, _______, _______, PG_O,    PG_APOS, PG_B,    _______, _______, _______
+       _______, _______, PG_Z,    PG_P,   N_TILD,  PG_T,                                        _______, _______, _______, _______, _______, _______,
+       _______, PG_Q,    PG_EACU, PG_U,   PG_O,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
+       _______, OU_GRV,  PG_Y,    PG_I,   PG_H,    _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
+                        _______, _______, _______, _______, PG_A,    PG_APOS, PG_B,    _______, _______, _______
      ),
 
 
@@ -279,9 +262,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      _______, KC_SPC,   LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
+      _______, SEL_LINE, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
       _______, C(PG_A),  C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
-      _______, SEL_WORD, KC_SPC,       KC_MUTE,    C(PG_Z),     C(PG_Y),  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
+      _______, SEL_WORD, _______,      KC_MUTE,    C(PG_Z),     _______,  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
                                        _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
     ),
 
@@ -301,7 +284,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_FUNCAPPS] = LAYOUT(
       _______, KC_F12,        KC_F9, KC_F8,   KC_F7,        QK_BOOT,                                        _______, SWIN(KC_LEFT), LWIN(KC_UP),   SWIN(KC_RIGHT), KC_NUM,    _______,
-      _______, KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                                     TG_FA,   LWIN(KC_LEFT), RCTL_T(FEN_B), LWIN(KC_RIGHT), A(KC_ESC), _______,
+      _______, KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                                     TT_FA,   LWIN(KC_LEFT), RCTL_T(FEN_B), LWIN(KC_RIGHT), A(KC_ESC), _______,
       _______, ALT_T(KC_F10), KC_F3, KC_F2,   KC_F1,        _______,    _______, _______, _______, _______, _______, _______,       _______,       _______,        _______,   _______,
                                      _______, _______,      _______,    _______, _______, _______, _______, _______, _______,       _______
     ),

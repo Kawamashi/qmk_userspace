@@ -62,6 +62,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 void matrix_scan_user(void) {
   recent_keys_task();
   caps_word_task();
+  layerword_task();
   os4a_task();
 }
 
@@ -87,7 +88,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_os4a(keycode, record)) { return false; }
 
   // Numword
-  if (!process_numword(keycode, record)) { return false; }
+  if (!process_layerword(keycode, record)) { return false; }
 
   // Word selection
   if (!process_select_word(keycode, record)) { return false; }
@@ -175,7 +176,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     TT_FA,   OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
+      _______, _______, _______, _______, _______, _______,                                     FUNWORD, OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
       _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
                                  _______, _______, KC_CAPS, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
@@ -241,9 +242,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ODK] = LAYOUT(
        _______, _______, PG_Z,    PG_P,   N_TILD,  PG_T,                                        _______, _______, _______, _______, _______, _______,
-       _______, PG_Q,    PG_EACU, PG_U,   PG_O,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
+       _______, PG_Q,    PG_EACU, PG_U,   PG_E,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
        _______, OU_GRV,  PG_Y,    PG_I,   PG_H,    _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
-                        _______, _______, _______, _______, PG_A,    PG_APOS, PG_B,    _______, _______, _______
+                        _______, _______, _______, PG_O,    PG_A,    PG_APOS, PG_B,    _______, _______, _______
      ),
 
 
@@ -265,7 +266,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, SEL_LINE, LWIN(KC_TAB), LWIN(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
       _______, C(PG_A),  C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
       _______, SEL_WORD, _______,      KC_MUTE,    C(PG_Z),     _______,  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
-                                       _______,    _______,     _______,  _______, _______, _______, _______, _______, _______,    _______
+                                       _______,    _______,     _______,  _______, _______, NAVWORD, _______, _______, _______,    _______
     ),
 
 /*
@@ -284,7 +285,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_FUNCAPPS] = LAYOUT(
       _______, KC_F12,        KC_F9, KC_F8,   KC_F7,        QK_BOOT,                                        _______, SWIN(KC_LEFT), LWIN(KC_UP),   SWIN(KC_RIGHT), KC_NUM,    _______,
-      _______, KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                                     TT_FA,   LWIN(KC_LEFT), RCTL_T(FEN_B), LWIN(KC_RIGHT), A(KC_ESC), _______,
+      _______, KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                                     _______, SFT_T(FEN_G),  RCTL_T(FEN_B), LWIN(KC_RIGHT), A(KC_ESC), _______,
       _______, ALT_T(KC_F10), KC_F3, KC_F2,   KC_F1,        _______,    _______, _______, _______, _______, _______, _______,       _______,       _______,        _______,   _______,
                                      _______, _______,      _______,    _______, _______, _______, _______, _______, _______,       _______
     ),

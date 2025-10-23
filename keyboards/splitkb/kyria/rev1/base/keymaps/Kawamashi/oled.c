@@ -79,7 +79,7 @@ bool oled_task_user(void) {
         oled_write_P(((mods & MOD_BIT(KC_LALT)) == MOD_BIT(KC_LALT)) ? PSTR("ALT ") : PSTR("    "), false);
 
         oled_write_P(is_caps_word_on() ? PSTR("CAPSWORD\n") : PSTR("        \n"), false);
-        oled_write_P(is_num_word_enabled() ? PSTR("NUMWORD\n") : PSTR("        \n"), false);
+        oled_write_P(get_layerword_layer() ? PSTR("NUMWORD\n") : PSTR("        \n"), false);
 
         // Write host Keyboard LED Status to OLEDs
         led_t led_usb_state = host_keyboard_led_state();

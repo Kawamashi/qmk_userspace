@@ -33,7 +33,7 @@
 #    define RGBLIGHT_LIMIT_VAL 150
 #endif
 
-#define TAPPING_TOGGLE 1
+//#define TAPPING_TOGGLE 1
 
 // combo
 #define COMBO_TERM 50
@@ -66,6 +66,7 @@
 #define RECENT_KEYS_TIMEOUT 5000
 #define CAPS_WORD_IDLE_TIMEOUT 5000
 #define OS4A_EXIT_TIMEOUT 3000
+//#define LAYERWORD_EXIT_TIMEOUT 3000
 
 
 //Faire de la place !

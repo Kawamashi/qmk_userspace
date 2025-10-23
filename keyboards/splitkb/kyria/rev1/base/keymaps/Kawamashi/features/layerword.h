@@ -15,19 +15,19 @@
  */
 
 #pragma once
-
-#include "quantum.h"
+#include QMK_KEYBOARD_H
 #include "keymap.h"
-//#include <string.h>
-//#include "keymap_french_frgo.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+void layerword_task(void);
+uint8_t get_layerword_layer(void);
+uint16_t layerword_exit_timeout(uint8_t layer);
 
-void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record);
+void enable_layerword(uint8_t layer);
+void disable_layerword(uint8_t layer);
+void toggle_layerword(uint16_t keycode);
+bool process_layerword_keys(uint16_t keycode, keyrecord_t *record);
 
+bool process_layerword(uint16_t keycode, keyrecord_t *record);
 
-#ifdef __cplusplus
-}
-#endif
+uint8_t layerword_layer_from_trigger(uint16_t keycode);
+bool should_exit_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record);

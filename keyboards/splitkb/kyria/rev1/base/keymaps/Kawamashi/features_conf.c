@@ -41,6 +41,9 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
     switch (keycode) {
 
+        case SFT_T(FEN_G):
+          return process_custom_tap_hold(LWIN(KC_LEFT), record);
+
         case RCTL_T(FEN_B):
           return process_custom_tap_hold(LWIN(KC_DOWN), record);
 
@@ -84,28 +87,33 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 
   if (is_send_string_macro(keycode)) { return keycode; }
 
-  switch (get_highest_layer(layer_state)) {
+    switch (get_highest_layer(layer_state)) {
 
-    case _ODK:
-      switch (keycode) {
-        case PG_K:
-        case PG_B:
-        //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
-          return keycode;
+      case _ODK:
+        switch (keycode) {
+          case PG_K:
+          case PG_B:
+          case PG_H:
+          //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
+            return keycode;
 
-        case PG_POIN:
-          return PG_3PTS;
+          case PG_POIN:
+            return PG_3PTS;
 
-        default:
-          return ODK;
-      }
-    
-    // There are no symbols on _SHORTNAV or _FUNCAPPS
-    case _SHORTNAV:
-    case _FUNCAPPS:
-      clear_recent_keys();
-      return KC_NO;
-  }
+          case PG_E:
+            return E_GRV;
+
+          default:
+            if (is_letter(keycode, record)) { return L_ODK; }
+            return ODK;
+        }
+      
+      // There are no symbols on _SHORTNAV or _FUNCAPPS
+      case _SHORTNAV:
+      case _FUNCAPPS:
+        clear_recent_keys();
+        return KC_NO;
+    }
 
   if (keycode == PG_E) { return PG_E; }   // because PG_E is not a basic keycode
 

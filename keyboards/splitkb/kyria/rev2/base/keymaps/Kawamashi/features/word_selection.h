@@ -15,16 +15,19 @@
  */
 
 #pragma once
-#include QMK_KEYBOARD_H
+
+#include "quantum.h"
 #include "keymap.h"
 
-bool is_num_word_enabled(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void enable_num_word(void);
-void disable_num_word(void);
-void toggle_num_word(void);
+bool is_select_word(void);
+void end_select_word(void);
 
-bool process_numword(uint16_t keycode, const keyrecord_t *record);
-void numword_exit_check(void);
+bool process_select_word(uint16_t keycode, keyrecord_t *record);
 
-bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record);
+#ifdef __cplusplus
+}
+#endif

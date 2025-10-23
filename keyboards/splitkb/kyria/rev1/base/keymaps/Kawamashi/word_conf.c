@@ -18,7 +18,29 @@
 
 
 
-bool is_letter(uint16_t keycode) {
+bool is_letter(uint16_t keycode, keyrecord_t* record) {
+
+  if (IS_LAYER_ON(_ODK)) {
+    switch (keycode) {
+
+      //case PG_VIRG:
+      case PG_B:
+      case PG_F:
+      case PG_D:
+      case PG_K:
+        return true;
+  
+      case PG_Y:    // pour le tréma
+      case PG_T:    // pour le trait d’union insécable
+      case PG_POIN:
+        return false;
+      
+      default:
+        return on_left_hand(record->event.key);
+
+    }
+  }
+
   switch (keycode) {
     case KC_A ... KC_F:
     case KC_H ... KC_P:
@@ -27,6 +49,8 @@ bool is_letter(uint16_t keycode) {
     case PG_L:
     case PG_E:
     case KC_GRV ... KC_DOT:
+    case E_GRV:
+    case L_ODK:
       return true;
 
     default:
@@ -47,7 +71,7 @@ bool is_send_string_macro(uint16_t keycode) {
   }
 }
 
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* record) {
   switch (keycode) {
     case PG_Q:
       return true;
@@ -61,7 +85,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
     case PG_M:
     case PG_Y:
     case PG_J:
-      if (!is_letter(prev_keycode)) { return true; }
+      if (!is_letter(prev_keycode, record)) { return true; }
   }
   return false;
 }
@@ -72,36 +96,17 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
 bool caps_word_press_user(uint16_t keycode, keyrecord_t* record) {
 
   if (IS_LAYER_ON(_ODK)) {
-    switch (keycode) {
-
-      //case PG_VIRG:
-      case PG_B:
-      case PG_F:
-      case PG_D:
-      case PG_K:
-        add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
-        return true;
-  
+    switch (keycode) {  
       case PG_Y:    // pour le tréma
       case PG_T:    // pour le trait d’union insécable
       case PG_APOS:
         return true;
-
-      case PG_POIN:
-        return false;
-      
-      default:
-        if (on_left_hand(record->event.key)) {
-          add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
-          return true;
-        }
-        return false;
     }
   }
 
   // Keycodes that continue Caps Word, with shift applied.
   // @ must be shifted, bc of CleverKeys using it.
-  if (is_letter(keycode) || is_send_string_macro(keycode)) {
+  if (is_letter(keycode, record) || is_send_string_macro(keycode)) {
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
   } 
@@ -139,7 +144,7 @@ bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record) {
           return update_capslist_countdown(1);
     }
 
-    if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
+    if (is_letter(keycode, record) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
 
     // This condition can't be merged with the previous one
     // because caps_word_press_user adds shift to letters and send-string macros.
@@ -174,33 +179,73 @@ bool list_separator(void) {
 }
 
 
-// Num Word
+// Layer Word
 
-bool should_exit_num_word(uint16_t keycode, const keyrecord_t *record) {
+uint8_t layerword_layer_from_trigger(uint16_t keycode) {
+  switch (keycode) {
+    case NUMWORD: return _NUMBERS;
+    case NAVWORD: return _SHORTNAV;
+    case FUNWORD: return _FUNCAPPS;
+    default: return 0;
+  }
+}
 
-    switch (keycode) {
-        // Keycodes which should not disable num word mode.
+uint16_t layerword_exit_timeout(uint8_t layer) {
+  switch (layer) {
+    case _NUMBERS:
+    case _SHORTNAV:
+      return 3000;
+    case _FUNCAPPS:
+      return 30000;
+    default:
+      return 0;
+  }
+}
 
+bool should_exit_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record) {
+
+  switch (layer) {
+    case _NUMBERS:
+      switch (keycode) {
+        // Keycodes that should not disable num word.
         // Numpad keycodes
-         case KC_1 ... KC_0:
-         case KC_PDOT:
-         case PG_MOIN:
-         case PG_ASTX: 
-         case PG_PLUS:
-         case PG_SLSH:
-         case PG_EGAL:
-         case PG_EXP:
-         case PG_IND:
-         case PG_H:
-         case PG_2PTS:
-         //case NNB_SPC:
+        case KC_1 ... KC_0:
+        case KC_PDOT:
+        case PG_MOIN:
+        case PG_ASTX: 
+        case PG_PLUS:
+        case PG_SLSH:
+        case PG_EGAL:
+        case PG_EXP:
+        case PG_IND:
+        case PG_H:
+        case PG_2PTS:
+        //case NNB_SPC:
 
         // Misc
         case KC_BSPC:
         case PG_ODK:   // Not to exit Numword when chording it with ODK
         //case NUMWORD:   // For the combo NUMWORD to work
-            return false;
-    }
+            return false; 
+      }
 
-    return true;
+    case _SHORTNAV:
+      keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
+      switch (keycode) {
+        case KC_LEFT:
+        case KC_RIGHT:
+        case KC_DOWN:
+        case KC_UP:
+        case KC_PGUP:
+        case KC_PGDN:
+            return false;
+      }
+
+    case _FUNCAPPS:
+      switch (keycode) {
+        case KC_F8:
+            return false;
+      }
+  }
+  return true;
 }

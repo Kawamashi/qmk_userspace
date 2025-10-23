@@ -152,24 +152,6 @@ bool process_caps_list(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
     }
-/*     if (keycode == CAPSWORD) {
-        // I can't use CW_TOGG because QMK dosn't reach process_record_user when processing it.
-        if (record->event.pressed) {
-            // Deactivating Caps Lock and Caps List when Caps Word activates.
-            if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-            if (is_caps_list_on()) { caps_list_off(); }
-            caps_word_toggle();
-        }
-        return false;
-
-    } else if (keycode == KC_CAPS) {
-        if (record->event.pressed) {
-            caps_word_off();
-            caps_list_off();
-        }
-        return true;
-    } */
-    
 
     // Other than the custom keycodes, nothing else in this feature will activate
     // if the behavior is not on, so allow QMK to handle the event as usual.
