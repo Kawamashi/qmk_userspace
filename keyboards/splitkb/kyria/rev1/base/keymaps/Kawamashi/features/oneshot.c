@@ -5,6 +5,30 @@ oneshot_state os_ctrl_state = os_idle;
 oneshot_state os_alt_state = os_idle;
 oneshot_state os_win_state = os_idle;
 
+static uint16_t idle_timer = 0;
+
+
+void oneshot_task(void) {
+  if (timer_expired(timer_read(), idle_timer)) {
+
+        if (os_shft_state == os_up_queued) { 
+            os_shft_state = os_idle;
+            unregister_code(KC_LSFT);
+        }
+        if (os_ctrl_state == os_up_queued) {
+            os_ctrl_state = os_idle;
+            unregister_code(KC_LCTL);
+        }
+        if (os_alt_state == os_up_queued) {
+            os_alt_state = os_idle;
+            unregister_code(KC_LALT);
+        }
+        if (os_win_state == os_up_queued) {
+            os_win_state = os_idle;
+            unregister_code(KC_LWIN);
+        }
+  }
+}
 
 bool process_oneshot(uint16_t keycode, keyrecord_t *record){
 
@@ -36,6 +60,7 @@ bool update_oneshot(oneshot_state *state, uint16_t mod, uint16_t trigger, uint16
                 case os_down_unused:
                     // If we didn't use the mod while trigger was held, queue it.
                     *state = os_up_queued;
+                    idle_timer = record->event.time + ONESHOT_TIMEOUT;
                     break;
                 case os_down_used:
                     // If we did use the mod while trigger was held, unregister it.

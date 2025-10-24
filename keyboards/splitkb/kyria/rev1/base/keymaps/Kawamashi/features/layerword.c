@@ -19,7 +19,7 @@
 //static uint16_t layer_word_timer = 0;
 
 static uint8_t layerword_layer = 0;
-static bool exit_layerword = false;
+static bool continue_layerword = false;
 
 static uint16_t idle_timer = 0;
 
@@ -37,13 +37,13 @@ void enable_layerword(uint8_t layer) {
     if (layerword_layer != 0) { layer_off(layerword_layer); }   // Only one layerword can be active at a time
     layer_on(layer);
     layerword_layer = layer;
+    continue_layerword = true;
     idle_timer = timer_read() + layerword_exit_timeout(layer);
 }
   
 void disable_layerword(uint8_t layer) {
     layer_off(layer);
     layerword_layer = 0;
-    exit_layerword = false;
 }
 
 void toggle_layerword(uint16_t keycode) {
@@ -59,12 +59,17 @@ void toggle_layerword(uint16_t keycode) {
 }
   
 bool process_layerword_keys(uint16_t keycode, keyrecord_t *record) {
-    // tap action
+
+    // Normal processing when hold
+    if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
+        if (record->tap.count == 0) { return true; }
+    }
+    // Tap action
     if (record->event.pressed) {
         toggle_layerword(keycode);
         return false;
     }
-    // normal processing otherwise
+    // Normal processing on release
     return true;
 }
 
@@ -77,9 +82,8 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
     // if the behavior is not on, so allow QMK to handle the event as usual.
     if (layerword_layer == 0) { return true; }
 
-    // Should exit layer word on key release 
-    // in case of rolled keys as well (take the press of the 2nd one into account !)
-    if (exit_layerword) {
+    // Should exit layer word on key release or on 2nd keypress of rolled keys
+    if (!continue_layerword) {
         disable_layerword(layerword_layer);
         return true;
     }
@@ -99,7 +103,7 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
         if (layerword_exit_timeout(layerword_layer) > 0) {
             idle_timer = record->event.time + layerword_exit_timeout(layerword_layer);
         }
-        exit_layerword = should_exit_layerword(layerword_layer, keycode, record);
+        continue_layerword = should_continue_layerword(layerword_layer, keycode, record);
 
     } else {  // On keyrelease
         
@@ -110,4 +114,32 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
         }
     }
     return true;
+}
+
+bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
+
+  // Shift shouldn't be added if other mods are active
+  if (get_mods() | get_oneshot_mods()) { return false; }
+
+  // Combos and encoder events.
+  if (!IS_KEYEVENT(record->event)) { return true; }
+
+  // Specific exceptions
+  if (not_to_be_shifted(keycode)) { return false; }
+
+  // Otherwise, add shift if the key is on the other side of the keyboard.
+  return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
+}
+
+
+void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
+    
+    // The OS4A layer must be exited only when ctrl or shift are registered,
+    // not when the OSM are released without having being held.
+    //if (get_mods() & QK_ONE_SHOT_MOD_GET_MODS(keycode)) { 
+
+    // When ctrl or shift are released after being held, exit the OS4A layer.
+    if (!record->tap.count) {
+      disable_layerword(layerword_layer);
+    }
 }

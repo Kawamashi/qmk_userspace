@@ -132,44 +132,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 }
 
 
-// One-shot 4 all configuration
-
-uint8_t os4a_layer_from_trigger(uint16_t keycode) {
-  switch (keycode) {
-    case L_OS4A: return _L_MODS;
-    case R_OS4A: return _R_MODS;
-    default: return 0;
-  }
-}
-
-bool should_stay_os4a_layer(uint16_t keycode) {
-  // keycodes that stay on os4a layers w/o being shifted
-  switch (keycode) {
-    case OS_SHFT:
-    case OS_CTRL:
-    case OS_LALT:
-    case OS_WIN:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-bool not_to_be_shifted(uint16_t keycode) {
-  // keycodes that exit os4a layers w/o being shifted
-  switch (keycode) {
-      case KC_CAPS:
-      case CAPSWORD:
-      case CAPSLIST:
-        return true;
-
-      default:
-        return false;
-  }
-}
-
-
 // Callum mods
 
 bool is_oneshot_cancel_key(uint16_t keycode) {

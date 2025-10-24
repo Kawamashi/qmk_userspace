@@ -30,4 +30,8 @@ bool process_layerword_keys(uint16_t keycode, keyrecord_t *record);
 bool process_layerword(uint16_t keycode, keyrecord_t *record);
 
 uint8_t layerword_layer_from_trigger(uint16_t keycode);
-bool should_exit_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record);
+bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record);
+
+bool should_add_shift(uint16_t keycode, keyrecord_t *record);
+bool not_to_be_shifted(uint16_t keycode);
+void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record);

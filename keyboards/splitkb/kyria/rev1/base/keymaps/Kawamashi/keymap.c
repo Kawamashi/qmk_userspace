@@ -63,7 +63,7 @@ void matrix_scan_user(void) {
   recent_keys_task();
   caps_word_task();
   layerword_task();
-  os4a_task();
+  oneshot_task();
 }
 
 
@@ -84,10 +84,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Callum Mods 
   if (!process_oneshot(keycode, record)) { return false; }
 
-  // Multi One-Shot Mods
-  if (!process_os4a(keycode, record)) { return false; }
-
-  // Numword
+  // Layer word
   if (!process_layerword(keycode, record)) { return false; }
 
   // Word selection

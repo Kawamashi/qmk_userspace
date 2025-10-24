@@ -12,6 +12,7 @@ typedef enum {
     os_down_used,
 } oneshot_state;
 
+void oneshot_task(void);
 
 bool process_oneshot(uint16_t keycode, keyrecord_t *record);
 
