@@ -112,7 +112,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
       // Handle keys carrying a modifier, for ex on symbols layer
       if (basic_keycode != keycode) { return keycode; }
 
-      if (is_letter(basic_keycode, record)) { return keycode; }
+      if (is_letter(basic_keycode)) { return keycode; }
       
       // Handle shifted symbols (ex shift + '-' = '!')
       // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if

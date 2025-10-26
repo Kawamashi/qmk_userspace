@@ -12,6 +12,10 @@ typedef enum {
     os_down_used,
 } oneshot_state;
 
+// Idle timout:
+// Custom oneshot mods are configured to deactivate if the keyboard is idle
+// for some time. This is useful to prevent unexpected behaviours.
+// In config.h, define `ONESHOT_TIMEOUT` with a time in milliseconds.
 void oneshot_task(void);
 
 bool process_oneshot(uint16_t keycode, keyrecord_t *record);
@@ -27,10 +31,10 @@ bool update_oneshot(
     keyrecord_t *record
 );
 
-// To be implemented by the consumer. Defines keys to cancel oneshot mods.
+// To be implemented by the user. Defines keys to cancel oneshot mods.
 bool is_oneshot_cancel_key(uint16_t keycode);
 
-// To be implemented by the consumer. Defines keys to ignore when determining
+// To be implemented by the user. Defines keys to ignore when determining
 // whether a oneshot mod has been used. Setting this to modifiers and layer
 // change keys allows stacking multiple oneshot modifiers, and carrying them
 // between layers.

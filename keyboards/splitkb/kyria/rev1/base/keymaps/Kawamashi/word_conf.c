@@ -18,25 +18,34 @@
 
 
 
-bool is_letter(uint16_t keycode, keyrecord_t* record) {
+bool is_letter(uint16_t keycode) {
 
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
 
-      //case PG_VIRG:
+      case PG_VIRG:
       case PG_B:
-      case PG_F:
-      case PG_D:
-      case PG_K:
+      //case PG_F:
+      //case PG_D:
+      //case PG_K:
         return true;
   
       case PG_Y:    // pour le tréma
       case PG_T:    // pour le trait d’union insécable
-      case PG_POIN:
+      case PG_G:    // greek dead key
+      case PG_V:
+      case PG_M:
+      case PG_J:
+      case PG_X:
+      case PG_S:
+      case PG_R:
+      case PG_L:
+      case PG_W:
+      //case PG_POIN:
         return false;
       
       default:
-        return on_left_hand(record->event.key);
+        //return true;
 
     }
   }
@@ -50,6 +59,7 @@ bool is_letter(uint16_t keycode, keyrecord_t* record) {
     case PG_E:
     case KC_GRV ... KC_DOT:
     case E_GRV:
+    case E_CIRC:
     case L_ODK:
       return true;
 
@@ -85,7 +95,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* r
     case PG_M:
     case PG_Y:
     case PG_J:
-      if (!is_letter(prev_keycode, record)) { return true; }
+      if (!is_letter(prev_keycode)) { return true; }
   }
   return false;
 }
@@ -106,7 +116,7 @@ bool caps_word_press_user(uint16_t keycode, keyrecord_t* record) {
 
   // Keycodes that continue Caps Word, with shift applied.
   // @ must be shifted, bc of CleverKeys using it.
-  if (is_letter(keycode, record) || is_send_string_macro(keycode)) {
+  if (is_letter(keycode) || is_send_string_macro(keycode)) {
     add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
     return true;
   } 
@@ -144,7 +154,7 @@ bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record) {
           return update_capslist_countdown(1);
     }
 
-    if (is_letter(keycode, record) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
+    if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
 
     // This condition can't be merged with the previous one
     // because caps_word_press_user adds shift to letters and send-string macros.
@@ -246,6 +256,8 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
         case PG_ODK:   // Not to exit Numword when chording it with ODK
         //case NUMWORD:   // For the combo NUMWORD to work
             return true; 
+        default:
+            return false;
       }
 
     case _SHORTNAV:
@@ -258,12 +270,16 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
         case KC_PGUP:
         case KC_PGDN:
             return true;
+        default:
+            return false;
       }
 
     case _FUNCAPPS:
       switch (keycode) {
         case KC_F8:
             return true;
+        default:
+            return false;
       }
   }
   return false;

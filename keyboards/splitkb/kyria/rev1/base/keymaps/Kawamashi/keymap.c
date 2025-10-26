@@ -93,11 +93,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Macros
   if (!process_macros(keycode, record)) { return false; }
 
-  // Custom behaviour of the typo dead-key
-  if (!process_odk_layer(keycode, record)) { return false; }
-
   // Clever keys
   if (!process_clever_keys(keycode, record)) { return false; }
+
+  // Custom behaviour of the typo dead-key
+  if (!process_odk_layer(keycode, record)) { return false; }
 
   // Caps Word
   if (!process_caps_word(keycode, record)) {return false; }
@@ -239,9 +239,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_ODK] = LAYOUT(
        _______, _______, PG_Z,    PG_P,   N_TILD,  PG_T,                                        _______, _______, _______, _______, _______, _______,
-       _______, PG_Q,    PG_EACU, PG_U,   PG_E,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
+       _______, PG_Q,    PG_EACU, PG_U,   PG_O,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
        _______, OU_GRV,  PG_Y,    PG_I,   PG_H,    _______, _______, _______, _______, _______, _______, _______, _______, PG_AROB, CNL_ODK, _______,
-                        _______, _______, _______, PG_O,    PG_A,    PG_APOS, PG_B,    _______, _______, _______
+                        _______, _______, _______, PG_E,    PG_A,    PG_APOS, PG_B,    _______, _______, _______
      ),
 
 

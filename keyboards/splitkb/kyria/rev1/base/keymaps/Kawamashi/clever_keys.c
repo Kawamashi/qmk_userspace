@@ -51,7 +51,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_3PTS:
         case PG_POIN:
           // Shift the letter at the beginning of sentences.
-          if (is_letter(*ongoing_keycode, record) || is_send_string_macro(*ongoing_keycode)) {
+          if (is_letter(*ongoing_keycode) || is_send_string_macro(*ongoing_keycode)) {
             set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
           }
           break;
@@ -62,6 +62,9 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       switch (*ongoing_keycode) {
         
         // Ajout automatique du "u" après le "q"
+        case E_CIRC:
+          tap_code(PG_U);
+          break;
         case PG_E:
         case PG_I:
         case PG_A:
@@ -176,7 +179,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           return replace_ongoing_key(PG_N, ongoing_keycode, record);
 
         case PG_M:
-          if (is_letter(get_recent_keycode(-2), record)) {
+          if (is_letter(get_recent_keycode(-2))) {
             // "ment"
             return finish_word((uint16_t[]) {PG_E, PG_N, PG_T}, 3, ongoing_keycode, record);
           } else {
@@ -200,7 +203,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       }
 
     case PG_AROB:
-      if (!is_letter(get_recent_keycode(-2), record)) {
+      if (!is_letter(get_recent_keycode(-2))) {
         switch (prev_keycode) {
 
 /*           case PG_P:
