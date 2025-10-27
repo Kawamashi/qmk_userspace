@@ -18,9 +18,16 @@
 #include QMK_KEYBOARD_H
 #include "keymap.h"
 
+// Idle timout:
+// Layerword can be configured to deactivate if the keyboard is idle
+// for some time. This is useful to prevent unexpected behaviours.
 void layerword_task(void);
-uint8_t get_layerword_layer(void);
+
+// Each layerword timeout timer can be defined individually (in ms).
 uint16_t layerword_exit_timeout(uint8_t layer);
+
+// Returns the layerword number
+uint8_t get_layerword_layer(void);
 
 void enable_layerword(uint8_t layer);
 void disable_layerword(uint8_t layer);

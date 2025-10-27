@@ -81,7 +81,6 @@ enum custom_keycodes {
 #define OS_ODK OSL(_ODK)
 #define NUM_ODK OSL(_NUMBERS)
 #define OS_FA OSL(_FUNCAPPS)
-#define TT_FA TT(_FUNCAPPS)
 
   // Mods
 #define MT_SLSH SFT_T(PG_SLSH)

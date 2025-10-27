@@ -28,53 +28,53 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   // This function extracts the base keycode of MT and LT,
   // even if the tap/hold key is a custom one, with non-basic tap keycode.
   switch (keycode) {
-      case LT_NBSPC:
-        return NNB_SPC;
-      default:
-        return keycode &= 0xff;   //QK_MOD_TAP_GET_TAP_KEYCODE(keycode)
+    case LT_NBSPC:
+      return NNB_SPC;
+    default:
+      return keycode &= 0xff;
   }
 }
 
 
 bool process_macros(uint16_t keycode, keyrecord_t *record) {
 
-  if (record->tap.count) {    // Handling of special tap-hold keys (on tap).
+  if (record->tap.count) {
+    // Special tap-hold keys (on tap).
     switch (keycode) {
+      case SFT_T(FEN_G):
+        return process_custom_tap_hold(LWIN(KC_LEFT), record);
 
-        case SFT_T(FEN_G):
-          return process_custom_tap_hold(LWIN(KC_LEFT), record);
+      case RCTL_T(FEN_B):
+        return process_custom_tap_hold(LWIN(KC_DOWN), record);
 
-        case RCTL_T(FEN_B):
-          return process_custom_tap_hold(LWIN(KC_DOWN), record);
+      case SFT_T(COPY):
+        return process_custom_tap_hold(C(PG_C), record);
 
-        case SFT_T(COPY):
-          return process_custom_tap_hold(C(PG_C), record);
+      case LT_NBSPC:
+        return process_custom_tap_hold(NNB_SPC, record);
 
-        case LT_NBSPC:
-          return process_custom_tap_hold(NNB_SPC, record);
+      case LT_REPT:
+        repeat_key_invoke(&record->event);
+        return false;
 
-        case LT_REPT:
-          repeat_key_invoke(&record->event);
-          return false;
-
-        case LT_MGC:
-          alt_repeat_key_invoke(&record->event);
-          return false;
+      case LT_MGC:
+        alt_repeat_key_invoke(&record->event);
+        return false;
     }
   }
 
-  if (record->event.pressed) {    // Handling of other macros (on press).
-      switch (keycode) {
+  if (record->event.pressed) {
+    // Other macros (on press).
+    switch (keycode) {
+      case TG_APOS:
+        is_apos_dr = !is_apos_dr;
+        return false;
 
-          case TG_APOS:
-              is_apos_dr = !is_apos_dr;
-              return false;
-
-          case PG_DEG:
-              tap_code(PG_ODK);
-              tap_code(KC_9);
-              return false;
-      }
+      case PG_DEG:
+        tap_code(PG_ODK);
+        tap_code(KC_9);
+        return false;
+    }
   }
   return true; // Process all other keycodes normally
 }
@@ -86,7 +86,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   // Handles custom keycodes to be processed for Clever Keys
 
   if (is_send_string_macro(keycode)) { return keycode; }
-
     switch (get_highest_layer(layer_state)) {
 
       case _ODK:
@@ -128,49 +127,51 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
         return KC_NO;
     }
   }
-
   return KC_TRNS;
 }
 
 
-// Callum mods
+// One-shot mods
+
+const oneshot_key_t oneshot_keys[] = {
+  {OS_SHFT, KC_LSFT},
+  {OS_CTRL, KC_LCTL},
+  {OS_LALT, KC_LALT},
+  {OS_WIN, KC_LWIN},
+};
 
 bool is_oneshot_cancel_key(uint16_t keycode) {
   switch (keycode) {
     case L_OS4A:
     case R_OS4A:
-        return true;
+      return true;
     default:
-        return false;
+      return false;
   }
 }
 
-bool is_oneshot_ignored_key(uint16_t keycode) {
-
-  const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  //if (keycode == OS_ODK && (mods & ~MOD_BIT(KC_ALGR))) { return true; }
+bool should_oneshot_stay_pressed(uint16_t keycode) {
 
   switch (keycode) {
     case OS_ODK:
-      // On veut que la touche typo soit ignorée par tous les Callum mods sauf Alt-gr.
-      // Ça permet de transmettre les mods à la touche suivante, par ex pour faire Ctrl + K. 
-      // Alt-gr doit pouvoir s’appliquer à la touche typo, pour permettre de faire la touche morte "~" avec.
-      // OS_ODK ne doit être ignored_key que lorsqu’elle est employée avec Alt-gr
-      // sous peine de ne pas pouvoir faire shift + typo + touche de l'autre côté
-      if (mods & ~MOD_BIT(KC_ALGR)) { return true; }
-      break;
-      
-    case OS_SHFT:
-    case OS_CTRL:
-    case OS_LALT:
-    case OS_WIN:
+      // On veut que les one-shot mods soient transmis aux touches de la couche ODK, par ex pour faire Ctrl + K.
+      // Il faut donc que cette fonction appliquée à OS_ODK renvoie true pour la plupart des mods.
+      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_ODK.
+      // Alt-gr doit être relâché après appui sur OS_ODK.
+      // Cette fonction appliquée à OS_ODK ne doit donc renvoyer false que quand Alt-gr est utilisé.
+      const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+      if (mods & MOD_BIT(KC_ALGR)) { return false; }
+      return true;
+
     case OS_FA:       // to be combined with Alt
-    case TT_FA:
+    case FUNWORD:
     case NUMWORD:     // to combine numbers with mods
     //case NUM_ODK:   // NUM_ODK sends PG_ODK when pressed. When shifted, PG_ODK sends one-shot shift.
       return true;
+
+    default:
+      return false;
   }
-  return false;
 }
 
 
@@ -182,8 +183,10 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
     case LT_REPT:
     case LT_MGC:
       return false;
+    
+    default:
+      return true;
   }
-  return true;
 }
 
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {

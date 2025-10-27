@@ -269,6 +269,8 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
         case KC_UP:
         case KC_PGUP:
         case KC_PGDN:
+        case KC_HOME:
+        case KC_END:
             return true;
         default:
             return false;
