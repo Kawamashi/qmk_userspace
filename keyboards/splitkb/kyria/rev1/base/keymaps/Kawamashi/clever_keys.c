@@ -157,24 +157,20 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
         case PG_Q:
           // qué scissor
-          //return finish_word((uint16_t[]) {PG_U, PG_EACU}, 2, ongoing_keycode, record);
           process_key(PG_U,record);
           return replace_ongoing_key(PG_EACU, ongoing_keycode, record);
 
         case PG_Y:
           // you bad redirection
-          //return finish_word((uint16_t[]) {PG_O, PG_U}, 2, ongoing_keycode, record);
           process_key(PG_O,record);
           return replace_ongoing_key(PG_U, ongoing_keycode, record);
 
         case PG_T:
           // "the"
-          //return finish_word((uint16_t[]) {PG_H, PG_E}, 2, ongoing_keycode, record);
           process_key(PG_H,record);
           return replace_ongoing_key(PG_E, ongoing_keycode, record);
 
         case PG_I:
-          //return finish_word((uint16_t[]) {PG_O, PG_N}, 2, ongoing_keycode, record);
           process_key(PG_O,record);
           return replace_ongoing_key(PG_N, ongoing_keycode, record);
 
@@ -198,7 +194,6 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         default:
           // "à"
           tap_code(PG_ODK);
-          //process_key(PG_ODK, record);
           return replace_ongoing_key(PG_A, ongoing_keycode, record);
       }
 
@@ -225,30 +220,6 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         update_bkspc_countdown(0);
         return replace_ongoing_key(PG_H, ongoing_keycode, record);
       }
-      break;
-
-/*     case PG_H:
-      switch (prev_keycode) {
-        case PG_M:
-        case PG_R:
-        case PG_A:
-        case PG_E:
-        case PG_EACU:
-        case PG_I:
-        case PG_O:
-        case PG_U:
-        case PG_Y:
-          update_bkspc_countdown(0);
-          return replace_ongoing_key(PG_B, ongoing_keycode, record);
-      } */
-/*       if (prev_keycode == PG_M) {
-        // "mh" -> "mb"
-        update_bkspc_countdown(0);
-        return replace_ongoing_key(PG_B, ongoing_keycode, record);
-      } else if (prev_keycode == PG_I) {
-        // "ih" -> "ique"
-        return finish_word((uint16_t[]) {PG_Q, PG_U, PG_E}, 3, ongoing_keycode, record);
-      } */
       break;
 
     case OU_GRV:

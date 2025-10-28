@@ -6,11 +6,15 @@ static uint16_t idle_timer = 0;
 
 void oneshot_task(void) {
   if (timer_expired(timer_read(), idle_timer)) {
-    for (uint8_t i = 0; i < OS_COUNT; i++) {
-      if (oneshot_state[i] == os_up_queued) {
-        oneshot_state[i] = os_idle;
-        unregister_code(oneshot_keys[i].modifier);
-      }
+    clear_oneshot();
+  }
+}
+
+void clear_oneshot(void) {
+  for (uint8_t i = 0; i < OS_COUNT; i++) {
+    if (oneshot_state[i] == os_up_queued) {
+      oneshot_state[i] = os_idle;
+      unregister_code(oneshot_keys[i].modifier);
     }
   }
 }

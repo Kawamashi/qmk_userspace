@@ -48,6 +48,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
         return process_custom_tap_hold(LWIN(KC_DOWN), record);
 
       case SFT_T(COPY):
+        enable_layerword(_SHORTNAV);
         return process_custom_tap_hold(C(PG_C), record);
 
       case LT_NBSPC:

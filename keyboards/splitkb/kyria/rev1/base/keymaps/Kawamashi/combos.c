@@ -103,15 +103,18 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             unregister_mods(MOD_LALT);
         }
         break;
+
       case PANIC:
         if (pressed) {
-          caps_lock_off();
           if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
-
+          
+          if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
           layer_clear();
-          clear_mods();
+          if (is_select_word()) { end_select_word(); }
+          clear_oneshot();
           //clear_oneshot_mods();
           //clear_weak_mods();
+          caps_lock_off();
           caps_word_off();
           //disable_num_word();
           clear_recent_keys();

@@ -133,7 +133,7 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
 
   // Caps word or caps list is active //
 
-  if (caps_word_active) {clear_weak_mods();}
+  if (caps_word_active) { clear_weak_mods(); }
 
   // No action on keyrelease
   if (!record->event.pressed) { return true; }

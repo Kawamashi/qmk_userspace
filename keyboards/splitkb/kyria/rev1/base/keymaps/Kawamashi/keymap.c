@@ -94,7 +94,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_macros(keycode, record)) { return false; }
 
   // Clever keys
-  if (!process_clever_keys(keycode, record)) { return false; }
+  process_clever_keys(keycode, record);
 
   // Custom behaviour of the typo dead-key
   if (!process_odk_layer(keycode, record)) { return false; }
@@ -104,11 +104,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Process all other keycodes normally
   return true;
-}
-
-void post_process_record_user(uint16_t keycode, keyrecord_t* record) {
-  
-  end_CK(record);
 }
 
 

@@ -261,6 +261,11 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
       }
 
     case _SHORTNAV:
+      switch (keycode) {
+        case SEL_WORD:
+        case SEL_LINE:
+          return true;
+      }
       keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
       switch (keycode) {
         case KC_LEFT:
