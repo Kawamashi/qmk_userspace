@@ -58,7 +58,7 @@ bool is_letter(uint16_t keycode) {
     case PG_L:
     case PG_E:
     case KC_GRV ... KC_DOT:
-    case E_GRV:
+    //case E_GRV:
     case E_CIRC:
     case L_ODK:
       return true;
@@ -72,6 +72,7 @@ bool is_send_string_macro(uint16_t keycode) {
   switch (keycode) {
     case OU_GRV:
     case N_TILD:
+    case PG_AE:
     case MAGIC:
     case PG_AROB:   // because of Clever Keys
       return true;

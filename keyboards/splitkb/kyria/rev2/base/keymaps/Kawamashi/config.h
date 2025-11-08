@@ -33,7 +33,7 @@
 #    define RGBLIGHT_LIMIT_VAL 150
 #endif
 
-#define TAPPING_TOGGLE 1
+//#define TAPPING_TOGGLE 1
 
 // combo
 #define COMBO_TERM 50
@@ -59,13 +59,13 @@
 #endif */
 
 // One shot modifiers
-//#define ONESHOT_TAP_TOGGLE 5  /* Tapping this number of times holds the key until tapped once again. */
-//#define ONESHOT_TIMEOUT 5000  /* Time (in ms) before the one shot key is released */
+#define OS_COUNT 4
 
 // Timeouts in milliseconds.
 #define RECENT_KEYS_TIMEOUT 5000
-#define CAPS_WORD_IDLE_TIMEOUT 5000
+#define CAPS_WORD_IDLE_TIMEOUT 3000
 #define OS4A_EXIT_TIMEOUT 3000
+#define ONESHOT_TIMEOUT 3000
 
 
 //Faire de la place !

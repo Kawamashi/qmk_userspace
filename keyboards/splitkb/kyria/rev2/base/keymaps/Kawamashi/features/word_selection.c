@@ -72,7 +72,10 @@ bool process_select_word(uint16_t keycode, keyrecord_t *record) {
     case KC_UP:
     case C(KC_LEFT):
     case C(KC_RGHT):
+    case KC_HOME:
+    case KC_END:
         add_weak_mods(MOD_BIT_LSHIFT);
+    case NAVWORD:
         return true;
   }
 

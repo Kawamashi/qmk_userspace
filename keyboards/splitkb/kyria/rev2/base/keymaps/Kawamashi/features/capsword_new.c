@@ -1,7 +1,9 @@
 #include "capsword.h"
 
+modword_state_t modword_state = idle;
+
 static bool caps_word_active = false;
-static bool caps_list_active = false;
+//static bool caps_list_active = false;
 
 static signed char capslist_countdown = 1;
 static unsigned char countdown_end = 6;
@@ -9,22 +11,18 @@ static unsigned char countdown_end = 6;
 static uint16_t idle_timer = 0;
 
 
-void caps_word_task(void) {
-  if (timer_expired(timer_read(), idle_timer)) {
-    if (caps_list_active) {
-        caps_list_off();
-    } else if (caps_word_active) {
-        caps_word_off();
-    }
+void modword_task(void) {
+  if (modword_state != idle) {
+    if (timer_expired(timer_read(), idle_timer)) { disable_modword(modword_state); }
   }
 }
 
-bool is_caps_lock_on(void) { return host_keyboard_led_state().caps_lock; }
-bool is_caps_word_on(void) { return caps_word_active; }
-bool is_caps_list_on(void) { return caps_list_active; }
+uint8_t get_modword(void) {
+  return (modword_state);
+}
 
 void caps_word_on(void) {
-  if (caps_word_active) { return; }
+  //if (caps_word_active) { return; }
 
   clear_mods();
   clear_oneshot_mods();
@@ -33,64 +31,67 @@ void caps_word_on(void) {
   caps_word_active = true;
 }
 
-void caps_list_on(void) {
-  if (caps_list_active) { return; }
-
-  idle_timer = timer_read() + CAPS_WORD_IDLE_TIMEOUT;
-  caps_list_active = true;
-  capslist_countdown = 1;
-  countdown_end = 6;
-}
-
 void caps_word_off(void) {
-  if (!caps_word_active) { return; }
+  //if (!caps_word_active) { return; }
 
   unregister_weak_mods(MOD_BIT(KC_LSFT));  // Make sure weak shift is off.
   caps_word_active = false;
 }
 
-void caps_list_off(void) {
-  if (!caps_list_active) { return; }
-    
-  caps_word_off();
-  caps_list_active = false;
-}
 
-void caps_lock_off(void) {
-  if (is_caps_lock_on()) { tap_code(KC_CAPS); }
-}
 
-void caps_word_toggle(void) {
-  if (caps_list_active) {
-      caps_list_active = false;
-      caps_word_on();
 
-  } else if (caps_word_active) {
-      caps_word_off();
+void enable_modword(modword_state_t modword) {
+  if (modword_state != idle) { disable_modword(modword_state); }   // Only one modword can be active at a time
+  switch (modword) {
 
-  } else {
-      // Deactivating Caps Lock and Caps List when Caps Word activates.
-      caps_lock_off();
-      caps_word_on();
+    case capslist:
+        capslist_countdown = 1;
+        countdown_end = 6;
+    case capsword:
+        clear_oneshot();
+        //clear_mods();
+        //clear_oneshot_mods();
+        caps_word_active = true;
+        break;
+
+    case capslock:
+        tap_code(KC_CAPS);
+        break;
   }
+  modword_state = modword;
+  idle_timer = timer_read() + CAPS_WORD_IDLE_TIMEOUT;
+}
+  
+void disable_modword(modword_state_t modword) {
+  switch (modword) {
+    case capslist:
+    case capsword:
+        unregister_weak_mods(MOD_BIT(KC_LSFT));  // Make sure weak shift is off.
+        caps_word_active = false;
+        break;
+
+    case capslock:
+        //if (is_caps_lock_on()) { tap_code(KC_CAPS); }
+        tap_code(KC_CAPS);
+  }
+  modword_state = idle;
 }
 
-void caps_list_toggle(void) {
-  if (caps_list_active) {
-      caps_list_off();
-  } else {
-      caps_lock_off();
-      caps_list_on();
-      caps_word_on();
+bool toggle_modword(modword_state_t modword_target, keyrecord_t* record) {
+  if (record->event.pressed) {
+    if (modword_state != modword_target) {
+        // Activate layerword layer
+        enable_modword(modword_target);
+    } else {
+        // Press again an layerword key to exit the layerword layer
+        disable_modword(modword_target);
+    }
+    return false;
   }
+  return true;
 }
 
-void caps_lock_toggle(void) {
-  if (!is_caps_lock_on()) {
-      caps_word_off();
-      caps_list_off();
-  }
-}
 
 bool update_capslist_countdown(signed char i) {
   capslist_countdown = capslist_countdown + i;
@@ -106,30 +107,21 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
 }
 
 
-bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
+bool process_modword(uint16_t keycode, keyrecord_t* record) {
 
   switch (keycode) {
     case CAPSWORD:
-        if (record->event.pressed) {
-            caps_word_toggle();
-        }
-        return false;
-    
+        return toggle_modword(capsword, record);
+
     case CAPSLIST:
-        if (record->event.pressed) {
-            caps_list_toggle();
-        }
-        return false;
+        return toggle_modword(capslist, record);
 
     case KC_CAPS:
-        if (record->event.pressed) {
-            caps_lock_toggle();
-        }
-        return true;
+        return toggle_modword(capslock record);
   }
 
 
-  if (!caps_word_active && !caps_list_active) { return true; }
+  if (modword_state == idle || modword_state == capslock) { return true; }
 
   // Caps word or caps list is active //
 
@@ -141,7 +133,7 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
   const uint8_t mods = get_mods() | get_oneshot_mods();
   if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
     // Avoid interfering with ctrl, alt and gui.
-    caps_word_off();
+    disable_modword(modword_state);
     return true;
   }
   
@@ -163,7 +155,7 @@ bool process_caps_word(uint16_t keycode, keyrecord_t* record) {
   idle_timer = record->event.time + CAPS_WORD_IDLE_TIMEOUT;
 
   if (caps_word_active) { update_caps_word(keycode, record); }
-  if (caps_list_active && !caps_word_active) { reactivate_caps_word(keycode, record); }     // Do not merge into a single 'if' block !
+  if (modword_state == capslist && !caps_word_active) { reactivate_caps_word(keycode, record); }     // Do not merge into a single 'if' block !
 
   return true;
 }
@@ -179,8 +171,8 @@ void update_caps_word(uint16_t keycode, keyrecord_t* record) {
       send_keyboard_report();
       return;
   }
-
   caps_word_off();
+  if (modword_state == capsword) { modword_state = idle; }
 }
 
 void reactivate_caps_word(uint16_t keycode, keyrecord_t* record) {
@@ -194,5 +186,5 @@ void reactivate_caps_word(uint16_t keycode, keyrecord_t* record) {
       }
       if (capslist_countdown < countdown_end) { return; }
   }
-  caps_list_off();
+  disable_modword(capslist);
 }

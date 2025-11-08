@@ -48,7 +48,7 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
         return process_custom_tap_hold(LWIN(KC_DOWN), record);
 
       case SFT_T(COPY):
-        enable_layerword(_SHORTNAV);
+        //enable_layerword(_SHORTNAV);
         return process_custom_tap_hold(C(PG_C), record);
 
       case LT_NBSPC:
@@ -87,36 +87,40 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   // Handles custom keycodes to be processed for Clever Keys
 
   if (is_send_string_macro(keycode)) { return keycode; }
-    switch (get_highest_layer(layer_state)) {
+  switch (get_highest_layer(layer_state)) {
 
-      case _ODK:
-        switch (keycode) {
-          case PG_K:
-          case PG_B:
-          case PG_H:
-          //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
-            return keycode;
+    case _ODK:
+      switch (keycode) {
+        case PG_K:
+        case PG_B:
+        case PG_H:
+        case PG_Z:
+        //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
+          return keycode;
 
-          case PG_POIN:
-            return PG_3PTS;
-          case PG_E:
-            return E_GRV;
-          case PG_O:
-            return E_CIRC;
+        case PG_POIN:
+          return PG_3PTS;
+/*           case E_GRV:
+          return E_GRV; */
+        case PG_O:
+          return E_CIRC;
 
-          default:
-            if (is_letter(keycode)) { return L_ODK; }
-            return ODK;
-        }
-      
-      // There are no symbols on _SHORTNAV or _FUNCAPPS
-      case _SHORTNAV:
-      case _FUNCAPPS:
-        clear_recent_keys();
-        return KC_NO;
-    }
+        default:
+          if (is_letter(keycode)) { return L_ODK; }
+          return ODK;
+      }
+    
+    // There are no symbols on _SHORTNAV or _FUNCAPPS
+    case _SHORTNAV:
+    case _FUNCAPPS:
+      clear_recent_keys();
+      return KC_NO;
+  }
 
-  if (keycode == PG_E) { return PG_E; }   // because PG_E is not a basic keycode
+  switch (keycode) {
+    case PG_E:    // because PG_E is not a basic keycode
+      return keycode;
+  }
 
   if (!IS_KEYEVENT(record->event)) {
     switch (keycode) {

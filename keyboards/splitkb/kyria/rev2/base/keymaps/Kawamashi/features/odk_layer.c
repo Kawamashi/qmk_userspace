@@ -44,6 +44,7 @@ bool process_odk_layer(uint16_t keycode, keyrecord_t *record) {
         case PG_K:
         case PG_B:
         case PG_H:
+        case PG_Z:
         case PG_APOS:
         case OU_GRV:
         //case KC_SPC:    // When space is added by Clever Keys

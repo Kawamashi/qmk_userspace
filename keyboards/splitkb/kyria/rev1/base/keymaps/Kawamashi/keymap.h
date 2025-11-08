@@ -54,7 +54,7 @@ enum custom_keycodes {
   OS4A,
   OU_GRV,
   N_TILD,
-  E_GRV,
+  PG_AE,
   E_CIRC,
   MAGIC,
   OS_SHFT,

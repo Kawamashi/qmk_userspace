@@ -25,11 +25,10 @@ COMBO_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
 
 SRC += features/tap_hold_utilities.c
-SRC += features/os4a.c
 SRC += oled.c
 SRC += features/clever_keys_utilities.c
 SRC += clever_keys.c
-SRC += features/numword.c
+SRC += features/layerword.c
 SRC += features/capsword.c
 SRC += features/word_selection.c
 SRC += features/oneshot.c

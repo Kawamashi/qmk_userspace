@@ -3,20 +3,38 @@
 #include "quantum.h"
 #include "keymap.h"
 
+// Represents the five states a one-shot key can be in
+typedef enum {
+    idle,
+    capsword,
+    capslist,
+    capslock,
+    selectword
+} modword_state_t;
 
+uint8_t get_modword(void);
+
+bool is_caps_lock_on(void);
 bool is_caps_list_on(void);
 
 void caps_list_on(void);
 void caps_list_off(void);
 void caps_list_toggle(void);
 
+void caps_lock_off(void);
+void caps_lock_toggle(void);
+
 bool update_capslist_countdown(signed char i);
 bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_countdown_end);
 
-bool process_caps_list(uint16_t keycode, keyrecord_t *record);
+//bool process_caps_list(uint16_t keycode, keyrecord_t *record);
 
-bool should_continue_caps_list(uint16_t keycode);
-bool caps_word_reactivation(void);
+void update_caps_word(uint16_t keycode, keyrecord_t* record);
+void reactivate_caps_word(uint16_t keycode, keyrecord_t* record);
+
+bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record);
+bool list_separator(void);
+//bool caps_word_reactivation(void);
 
 
 // Copyright 2021-2025 Google LLC
@@ -184,7 +202,7 @@ void caps_word_set_user(bool active);
  * @note Outside of this callback, you can use `caps_word_off()` to deactivate
  * Caps Word.
  */
-bool caps_word_press_user(uint16_t keycode);
+bool caps_word_press_user(uint16_t keycode, keyrecord_t* record);
 
 // Deprecated APIs.
 

@@ -25,7 +25,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
   uint16_t prev_keycode = get_recent_keycode(-1);
 
     // Apostrophe
-    if (is_followed_by_apos(*ongoing_keycode, prev_keycode)) {
+    if (is_followed_by_apos(*ongoing_keycode, prev_keycode, record)) {
       set_last_keycode(PG_APOS);
     }
   
@@ -62,6 +62,9 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       switch (*ongoing_keycode) {
         
         // Ajout automatique du "u" après le "q"
+        case E_CIRC:
+          tap_code(PG_U);
+          break;
         case PG_E:
         case PG_I:
         case PG_A:
@@ -108,13 +111,10 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case PG_O:
     case PG_U:
     case PG_Y:
-      switch (*ongoing_keycode) {
-        case PG_H:
+    //case E_GRV:
+      if (*ongoing_keycode == PG_H && IS_LAYER_OFF(_ODK)) {
           update_bkspc_countdown(0);
           return replace_ongoing_key(PG_B, ongoing_keycode, record);
-/*         case PG_B:
-          update_bkspc_countdown(0);
-          return replace_ongoing_key(PG_H, ongoing_keycode, record); */
       }
       break;
   }
@@ -141,7 +141,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
         case PG_C:
           // cs SFB
-          return replace_ongoing_key(PG_S, ongoing_keycode, record);
+          return replace_ongoing_key(PG_K, ongoing_keycode, record);
 
         case PG_N:
           // n. SFB
@@ -157,24 +157,20 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
         case PG_Q:
           // qué scissor
-          //return finish_word((uint16_t[]) {PG_U, PG_EACU}, 2, ongoing_keycode, record);
           process_key(PG_U,record);
           return replace_ongoing_key(PG_EACU, ongoing_keycode, record);
 
         case PG_Y:
           // you bad redirection
-          //return finish_word((uint16_t[]) {PG_O, PG_U}, 2, ongoing_keycode, record);
           process_key(PG_O,record);
           return replace_ongoing_key(PG_U, ongoing_keycode, record);
 
         case PG_T:
           // "the"
-          //return finish_word((uint16_t[]) {PG_H, PG_E}, 2, ongoing_keycode, record);
           process_key(PG_H,record);
           return replace_ongoing_key(PG_E, ongoing_keycode, record);
 
         case PG_I:
-          //return finish_word((uint16_t[]) {PG_O, PG_N}, 2, ongoing_keycode, record);
           process_key(PG_O,record);
           return replace_ongoing_key(PG_N, ongoing_keycode, record);
 
@@ -197,7 +193,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         
         default:
           // "à"
-          process_key(PG_ODK, record);
+          tap_code(PG_ODK);
           return replace_ongoing_key(PG_A, ongoing_keycode, record);
       }
 
@@ -226,37 +222,54 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       }
       break;
 
-/*     case PG_H:
-      switch (prev_keycode) {
-        case PG_M:
-        case PG_R:
-        case PG_A:
-        case PG_E:
-        case PG_EACU:
-        case PG_I:
-        case PG_O:
-        case PG_U:
-        case PG_Y:
-          update_bkspc_countdown(0);
-          return replace_ongoing_key(PG_B, ongoing_keycode, record);
-      } */
-/*       if (prev_keycode == PG_M) {
-        // "mh" -> "mb"
-        update_bkspc_countdown(0);
-        return replace_ongoing_key(PG_B, ongoing_keycode, record);
-      } else if (prev_keycode == PG_I) {
-        // "ih" -> "ique"
-        return finish_word((uint16_t[]) {PG_Q, PG_U, PG_E}, 3, ongoing_keycode, record);
-      } */
+    case PG_Z:
+      if (is_letter(prev_keycode)) {
+        switch (prev_keycode) {
+          case PG_A:
+          case PG_E:
+          case PG_O:
+          case PG_U:
+            if (IS_LAYER_ON(_ODK)) {
+              process_key(PG_ODK, record);
+              return replace_ongoing_key(PG_E, ongoing_keycode, record);
+            }
+            break;
+          
+          default:
+            if (IS_LAYER_ON(_ODK)) { break; }
+            process_key(PG_ODK, record);
+            return replace_ongoing_key(PG_E, ongoing_keycode, record);
+        }
+      }
+      if (IS_LAYER_ON(_ODK)) {
+        process_key(PG_ODK, record);
+        return replace_ongoing_key(PG_E, ongoing_keycode, record);
+      }
       break;
+
+/*     case PG_N:
+      if (prev_keycode == PG_L) {
+        // "ln" -> "lè"
+        update_bkspc_countdown(0);
+        tap_code(PG_ODK);
+        return replace_ongoing_key(PG_E, ongoing_keycode, record);
+      }
+      break; */
 
     case OU_GRV:
       layer_off(_ODK);
       return finish_word((uint16_t[]) {PG_O, PG_ODK, PG_N}, 3, ongoing_keycode, record);
       //return replace_ongoing_key(prev_keycode, ongoing_keycode, record);
 
+/*     case E_GRV:
+      process_key(PG_ODK, record);
+      return replace_ongoing_key(PG_E, ongoing_keycode, record); */
+
     case N_TILD:
       return replace_ongoing_key(PG_H, ongoing_keycode, record);
+    
+    case PG_AE:
+      return replace_ongoing_key(PG_Z, ongoing_keycode, record);
 
     case PG_APOS:
       if (replace_apos()) { return replace_ongoing_key(PG_APOD, ongoing_keycode, record); }

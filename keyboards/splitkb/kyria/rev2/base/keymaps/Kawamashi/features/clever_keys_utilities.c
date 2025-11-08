@@ -178,7 +178,7 @@ void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_k
 }
 
 
-bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
+void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
 
   if (record->event.pressed) {
     uint16_t ongoing_keycode = get_ongoing_keycode(keycode, record);
@@ -191,23 +191,21 @@ bool process_clever_keys(uint16_t keycode, keyrecord_t* record) {
       // IS_KEYEVENT prevents combos from updating last_keypress_timer, to allow combos to be chained.
       if (IS_KEYEVENT(record->event)) { last_keypress_timer = timer_read(); }
     }
-    //return true; // If no clever key was found, process keycode normally.
-    
-/*   } else if (processingCK) {
+
+  } else if (processingCK) {
     processingCK = false;
-    record->keycode = recent[RECENT_SIZE - 1]; */
+    record->keycode = recent[RECENT_SIZE - 1];
   }
-  return true;
 }
 
 bool enough_time_before_combo(void) {
   return timer_elapsed(last_keypress_timer) > TAP_INTERVAL;
 }
 
-void end_CK(keyrecord_t* record) {
+/* void end_CK(keyrecord_t* record) {
   if (processingCK) {
     processingCK = false;
     record->event.pressed = false;
     process_record(record); 
   }
-}
+} */

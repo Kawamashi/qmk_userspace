@@ -31,7 +31,6 @@ enum combos {
   ESC, 
   HELP, 
   PANIC,
-  //NUMWRD,
   ALTTAB,
   ALTESC,
   L_SPACE
@@ -47,9 +46,7 @@ const uint16_t PROGMEM esc_combo[] = {PG_N, PG_A, COMBO_END};
 const uint16_t PROGMEM bkspc_combo_g[] = {PG_A, PG_I, COMBO_END};
 const uint16_t PROGMEM home_combo[] = {PG_Z, PG_Y, COMBO_END};
 const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
-//const uint16_t PROGMEM help_combo[] = {PG_EACU, PG_J, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
-//const uint16_t PROGMEM numword_combo[] = {PG_T, PG_R, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
 const uint16_t PROGMEM altesc_combo[] = {PG_A, PG_I, PG_N, COMBO_END};
 const uint16_t PROGMEM space_combo[] = {PG_Z, PG_H, COMBO_END};
@@ -65,9 +62,7 @@ combo_t key_combos[] = {
     [ENTER] = COMBO(enter_combo, KC_ENT),
     [TAB] = COMBO(tab_combo, KC_TAB),
     [ESC] = COMBO(esc_combo, KC_ESC),
-    //[HELP] = COMBO(help_combo, AIDE_MEM), 
     [PANIC] = COMBO(panic_combo, KC_NO),
-    //[NUMWRD] = COMBO(numword_combo, NUMWORD),
     [ALTTAB] = COMBO(alttab_combo, KC_NO),
     [ALTESC] = COMBO(altesc_combo, LALT(KC_ESC)),
     [L_SPACE] = COMBO(space_combo, KC_SPC)
@@ -75,10 +70,11 @@ combo_t key_combos[] = {
 
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+
     // Chorded mods shouldn't be considered as combos.
-    if (get_os4a_layer()) {
-      return (get_os4a_layer() == _R_MODS) == on_left_hand(record->event.key);
-    }
+    if (IS_LAYER_ON(_R_MODS)) { return on_left_hand(record->event.key); }
+    if (IS_LAYER_ON(_L_MODS)) { return !on_left_hand(record->event.key); }
+
     // Some combos shouldn't be affected by last_keypress_timer.
     switch (combo_index) {
         case R_BKSPC:
@@ -107,15 +103,18 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             unregister_mods(MOD_LALT);
         }
         break;
+
       case PANIC:
         if (pressed) {
-          caps_lock_off();
           if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
-
+          
+          if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
           layer_clear();
-          clear_mods();
+          if (is_select_word()) { end_select_word(); }
+          clear_oneshot();
           //clear_oneshot_mods();
           //clear_weak_mods();
+          caps_lock_off();
           caps_word_off();
           //disable_num_word();
           clear_recent_keys();

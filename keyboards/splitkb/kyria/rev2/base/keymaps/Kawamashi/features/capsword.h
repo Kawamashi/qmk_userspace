@@ -3,6 +3,17 @@
 #include "quantum.h"
 #include "keymap.h"
 
+// Represents the five states a one-shot key can be in
+typedef enum {
+    idle,
+    capsword,
+    capslist,
+    capslock,
+    selectword
+} modword_state_t;
+
+uint8_t get_modword(void);
+
 bool is_caps_lock_on(void);
 bool is_caps_list_on(void);
 
