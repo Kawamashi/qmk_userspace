@@ -1,9 +1,8 @@
-#include "capsword.h"
+#include "modword.h"
 
 modword_state_t modword_state = idle;
 
 static bool caps_word_active = false;
-//static bool caps_list_active = false;
 
 static signed char capslist_countdown = 1;
 static unsigned char countdown_end = 6;
@@ -22,41 +21,46 @@ uint8_t get_modword(void) {
 }
 
 void caps_word_on(void) {
-  //if (caps_word_active) { return; }
+  clear_oneshot();
+/*   clear_mods();
+  clear_oneshot_mods(); */
 
-  clear_mods();
-  clear_oneshot_mods();
-
-  idle_timer = timer_read() + CAPS_WORD_IDLE_TIMEOUT;
   caps_word_active = true;
 }
 
 void caps_word_off(void) {
-  //if (!caps_word_active) { return; }
-
   unregister_weak_mods(MOD_BIT(KC_LSFT));  // Make sure weak shift is off.
   caps_word_active = false;
 }
 
 
-
-
-void enable_modword(modword_state_t modword) {
+void enable_modword(modword_state_t modword, uint16_t keycode) {
   if (modword_state != idle) { disable_modword(modword_state); }   // Only one modword can be active at a time
-  switch (modword) {
+  switch (keycode) {
 
-    case capslist:
+    case CAPSLIST:
         capslist_countdown = 1;
         countdown_end = 6;
-    case capsword:
-        clear_oneshot();
-        //clear_mods();
-        //clear_oneshot_mods();
-        caps_word_active = true;
+    case CAPSWORD:
+        caps_word_on();
         break;
 
-    case capslock:
+    case CAPSLOCK:
         tap_code(KC_CAPS);
+        break;
+
+    case SEL_WORD:
+        tap_code16(C(KC_RIGHT));
+        tap_code16(C(KC_LEFT));
+        tap_code16(RCS(KC_RIGHT));
+        break;
+
+    case SEL_LINE:
+        tap_code(KC_HOME);
+        tap_code16(S(KC_END));
+        break;
+
+    default:
         break;
   }
   modword_state = modword;
@@ -67,22 +71,28 @@ void disable_modword(modword_state_t modword) {
   switch (modword) {
     case capslist:
     case capsword:
-        unregister_weak_mods(MOD_BIT(KC_LSFT));  // Make sure weak shift is off.
-        caps_word_active = false;
+        caps_word_off();
         break;
 
     case capslock:
-        //if (is_caps_lock_on()) { tap_code(KC_CAPS); }
         tap_code(KC_CAPS);
+        break;
+
+    case selectword:
+        clear_weak_mods();
+        break;
+
+    default:
+        break;
   }
   modword_state = idle;
 }
 
-bool toggle_modword(modword_state_t modword_target, keyrecord_t* record) {
+bool toggle_modword(modword_state_t modword_target, uint16_t keycode, keyrecord_t* record) {
   if (record->event.pressed) {
     if (modword_state != modword_target) {
         // Activate layerword layer
-        enable_modword(modword_target);
+        enable_modword(modword_target, keycode);
     } else {
         // Press again an layerword key to exit the layerword layer
         disable_modword(modword_target);
@@ -111,21 +121,37 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
 
   switch (keycode) {
     case CAPSWORD:
-        return toggle_modword(capsword, record);
+        return toggle_modword(capsword, keycode, record);
 
     case CAPSLIST:
-        return toggle_modword(capslist, record);
+        return toggle_modword(capslist, keycode, record);
 
-    case KC_CAPS:
-        return toggle_modword(capslock record);
+    case CAPSLOCK:
+        return toggle_modword(capslock, keycode, record);
+
+    case SEL_WORD:
+        return toggle_modword(selectword, keycode, record);
+    
+    case SEL_LINE:
+        return toggle_modword(selectword, keycode, record);
   }
 
 
-  if (modword_state == idle || modword_state == capslock) { return true; }
+  if (modword_state == idle) { return true; }
+
+  if (modword_state == capslock) { 
+    idle_timer = record->event.time + CAPS_WORD_IDLE_TIMEOUT;
+    return true;
+  }
 
   // Caps word or caps list is active //
 
-  if (caps_word_active) { clear_weak_mods(); }
+  if (caps_word_active || modword_state == selectword) { clear_weak_mods(); }
+
+  if (modword_state == selectword) {
+    if (IS_LAYER_OFF(_SHORTNAV)) { disable_modword(selectword); }
+  }
+  
 
   // No action on keyrelease
   if (!record->event.pressed) { return true; }
@@ -156,13 +182,14 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
 
   if (caps_word_active) { update_caps_word(keycode, record); }
   if (modword_state == capslist && !caps_word_active) { reactivate_caps_word(keycode, record); }     // Do not merge into a single 'if' block !
+  if (modword_state == selectword) { word_selection_press_user(keycode); }
 
   return true;
 }
 
 void update_caps_word(uint16_t keycode, keyrecord_t* record) {
 
-  if (caps_word_press_user(keycode, record)) {
+  if (caps_word_press_user(keycode)) {
       // Invert on shift
       if (get_oneshot_mods() & MOD_MASK_SHIFT) {
         set_weak_mods(get_weak_mods() ^ MOD_BIT(KC_LSFT));

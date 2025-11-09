@@ -104,7 +104,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* r
 
 // Caps Word
 
-bool caps_word_press_user(uint16_t keycode, keyrecord_t* record) {
+bool caps_word_press_user(uint16_t keycode) {
 
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {  
@@ -129,8 +129,6 @@ bool caps_word_press_user(uint16_t keycode, keyrecord_t* record) {
     case PG_TIRE:
     case PG_SLSH:
     case KC_1 ... KC_0:
-    //case KC_LEFT:
-    //case KC_RIGHT:
     case KC_BSPC:
     case LCTL(KC_BSPC):
     case KC_DEL:
@@ -159,7 +157,7 @@ bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record) {
 
     // This condition can't be merged with the previous one
     // because caps_word_press_user adds shift to letters and send-string macros.
-    if (caps_word_press_user(keycode, record)) { return update_capslist_countdown(1); }
+    if (caps_word_press_user(keycode)) { return update_capslist_countdown(1); }
 
     return false;  // Deactivate Caps List.
 }
@@ -176,6 +174,8 @@ bool list_separator(void) {
 
         if (word_check((uint16_t[]) {KC_SPC, PG_O, PG_U}, 3, 2)) { return true; }
 
+        if (word_check((uint16_t[]) {PG_X, PG_C, PG_G}, 3, 2)) { return true; }
+
 /*         if (get_recent_keycode(-4) == KC_SPC && get_recent_keycode(-3) == PG_E && get_recent_keycode(-2) == PG_T) {
             countdown_end = 2;
             return true;
@@ -187,6 +187,29 @@ bool list_separator(void) {
 
     }
     return false;
+}
+
+void word_selection_press_user(uint16_t keycode) {
+  switch (keycode) {
+    case KC_LEFT:
+    case KC_RIGHT:
+        set_weak_mods(MOD_BIT_LCTRL);
+
+    case KC_DOWN:
+    case KC_UP:
+    case C(KC_LEFT):
+    case C(KC_RGHT):
+    case KC_HOME:
+    case KC_END:
+        add_weak_mods(MOD_BIT_LSHIFT);
+        break;
+
+    case NAVWORD:
+        break;
+
+    default:
+      disable_modword(selectword);
+  }
 }
 
 

@@ -30,6 +30,16 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     case LT_NBSPC:
       return NNB_SPC;
+    case SFT_T(COPY):
+      return C(PG_C);
+      //return COPY;
+    case SFT_T(FEN_G):
+      return LWIN(KC_LEFT);
+    case RCTL_T(FEN_B):
+      return LWIN(KC_DOWN);
+    case LT_REPT:
+    case LT_MGC:
+      return REPMAG;
     default:
       return keycode &= 0xff;
   }
@@ -41,6 +51,12 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {
     // Special tap-hold keys (on tap).
     switch (keycode) {
+/*       case SFT_T(FEN_G):
+      case RCTL_T(FEN_B):
+      case SFT_T(COPY):
+      case LT_NBSPC:
+        return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
+
       case SFT_T(FEN_G):
         return process_custom_tap_hold(LWIN(KC_LEFT), record);
 
@@ -100,8 +116,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 
         case PG_POIN:
           return PG_3PTS;
-/*           case E_GRV:
-          return E_GRV; */
         case PG_O:
           return E_CIRC;
 
@@ -120,6 +134,8 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
     case PG_E:    // because PG_E is not a basic keycode
       return keycode;
+    case REPMAG:  // Repeat and Magic keys should not be processed straight away
+      return KC_NO;
   }
 
   if (!IS_KEYEVENT(record->event)) {

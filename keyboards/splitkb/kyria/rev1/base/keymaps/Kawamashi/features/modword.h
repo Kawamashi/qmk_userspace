@@ -12,17 +12,12 @@ typedef enum {
     selectword
 } modword_state_t;
 
+void modword_task(void);
 uint8_t get_modword(void);
 
-bool is_caps_lock_on(void);
-bool is_caps_list_on(void);
-
-void caps_list_on(void);
-void caps_list_off(void);
-void caps_list_toggle(void);
-
-void caps_lock_off(void);
-void caps_lock_toggle(void);
+void enable_modword(modword_state_t modword, uint16_t keycode);
+void disable_modword(modword_state_t modword);
+bool toggle_modword(modword_state_t modword_target, uint16_t keycode, keyrecord_t* record);
 
 bool update_capslist_countdown(signed char i);
 bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_countdown_end);
@@ -31,9 +26,12 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
 
 void update_caps_word(uint16_t keycode, keyrecord_t* record);
 void reactivate_caps_word(uint16_t keycode, keyrecord_t* record);
+void word_selection_press_user(uint16_t keycode);
 
 bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record);
 bool list_separator(void);
+
+bool process_modword(uint16_t keycode, keyrecord_t* record);
 //bool caps_word_reactivation(void);
 
 
@@ -109,7 +107,7 @@ bool list_separator(void);
  *
  * Call this function from `process_record_user()` to implement Caps Word.
  */
-bool process_caps_word(uint16_t keycode, keyrecord_t* record);
+//bool process_caps_word(uint16_t keycode, keyrecord_t* record);
 
 // If CAPS_WORD_IDLE_TIMEOUT is set, call `caps_word_task()` from
 // `housekeeping_task_user()` as described above.
@@ -146,10 +144,10 @@ void caps_word_on(void);
 void caps_word_off(void);
 
 /** Toggles Caps Word. */
-void caps_word_toggle(void);
+//void caps_word_toggle(void);
 
 /** Returns true if Caps Word is currently on. */
-bool is_caps_word_on(void);
+//bool is_caps_word_on(void);
 
 /**
  * Optional callback that gets called when Caps Word turns on or off.
@@ -202,21 +200,21 @@ void caps_word_set_user(bool active);
  * @note Outside of this callback, you can use `caps_word_off()` to deactivate
  * Caps Word.
  */
-bool caps_word_press_user(uint16_t keycode, keyrecord_t* record);
+bool caps_word_press_user(uint16_t keycode);
 
 // Deprecated APIs.
 
 /** @deprecated Use `caps_word_on()` and `caps_word_off()` instead. */
-static inline void caps_word_set(bool active) {
+/* static inline void caps_word_set(bool active) {
   if (active) {
     caps_word_on();
   } else {
     caps_word_off();
   }
-}
+} */
 
 /** @deprecated Use `is_caps_word_on()` instead. */
-static inline bool caps_word_get(void) { return is_caps_word_on(); }
+//static inline bool caps_word_get(void) { return is_caps_word_on(); }
 
 #ifdef __cplusplus
 }

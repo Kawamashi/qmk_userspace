@@ -24,8 +24,8 @@
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
 #include "features/layerword.h"
-#include "features/capsword.h"
-#include "features/word_selection.h"
+#include "features/modword.h"
+//#include "features/word_selection.h"
 #include "features/oneshot.h"
 #include "features/odk_layer.h"
 
@@ -48,10 +48,14 @@ enum custom_keycodes {
   FUNWORD,
   CAPSWORD,
   CAPSLIST,
+  CAPSLOCK,
+  SEL_WORD,
+  SEL_LINE,
   FEN_G,
   FEN_B,
   COPY,
   OS4A,
+  REPMAG,
   OU_GRV,
   N_TILD,
   PG_AE,
@@ -65,16 +69,14 @@ enum custom_keycodes {
   ODK,
   CNL_ODK,
   TG_APOS,
-  PG_DEG,
-  SEL_WORD,
-  SEL_LINE
+  PG_DEG
 };
 
   // Layer changers
 #define LT_SPC LT(_SYMBOLS, KC_SPC)
 #define LT_E LT(_SYMBOLS, PG_E)
-#define LT_REPT LT(_NUMBERS, KC_1)
-#define LT_MGC LT(_SHORTNAV, KC_1)
+#define LT_REPT LT(_NUMBERS, REPMAG)
+#define LT_MGC LT(_SHORTNAV, REPMAG)
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
 

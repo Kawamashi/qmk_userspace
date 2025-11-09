@@ -24,9 +24,6 @@ static bool continue_layerword = false;
 static uint16_t idle_timer = 0;
 
 void layerword_task(void) {
-/*     if (timer_expired(timer_read(), idle_timer)) {
-        if (layerword_layer != 0) { disable_layerword(layerword_layer); }
-    } */
     if (layerword_layer != 0) {
         if (timer_expired(timer_read(), idle_timer)) { disable_layerword(layerword_layer); }
     }

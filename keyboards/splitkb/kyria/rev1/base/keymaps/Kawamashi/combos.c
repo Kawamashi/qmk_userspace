@@ -110,13 +110,11 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
           
           if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
           layer_clear();
-          if (is_select_word()) { end_select_word(); }
+          //if (is_select_word()) { end_select_word(); }
           clear_oneshot();
           //clear_oneshot_mods();
           //clear_weak_mods();
-          caps_lock_off();
-          caps_word_off();
-          //disable_num_word();
+          if (get_modword() != idle) { disable_modword(get_modword()); }
           clear_recent_keys();
         }
         break;

@@ -61,7 +61,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
 void matrix_scan_user(void) {
   recent_keys_task();
-  caps_word_task();
+  modword_task();
   layerword_task();
   oneshot_task();
 }
@@ -87,12 +87,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }
 
-  // Word selection
-  if (!process_select_word(keycode, record)) { return false; }
-
-  // Macros
-  if (!process_macros(keycode, record)) { return false; }
-
   // Clever keys
   process_clever_keys(keycode, record);
 
@@ -100,7 +94,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_odk_layer(keycode, record)) { return false; }
 
   // Caps Word
-  if (!process_caps_word(keycode, record)) {return false; }
+  if (!process_modword(keycode, record)) {return false; }
+
+  // Macros
+  if (!process_macros(keycode, record)) { return false; }
 
   // Process all other keycodes normally
   return true;
@@ -167,10 +164,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_R_MODS] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                     FUNWORD, OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
-      _______, _______, _______, _______, _______, _______, _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
-                                 _______, _______, KC_CAPS, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
+      _______, _______, _______, _______, _______, _______,                                      KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
+      _______, _______, _______, _______, _______, _______,                                      FUNWORD, OS_SHFT, OS_CTRL, NUMWORD, NUM_ODK,  KC_NO,
+      _______, _______, _______, _______, _______, _______,  _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
+                                 _______, _______, CAPSLOCK, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
 
 
@@ -233,7 +230,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ODK] = LAYOUT(
-       _______, _______, PG_AE,    PG_P,   N_TILD,  PG_T,                                        _______, _______, _______, _______, _______, _______,
+       _______, _______, PG_AE,   PG_P,   N_TILD,  PG_T,                                        _______, _______, _______, _______, _______, _______,
        _______, PG_Q,    PG_EACU, PG_U,   PG_O,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
        _______, OU_GRV,  PG_Z,    PG_I,   PG_H,    _______, _______, _______, _______, _______, _______, PG_Y,    _______, PG_AROB, CNL_ODK, _______,
                         _______, _______, _______, PG_D,    PG_A,    PG_APOS, PG_B,    _______, _______, _______

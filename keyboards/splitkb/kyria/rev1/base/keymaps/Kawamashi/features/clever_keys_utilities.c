@@ -54,6 +54,7 @@ void recent_keys_task(void) {
 uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+  if (IS_QK_MODS(keycode)) { mods |= QK_MODS_GET_MODS(keycode); }
 
   if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
     clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
@@ -64,7 +65,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
     // Sticky keys don't type anything on their own.
     case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
     // Ignore MO, TO, TG, TT, and OSL layer switch keys.
-    case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
+    //case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
     case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
 /*     case QK_MOMENTARY ... QK_MOMENTARY_MAX:
     case QK_TO ... QK_TO_MAX:
@@ -102,26 +103,31 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   }
 
 
-  uint8_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
+  uint16_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
 
   switch (basic_keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
 
-      if (mods & MOD_BIT(KC_ALGR)) { return ALGR(keycode); }
+      if (mods & MOD_BIT(KC_ALGR)) { 
+        basic_keycode = ALGR(basic_keycode);
+        keycode = ALGR(keycode);
+      }
 
-      // Handle keys carrying a modifier, for ex on symbols layer
+      // Handle keys with embedded modifier, for ex on symbols layer
       if (basic_keycode != keycode) { return keycode; }
 
       if (is_letter(basic_keycode)) { return keycode; }
+
+      if (mods & MOD_MASK_SHIFT) { return S(keycode); }
       
       // Handle shifted symbols (ex shift + '-' = '!')
       // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
       // left and right handed mods were mixed, they all become right handed.
-      mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
+      //mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
             // Combine right and left hand mods.
-            | (((mods >> 4) | mods) & 0xf);
+/*             | (((mods >> 4) | mods) & 0xf);
       // Combine basic keycode with mods.
-      keycode = (mods << 8) | basic_keycode;
+      keycode = (mods << 8) | basic_keycode; */
       return keycode;
   }
 
