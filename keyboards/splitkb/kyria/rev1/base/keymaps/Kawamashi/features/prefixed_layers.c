@@ -14,32 +14,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "prefixed_layer.h"
+#include "prefixed_layers.h"
 
 bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record) {
 
     if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
-    const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-
-    switch (keycode) {
-        case OS_ODK:
-          // Custom behaviour when alt-gr
-          if (mods & MOD_BIT(KC_ALGR)) {
-              tap_code16(ALGR(PG_ODK));
-              return false;
-          }
-          return true;
-
-        case PG_ODK:
-        case NUM_ODK:
-          return deferred_shift_after_dead_key(keycode, mods);
+    // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
+    if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
+        if (should_add_shift(keycode, record)) {
+            set_oneshot_mods(MOD_BIT(KC_LSFT));
+            if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
+        }
     }
 
-    switch (get_highest_layer(layer_state)) {
-      case _ODK:
+    // Handling keys and layers related to the One Dead Key (ODK)
+    switch (keycode) {
+        case PG_ODK:
+        case NUM_ODK:
+          return deferred_shift_after_dead_key(keycode);
+    }
 
-        // Handling keys on _ODK layer
+    if (IS_LAYER_ON(_ODK)) {
         switch (keycode) {
             case PG_AROB:
             case PG_K:
@@ -53,27 +49,44 @@ bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record) {
               return true;
 
             default:
-              return deferred_shift_after_dead_key(keycode, mods);
+              return deferred_shift_after_dead_key(keycode);
         }
     }
     return true;
 }
 
-bool deferred_shift_after_dead_key(uint16_t keycode, uint8_t mods) {
+
+bool deferred_shift_after_dead_key(uint16_t keycode) {
     // Special behaviour of PG_ODK when shifted
     // Shift must apply to the next keycode
-    bool is_shifted = false;
+    const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 
-    if (mods & MOD_MASK_SHIFT) {
+    if (is_shifted) {
         del_weak_mods(MOD_MASK_SHIFT);
         del_oneshot_mods(MOD_MASK_SHIFT);
         unregister_mods(MOD_MASK_SHIFT);
-        is_shifted = true;
+        //is_shifted = true;
     }
 
     tap_code(PG_ODK);
-
     if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
 
     return keycode != PG_ODK;
+}
+
+
+bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
+
+  // Shift shouldn't be added if other mods are active
+  if (get_mods() | get_oneshot_mods()) { return false; }
+
+  // Combos and encoder events.
+  if (!IS_KEYEVENT(record->event)) { return true; }
+
+  // Specific exceptions
+  if (not_to_be_shifted(keycode)) { return false; }
+
+  // Otherwise, add shift if the key is on the other side of the keyboard.
+  //return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
+  return IS_LAYER_ON(_R_MODS) == on_left_hand(record->event.key);
 }

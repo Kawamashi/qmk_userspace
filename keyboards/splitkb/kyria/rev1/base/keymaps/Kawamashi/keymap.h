@@ -27,7 +27,7 @@
 #include "features/modword.h"
 //#include "features/word_selection.h"
 #include "features/oneshot.h"
-#include "features/odk_layer.h"
+#include "features/prefixed_layers.h"
 
 
 enum layers {
@@ -55,7 +55,6 @@ enum custom_keycodes {
   FEN_B,
   COPY,
   OS4A,
-  REPMAG,
   OU_GRV,
   N_TILD,
   PG_AE,
@@ -75,8 +74,8 @@ enum custom_keycodes {
   // Layer changers
 #define LT_SPC LT(_SYMBOLS, KC_SPC)
 #define LT_E LT(_SYMBOLS, PG_E)
-#define LT_REPT LT(_NUMBERS, REPMAG)
-#define LT_MGC LT(_SHORTNAV, REPMAG)
+#define LT_REPT LT(_NUMBERS, KC_1)
+#define LT_MGC LT(_SHORTNAV, KC_1)
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
 

@@ -198,7 +198,7 @@ void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
       if (IS_KEYEVENT(record->event)) { last_keypress_timer = timer_read(); }
     }
 
-  } else if (processingCK) {
+  } else if (processingCK) {    // On keyrelease
     processingCK = false;
     record->keycode = recent[RECENT_SIZE - 1];
   }

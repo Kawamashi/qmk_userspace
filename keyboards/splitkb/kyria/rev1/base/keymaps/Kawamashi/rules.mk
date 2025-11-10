@@ -34,7 +34,7 @@ SRC += features/modword.c
 SRC += features/oneshot.c
 SRC += features_conf.c
 SRC += word_conf.c
-SRC += features/odk_layer.c
+SRC += features/prefixed_layers.c
 
 INTROSPECTION_KEYMAP_C = combos.c
 

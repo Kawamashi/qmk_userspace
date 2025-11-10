@@ -81,23 +81,26 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
+  // LT Repeat and Magic keys
+  if (!process_macros_I(keycode, record)) { return false; }
+
   // Callum Mods 
   if (!process_oneshot(keycode, record)) { return false; }
 
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }
 
+  // Prefixed layers
+  if (!process_prefixed_layers(keycode, record)) { return false; }
+
   // Clever keys
   process_clever_keys(keycode, record);
-
-  // Custom behaviour of the typo dead-key
-  if (!process_odk_layer(keycode, record)) { return false; }
 
   // Caps Word
   if (!process_modword(keycode, record)) {return false; }
 
-  // Macros
-  if (!process_macros(keycode, record)) { return false; }
+  // Other macros
+  if (!process_macros_II(keycode, record)) { return false; }
 
   // Process all other keycodes normally
   return true;

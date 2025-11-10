@@ -37,16 +37,32 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
       return LWIN(KC_LEFT);
     case RCTL_T(FEN_B):
       return LWIN(KC_DOWN);
-    case LT_REPT:
-    case LT_MGC:
-      return REPMAG;
+
     default:
       return keycode &= 0xff;
   }
 }
 
 
-bool process_macros(uint16_t keycode, keyrecord_t *record) {
+bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
+
+  if (record->tap.count) {
+    // Special tap-hold keys (on tap).
+    switch (keycode) {
+      case LT_REPT:
+        repeat_key_invoke(&record->event);
+        return false;
+
+      case LT_MGC:
+        alt_repeat_key_invoke(&record->event);
+        return false;
+    }
+  }
+  return true; // Process all other keycodes normally
+}
+
+
+bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 
   if (record->tap.count) {
     // Special tap-hold keys (on tap).
@@ -70,13 +86,14 @@ bool process_macros(uint16_t keycode, keyrecord_t *record) {
       case LT_NBSPC:
         return process_custom_tap_hold(NNB_SPC, record);
 
-      case LT_REPT:
-        repeat_key_invoke(&record->event);
-        return false;
-
-      case LT_MGC:
-        alt_repeat_key_invoke(&record->event);
-        return false;
+      case OS_ODK:
+        // Custom behaviour when alt-gr
+        const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+        if (mods & MOD_BIT(KC_ALGR)) {
+            tap_code16(ALGR(PG_ODK));
+            return false;
+        }
+        return true;
     }
   }
 
@@ -134,8 +151,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
     case PG_E:    // because PG_E is not a basic keycode
       return keycode;
-    case REPMAG:  // Repeat and Magic keys should not be processed straight away
-      return KC_NO;
   }
 
   if (!IS_KEYEVENT(record->event)) {

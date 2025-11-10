@@ -13,15 +13,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 
 #pragma once
 
 #include "quantum.h"
 #include "keymap.h"
 
-bool replace_apos(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-uint16_t tap_hold_extractor(uint16_t keycode);
+bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record);
+bool deferred_shift_after_dead_key(uint16_t keycode);
 
-bool process_macros_I(uint16_t keycode, keyrecord_t *record);
-bool process_macros_II(uint16_t keycode, keyrecord_t *record);
+bool should_add_shift(uint16_t keycode, keyrecord_t *record);
+bool not_to_be_shifted(uint16_t keycode);
+
+#ifdef __cplusplus
+}
+#endif

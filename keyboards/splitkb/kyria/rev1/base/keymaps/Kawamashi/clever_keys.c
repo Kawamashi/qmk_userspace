@@ -192,7 +192,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         
         default:
           // "à"
-          tap_code(PG_ODK);
+          process_key(PG_ODK, record);
           return replace_ongoing_key(PG_A, ongoing_keycode, record);
       }
 

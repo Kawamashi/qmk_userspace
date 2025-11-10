@@ -254,7 +254,6 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
         case OS_WIN:
             return true;
         default:
-            if (should_add_shift(keycode, record)) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }
             return false;
       }
 
