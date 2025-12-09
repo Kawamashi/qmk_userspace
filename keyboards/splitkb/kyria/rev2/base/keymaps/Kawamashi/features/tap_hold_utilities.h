@@ -23,10 +23,34 @@
 extern "C" {
 #endif
 
+// Returns true if `pos` on the left hand of the keyboard, false if right.
 bool on_left_hand(keypos_t pos);
 
-bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record);
+/**
+ * Returns true if the args come from keys on opposite hands.
+ *
+ * @param tap_hold_record keyrecord_t from the tap-hold key's event.
+ * @param other_record keyrecord_t from the other key's event.
+ * @return True if the keys are on opposite hands.
+ */
+bool bilateral_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record);
 
+/**
+ * Optional callback to customize which key chords are considered "held".
+ *
+ * This callback is called if while `tap_hold_keycode` is pressed,
+ * `other_keycode` is pressed. Return true if the tap-hold key should be
+ * considered held, or false to consider it tapped.
+ *
+ * @param tap_hold_keycode Keycode of the tap-hold key.
+ * @param tap_hold_record keyrecord_t from the tap-hold press event.
+ * @param other_keycode Keycode of the other key.
+ * @param other_record keyrecord_t from the other key's press event.
+ * @return True if the tap-hold key should be considered held.
+ */
+bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record);
+
+// Handles the tap function of tap-hold keys using non-basic keycodes
 bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
 #ifdef __cplusplus

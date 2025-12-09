@@ -16,10 +16,9 @@
 
 #include "word_conf.h"
 
-
-
 bool is_letter(uint16_t keycode) {
 
+  // Taking ODK layer into account
   if (IS_LAYER_ON(_ODK)) {
     switch (keycode) {
 
@@ -83,10 +82,8 @@ bool is_send_string_macro(uint16_t keycode) {
 }
 
 bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* record) {
+  
   switch (keycode) {
-    case PG_Q:
-      return true;
-      
     case PG_L:
     case PG_T:
     case PG_D:
@@ -96,9 +93,13 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* r
     case PG_M:
     case PG_Y:
     case PG_J:
-      if (!is_letter(prev_keycode)) { return true; }
+      if (is_letter(prev_keycode)) { return false; }
+    case PG_Q:
+      return true;
+
+    default:
+      return false;
   }
-  return false;
 }
 
 
@@ -144,20 +145,20 @@ bool caps_word_press_user(uint16_t keycode) {
 bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record) {
 
     // Keycodes that continue Caps List, but not Caps Word.
-    // These keycodes trigger the countdown to end Caps List.
+    // These keycodes trigger the counter to deactivate Caps List.
     switch (keycode) {
       case KC_BSPC:
-        return update_capslist_countdown(-1);
+        return update_capslist_counter(-1);
       case PG_VIRG:
       case KC_SPC:
-          return update_capslist_countdown(1);
+          return update_capslist_counter(1);
     }
 
-    if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_countdown(1); }
+    if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_counter(1); }
 
     // This condition can't be merged with the previous one
     // because caps_word_press_user adds shift to letters and send-string macros.
-    if (caps_word_press_user(keycode)) { return update_capslist_countdown(1); }
+    if (caps_word_press_user(keycode)) { return update_capslist_counter(1); }
 
     return false;  // Deactivate Caps List.
 }
@@ -175,30 +176,35 @@ bool list_separator(void) {
         if (word_check((uint16_t[]) {KC_SPC, PG_O, PG_U}, 3, 2)) { return true; }
 
         if (word_check((uint16_t[]) {PG_X, PG_C, PG_G}, 3, 2)) { return true; }
-
-/*         if (get_recent_keycode(-4) == KC_SPC && get_recent_keycode(-3) == PG_E && get_recent_keycode(-2) == PG_T) {
-            countdown_end = 2;
-            return true;
-        }
-        if (get_recent_keycode(-4) == KC_SPC && get_recent_keycode(-3) == PG_O && get_recent_keycode(-2) == PG_U) {
-            countdown_end = 2;
-            return true;
-        } */
-
     }
     return false;
 }
 
 void word_selection_press_user(uint16_t keycode) {
+
   switch (keycode) {
     case KC_LEFT:
+    case C(KC_LEFT):
+        select_word(-1);
+        set_weak_mods(MOD_BIT_LCTRL | MOD_BIT_LSHIFT);
+        break;
+
     case KC_RIGHT:
-        set_weak_mods(MOD_BIT_LCTRL);
+    case C(KC_RGHT):
+        select_word(1);
+        set_weak_mods(MOD_BIT_LCTRL | MOD_BIT_LSHIFT);
+        break;
 
     case KC_DOWN:
+        select_line(1);
+        add_weak_mods(MOD_BIT_LSHIFT);
+        break;
+
     case KC_UP:
-    case C(KC_LEFT):
-    case C(KC_RGHT):
+        select_line(-1);
+        add_weak_mods(MOD_BIT_LSHIFT);
+        break;
+
     case KC_HOME:
     case KC_END:
         add_weak_mods(MOD_BIT_LSHIFT);
@@ -309,11 +315,13 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
         case KC_F8:
             return true;
         default:
+            disable_layerword(_FUNCAPPS);
             return false;
       }
   }
   return false;
 }
+
 
 // One-shot 4 all configuration
 

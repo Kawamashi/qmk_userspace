@@ -26,40 +26,37 @@ static keyrecord_t next_record;
 
 // Tap-hold configuration
 
-bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
+bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
   switch (tap_hold_keycode) {
     case LT_REPT:
     case LT_MGC:
-      return false;
+      return true;
   }
 
   // Otherwise, follow the opposite hands rule.
-  return same_side_combination(tap_hold_record, other_record);
+  return bilateral_combination(tap_hold_record, other_record);
 }
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
-    //if (record->event.key.col != next_record.event.key.col) {
-
       // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
       // Fait également gagner pas mal de place sur le FW.
       if (keycode == OS_ODK) { return true; }
+      //if (keycode == OS_ODK) { return false; }
 
-      if (forbidden_chord(keycode, record, next_keycode, &next_record)) {
+      if (!approved_chord(keycode, record, next_keycode, &next_record)) {
           // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
-          //tap_converter(keycode, record);
           record->tap.interrupted = false;
           record->tap.count = 1;
           return true;
       }
-    //}
     return false;
 }
 
 
-// Matrix scan
+// Housekeeping
 
-void matrix_scan_user(void) {
+void housekeeping_task_user(void) {
   recent_keys_task();
   modword_task();
   layerword_task();
@@ -80,18 +77,18 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-
+  
   // LT Repeat and Magic keys
   if (!process_macros_I(keycode, record)) { return false; }
 
-  // Callum Mods 
+  // Callum Mods
   if (!process_oneshot(keycode, record)) { return false; }
 
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }
 
   // Prefixed layers
-  if (!process_prefixed_layers(keycode, record)) { return false; }
+  if (!process_prefixing_layers(keycode, record)) { return false; }
 
   // Clever keys
   process_clever_keys(keycode, record);
@@ -190,10 +187,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NUMBERS] = LAYOUT(
       // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  S(PG_EGAL), PG_EGAL, PG_ASTX, _______, _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_SLSH,    KC_6,    KC_7,    KC_8,    _______,
-       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, KC_9,       PG_DEG,  _______, PG_ODK,  _______,
-                                  _______, _______, KC_PDOT, LT_0   , LT_NBSPC, _______, LT_SPC,  _______, _______,    _______
+       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), PG_ODK,  _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_6,    KC_7,    KC_8,       KC_9,    _______,
+       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
+                                  _______, _______, KC_PDOT, LT_0   , LT_NBSPC, _______, LT_SPC,  _______, _______, _______
      ),
 
 /*
@@ -214,7 +211,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                     PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_J), PG_GRV,  _______,
       _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, PG_2PTS,                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
       _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______, _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
-                                    _______, _______, _______, PG_UNDS, KC_SPC,  _______, _______, _______, _______, _______
+                                    _______, _______, _______, KC_SPC,  _______, _______, _______, _______, _______, _______
     ),
 
 
@@ -233,10 +230,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ODK] = LAYOUT(
-       _______, _______, PG_AE,   PG_P,   N_TILD,  PG_T,                                        _______, _______, _______, _______, _______, _______,
-       _______, PG_Q,    PG_EACU, PG_U,   PG_O,    _______,                                     _______, PG_K,    _______, _______, _______, _______,
-       _______, OU_GRV,  PG_Z,    PG_I,   PG_H,    _______, _______, _______, _______, _______, _______, PG_Y,    _______, PG_AROB, CNL_ODK, _______,
-                        _______, _______, _______, PG_D,    PG_A,    PG_APOS, PG_B,    _______, _______, _______
+       _______, _______, PG_AE,   PG_P,   N_TILD,  PG_T,                                        PG_S,    _______, _______, _______, _______, _______,
+       _______, PG_Q,    PG_EACU, PG_U,   PG_Z,    _______,                                     _______, PG_K,    PG_Y,    _______, _______, _______,
+       _______, OU_GRV,  PG_AROB, PG_I,   PG_H,    _______, _______, _______, _______, _______, _______, PG_B,    _______, PG_D,    CNL_ODK, _______,
+                        _______, _______, _______, PG_O   , PG_A,    PG_APOS, PG_UNDS, _______, _______, _______
      ),
 
 

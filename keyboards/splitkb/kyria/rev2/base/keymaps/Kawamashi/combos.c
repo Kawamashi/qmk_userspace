@@ -75,7 +75,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
     if (IS_LAYER_ON(_R_MODS)) { return on_left_hand(record->event.key); }
     if (IS_LAYER_ON(_L_MODS)) { return !on_left_hand(record->event.key); }
 
-    // Some combos shouldn't be affected by last_keypress_timer.
+    // Some combos should trigger regardless of the idle time.
     switch (combo_index) {
         case R_BKSPC:
         case BK_WORD:
@@ -87,7 +87,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 
         default:
           //return enough_time_before_combo();    // takes more space
-          if (!enough_time_before_combo()) { return false; }
+          if (get_idle_time() < TAP_INTERVAL) { return false; }
     }
     return true;
 }
@@ -99,7 +99,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         if (pressed) {
             register_mods(MOD_LALT);
             tap_code(KC_TAB);
+            layer_on(_SHORTNAV);
         } else {
+            layer_off(_SHORTNAV);
             unregister_mods(MOD_LALT);
         }
         break;
@@ -110,13 +112,11 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
           
           if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
           layer_clear();
-          if (is_select_word()) { end_select_word(); }
+          //if (is_select_word()) { end_select_word(); }
           clear_oneshot();
           //clear_oneshot_mods();
           //clear_weak_mods();
-          caps_lock_off();
-          caps_word_off();
-          //disable_num_word();
+          if (get_modword() != idle) { disable_modword(get_modword()); }
           clear_recent_keys();
         }
         break;

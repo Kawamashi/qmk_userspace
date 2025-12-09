@@ -3,7 +3,7 @@
 #include QMK_KEYBOARD_H
 #include "keymap.h"
 
-// Custom one-shot key entry. The `keycode` field is the keycode as it appears in
+// Custom one-shot key structure. The `keycode` field is the keycode as it appears in
 // your keymap. The `modifier` field must use the KC_* prefix.
 typedef struct {
   uint16_t keycode;
@@ -23,7 +23,7 @@ typedef enum {
     os_down_used,
 } oneshot_state_t;
 
-// Idle timout:
+// Idle timeout:
 // Custom one-shot mods are configured to deactivate if the keyboard is idle
 // for some time. This is useful to prevent unexpected behaviours.
 // In config.h, define `ONESHOT_TIMEOUT` with a time in milliseconds.

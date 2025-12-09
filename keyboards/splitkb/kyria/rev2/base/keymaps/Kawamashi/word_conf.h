@@ -20,6 +20,11 @@
 #include "quantum.h"
 #include "keymap.h"
 
+// Returns whether a keycode is a letter or not
 bool is_letter(uint16_t keycode);
+
+// Returns true for macros used to type sequence of letters
 bool is_send_string_macro(uint16_t keycode);
+
+// Returns true for letters that can be followed by an apostrophe (in french)
 bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* record);

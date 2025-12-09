@@ -17,7 +17,6 @@
 #include "tap_hold_utilities.h"
 
 
-// Returns true if `pos` on the left hand of the keyboard, false if right.
 bool on_left_hand(keypos_t pos) {
 #ifdef SPLIT_KEYBOARD
   return pos.row < MATRIX_ROWS / 2;
@@ -27,15 +26,15 @@ bool on_left_hand(keypos_t pos) {
 #endif
 }
 
-bool same_side_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record) {
-  return on_left_hand(tap_hold_record->event.key) == on_left_hand(other_record->event.key);
+bool bilateral_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record) {
+  return on_left_hand(tap_hold_record->event.key) != on_left_hand(other_record->event.key);
 }
 
 // By default, use the BILATERAL_COMBINATIONS rule to consider the tap-hold key
 // "held" only when it and the other key are on opposite hands.
-__attribute__((weak)) bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
+__attribute__((weak)) bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
                                            uint16_t other_keycode, keyrecord_t* other_record) {
-  return same_side_combination(tap_hold_record, other_record);
+  return bilateral_combination(tap_hold_record, other_record);
 }
 
 

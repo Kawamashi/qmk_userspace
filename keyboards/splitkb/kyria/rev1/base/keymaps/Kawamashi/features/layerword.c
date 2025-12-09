@@ -58,7 +58,7 @@ void toggle_layerword(uint16_t keycode) {
     }
 }
   
-bool process_layerword_keys(uint16_t keycode, keyrecord_t *record) {
+bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
 
     // Normal processing when hold
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
@@ -76,7 +76,7 @@ bool process_layerword_keys(uint16_t keycode, keyrecord_t *record) {
 
 bool process_layerword(uint16_t keycode, keyrecord_t *record) {
     // Handle the custom keycodes that go with this feature
-    if (layerword_layer_from_trigger(keycode)) { return process_layerword_keys(keycode, record); }
+    if (layerword_layer_from_trigger(keycode)) { return process_layerword_triggers(keycode, record); }
 
     // Other than the custom keycodes, nothing else in this feature will activate
     // if the behavior is not on, so allow QMK to handle the event as usual.

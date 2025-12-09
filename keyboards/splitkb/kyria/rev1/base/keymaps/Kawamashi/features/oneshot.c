@@ -5,8 +5,9 @@ oneshot_state_t oneshot_state[OS_COUNT] = { [0 ... OS_COUNT - 1] = os_idle };
 static uint16_t idle_timer = 0;
 
 void oneshot_task(void) {
-  if (timer_expired(timer_read(), idle_timer)) {
+  if (idle_timer && timer_expired(timer_read(), idle_timer)) {
     clear_oneshot();
+    idle_timer = 0;
   }
 }
 
@@ -39,7 +40,7 @@ bool process_oneshot(uint16_t keycode, keyrecord_t *record){
             case os_down_unused:
                 // If we didn't use the mod while trigger was held, queue it.
                 oneshot_state[i] = os_up_queued;
-                idle_timer = record->event.time + ONESHOT_TIMEOUT;
+                idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
                 break;
             case os_down_used:
                 // If we did use the mod while trigger was held, unregister it.
@@ -68,7 +69,7 @@ bool process_oneshot(uint16_t keycode, keyrecord_t *record){
 
     if (should_oneshot_stay_pressed(keycode)) {
         if (record->event.pressed) {
-            idle_timer = record->event.time + ONESHOT_TIMEOUT;
+            idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
         }
         continue;
     }

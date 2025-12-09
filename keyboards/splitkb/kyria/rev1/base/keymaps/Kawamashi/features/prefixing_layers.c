@@ -14,9 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "prefixed_layers.h"
+#include "prefixing_layers.h"
 
-bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record) {
+bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
     if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
@@ -25,6 +25,7 @@ bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record) {
         if (should_add_shift(keycode, record)) {
             set_oneshot_mods(MOD_BIT(KC_LSFT));
             if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
+            disable_layerword(get_layerword_layer());  // To correct a bug producing Capsword when typing OS4A + roll between a letter and apostrophe.
         }
     }
 
@@ -44,6 +45,7 @@ bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_Z:
             case PG_APOS:
             case OU_GRV:
+            case PG_UNDS:
             //case KC_SPC:    // When space is added by Clever Keys
             case CNL_ODK:
               return true;
@@ -58,14 +60,13 @@ bool process_prefixed_layers(uint16_t keycode, keyrecord_t *record) {
 
 bool deferred_shift_after_dead_key(uint16_t keycode) {
     // Special behaviour of PG_ODK when shifted
-    // Shift must apply to the next keycode
+    // Shift must apply to the keycode following PG_ODK.
     const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 
     if (is_shifted) {
         del_weak_mods(MOD_MASK_SHIFT);
         del_oneshot_mods(MOD_MASK_SHIFT);
         unregister_mods(MOD_MASK_SHIFT);
-        //is_shifted = true;
     }
 
     tap_code(PG_ODK);

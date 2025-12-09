@@ -75,7 +75,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
     if (IS_LAYER_ON(_R_MODS)) { return on_left_hand(record->event.key); }
     if (IS_LAYER_ON(_L_MODS)) { return !on_left_hand(record->event.key); }
 
-    // Some combos shouldn't be affected by last_keypress_timer.
+    // Some combos should trigger regardless of the idle time.
     switch (combo_index) {
         case R_BKSPC:
         case BK_WORD:
@@ -87,7 +87,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 
         default:
           //return enough_time_before_combo();    // takes more space
-          if (!enough_time_before_combo()) { return false; }
+          if (get_idle_time() < TAP_INTERVAL) { return false; }
     }
     return true;
 }
@@ -99,7 +99,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         if (pressed) {
             register_mods(MOD_LALT);
             tap_code(KC_TAB);
+            layer_on(_SHORTNAV);
         } else {
+            layer_off(_SHORTNAV);
             unregister_mods(MOD_LALT);
         }
         break;

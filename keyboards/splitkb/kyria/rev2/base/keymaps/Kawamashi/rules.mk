@@ -29,12 +29,11 @@ SRC += oled.c
 SRC += features/clever_keys_utilities.c
 SRC += clever_keys.c
 SRC += features/layerword.c
-SRC += features/capsword.c
-SRC += features/word_selection.c
+SRC += features/modword.c
 SRC += features/oneshot.c
 SRC += features_conf.c
 SRC += word_conf.c
-SRC += features/odk_layer.c
+SRC += features/prefixing_layers.c
 
 INTROSPECTION_KEYMAP_C = combos.c
 

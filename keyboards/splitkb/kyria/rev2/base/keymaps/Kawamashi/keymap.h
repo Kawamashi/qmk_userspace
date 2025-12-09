@@ -24,10 +24,9 @@
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
 #include "features/layerword.h"
-#include "features/capsword.h"
-#include "features/word_selection.h"
+#include "features/modword.h"
 #include "features/oneshot.h"
-#include "features/odk_layer.h"
+#include "features/prefixing_layers.h"
 
 
 enum layers {
@@ -48,6 +47,9 @@ enum custom_keycodes {
   FUNWORD,
   CAPSWORD,
   CAPSLIST,
+  CAPSLOCK,
+  SEL_WORD,
+  SEL_LINE,
   FEN_G,
   FEN_B,
   COPY,
@@ -65,9 +67,7 @@ enum custom_keycodes {
   ODK,
   CNL_ODK,
   TG_APOS,
-  PG_DEG,
-  SEL_WORD,
-  SEL_LINE
+  PG_DEG
 };
 
   // Layer changers
@@ -85,10 +85,9 @@ enum custom_keycodes {
   // Mods
 #define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
+#define MT_6 SFT_T(KC_6)
 #define OS_RSA OSM(MOD_RALT | MOD_LSFT)
 
   // OS4A
 #define L_OS4A LSFT_T(OS4A)
 #define R_OS4A RSFT_T(OS4A)
-
-bool forbidden_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record);

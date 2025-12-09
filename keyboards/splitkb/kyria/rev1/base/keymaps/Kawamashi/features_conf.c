@@ -25,18 +25,17 @@ bool replace_apos(void) {
 
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
-  // This function extracts the base keycode of MT and LT,
-  // even if the tap/hold key is a custom one, with non-basic tap keycode.
   switch (keycode) {
     case LT_NBSPC:
       return NNB_SPC;
     case SFT_T(COPY):
       return C(PG_C);
-      //return COPY;
     case SFT_T(FEN_G):
       return LWIN(KC_LEFT);
     case RCTL_T(FEN_B):
       return LWIN(KC_DOWN);
+/*     case LT_REPT:
+      return get_last_keycode(); */
 
     default:
       return keycode &= 0xff;
@@ -49,6 +48,8 @@ bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {
     // Special tap-hold keys (on tap).
     switch (keycode) {
+/*       case CAPSWORD:
+        if (IS_LAYER_OFF(_L_MODS)) { break; } */
       case LT_REPT:
         repeat_key_invoke(&record->event);
         return false;
@@ -153,6 +154,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
       return keycode;
   }
 
+  // Handles combos
   if (!IS_KEYEVENT(record->event)) {
     switch (keycode) {
       case KC_BSPC:
@@ -181,6 +183,7 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
     case L_OS4A:
     case R_OS4A:
       return true;
+
     default:
       return false;
   }
@@ -227,6 +230,8 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
+  if (get_last_keycode() == KC_NO) { return MAGIC; }
+
   switch (keycode) {
     case C(PG_Z):
       return C(PG_Y);
@@ -234,8 +239,26 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
       return C(PG_Z);
   }
 
-  if (get_recent_keycode(-1) != KC_NO) { return MAGIC; }
+  if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+    return KC_TRNS;
+  }
+
+  keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
+  switch (keycode) {
+    case KC_LEFT:
+    case KC_RIGHT:
+    case KC_DOWN:
+    case KC_UP:
+    case KC_PGUP:
+    case KC_PGDN:
+    case KC_HOME:
+    case KC_END:
+        return KC_TRNS;
+  }
+  return MAGIC;
+
+/*   if (get_recent_keycode(-1) != KC_NO) { return MAGIC; }
   if (get_last_keycode() == KC_NO) { return MAGIC; }
   
-  return KC_TRNS;  // Defer to default definitions.
+  return KC_TRNS;  // Defer to default definitions. */
 }

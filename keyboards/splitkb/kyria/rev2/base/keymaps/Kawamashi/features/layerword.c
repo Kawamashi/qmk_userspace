@@ -24,9 +24,6 @@ static bool continue_layerword = false;
 static uint16_t idle_timer = 0;
 
 void layerword_task(void) {
-/*     if (timer_expired(timer_read(), idle_timer)) {
-        if (layerword_layer != 0) { disable_layerword(layerword_layer); }
-    } */
     if (layerword_layer != 0) {
         if (timer_expired(timer_read(), idle_timer)) { disable_layerword(layerword_layer); }
     }
@@ -61,7 +58,7 @@ void toggle_layerword(uint16_t keycode) {
     }
 }
   
-bool process_layerword_keys(uint16_t keycode, keyrecord_t *record) {
+bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
 
     // Normal processing when hold
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
@@ -79,7 +76,7 @@ bool process_layerword_keys(uint16_t keycode, keyrecord_t *record) {
 
 bool process_layerword(uint16_t keycode, keyrecord_t *record) {
     // Handle the custom keycodes that go with this feature
-    if (layerword_layer_from_trigger(keycode)) { return process_layerword_keys(keycode, record); }
+    if (layerword_layer_from_trigger(keycode)) { return process_layerword_triggers(keycode, record); }
 
     // Other than the custom keycodes, nothing else in this feature will activate
     // if the behavior is not on, so allow QMK to handle the event as usual.
@@ -117,21 +114,6 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
         }
     }
     return true;
-}
-
-bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
-
-  // Shift shouldn't be added if other mods are active
-  if (get_mods() | get_oneshot_mods()) { return false; }
-
-  // Combos and encoder events.
-  if (!IS_KEYEVENT(record->event)) { return true; }
-
-  // Specific exceptions
-  if (not_to_be_shifted(keycode)) { return false; }
-
-  // Otherwise, add shift if the key is on the other side of the keyboard.
-  return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
 }
 
 

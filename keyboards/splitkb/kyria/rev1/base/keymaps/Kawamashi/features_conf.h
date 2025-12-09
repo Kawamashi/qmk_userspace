@@ -19,9 +19,16 @@
 #include "quantum.h"
 #include "keymap.h"
 
+// Returns whether typographic apostrophe is to be replaced by typewritten apostrophe
 bool replace_apos(void);
 
+// This function extracts the base keycode of MT and LT,
+// even if the tap/hold key is a custom one, with non-basic tap keycode.
 uint16_t tap_hold_extractor(uint16_t keycode);
 
+// Macros to be executed at the beginning of process_record_user :
+// Layer-tap Repeat and Magic keys
 bool process_macros_I(uint16_t keycode, keyrecord_t *record);
+
+// Other macros, to be executed at the end of process_record_user
 bool process_macros_II(uint16_t keycode, keyrecord_t *record);

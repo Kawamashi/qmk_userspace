@@ -37,7 +37,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_POIN:
           // uses less space than process_word
           tap_code(KC_BSPC);
-          process_key(SAGR(KC_SPC), record);
+          invoke_key(SAGR(KC_SPC), record);
         case PG_TIRE:
         case PG_VIRG:
           return replace_ongoing_key(S(*ongoing_keycode), ongoing_keycode, record);
@@ -72,6 +72,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_EACU:
         case PG_APOS:
           invoke_key(PG_U, record);
+          update_bkspc_countdown(1);
           set_last_keycode(*ongoing_keycode);
           break;
 
@@ -101,6 +102,21 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           return finish_word((uint16_t[]) {PG_L, PG_U, PG_S}, 3, ongoing_keycode, record);
       }
       break;
+    
+    case PG_C:
+      switch (*ongoing_keycode) {
+        case PG_M:
+          // "cm" -> "ch"
+          update_bkspc_countdown(0);
+          return replace_ongoing_key(PG_H, ongoing_keycode, record);
+
+        case PG_J:
+          // "cj" -> "ck"
+          update_bkspc_countdown(0);
+          return replace_ongoing_key(PG_K, ongoing_keycode, record);
+      }
+      break;
+    
 
     case PG_M:
     case PG_R:
@@ -125,7 +141,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       switch (prev_keycode) {
         case PG_O:
           // oui
-          process_key(PG_U, record);
+          invoke_key(PG_U, record);
         case PG_U:
           // ui SFB
           return replace_ongoing_key(PG_I, ongoing_keycode, record);
@@ -140,7 +156,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
         case PG_C:
           // cs SFB
-          return replace_ongoing_key(PG_K, ongoing_keycode, record);
+          return replace_ongoing_key(PG_S, ongoing_keycode, record);
 
         case PG_N:
           // n. SFB
@@ -156,21 +172,21 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
         case PG_Q:
           // qué scissor
-          process_key(PG_U,record);
+          invoke_key(PG_U,record);
           return replace_ongoing_key(PG_EACU, ongoing_keycode, record);
 
         case PG_Y:
           // you bad redirection
-          process_key(PG_O,record);
+          invoke_key(PG_O,record);
           return replace_ongoing_key(PG_U, ongoing_keycode, record);
 
         case PG_T:
           // "the"
-          process_key(PG_H,record);
+          invoke_key(PG_H,record);
           return replace_ongoing_key(PG_E, ongoing_keycode, record);
 
         case PG_I:
-          process_key(PG_O,record);
+          invoke_key(PG_O,record);
           return replace_ongoing_key(PG_N, ongoing_keycode, record);
 
         case PG_M:
@@ -192,7 +208,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         
         default:
           // "à"
-          process_key(PG_ODK, record);
+          invoke_key(PG_ODK, record);
           return replace_ongoing_key(PG_A, ongoing_keycode, record);
       }
 
@@ -208,35 +224,37 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       }
       break;
 
-    case PG_M:
+/*     case PG_M:
       if (prev_keycode == PG_C) {
         // "cm" -> "ch"
         update_bkspc_countdown(0);
         return replace_ongoing_key(PG_H, ongoing_keycode, record);
       }
+      break; */
+
+    case PG_EACU:
+      if (prev_keycode == PG_E) {
+        // "eé" -> "ez"
+        update_bkspc_countdown(0);
+        return replace_ongoing_key(PG_Z, ongoing_keycode, record);
+      }
       break;
 
     case PG_Z:
-      if (is_letter(prev_keycode)) {
+/*       if (is_letter(prev_keycode)) {
         switch (prev_keycode) {
-          case PG_A:
-          case PG_E:
-          case PG_O:
-          case PG_U:
-            if (IS_LAYER_ON(_ODK)) {
-              process_key(PG_ODK, record);
+          
+          default:
+            if (IS_LAYER_OFF(_ODK)) {
+              invoke_key(PG_ODK, record);
               return replace_ongoing_key(PG_E, ongoing_keycode, record);
             }
             break;
-          
-          default:
-            if (IS_LAYER_ON(_ODK)) { break; }
-            process_key(PG_ODK, record);
-            return replace_ongoing_key(PG_E, ongoing_keycode, record);
         }
-      }
-      if (IS_LAYER_ON(_ODK)) {
-        process_key(PG_ODK, record);
+        break;
+      } */
+      if (IS_LAYER_OFF(_ODK)) {
+        invoke_key(PG_ODK, record);
         return replace_ongoing_key(PG_E, ongoing_keycode, record);
       }
       break;
