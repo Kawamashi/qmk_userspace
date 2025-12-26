@@ -87,11 +87,11 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
       case LT_NBSPC:
         return process_custom_tap_hold(NNB_SPC, record);
 
-      case OS_ODK:
+      case OS_1DK:
         // Custom behaviour when alt-gr
         const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
         if (mods & MOD_BIT(KC_ALGR)) {
-            tap_code16(ALGR(PG_ODK));
+            tap_code16(ALGR(PG_1DK));
             return false;
         }
         return true;
@@ -106,7 +106,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
         return false;
 
       case PG_DEG:
-        tap_code(PG_ODK);
+        tap_code(PG_1DK);
         tap_code(KC_9);
         return false;
     }
@@ -123,7 +123,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   if (is_send_string_macro(keycode)) { return keycode; }
   switch (get_highest_layer(layer_state)) {
 
-    case _ODK:
+    case _1DK:
       switch (keycode) {
         case PG_K:
         case PG_B:
@@ -138,8 +138,8 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
           return E_CIRC;
 
         default:
-          if (is_letter(keycode)) { return L_ODK; }
-          return ODK;
+          if (is_letter(keycode)) { return LETTER_1DK; }
+          return SYMBOL_1DK;
       }
     
     // There are no symbols on _SHORTNAV or _FUNCAPPS
@@ -192,12 +192,12 @@ bool is_oneshot_cancel_key(uint16_t keycode) {
 bool should_oneshot_stay_pressed(uint16_t keycode) {
 
   switch (keycode) {
-    case OS_ODK:
-      // On veut que les one-shot mods soient transmis aux touches de la couche ODK, par ex pour faire Ctrl + K.
-      // Il faut donc que cette fonction appliquée à OS_ODK renvoie true pour la plupart des mods.
-      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_ODK.
-      // Alt-gr doit être relâché après appui sur OS_ODK.
-      // Cette fonction appliquée à OS_ODK ne doit donc renvoyer false que quand Alt-gr est utilisé.
+    case OS_1DK:
+      // On veut que les one-shot mods soient transmis aux touches de la couche 1DK, par ex pour faire Ctrl + K.
+      // Il faut donc que cette fonction appliquée à OS_1DK renvoie true pour la plupart des mods.
+      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_1DK.
+      // Alt-gr doit être relâché après appui sur OS_1DK.
+      // Cette fonction appliquée à OS_1DK ne doit donc renvoyer false que quand Alt-gr est utilisé.
       const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
       if (mods & MOD_BIT(KC_ALGR)) { return false; }
       return true;
@@ -205,7 +205,7 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
     case OS_FA:       // to be combined with Alt
     case FUNWORD:
     case NUMWORD:     // to combine numbers with mods
-    //case NUM_ODK:   // NUM_ODK sends PG_ODK when pressed. When shifted, PG_ODK sends one-shot shift.
+    //case NUM_1DK:   // NUM_1DK sends PG_1DK when pressed. When shifted, PG_1DK sends one-shot shift.
       return true;
 
     default:

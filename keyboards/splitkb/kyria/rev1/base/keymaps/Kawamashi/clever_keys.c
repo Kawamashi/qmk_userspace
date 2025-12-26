@@ -127,7 +127,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case PG_O:
     case PG_U:
     case PG_Y:
-      if (*ongoing_keycode == PG_H && IS_LAYER_OFF(_ODK)) {
+      if (*ongoing_keycode == PG_H && IS_LAYER_OFF(_1DK)) {
           update_bkspc_countdown(0);
           return replace_ongoing_key(PG_B, ongoing_keycode, record);
       }
@@ -195,34 +195,39 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
             return finish_word((uint16_t[]) {PG_E, PG_N, PG_T}, 3, ongoing_keycode, record);
           } else {
             // "même"
-            return finish_word((uint16_t[]) {PG_ODK, PG_O, PG_M, PG_E}, 4, ongoing_keycode, record);
+            return finish_word((uint16_t[]) {PG_1DK, PG_O, PG_M, PG_E}, 4, ongoing_keycode, record);
           }
 
         case PG_B:
           // "beaucoup"
           return finish_word((uint16_t[]) {PG_E, PG_A, PG_U, PG_C, PG_O, PG_U, PG_P}, 7, ongoing_keycode, record);
 
+        case PG_A:
+          // "a@" -> "aujourd'hui"
+          layer_off(_1DK);
+          return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, ongoing_keycode, record);
+
 /*         case PG_D:
           // "déjà"
-          return finish_word((uint16_t[]) {PG_EACU, PG_J, PG_ODK, PG_A}, 4, ongoing_keycode, record); */
+          return finish_word((uint16_t[]) {PG_EACU, PG_J, PG_1DK, PG_A}, 4, ongoing_keycode, record); */
         
         default:
           // "à"
-          invoke_key(PG_ODK, record);
+          invoke_key(PG_1DK, record);
           return replace_ongoing_key(PG_A, ongoing_keycode, record);
       }
 
-    case PG_AROB:
+/*     case PG_AROB:
       if (!is_letter(get_recent_keycode(-2))) {
         switch (prev_keycode) {
 
           case PG_A:
             // "a@" -> "aujourd'hui"
-            layer_off(_ODK);
+            layer_off(_1DK);
             return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, ongoing_keycode, record);
         }
       }
-      break;
+      break; */
 
 /*     case PG_M:
       if (prev_keycode == PG_C) {
@@ -245,23 +250,23 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         switch (prev_keycode) {
           
           default:
-            if (IS_LAYER_OFF(_ODK)) {
-              invoke_key(PG_ODK, record);
+            if (IS_LAYER_OFF(_1DK)) {
+              invoke_key(PG_1DK, record);
               return replace_ongoing_key(PG_E, ongoing_keycode, record);
             }
             break;
         }
         break;
       } */
-      if (IS_LAYER_OFF(_ODK)) {
-        invoke_key(PG_ODK, record);
+      if (IS_LAYER_OFF(_1DK)) {
+        invoke_key(PG_1DK, record);
         return replace_ongoing_key(PG_E, ongoing_keycode, record);
       }
       break;
 
     case OU_GRV:
-      layer_off(_ODK);
-      return finish_word((uint16_t[]) {PG_O, PG_ODK, PG_N}, 3, ongoing_keycode, record);
+      layer_off(_1DK);
+      return finish_word((uint16_t[]) {PG_O, PG_1DK, PG_N}, 3, ongoing_keycode, record);
       //return replace_ongoing_key(prev_keycode, ongoing_keycode, record);
 
     case N_TILD:

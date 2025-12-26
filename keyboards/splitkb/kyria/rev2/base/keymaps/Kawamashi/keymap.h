@@ -34,7 +34,7 @@ enum layers {
     // OS4A layers should be as closed as base layer as possible
     _L_MODS,
     _R_MODS,
-    _ODK,
+    _1DK,
     _NUMBERS,
     _SYMBOLS,
     _SHORTNAV,
@@ -63,9 +63,9 @@ enum custom_keycodes {
   OS_CTRL,
   OS_LALT,
   OS_WIN,
-  L_ODK,
-  ODK,
-  CNL_ODK,
+  LETTER_1DK,
+  SYMBOL_1DK,
+  CNL_1DK,
   TG_APOS,
   PG_DEG
 };
@@ -78,8 +78,8 @@ enum custom_keycodes {
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
 
-#define OS_ODK OSL(_ODK)
-#define NUM_ODK OSL(_NUMBERS)
+#define OS_1DK OSL(_1DK)
+#define NUM_1DK OSL(_NUMBERS)
 #define OS_FA OSL(_FUNCAPPS)
 
   // Mods

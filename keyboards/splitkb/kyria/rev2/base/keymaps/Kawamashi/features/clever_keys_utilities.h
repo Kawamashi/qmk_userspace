@@ -43,7 +43,6 @@ bool was_keycode_replaced(void);
  * When it reaches 0, the `recent` buffer is cleared.
  * This function updates the countdown.
 */ 
-
 void update_bkspc_countdown(unsigned char i);
 
 // Clears the buffer by replacing all keys by KC_NO

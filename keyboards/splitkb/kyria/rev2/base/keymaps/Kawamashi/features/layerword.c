@@ -16,7 +16,6 @@
 
 #include "layerword.h"
 
-//static uint16_t layer_word_timer = 0;
 
 static uint8_t layerword_layer = 0;
 static bool continue_layerword = false;

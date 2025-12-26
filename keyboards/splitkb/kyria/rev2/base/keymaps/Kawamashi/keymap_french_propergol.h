@@ -90,7 +90,7 @@
 #define PG_D    KC_M    // C
 #define PG_F    KC_COMM // H
 #define PG_W    KC_DOT  // W
-#define PG_ODK  KC_SLSH // **
+#define PG_1DK  KC_SLSH // **
 
 
 /* Shifted symbols
@@ -135,7 +135,7 @@
 #define PG_LSBR S(PG_UNDS) // [
 
 // Row 4
-#define PG_PVIR S(PG_ODK)
+#define PG_PVIR S(PG_1DK)
 
 // Row 5
 #define NNB_SPC S(KC_SPC)  // Espace fine insecable
@@ -191,7 +191,7 @@
 #define PG_LCBR ALGR(PG_EACU)    // {
 #define PG_RCBR ALGR(PG_U)    // }
 //#define PG_LSBR ALGR(PG_W)    // [
-//#define PG_RSBR ALGR(PG_ODK) // ]
+//#define PG_RSBR ALGR(PG_1DK) // ]
 
 
 /* Shift+AltGr symbols

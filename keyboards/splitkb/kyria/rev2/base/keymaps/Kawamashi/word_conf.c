@@ -18,8 +18,8 @@
 
 bool is_letter(uint16_t keycode) {
 
-  // Taking ODK layer into account
-  if (IS_LAYER_ON(_ODK)) {
+  // Taking 1DK layer into account
+  if (IS_LAYER_ON(_1DK)) {
     switch (keycode) {
 
       case PG_VIRG:
@@ -59,7 +59,7 @@ bool is_letter(uint16_t keycode) {
     case KC_GRV ... KC_DOT:
     //case E_GRV:
     case E_CIRC:
-    case L_ODK:
+    case LETTER_1DK:
       return true;
 
     default:
@@ -107,7 +107,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* r
 
 bool caps_word_press_user(uint16_t keycode) {
 
-  if (IS_LAYER_ON(_ODK)) {
+  if (IS_LAYER_ON(_1DK)) {
     switch (keycode) {  
       case PG_Y:    // pour le tréma
       case PG_T:    // pour le trait d’union insécable
@@ -125,7 +125,7 @@ bool caps_word_press_user(uint16_t keycode) {
 
   switch (keycode) {
     // Keycodes that continue Caps Word, without shifting.
-    case PG_ODK:
+    case PG_1DK:
     case PG_UNDS:
     case PG_TIRE:
     case PG_SLSH:
@@ -282,7 +282,7 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
 
         // Misc
         case KC_BSPC:
-        case PG_ODK:   // Not to exit Numword when chording it with ODK
+        case PG_1DK:   // Not to exit Numword when chording it with 1DK
         //case NUMWORD:   // For the combo NUMWORD to work
             return true; 
         default:

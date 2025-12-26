@@ -61,7 +61,7 @@ bool oled_task_user(void) {
             case _FUNCAPPS:
                 oled_write_P(PSTR("FuncApps\n"), false);
                 break;
-            case _ODK:
+            case _1DK:
                 oled_write_P(PSTR("1DK\n"), false);
                 break;
             default:

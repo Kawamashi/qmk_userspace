@@ -16,9 +16,17 @@
 
 #include "prefixing_layers.h"
 
+static bool previous_1dk = false;
+
 bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
-    if (!record->event.pressed) { return true; }    // Nothing special happens on release
+    if (!record->event.pressed) { 
+        if (previous_1dk && get_repeat_key_count() > 0) {
+            clear_oneshot_layer_state(ONESHOT_PRESSED); 
+            previous_1dk = false;
+        }
+        return true; 
+    }
 
     // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
     if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
@@ -29,14 +37,24 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
-    // Handling keys and layers related to the One Dead Key (ODK)
+    if (previous_1dk) {
+        if (get_repeat_key_count() > 0) { 
+            set_oneshot_layer(_1DK, ONESHOT_START);
+        } else {
+            previous_1dk = false;
+        }
+    }
+
+    // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
-        case PG_ODK:
-        case NUM_ODK:
+        case PG_1DK:
+        case NUM_1DK:
           return deferred_shift_after_dead_key(keycode);
     }
 
-    if (IS_LAYER_ON(_ODK)) {
+    if (IS_LAYER_ON(_1DK)) {
+        previous_1dk = true;
+
         switch (keycode) {
             case PG_AROB:
             case PG_K:
@@ -47,7 +65,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case OU_GRV:
             case PG_UNDS:
             //case KC_SPC:    // When space is added by Clever Keys
-            case CNL_ODK:
+            case CNL_1DK:
               return true;
 
             default:
@@ -59,8 +77,8 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
 
 bool deferred_shift_after_dead_key(uint16_t keycode) {
-    // Special behaviour of PG_ODK when shifted
-    // Shift must apply to the keycode following PG_ODK.
+    // Special behaviour of PG_1DK when shifted
+    // Shift must apply to the keycode following PG_1DK.
     const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 
     if (is_shifted) {
@@ -69,10 +87,10 @@ bool deferred_shift_after_dead_key(uint16_t keycode) {
         unregister_mods(MOD_MASK_SHIFT);
     }
 
-    tap_code(PG_ODK);
+    tap_code(PG_1DK);
     if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
 
-    return keycode != PG_ODK;
+    return keycode != PG_1DK;
 }
 
 

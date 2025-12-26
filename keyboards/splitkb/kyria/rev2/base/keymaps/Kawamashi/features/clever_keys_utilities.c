@@ -204,15 +204,3 @@ void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
     record->keycode = recent[RECENT_SIZE - 1];
   }
 }
-
-/* bool enough_time_before_combo(void) {
-  return timer_elapsed(last_keypress_time) > TAP_INTERVAL;
-} */
-
-/* void end_CK(keyrecord_t* record) {
-  if (processingCK) {
-    processingCK = false;
-    record->event.pressed = false;
-    process_record(record); 
-  }
-} */
