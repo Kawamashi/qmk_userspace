@@ -62,9 +62,13 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       switch (*ongoing_keycode) {
         
         // Ajout automatique du "u" après le "q"
-        case E_CIRC:
+/*         case PG_ECIR:
+          //layer_off(_1DK);
           tap_code(PG_U);
+          //tap_code(PG_B);
+          //tap_code(PG_1DK);
           break;
+          //layer_off(_1DK); */
         case PG_E:
         case PG_I:
         case PG_A:
@@ -127,6 +131,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case PG_O:
     case PG_U:
     case PG_Y:
+    case PG_EGRV:
       if (*ongoing_keycode == PG_H && IS_LAYER_OFF(_1DK)) {
           update_bkspc_countdown(0);
           return replace_ongoing_key(PG_B, ongoing_keycode, record);
@@ -213,8 +218,9 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         
         default:
           // "à"
-          invoke_key(PG_1DK, record);
-          return replace_ongoing_key(PG_A, ongoing_keycode, record);
+/*           invoke_key(PG_1DK, record);
+          return replace_ongoing_key(PG_A, ongoing_keycode, record); */
+          return replace_ongoing_key(PG_AGRV, ongoing_keycode, record);
       }
 
 /*     case PG_AROB:
@@ -259,21 +265,19 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         break;
       } */
       if (IS_LAYER_OFF(_1DK)) {
-        invoke_key(PG_1DK, record);
-        return replace_ongoing_key(PG_E, ongoing_keycode, record);
+/*         invoke_key(PG_1DK, record);
+        return replace_ongoing_key(PG_E, ongoing_keycode, record); */
+        return replace_ongoing_key(PG_EGRV, ongoing_keycode, record);
       }
       break;
 
     case OU_GRV:
-      layer_off(_1DK);
-      return finish_word((uint16_t[]) {PG_O, PG_1DK, PG_N}, 3, ongoing_keycode, record);
-      //return replace_ongoing_key(prev_keycode, ongoing_keycode, record);
+/*       layer_off(_1DK);
+      return finish_word((uint16_t[]) {PG_O, PG_1DK, PG_P}, 3, ongoing_keycode, record); */
+      return replace_ongoing_key(prev_keycode, ongoing_keycode, record);
 
     case N_TILD:
       return replace_ongoing_key(PG_H, ongoing_keycode, record);
-    
-    case PG_AE:
-      return replace_ongoing_key(PG_Z, ongoing_keycode, record);
 
     case PG_APOS:
       if (replace_apos()) { return replace_ongoing_key(PG_APOD, ongoing_keycode, record); }

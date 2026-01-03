@@ -56,18 +56,30 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
         previous_1dk = true;
 
         switch (keycode) {
-            case PG_AROB:
+/*             case PG_E:
+                //tap_code(PG_B);
+                if (get_recent_keycode(-1) != PG_Q) { break; } */
             case PG_K:
             case PG_B:
             case PG_H:
-            case PG_Z:
             case PG_APOS:
             case OU_GRV:
             case PG_UNDS:
+            case PG_AGRV:
+            case PG_ECIR:
             //case KC_SPC:    // When space is added by Clever Keys
             case CNL_1DK:
               return true;
 
+            case PG_E:
+            case PG_U:
+            //case PG_ECIR:
+                if (get_recent_keycode(-3) == PG_Q) { 
+                    tap_code(PG_C);
+                    return true;
+                } else {
+                    tap_code16(get_recent_keycode(-1));
+                }
             default:
               return deferred_shift_after_dead_key(keycode);
         }

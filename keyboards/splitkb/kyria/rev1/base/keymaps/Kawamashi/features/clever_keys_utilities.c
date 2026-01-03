@@ -87,6 +87,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   // Handles custom keycodes.
   uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
+  //if (custom_keycode == PG_ECIR) { tap_code(PG_A); }
   if (custom_keycode != KC_TRNS) { return custom_keycode; }
 
 

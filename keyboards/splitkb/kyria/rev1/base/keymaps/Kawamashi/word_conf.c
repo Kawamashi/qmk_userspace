@@ -23,29 +23,20 @@ bool is_letter(uint16_t keycode) {
     switch (keycode) {
 
       case PG_VIRG:
-      case PG_B:
-      //case PG_F:
-      //case PG_D:
-      //case PG_K:
         return true;
   
-      case PG_Y:    // pour le tréma
-      case PG_T:    // pour le trait d’union insécable
-      case PG_G:    // greek dead key
+      case PG_Z:    // arrobe
       case PG_V:
       case PG_M:
+      case PG_C:
       case PG_J:
       case PG_X:
-      case PG_S:
-      case PG_R:
+      case PG_G:    // greek dead key
+      case PG_T:
+      case PG_R:    // pour le trait d’union insécable
       case PG_L:
-      case PG_W:
-      //case PG_POIN:
+      case PG_D:    // pour le tréma
         return false;
-      
-      default:
-        //return true;
-
     }
   }
 
@@ -57,8 +48,9 @@ bool is_letter(uint16_t keycode) {
     case PG_L:
     case PG_E:
     case KC_GRV ... KC_DOT:
-    //case E_GRV:
-    case E_CIRC:
+    case PG_AGRV:
+    case PG_EGRV:
+    case PG_ECIR:
     case LETTER_1DK:
       return true;
 
@@ -71,9 +63,8 @@ bool is_send_string_macro(uint16_t keycode) {
   switch (keycode) {
     case OU_GRV:
     case N_TILD:
-    case PG_AE:
     case MAGIC:
-    case PG_AROB:   // because of Clever Keys
+    //case PG_AROB:   // because of Clever Keys
       return true;
     
     default:
@@ -109,8 +100,8 @@ bool caps_word_press_user(uint16_t keycode) {
 
   if (IS_LAYER_ON(_1DK)) {
     switch (keycode) {  
-      case PG_Y:    // pour le tréma
-      case PG_T:    // pour le trait d’union insécable
+      case PG_D:    // pour le tréma
+      case PG_R:    // pour le trait d’union insécable
       //case PG_APOS:
         return true;
     }
