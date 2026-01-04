@@ -56,9 +56,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
         previous_1dk = true;
 
         switch (keycode) {
-/*             case PG_E:
-                //tap_code(PG_B);
-                if (get_recent_keycode(-1) != PG_Q) { break; } */
             case PG_K:
             case PG_B:
             case PG_H:
@@ -71,15 +68,9 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case CNL_1DK:
               return true;
 
-            case PG_E:
             case PG_U:
-            //case PG_ECIR:
-                if (get_recent_keycode(-3) == PG_Q) { 
-                    tap_code(PG_C);
-                    return true;
-                } else {
-                    tap_code16(get_recent_keycode(-1));
-                }
+                if (get_recent_keycode(-1) == PG_Q) { return true; }
+                
             default:
               return deferred_shift_after_dead_key(keycode);
         }

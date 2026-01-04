@@ -62,13 +62,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       switch (*ongoing_keycode) {
         
         // Ajout automatique du "u" après le "q"
-/*         case PG_ECIR:
-          //layer_off(_1DK);
-          tap_code(PG_U);
-          //tap_code(PG_B);
-          //tap_code(PG_1DK);
-          break;
-          //layer_off(_1DK); */
+        case PG_ECIR:
         case PG_E:
         case PG_I:
         case PG_A:
@@ -77,6 +71,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_APOS:
           invoke_key(PG_U, record);
           update_bkspc_countdown(1);
+          if (*ongoing_keycode == PG_ECIR) { return replace_ongoing_key(PG_ECIR, ongoing_keycode, record); }
           set_last_keycode(*ongoing_keycode);
           break;
 

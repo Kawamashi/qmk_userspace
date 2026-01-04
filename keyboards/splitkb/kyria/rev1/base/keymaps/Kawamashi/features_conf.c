@@ -126,20 +126,12 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
         case PG_B:
         case PG_H:
         case PG_Z:
-        //case PG_E:
-        //case PG_ECIR:
+        case PG_ECIR:
         //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
           return keycode;
 
-        case PG_ECIR:
-          tap_code(PG_A);
-          return PG_ECIR;
-
         case PG_POIN:
           return PG_3PTS;
-/*         case PG_E:
-          //tap_code(PG_A);
-          return PG_ECIR; */
 
         default:
           if (is_letter(keycode)) { return LETTER_1DK; }
@@ -156,9 +148,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
     case PG_E:    // because PG_E is not a basic keycode
       return keycode;
-    case PG_ECIR:
-      tap_code(PG_A);
-      return PG_ECIR;
   }
 
   // Handles combos

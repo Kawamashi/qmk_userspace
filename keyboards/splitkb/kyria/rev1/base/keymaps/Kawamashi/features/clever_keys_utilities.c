@@ -58,11 +58,26 @@ void recent_keys_task(void) {
 uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-  if (IS_QK_MODS(keycode)) { mods |= QK_MODS_GET_MODS(keycode); }
 
   if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
     clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
     return KC_NO;
+  }
+
+  if (IS_QK_MODS(keycode)) { 
+    switch (QK_MODS_GET_MODS(keycode)) {
+      case MOD_LSFT:
+      case MOD_RSFT:
+        mods |= MOD_BIT(KC_LSFT);
+        break;
+      case MOD_RALT:
+        mods |= MOD_BIT(KC_ALGR);
+        break;
+      
+      default:
+        clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
+        return KC_NO;
+    }
   }
 
   switch (keycode) {
@@ -87,7 +102,6 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
 
   // Handles custom keycodes.
   uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
-  //if (custom_keycode == PG_ECIR) { tap_code(PG_A); }
   if (custom_keycode != KC_TRNS) { return custom_keycode; }
 
 
