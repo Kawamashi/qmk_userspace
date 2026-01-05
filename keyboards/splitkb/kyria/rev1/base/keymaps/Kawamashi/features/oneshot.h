@@ -35,7 +35,7 @@ void clear_oneshot(void);
 // Custom one-shot mod implementation that doesn't rely on timers. If a mod is
 // used while it is held it will be unregistered on keyup as normal, otherwise
 // it will be queued and only released after the next non-mod keyup.
-bool process_oneshot(uint16_t keycode, keyrecord_t *record);
+bool process_custom_oneshot(uint16_t keycode, keyrecord_t *record);
 
 // To be implemented by the user. Defines keys to cancel one-shot mods.
 bool is_oneshot_cancel_key(uint16_t keycode);

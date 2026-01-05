@@ -31,9 +31,9 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
     case SFT_T(COPY):
       return C(PG_C);
     case SFT_T(FEN_G):
-      return LWIN(KC_LEFT);
+      return LGUI(KC_LEFT);
     case RCTL_T(FEN_B):
-      return LWIN(KC_DOWN);
+      return LGUI(KC_DOWN);
 /*     case LT_REPT:
       return get_last_keycode(); */
 
@@ -73,10 +73,10 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
       case SFT_T(FEN_G):
-        return process_custom_tap_hold(LWIN(KC_LEFT), record);
+        return process_custom_tap_hold(LGUI(KC_LEFT), record);
 
       case RCTL_T(FEN_B):
-        return process_custom_tap_hold(LWIN(KC_DOWN), record);
+        return process_custom_tap_hold(LGUI(KC_DOWN), record);
 
       case SFT_T(COPY):
         return process_custom_tap_hold(C(PG_C), record);
@@ -170,8 +170,8 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 const oneshot_key_t oneshot_keys[] = {
   {OS_SHFT, KC_LSFT},
   {OS_CTRL, KC_LCTL},
-  {OS_LALT, KC_LALT},
-  {OS_WIN, KC_LWIN},
+  {OS_ALT, KC_LALT},
+  {OS_GUI, KC_LGUI},
 };
 
 bool is_oneshot_cancel_key(uint16_t keycode) {

@@ -247,8 +247,8 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
       switch (keycode) {
         case OS_SHFT:
         case OS_CTRL:
-        case OS_LALT:
-        case OS_WIN:
+        case OS_ALT:
+        case OS_GUI:
             return true;
         default:
             return false;
