@@ -82,7 +82,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_macros_I(keycode, record)) { return false; }
 
   // Callum Mods
-  if (!process_oneshot(keycode, record)) { return false; }
+  if (!process_custom_oneshot(keycode, record)) { return false; }
 
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }
@@ -145,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_L_MODS] = LAYOUT(
       KC_NO, KC_NO,   KC_NO,  OS_WIN,  KC_RGUI, KC_NO,                                        _______,  _______, _______, _______, _______, _______,
       KC_NO, OS_RSA,  OS_FA,  OS_CTRL, OS_SHFT, KC_NO,                                        _______,  _______, _______, _______, _______, _______,
-      KC_NO, OS_LALT, KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______,  _______, _______, _______, _______, _______,
+      KC_NO, OS_ALT,  KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______,  _______, _______, _______, _______, _______,
                               KC_NO,   KC_NO,   _______, _______, _______, CAPSWORD, _______, CAPSLIST, _______, _______
     ),
 
@@ -165,8 +165,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_R_MODS] = LAYOUT(
       _______, _______, _______, _______, _______, _______,                                      KC_NO,   KC_RGUI, OS_WIN,  KC_NO,   KC_NO,   KC_NO,
-      _______, _______, _______, _______, _______, _______,                                      FUNWORD, OS_SHFT, OS_CTRL, NUMWORD, NUM_1DK,  KC_NO,
-      _______, _______, _______, _______, _______, _______,  _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_LALT, KC_NO,
+      _______, _______, _______, _______, _______, _______,                                      FUNWORD, OS_SHFT, OS_CTRL, NUMWORD, NUM_1DK, KC_NO,
+      _______, _______, _______, _______, _______, _______,  _______, _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   OS_FA,   OS_ALT,  KC_NO,
                                  _______, _______, CAPSLOCK, _______, MAGIC,   TG_APOS, _______, _______, KC_NO,   KC_NO
     ),
 

@@ -100,12 +100,7 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
       keycode = tap_hold_extractor(keycode);
   }
 
-  // Handles custom keycodes.
-  uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
-  if (custom_keycode != KC_TRNS) { return custom_keycode; }
-
-
-    // Handle backspace.
+  // Handle backspace.
   if (keycode == KC_BSPC) {
       bkspc_countdown--;
       if (bkspc_countdown == 0) {
@@ -115,11 +110,12 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
         // Rewind the key buffers.
         memmove(recent + 1, recent, (RECENT_SIZE - 1) * sizeof(uint16_t));
         recent[0] = KC_NO;
-        // Setting the key to be repeated to match the key buffer.
-        set_last_keycode(recent[RECENT_SIZE - 1]);
       }
-      return KC_NO;
   }
+
+  // Handles custom keycodes.
+  uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
+  if (custom_keycode != KC_TRNS) { return custom_keycode; }
 
 
   uint16_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
@@ -153,6 +149,17 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   // Avoid acting otherwise, particularly on navigation keys.
   clear_recent_keys();
   return KC_NO;
+}
+
+__attribute__((weak)) uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
+
+  switch (keycode) {
+    case KC_BSPC:
+      return KC_NO;
+    
+    default:
+      return KC_TRNS;
+  }
 }
 
 void store_keycode(uint16_t keycode, keyrecord_t* record) {

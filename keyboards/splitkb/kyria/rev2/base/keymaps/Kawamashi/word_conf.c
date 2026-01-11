@@ -81,7 +81,7 @@ bool is_send_string_macro(uint16_t keycode) {
   }
 }
 
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* record) {
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
   
   switch (keycode) {
     case PG_L:
@@ -256,7 +256,7 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
       switch (keycode) {
         case OS_SHFT:
         case OS_CTRL:
-        case OS_LALT:
+        case OS_ALT:
         case OS_WIN:
             return true;
         default:

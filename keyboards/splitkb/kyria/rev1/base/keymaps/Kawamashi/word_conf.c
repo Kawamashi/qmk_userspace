@@ -25,7 +25,7 @@ bool is_letter(uint16_t keycode) {
       case PG_VIRG:
         return true;
   
-      case PG_Z:    // arrobe
+      case PG_EGRV:    // arrobe
       case PG_V:
       case PG_M:
       case PG_C:
@@ -72,7 +72,7 @@ bool is_send_string_macro(uint16_t keycode) {
   }
 }
 
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* record) {
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
   
   switch (keycode) {
     case PG_L:

@@ -121,6 +121,17 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   // Handles custom keycodes to be processed for Clever Keys
 
   if (is_send_string_macro(keycode)) { return keycode; }
+
+  if (keycode == KC_BSPC) {
+    // Setting the key to be repeated to match the key buffer.
+    if (is_followed_by_apos(get_recent_keycode(-1), get_recent_keycode(-2))) {
+        set_last_keycode(PG_APOS);
+    } else {
+        set_last_keycode(get_recent_keycode(-1));
+    }
+    return KC_NO;
+  }
+
   switch (get_highest_layer(layer_state)) {
 
     case _1DK:
@@ -174,7 +185,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 const oneshot_key_t oneshot_keys[] = {
   {OS_SHFT, KC_LSFT},
   {OS_CTRL, KC_LCTL},
-  {OS_LALT, KC_LALT},
+  {OS_ALT, KC_LALT},
   {OS_WIN, KC_LWIN},
 };
 

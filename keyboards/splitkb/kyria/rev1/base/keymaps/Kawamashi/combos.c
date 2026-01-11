@@ -44,12 +44,12 @@ const uint16_t PROGMEM enter_combo[] = {PG_P, PG_U, COMBO_END};
 const uint16_t PROGMEM tab_combo[] = {PG_N, PG_I, COMBO_END};
 const uint16_t PROGMEM esc_combo[] = {PG_N, PG_A, COMBO_END};
 const uint16_t PROGMEM bkspc_combo_g[] = {PG_A, PG_I, COMBO_END};
-const uint16_t PROGMEM home_combo[] = {PG_Z, PG_Y, COMBO_END};
+const uint16_t PROGMEM home_combo[] = {PG_EGRV, PG_Y, COMBO_END};
 const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
 const uint16_t PROGMEM altesc_combo[] = {PG_A, PG_I, PG_N, COMBO_END};
-const uint16_t PROGMEM space_combo[] = {PG_Z, PG_H, COMBO_END};
+const uint16_t PROGMEM space_combo[] = {PG_EGRV, PG_H, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),

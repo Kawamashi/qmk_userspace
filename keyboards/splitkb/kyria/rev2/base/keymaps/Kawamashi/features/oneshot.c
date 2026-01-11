@@ -20,7 +20,7 @@ void clear_oneshot(void) {
   }
 }
 
-bool process_oneshot(uint16_t keycode, keyrecord_t *record){
+bool process_custom_oneshot(uint16_t keycode, keyrecord_t *record){
 
   for (uint8_t i = 0; i < OS_COUNT; i++) {
     if (keycode == oneshot_keys[i].keycode) {

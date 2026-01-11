@@ -27,4 +27,4 @@ bool is_letter(uint16_t keycode);
 bool is_send_string_macro(uint16_t keycode);
 
 // Returns true for letters that can be followed by an apostrophe (in french)
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode, keyrecord_t* record);
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);

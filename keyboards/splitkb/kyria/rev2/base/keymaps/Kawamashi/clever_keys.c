@@ -25,7 +25,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
   uint16_t prev_keycode = get_recent_keycode(-1);
 
     // Apostrophe
-    if (is_followed_by_apos(*ongoing_keycode, prev_keycode, record)) {
+    if (is_followed_by_apos(*ongoing_keycode, prev_keycode)) {
       set_last_keycode(PG_APOS);
     }
   

@@ -104,7 +104,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 
       case PG_DEG:
         tap_code(PG_1DK);
-        tap_code(KC_9);
+        tap_code(KC_0);
         return false;
     }
   }
@@ -118,6 +118,17 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   // Handles custom keycodes to be processed for Clever Keys
 
   if (is_send_string_macro(keycode)) { return keycode; }
+
+  if (keycode == KC_BSPC) {
+    // Setting the key to be repeated to match the key buffer.
+    if (is_followed_by_apos(get_recent_keycode(-1), get_recent_keycode(-2))) {
+        set_last_keycode(PG_APOS);
+    } else {
+        set_last_keycode(get_recent_keycode(-1));
+    }
+    return KC_NO;
+  }
+
   switch (get_highest_layer(layer_state)) {
 
     case _1DK:

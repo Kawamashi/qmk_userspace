@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |        |   O  |   A  |   I  |   N  |   .  |                              |   G  |   T  |   S  |   R  |   L  |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |   Q  |   Z  |   Y  |   H  |      |      |      |  |      |      |      |   D  |   F  |   W  |  1DK |        |
+ * |        |   Q  |   È  |   Y  |   H  |      |      |      |  |      |      |      |   D  |   F  |   W  |  1DK |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      | OS4A |   E  | Magic|  |Repeat| Space| OS4A |      |      |
  *                        |      |      |      | Symb |  Nav |  | Num  | Symb |      |      |      |
@@ -124,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       KC_NO, PG_VIRG, PG_EACU, PG_U,  PG_P,   PG_TIRE,                                 PG_V,   PG_M,  PG_C, PG_J, PG_X,   KC_NO,
       KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_POIN,                                 PG_G,   PG_T,  PG_S, PG_R, PG_L,   KC_NO,
-      KC_NO, PG_Q,    PG_Z,    PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,  PG_F, PG_W, OS_1DK, KC_NO,
+      KC_NO, PG_Q,    PG_EGRV, PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,  PG_F, PG_W, OS_1DK, KC_NO,
                                KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_NO, KC_NO
     ),
 
@@ -228,8 +228,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_1DK] = LAYOUT(
        _______, _______, _______, _______, N_TILD,  PG_R,                                        PG_T,    _______, _______, _______, _______, _______,
-       _______, _______, _______, _______, _______, _______,                                     _______, PG_K,    PG_D,    _______, _______, _______,
-       _______, OU_GRV,  _______, _______, PG_H,    _______, _______, _______, _______, _______, _______, PG_B,    _______, PG_S,    CNL_1DK, _______,
+       _______, _______, _______, _______, PG_Z,    _______,                                     _______, PG_K,    PG_D,    _______, _______, _______,
+       _______, OU_GRV,  PG_W,    _______, PG_H,    _______, _______, _______, _______, _______, _______, PG_B,    _______, PG_S,    CNL_1DK, _______,
                                   _______, _______, _______, PG_ECIR, PG_AGRV, PG_APOS, PG_UNDS, _______, _______, _______
      ),
 

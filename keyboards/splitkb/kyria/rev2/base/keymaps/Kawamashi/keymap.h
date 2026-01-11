@@ -61,7 +61,7 @@ enum custom_keycodes {
   MAGIC,
   OS_SHFT,
   OS_CTRL,
-  OS_LALT,
+  OS_ALT,
   OS_WIN,
   LETTER_1DK,
   SYMBOL_1DK,
@@ -86,7 +86,7 @@ enum custom_keycodes {
 #define MT_SLSH SFT_T(PG_SLSH)
 #define MT_1 SFT_T(KC_1)
 #define MT_6 SFT_T(KC_6)
-#define OS_RSA OSM(MOD_RALT | MOD_LSFT)
+//#define OS_RSA OSM(MOD_RALT | MOD_LSFT)
 
   // OS4A
 #define L_OS4A LSFT_T(OS4A)
