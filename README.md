@@ -12,60 +12,100 @@ This is a template repository which allows for an external set of QMK keymaps to
 
 # Positional Tap-Hold
 
-blabla
+# Configuration des Layer-Tap
+J’utilise des layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation et raccourcis).<br/>
+J’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#tap-or-hold-decision-modes), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
 
-## Howto configure your build targets
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. Enable userspace in QMK config using `qmk config user.overlay_dir="$(realpath qmk_userspace)"`
-1. Add a new keymap for your board using `qmk new-keymap`
-    * This will create a new keymap in the `keyboards` directory, in the same location that would normally be used in the main QMK repository. For example, if you wanted to add a keymap for the Planck, it will be created in `keyboards/planck/keymaps/<your keymap name>`
-    * You can also create a new keymap using `qmk new-keymap -kb <your_keyboard> -km <your_keymap>`
-    * Alternatively, add your keymap manually by placing it in the location specified above.
-    * `layouts/<layout name>/<your keymap name>/keymap.*` is also supported if you prefer the layout system
-1. Add your keymap(s) to the build by running `qmk userspace-add -kb <your_keyboard> -km <your_keymap>`
-    * This will automatically update your `qmk.json` file
-    * Corresponding `qmk userspace-remove -kb <your_keyboard> -km <your_keymap>` will delete it
-    * Listing the build targets can be done with `qmk userspace-list`
-1. Commit your changes
+Pour éviter les déclenchements par erreur (lors de roulements par exemple), je me base sur une vérification de la position des touches : avant le typing_term, si l’une de mes touches de pouce principales est enfoncée ainsi qu’une autre touche de la même main, alors la touche de pouce produira immédiatement un tap et non un hold. Pour cela, j’ai adopté l’approche de [Filterpaper](https://github.com/filterpaper/qmk_userspace?tab=readme-ov-file#contextual-mod-taps), que je trouve légère et efficace. Elle est basée sur l’utilisation de la fonction `pre_process_record_user` et sur une utilisation avancée de la fonction `get_hold_on_other_key_press` :
 
-## Howto build with GitHub
+```c
+bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-1. In the GitHub Actions tab, enable workflows
-1. Push your changes above to your forked GitHub repository
-1. Look at the GitHub Actions for a new actions run
-1. Wait for the actions run to complete
-1. Inspect the Releases tab on your repository for the latest firmware build
-
-## Howto build locally
-
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. `cd` into this repository's clone directory
-1. Set global userspace path: `qmk config user.overlay_dir="$(realpath .)"` -- you MUST be located in the cloned userspace location for this to work correctly
-    * This will be automatically detected if you've `cd`ed into your userspace repository, but the above makes your userspace available regardless of your shell location.
-1. Compile normally: `qmk compile -kb your_keyboard -km your_keymap` or `make your_keyboard:your_keymap`
-
-Alternatively, if you configured your build targets above, you can use `qmk userspace-compile` to build all of your userspace targets at once.
-
-## Extra info
-
-If you wish to point GitHub actions to a different repository, a different branch, or even a different keymap name, you can modify `.github/workflows/build_binaries.yml` to suit your needs.
-
-To override the `build` job, you can change the following parameters to use a different QMK repository or branch:
+    if (record->event.pressed) {
+        // Cache the next input for mod-tap decisions
+        next_keycode = keycode;
+        next_record  = *record;
+    }
+    return true;
+}
 ```
-    with:
-      qmk_repo: qmk/qmk_firmware
-      qmk_ref: master
+```c
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+
+    if (!approved_chord(keycode, record, next_keycode, &next_record)) {
+        // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
+        record->tap.interrupted = false;
+        record->tap.count = 1;
+        return true;
+    }
+    return false;
+}
 ```
 
-If you wish to manually manage `qmk_firmware` using git within the userspace repository, you can add `qmk_firmware` as a submodule in the userspace directory instead. GitHub Actions will automatically use the submodule at the pinned revision if it exists, otherwise it will use the default latest revision of `qmk_firmware` from the main repository.
+&nbsp;</br> &nbsp;</br>
 
-This can also be used to control which fork is used, though only upstream `qmk_firmware` will have support for external userspace until other manufacturers update their forks.
+# Modificatrices
+Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum), autrement dit des one-shot mods situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
 
-1. (First time only) `git submodule add https://github.com/qmk/qmk_firmware.git`
-1. (To update) `git submodule update --init --recursive`
-1. Commit your changes to your userspace repository
+
+Les Callum mods peuvent être maintenus comme des modificatrices classiques, ou employés comme sticky keys. Ils ont la particularité de ne pas utiliser de timer. Du coup, ils peuvent être combinés sans être obligé de marquer une pause entre chaque modificatrice.
+
+
+J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les roulements. J’ai également implémenté un timer, pour que les one-shot mods se désactivent automatiquement au bout d’un certain temps d’inactivité. Le code se trouve [ici](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/oneshot.c).
+
+&nbsp;</br>
+
+# Mod Word
+Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword.c) chapeaute mon implémentation de [*Caps Word*](https://docs.qmk.fm/features/caps_word), *Caps List*, *Caps Lock* et *Word Selection*.
+## Caps List
+J’utilise énormément [*Caps Word*](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé *Caps List*, une fonctionnalité qui réactive *Caps Word* entre chaque mot d’une liste. 
+
+
+L’utilisateur peut définir les keycodes qui ne doivent pas interrompre *Caps List* (comme par exemple les lettres, les chiffres, certains symboles, `,` et ` `). À la saisie d’un caractère différent, Caps List se désactivera automatiquement. L’utilisateur doit également définir les séparateurs de liste (comme `, `, ` et `, ` ou `). *Caps List* réactivera automatiquement *Caps Word* après l’un de ces séparateurs. 
+
+
+Pour chaque séparateur, l’utilisateur peut définir un compteur, pour indiquer à la fonction qu’elle doit se désactiver après le prochain mot. Par exemple, ` et ` déclenche ce compteur mais pas `, `. 
+&nbsp;</br>
+
+## Mod Word
+En plus de *Caps Word* et *Caps List*, je suis également amené à utiliser *Caps Lock* régulièrement. Je voulais que l’activation d’une fonctionnalité désactive automatiquement les autres, pour qu’il n’y ait pas d’interférences entre elles. Le module *Mod Word* est là pour les chapeauter. En plus de gérer les activations concurrentielles, *Mod Word* désactive la fonctionnalité en cours au bout d’un certain temps d’inactivité du clavier.
+&nbsp;</br>
+
+## Word Selection
+*Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation (flèches, home et end) tapées ensuite pour étendre la sélection. *Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive. 
+Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une ligne entière. 
+
+
+*Word Selection* ajoutant une modificatrice aux inputs successifs, elle est également chapeautée par *Mod Word*.
+
+&nbsp;</br>
+
+# Layer Word
+[*Layer Word*](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/layerword.c) est un concept similaire à *Caps Word*, mais il s’applique aux couches. Quand on active un *Layer Word*, on active la couche correspondante, et elle restera activée tant que l’utilisateur ne tape pas de caractère “word breaking”. Par exemple, le *Layer Word* lié à ma couche de nombres restera activé tant que je taperai des symboles numériques. Les caractères permettant de continuer chaque *Layer Word* sont à définir par l’utilisateur.
+
+
+Comme pour *Mod Word*, il ne peut y avoir qu’un seul *Layer Word* actif à la fois. Les *Layer Word* peuvent se désactiver automatiquement au bout d’un certain temps d’inactivité du clavier.
+
+&nbsp;</br>
+
+# Clever Keys
+Je me suis beaucoup inspiré de [ce post](https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys) quand j’ai écrit les [Clever Keys](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/clever_keys_utilities.c). Ce concept repose sur le fait de mémoriser les derniers caractères tapés en les stockant dans un buffer, et de potentiellement remplacer un caractère en cours de traitement par un autre. En un mot, les *Clever Keys* permettent de transformer votre layout en **layout adaptatif**.
+
+
+Dans un premier temps, l’algorithme analyse la frappe en cours pour déterminer si elle sert à taper un caractère ou pas. Par exemple, une touche de navigation ou une touche affectée par Ctrl ou Alt ne sert pas à taper du texte. Elle ne sera donc pas mémorisée, et effacera le contenu du buffer pour éviter des effets de bord potentiellement catastrophiques. Cette fonction est paramétrable par l’utilisateur. 
+
+
+Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/clever_keys.c) (également paramétrable par l’utilisateur) détermine si celui-ci doit être remplacé (par un autre caractère ou par une macro) ou bien si d’autres caractères doivent être insérés avant lui, en fonction du contenu du buffer. Celui-ci mémorise les 8 dernières touches. Enfin, le caractère est ajouté au buffer, en décalant les touches présentes auparavant. 
+
+
+Mes Clever Keys me servent notamment :
+–	à ajouter automatiquement le U entre le Q et une autre voyelle (ou l’apostrophe)
+–	à mettre automatiquement la première lettre d’une phrase en majuscule
+–	à utiliser ma touche Repeat comme une touche apostrophe (en français)
+–	à envoyer des macros pour des mots courants
+Backspace supprime la dernière touche du buffer, et décale les touches dans l’autre sens. Parfois, une frappe est remplacée, mais ce n’est pas le comportement souhaité. Dans ce cas, il suffit d’effacer les touches produites par l’algorithme, et celui-ci effacera complètement le buffer. Comme ça, si on retape le même caractère, les clever keys ne s’appliqueront pas ce coup-ci. Par exemple, si je tape Q puis I, je vais obtenir QUI. Si pour une fois je voulais taper QI, il me suffirait de taper deux fois backspace et de retaper I pour obtenir QI. J’ai une macro “Panique” qui permet de vider le buffer, pour éviter que les Clever Keys ne modifient la frappe suivante.
+La touche Repeat interagit avec le buffer, même quand il est mis à jour avec backspace. C’est comme si Repeat voyageait dans le temps !
+Pour éviter des effets intempestifs, le buffer se vide automatiquement au bout d’un certain temps d’inactivité du clavier.
+
+
