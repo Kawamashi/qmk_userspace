@@ -119,10 +119,10 @@ Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboa
 
 
 Les Clever Keys me servent notamment :
-- à ajouter automatiquement le U entre le Q et une autre voyelle (ou l’apostrophe)
+- à ajouter automatiquement le `U` entre le `Q` et une autre voyelle (ou l’apostrophe)
 - à mettre automatiquement la première lettre d’une phrase en majuscule
-- à utiliser ma touche Repeat [comme une touche apostrophe](https://github.com/Kawamashi/Propergol/blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais) (en français)
-- à envoyer des macros pour des mots courants
+- à utiliser ma touche `Repeat` [comme une touche apostrophe](https://github.com/Kawamashi/Propergol/blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais) (en français)
+- à paramétrer plus finement ma touche `Alt-Repeat`
 
 
 `Backspace` supprime la dernière touche du buffer, et décale les touches dans l’autre sens. La touche `Repeat` interagit avec le buffer, même quand il est mis à jour avec `backspace`. C’est comme si `Repeat` voyageait dans le temps !
