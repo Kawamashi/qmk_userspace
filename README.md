@@ -92,20 +92,38 @@ Comme pour *Mod Word*, il ne peut y avoir qu’un seul *Layer Word* actif à la 
 # Clever Keys
 Je me suis beaucoup inspiré de [ce post](https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys) quand j’ai écrit les [Clever Keys](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/clever_keys_utilities.c). Ce concept repose sur le fait de mémoriser les derniers caractères tapés en les stockant dans un buffer, et de potentiellement remplacer un caractère en cours de traitement par un autre. En un mot, les *Clever Keys* permettent de transformer votre layout en **layout adaptatif**.
 
+```c
+void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
+
+    if (record->event.pressed) {
+      uint16_t ongoing_keycode = get_ongoing_keycode(keycode, record);
+
+      if (ongoing_keycode != KC_NO) {
+        get_clever_keycode(&ongoing_keycode, record);
+        store_keycode(ongoing_keycode, record);
+      }
+
+    } else if (processingCK) {    // On keyrelease
+      processingCK = false;
+      record->keycode = recent[RECENT_SIZE - 1];
+    }
+}
+```
 
 Dans un premier temps, l’algorithme analyse la frappe en cours pour déterminer si elle sert à taper un caractère ou pas. Par exemple, une touche de navigation ou une touche affectée par Ctrl ou Alt ne sert pas à taper du texte. Elle ne sera donc pas mémorisée, et effacera le contenu du buffer pour éviter des effets de bord potentiellement catastrophiques. Cette fonction est paramétrable par l’utilisateur. 
 
 
-Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/clever_keys.c) (également paramétrable par l’utilisateur) détermine si celui-ci doit être remplacé (par un autre caractère ou par une macro) ou bien si d’autres caractères doivent être insérés avant lui, en fonction du contenu du buffer. Celui-ci mémorise les 8 dernières touches. Enfin, le caractère est ajouté au buffer, en décalant les touches présentes auparavant. 
+Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/clever_keys.c) (également paramétrable par l’utilisateur) détermine si celui-ci doit être remplacé (par un autre caractère ou par une macro) ou bien si d’autres caractères doivent être insérés avant lui, en fonction du contenu du buffer. Celui-ci mémorise les 8 dernières touches. Enfin, le caractère est ajouté au buffer, en décalant les touches présentes auparavant. Pour éviter des effets intempestifs, le buffer se vide automatiquement au bout d’un certain temps d’inactivité du clavier.
 
 
-Mes Clever Keys me servent notamment :
-–	à ajouter automatiquement le U entre le Q et une autre voyelle (ou l’apostrophe)
-–	à mettre automatiquement la première lettre d’une phrase en majuscule
-–	à utiliser ma touche Repeat comme une touche apostrophe (en français)
-–	à envoyer des macros pour des mots courants
-Backspace supprime la dernière touche du buffer, et décale les touches dans l’autre sens. Parfois, une frappe est remplacée, mais ce n’est pas le comportement souhaité. Dans ce cas, il suffit d’effacer les touches produites par l’algorithme, et celui-ci effacera complètement le buffer. Comme ça, si on retape le même caractère, les clever keys ne s’appliqueront pas ce coup-ci. Par exemple, si je tape Q puis I, je vais obtenir QUI. Si pour une fois je voulais taper QI, il me suffirait de taper deux fois backspace et de retaper I pour obtenir QI. J’ai une macro “Panique” qui permet de vider le buffer, pour éviter que les Clever Keys ne modifient la frappe suivante.
-La touche Repeat interagit avec le buffer, même quand il est mis à jour avec backspace. C’est comme si Repeat voyageait dans le temps !
-Pour éviter des effets intempestifs, le buffer se vide automatiquement au bout d’un certain temps d’inactivité du clavier.
+Les Clever Keys me servent notamment :
+- à ajouter automatiquement le U entre le Q et une autre voyelle (ou l’apostrophe)
+- à mettre automatiquement la première lettre d’une phrase en majuscule
+- à utiliser ma touche Repeat comme une touche apostrophe (en français)
+- à envoyer des macros pour des mots courants
 
 
+`Backspace` supprime la dernière touche du buffer, et décale les touches dans l’autre sens. La touche `Repeat` interagit avec le buffer, même quand il est mis à jour avec `backspace`. C’est comme si `Repeat` voyageait dans le temps !
+
+
+Parfois, une `Clever Key` se déclenche, mais ce n’est pas le comportement souhaité. Dans ce cas, il suffit d’effacer les touches produites par l’algorithme, et celui-ci effacera complètement le buffer. Comme ça, si on retape le même caractère, les clever keys ne s’appliqueront pas ce coup-ci. Par exemple, si je tape `Q` puis `I`, je vais obtenir `QUI`. Si pour une fois je voulais taper `QI`, il me suffirait de taper deux fois `backspace` pour effacer `UI` et de retaper `I` pour obtenir `QI`. J’ai également une macro *Panique* qui permet de vider le buffer, pour éviter que les *Clever Keys* ne modifient la frappe suivante.
