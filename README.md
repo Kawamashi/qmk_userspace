@@ -5,12 +5,14 @@ This is a template repository which allows for an external set of QMK keymaps to
 ![kb](https://github.com/Kawamashi/qmk_userspace/blob/main/GMKyria-min.jpg)
 
 ## Custom features
-* [Positional Tap-Hold](#positional-tap-hold)
+* [Configuration des Layer-Tap](#Configuration-des-Layer-Tap)
 * [One-shot for All](#one-shot-for-all-mods) modifiers
+* [Modificatrices](#Modificatrices)
+* [Mod Word](#Mod-Word)
+* [Layer Word](#Layer-Word)
+* [Clever Keys](#Clever-Keys)
 
 &nbsp;</br> &nbsp;</br>
-
-# Positional Tap-Hold
 
 # Configuration des Layer-Tap
 J’utilise des layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation et raccourcis).<br/>
