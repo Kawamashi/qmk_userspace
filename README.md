@@ -50,20 +50,21 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 &nbsp;</br> &nbsp;</br>
 
 ## Modificatrices
-Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum), autrement dit des one-shot mods situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
+Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods]([https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum#oneshot-modifiers)), autrement dit des [one‑shot mods](https://docs.qmk.fm/one_shot_keys) situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
 
 
 Les Callum mods peuvent être maintenus comme des modificatrices classiques, ou employés comme sticky keys. Ils ont la particularité de ne pas utiliser de timer. Du coup, ils peuvent être combinés sans être obligé de marquer une pause entre chaque modificatrice.
 
 
-J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les roulements. J’ai également implémenté un timer, pour que les one-shot mods se désactivent automatiquement au bout d’un certain temps d’inactivité. Le code se trouve [ici](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/oneshot.c).
+J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les roulements. Dans mon implémentation, un one-shot mod se désactive lorsqu’on appuie une deuxième fois dessus, ou automatiquement au bout d’un certain temps d’inactivité. Le code se trouve [ici](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/oneshot.c).
 
 &nbsp;</br>
 
 ## One-shot for All
 Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait de devoir maintenir une touche pour y accéder, je voulais pouvoir le faire avec une one-shot layer. De plus, je voulais conserver des one-shot shift sur ma keymap, et je n’avais pas la place de tout mettre. J’ai donc conçu les One-Shot for All (OS4A) pour tout faire à la fois : 
-- lors d’un appui maintenu, ces touches produisent `Shift`
+- lors d’un appui maintenu, ces touches produisent `Shift`.
 - après un appui simple, elles activent une couche liée.
+- après un 2e appui, elles désactivent la couche liée et annulent tous les Callum mods.
 
 Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche liée :
 
@@ -127,6 +128,43 @@ bool deferred_shift_after_dead_key(uint16_t keycode) {
 }
 ```
 Vous trouverez mon implémentation complète [ici](https://github.com/Kawamashi/qmk_userspace/blob/main/keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/prefixing_layers.c).
+
+&nbsp;</br>
+
+## Combos
+J’utilise des combos principalement pour les touches d’édition : `Backspace`, `Delete`, `Tab`, `Enter`, `Esc`, `Home`, `End`. Certaines d’entre elles sont placées sur la home-row. J’ai implémenté un timer pour éviter leur déclenchement involontaire, lors d’un roulement par exemple : 
+
+```c
+bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+
+    // Chorded mods shouldn't be considered as combos.
+    if (IS_LAYER_ON(_R_MODS)) { return on_left_hand(record->event.key); }
+    if (IS_LAYER_ON(_L_MODS)) { return !on_left_hand(record->event.key); }
+
+    // Some combos should trigger regardless of the idle time.
+    switch (combo_index) {
+        case R_BKSPC:
+        case BK_WORD:
+        case ENTER:
+        case HOME:
+        case END:
+        case L_SPACE:
+          return true;
+
+        default:
+          if (get_idle_time() < TAP_INTERVAL) { return false; }
+    }
+    return true;
+}
+```
+Pour que certaines combos se déclenchent, il faut donc qu’un temps `TAP_INTERVAL` se soit écoulé entre l’input du dernier caractère et la combo.
+
+J’ai également une combo `PANIC`, pour remettre le clavier dans son état nominal. Cette combo :
+- annule les [one-shot mods](#Modificatrices)
+- désactive les layers autres que la couche de base
+- désactive les [Layer Word](#Layer-Word)
+- désactive les [Mod Word](#Mod-Word)
+- vide le buffer des [Clever Keys](#Clever-Keys)
 
 &nbsp;</br>
 
