@@ -72,7 +72,7 @@ Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être ench
 - Pour faire `Ctrl S`, on tape `OS4A` `⎈` `S`.
 - Pour faire `Ctrl Shift T`, on tape `OS4A` `⎈` `⇧` `S`. L’ordre des modificatrices n’est pas importante, elles peuvent même être tapées simultanément.
 
-Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#Layer-Word). Les OS4A impliquent des timers, puisqu’au fond ce sont des mod-taps modifiés. Cependant, grâce à la configuration des [Configuration des Layer-Tap](#Configuration-des-Layer-Tap), on peut faire un roulement sur `OS4A` et une modificatrice sans aucun souci. En utilisation réelle, il n’y a pas de timer à respecter. 
+Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#Layer-Word). Les OS4A impliquent des timers, puisqu’au fond ce sont des mod-taps modifiés. Cependant, grâce à la configuration des [Tap-Hold](#Configuration-des-Layer-Tap), on peut faire un roulement sur `OS4A` et une modificatrice sans aucun souci. En utilisation réelle, il n’y a pas de timer à respecter. 
 
 &nbsp;</br>
 
