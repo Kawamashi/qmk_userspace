@@ -14,8 +14,8 @@ This is a template repository which allows for an external set of QMK keymaps to
 
 &nbsp;</br> &nbsp;</br>
 
-# Configuration des Layer-Tap
-J’utilise des layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation et raccourcis).
+## Configuration des Layer-Tap
+J’utilise des layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation, raccourcis et modificatrices).
 
 
 J’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#tap-or-hold-decision-modes), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
@@ -48,7 +48,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 ```
 &nbsp;</br> &nbsp;</br>
 
-# Modificatrices
+## Modificatrices
 Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum), autrement dit des one-shot mods situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
 
 
@@ -59,9 +59,19 @@ J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les 
 
 &nbsp;</br>
 
-# Mod Word
+## One-shot for All (OS4A)
+Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait de devoir maintenir une touche pour y accéder, je voulais pouvoir le faire avec une one-shot layer. De plus, je voulais conserver des one-shot shift sur ma keymap, et je n’avais pas la place de tout mettre. J’ai donc conçu les One-Shot for All pour tout faire à la fois : 
+- lors d’un appui maintenu, ces touches produisent `Shift`
+- après un appui simple, elles activent une autre couche.
+
+Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift.
+J’ai donc une OS4A pour chaque moitié du clavier.
+
+&nbsp;</br>
+
+## Mod Word
 Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword.c) chapeaute mon implémentation de [*Caps Word*](https://docs.qmk.fm/features/caps_word), *Caps List*, *Caps Lock* et *Word Selection*.
-## Caps List
+### Caps List
 J’utilise énormément [*Caps Word*](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé *Caps List*, une fonctionnalité qui réactive *Caps Word* entre chaque mot d’une liste. 
 
 
@@ -71,11 +81,11 @@ L’utilisateur peut définir les keycodes qui ne doivent pas interrompre *Caps 
 Pour chaque séparateur, l’utilisateur peut définir un compteur, pour indiquer à la fonction qu’elle doit se désactiver après le prochain mot. Par exemple, ` et ` déclenche ce compteur mais pas `, `. 
 &nbsp;</br>
 
-## Mod Word
+### Mod Word
 En plus de *Caps Word* et *Caps List*, je suis également amené à utiliser *Caps Lock* régulièrement. Je voulais que l’activation d’une fonctionnalité désactive automatiquement les autres, pour qu’il n’y ait pas d’interférences entre elles. Le module *Mod Word* est là pour les chapeauter. En plus de gérer les activations concurrentielles, *Mod Word* désactive la fonctionnalité en cours au bout d’un certain temps d’inactivité du clavier.
 &nbsp;</br>
 
-## Word Selection
+### Word Selection
 *Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation (flèches, home et end) tapées ensuite pour étendre la sélection. *Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive. 
 Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une ligne entière. 
 
@@ -84,7 +94,7 @@ Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une
 
 &nbsp;</br>
 
-# Layer Word
+## Layer Word
 [*Layer Word*](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/layerword.c) est un concept similaire à *Caps Word*, mais il s’applique aux couches. Quand on active un *Layer Word*, on active la couche correspondante, et elle restera activée tant que l’utilisateur ne tape pas de caractère “word breaking”. Par exemple, le *Layer Word* lié à ma couche de nombres restera activé tant que je taperai des symboles numériques. Les caractères permettant de continuer chaque *Layer Word* sont à définir par l’utilisateur.
 
 
@@ -92,7 +102,7 @@ Comme pour *Mod Word*, il ne peut y avoir qu’un seul *Layer Word* actif à la 
 
 &nbsp;</br>
 
-# Clever Keys
+## Clever Keys
 Je me suis beaucoup inspiré de [ce post](https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys) quand j’ai écrit les [Clever Keys](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/clever_keys_utilities.c). Ce concept repose sur le fait de mémoriser les derniers caractères tapés en les stockant dans un buffer, et de potentiellement remplacer un caractère en cours de traitement par un autre. En un mot, les *Clever Keys* permettent de transformer votre layout en **layout adaptatif**.
 
 ```c
