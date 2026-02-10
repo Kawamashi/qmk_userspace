@@ -6,8 +6,9 @@ This is a template repository which allows for an external set of QMK keymaps to
 
 ## Custom features
 * [Configuration des Layer-Tap](#Configuration-des-Layer-Tap)
-* [One-shot for All](#one-shot-for-all-mods) modifiers
+* [One-shot for All](#one-shot-for-all-mods)
 * [Modificatrices](#Modificatrices)
+* [Couches préfixées](#Couches-préfixées)
 * [Mod Word](#Mod-Word)
 * [Layer Word](#Layer-Word)
 * [Clever Keys](#Clever-Keys)
@@ -66,7 +67,7 @@ Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait
 
 Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche liée :
 
-![kb](OS4A.png)
+![couche OS4A](OS4A.png)
 
 - Pour taper `T` (majuscule), il suffit de taper `OS4A` `T`.
 - Pour faire `Ctrl S`, on tape `OS4A` `⎈` `S`.
@@ -76,10 +77,23 @@ Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#
 
 &nbsp;</br>
 
-## Prefixing layers
+## Couches préfixées
+Mon layout, [Propergol](https://github.com/Kawamashi/Propergol/), utilise une [touche morte de type Lafayette](https://ergol.org/presentation/#impeccable-en-fran%C3%A7ais) (notée 1DK ou `★`) pour taper les caractères accentués, les diacritiques ainsi que les symboles typographiques. Pour m’affranchir de certaines limites liées à cette approche, j’ai remplacé cette touche morte par un one-shot layer, donnant accès à une couche 1DK. Par défaut, un caractère tapé sur cette couche envoie la touche morte avant. Pour l’implémenter, j’ai utilisé [une idée de Pascal Getreuer](https://getreuer.info/posts/keyboards/macros3/index.html#prefixing-layer) :
 
 ```c
 bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
+
+    if (IS_LAYER_ON(_1DK)) {
+        switch (keycode) {
+            case PG_Z:
+            case PG_UNDS:
+            case PG_ECIR:
+            case PG_Q:
+                return true;                
+            default:
+                tap_code(PG_1DK);            
+        }
+    }
 
     // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
     if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
@@ -88,28 +102,31 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
         }
     }
-
-    if (IS_LAYER_ON(_1DK)) {
-
-        switch (keycode) {
-            case PG_K:
-            case PG_B:
-            case PG_H:
-            case PG_APOS:
-            case OU_GRV:
-            case PG_UNDS:
-            case PG_AGRV:
-            case PG_ECIR:
-            case CNL_1DK:
-                return true;
-                
-            default:
-                tap_code(PG_1DK);            
-        }
-    }
     return true;
 }
 ```
+&nbsp;</br>
+
+Pour faire `ê` avec l’approche Lafayette, il faut faire `★` `e`. Pour faire `Ê`, il faut faire `★` `Shift`+`e`. Je trouve ça plus logique de faire `Shift`+`ê`, donc `Shift`+`★` `e`. Dans ce même module, j’ai modifié le comportement de la touche 1DK avec `Shift`, pour que ce soit le caractère suivant `★` qui soit shifté :
+```c
+bool deferred_shift_after_dead_key(uint16_t keycode) {
+    // Special behaviour of PG_1DK when shifted
+    // Shift must apply to the keycode following PG_1DK.
+    const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+
+    if (is_shifted) {
+        del_weak_mods(MOD_MASK_SHIFT);
+        del_oneshot_mods(MOD_MASK_SHIFT);
+        unregister_mods(MOD_MASK_SHIFT);
+    }
+
+    tap_code(PG_1DK);
+    if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
+
+    return keycode != PG_1DK;
+}
+```
+Vous trouverez mon implémentation complète [ici](https://github.com/Kawamashi/qmk_userspace/blob/main/keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/prefixing_layers.c).
 
 &nbsp;</br>
 
@@ -176,7 +193,7 @@ Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboa
 Les Clever Keys me servent notamment :
 - à ajouter automatiquement le `U` entre le `Q` et une autre voyelle (ou l’apostrophe)
 - à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, or `!`. Autrement dit, `Shift` s’applique automatiquement en début de phrase !
-- à changer le comportement de la touche `Repeat` dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi/Propergol/blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
+- à changer le comportement de la touche `Repeat` dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi//blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
 - à donner des effets “magiques” à n’importe quelle touche, pas seulement la touche `Alt-Repeat`
 - à paramétrer plus finement celle-ci, en tenant compte de la série de touches tapées avant et non pas seulement de la dernière
 
