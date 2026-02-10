@@ -174,7 +174,7 @@ Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword
 J’utilise énormément [*Caps Word*](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé *Caps List*, une fonctionnalité qui réactive *Caps Word* entre chaque mot d’une liste. 
 
 
-L’utilisateur peut définir les keycodes qui ne doivent pas interrompre *Caps List* (comme par exemple les lettres, les chiffres, certains symboles, `,` et ` `). À la saisie d’un caractère différent, Caps List se désactivera automatiquement. L’utilisateur doit également définir les séparateurs de liste (comme `, `, ` et `, ` ou `). *Caps List* réactivera automatiquement *Caps Word* après l’un de ces séparateurs. 
+L’utilisateur peut définir les keycodes qui ne doivent pas interrompre *Caps List* (comme par exemple les lettres, les chiffres, certains symboles, `,` et `␣`). À la saisie d’un caractère différent, Caps List se désactivera automatiquement. L’utilisateur doit également définir les séparateurs de liste (comme `, `, ` et `, ` ou `). *Caps List* réactivera automatiquement *Caps Word* après l’un de ces séparateurs. 
 
 
 Pour chaque séparateur, l’utilisateur peut définir un compteur, pour indiquer à la fonction qu’elle doit se désactiver après le prochain mot. Par exemple, ` et ` déclenche ce compteur mais pas `, `. 
@@ -185,7 +185,7 @@ En plus de *Caps Word* et *Caps List*, je suis également amené à utiliser *Ca
 &nbsp;</br>
 
 ### Word Selection
-*Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation (flèches, home et end) tapées ensuite pour étendre la sélection. *Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive. 
+*Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation tapées ensuite pour étendre la sélection (flèches, `Home` et `End`). *Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive. 
 Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une ligne entière. 
 
 
