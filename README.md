@@ -2,7 +2,7 @@
 
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the main QMK repository.
 
-![kb](https://github.com/Kawamashi/qmk_userspace/blob/main/GMKyria-min.jpg)
+![kb](GMKyria-min.jpg)
 
 ## Custom features
 * [Configuration des Layer-Tap](#Configuration-des-Layer-Tap)
@@ -64,8 +64,15 @@ Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait
 - lors d’un appui maintenu, ces touches produisent `Shift`
 - après un appui simple, elles activent une autre couche.
 
-Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift.
-J’ai donc une OS4A pour chaque moitié du clavier.
+Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche OS4A :
+
+![kb](OS4A.png)
+
+- Pour taper `T` (majuscule), il suffit de taper `OS4A` `T`.
+- Pour faire `Ctrl S`, on tape `OS4A` `⎈` `S`.
+- Pour faire `Ctrl Shift T`, on tape `OS4A` `⎈` `⇧` `S`. L’ordre des modificatrices n’est pas importante, elles peuvent même être tapées simultanément.
+
+Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#Layer-Word). Les OS4A impliquent des timers, puisqu’au fond ce sont des mod-taps modifiés. Cependant, grâce à la configuration des [Configuration des Layer-Tap](#Configuration-des-Layer-Tap), on peut faire un roulement sur `OS4A` et une modificatrice sans aucun souci. En utilisation réelle, il n’y a pas de timer à respecter. 
 
 &nbsp;</br>
 
