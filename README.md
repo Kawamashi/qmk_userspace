@@ -76,6 +76,43 @@ Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#
 
 &nbsp;</br>
 
+## Prefixing layers
+
+```c
+bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
+
+    // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
+    if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
+        if (should_add_shift(keycode, record)) {
+            set_oneshot_mods(MOD_BIT(KC_LSFT));
+            if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
+        }
+    }
+
+    if (IS_LAYER_ON(_1DK)) {
+
+        switch (keycode) {
+            case PG_K:
+            case PG_B:
+            case PG_H:
+            case PG_APOS:
+            case OU_GRV:
+            case PG_UNDS:
+            case PG_AGRV:
+            case PG_ECIR:
+            case CNL_1DK:
+                return true;
+                
+            default:
+                tap_code(PG_1DK);            
+        }
+    }
+    return true;
+}
+```
+
+&nbsp;</br>
+
 ## Mod Word
 Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword.c) chapeaute mon implémentation de [*Caps Word*](https://docs.qmk.fm/features/caps_word), *Caps List*, *Caps Lock* et *Word Selection*.
 ### Caps List
