@@ -62,9 +62,9 @@ J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les 
 ## One-shot for All (OS4A)
 Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait de devoir maintenir une touche pour y accéder, je voulais pouvoir le faire avec une one-shot layer. De plus, je voulais conserver des one-shot shift sur ma keymap, et je n’avais pas la place de tout mettre. J’ai donc conçu les One-Shot for All pour tout faire à la fois : 
 - lors d’un appui maintenu, ces touches produisent `Shift`
-- après un appui simple, elles activent une autre couche.
+- après un appui simple, elles activent une couche liée.
 
-Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche OS4A :
+Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche liée :
 
 ![kb](OS4A.png)
 
@@ -72,7 +72,7 @@ Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être ench
 - Pour faire `Ctrl S`, on tape `OS4A` `⎈` `S`.
 - Pour faire `Ctrl Shift T`, on tape `OS4A` `⎈` `⇧` `S`. L’ordre des modificatrices n’est pas importante, elles peuvent même être tapées simultanément.
 
-Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#Layer-Word). Les OS4A impliquent des timers, puisqu’au fond ce sont des mod-taps modifiés. Cependant, grâce à la configuration des [Tap-Hold](#Configuration-des-Layer-Tap), on peut faire un roulement sur `OS4A` et une modificatrice sans aucun souci. En utilisation réelle, il n’y a pas de timer à respecter. 
+Les OS4A fonctionnent grâce à des couches préfixées et à des [Layer Word](#Layer-Word). Les OS4A impliquent des timers, puisqu’au fond ce sont des mod-taps modifiés. Cependant, grâce à la configuration des [Tap-Hold](#Configuration-des-Layer-Tap), on peut faire un roulement sur une touche OS4A et une modificatrice sans aucun souci. En utilisation réelle, il n’y a pas de timer à respecter. 
 
 &nbsp;</br>
 
