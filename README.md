@@ -171,13 +171,50 @@ J’ai également une combo `PANIC`, pour remettre le clavier dans son état nom
 ## Mod Word
 Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword.c) chapeaute mon implémentation de [*Caps Word*](https://docs.qmk.fm/features/caps_word), *Caps List*, *Caps Lock* et *Word Selection*.
 ### Caps List
-J’utilise énormément [*Caps Word*](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé *Caps List*, une fonctionnalité qui réactive *Caps Word* entre chaque mot d’une liste. 
+J’utilise énormément [Caps Word](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé *Caps List*, une fonctionnalité qui réactive Caps Word entre chaque mot d’une liste. 
 
 
-L’utilisateur peut définir les keycodes qui ne doivent pas interrompre *Caps List* (comme par exemple les lettres, les chiffres, certains symboles, `,` et `␣`). À la saisie d’un caractère différent, Caps List se désactivera automatiquement. L’utilisateur doit également définir les séparateurs de liste (comme `, `, ` et `, ` ou `). *Caps List* réactivera automatiquement *Caps Word* après l’un de ces séparateurs. 
+L’utilisateur peut définir les keycodes qui ne doivent pas interrompre Caps List (comme par exemple les lettres, les chiffres, certains symboles, `,` et `␣`). À la saisie d’un caractère différent, Caps List se désactivera automatiquement. \
+L’utilisateur doit également définir les séparateurs de liste (comme `,␣`, `␣et␣`, `␣ou␣`). Caps List réactivera automatiquement Caps Word après l’un de ces séparateurs, en se servant du buffer des [Clever Keys](#Clever-Keys).
 
 
 Pour chaque séparateur, l’utilisateur peut définir un compteur, pour indiquer à la fonction qu’elle doit se désactiver après le prochain mot. Par exemple, ` et ` déclenche ce compteur mais pas `, `. 
+
+
+Pour illustrer le fonctionnement de Caps List, si je veux écrire `Les principaux firmwares sont QMK, ZMK et KRK, je préfère QMK.` : 
+- j’active Caps List avant de taper ma liste.
+- Caps List active automatiquement Caps Word.
+- je tape `qmk`. Tous les caractères étant des lettres, ni Caps List ni Caps Word ne se désactivent.
+- je tape `,`. Caps Word se désactive. Caps List sera désactivé si un séparateur de liste n’est pas détecté dans les prochains caratères, grâce à un compteur.
+- je tape `␣`. Caps List est toujours actif. Le compteur s’incrémente.
+- je tape `z`. Caps List détecte que la séquence précédente (`,␣`) est un séparateur de liste : Caps Word est réactivé, le compteur est réinitialisé.
+- je tape `mk`. Tous les caractères étant des lettres, ni Caps List ni Caps Word ne se désactivent.
+- je tape `␣`. Caps Word se désactive. Le compteur de Caps List s’incrémente.
+- je tape `et␣`. Le compteur s’incrémente.
+- je tape `k`. Caps List détecte que la séquence précédente (`,␣`) est un séparateur de liste : Caps Word est réactivé, le compteur est réinitialisé. Ce séparateur a été configuré comme séparateur final de liste : il change la valeur limite du compteur.
+- je tape `rk`. Tous les caractères étant des lettres, ni Caps List ni Caps Word ne se désactivent.
+- je tape `,`. Caps Word se désactive. Le compteur de Caps List s’incrémente.
+- je tape `␣`. Le compteur arrive à sa limite, Caps List se désactive. Le prochain mot ne réactivera donc pas Caps Word.
+
+`Backspace` décrémente le compteur.
+
+```c
+
+void update_caps_list(uint16_t keycode, keyrecord_t* record) {
+    
+  if (should_continue_caps_list(keycode, record)) {
+
+      if (list_separator()) {
+        caps_word_on();  // Reactivate Caps Word for a new word
+        capslist_counter = 1;
+        return;
+      }
+      if (capslist_counter < counter_limit) { return; }
+  }
+  disable_modword(capslist);
+}
+```
+
 &nbsp;</br>
 
 ### Mod Word
