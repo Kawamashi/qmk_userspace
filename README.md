@@ -199,6 +199,78 @@ Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une
 
 Comme pour *Mod Word*, il ne peut y avoir qu’un seul *Layer Word* actif à la fois. Les *Layer Word* peuvent se désactiver automatiquement au bout d’un certain temps d’inactivité du clavier.
 
+
+La mise en place d’un Layerword est très simple. Il faut d’abord définir un keycode custom, `NUMWORD` par exemple. On lie ensuite ce keycode à une couche et on peut définir le timeout du Layerword : 
+
+```c
+
+uint8_t layerword_layer_from_trigger(uint16_t keycode) {
+
+  switch (keycode) {
+    case L_OS4A: return _L_MODS;
+    case R_OS4A: return _R_MODS;
+    case NUMWORD: return _NUMBERS;
+    case NAVWORD: return _SHORTNAV;
+    case FUNWORD: return _FUNCAPPS;
+    default: return 0;
+  }
+}
+
+uint16_t layerword_exit_timeout(uint8_t layer) {
+
+  switch (layer) {
+    case _NUMBERS:
+    case _SHORTNAV:
+    case _L_MODS:
+    case _R_MODS:
+        return 3000;
+    case _FUNCAPPS:
+        return 30000;
+    default:
+        return 0;
+  }
+}
+```
+
+Il ne reste plus qu’à définir les caractères qui continuent le Layerword :
+
+```c
+bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record) {
+
+  switch (layer) {
+
+    case _NUMBERS:
+      switch (keycode) {
+        // Keycodes that should not disable num word.
+        // Numpad keycodes
+        case KC_1 ... KC_0:
+        case KC_PDOT:
+        case PG_MOIN:
+        case PG_ASTX: 
+        case PG_PLUS:
+        case PG_SLSH:
+        case PG_EGAL:
+        case PG_EXP:
+        case PG_IND:
+        case PG_H:
+        case PG_2PTS:
+
+        // Misc
+        case KC_BSPC:
+        case PG_1DK:   // Not to exit Numword when chording it with 1DK
+            return true; 
+        default:
+            return false;
+      }
+    // Other Layerwords
+  }
+  return false;
+}
+```
+
+Tout autre symbole de la couche sera saisi, mais le layerword se terminera et la couche sera désactivée quand la touche sera relâchée.  
+Le paramétrage de mes Layerwords se trouve [ici](https://github.com/Kawamashi/qmk_userspace/blob/main/keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/word_conf.c).
+
 &nbsp;</br>
 
 ## Clever Keys
