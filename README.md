@@ -36,6 +36,17 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 ```
 ```c
+bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
+    switch (tap_hold_keycode) {
+        case LT_REPT:
+        case LT_MGC:
+          return true;
+    }
+
+    // Otherwise, follow the opposite hands rule.
+    return bilateral_combination(tap_hold_record, other_record);
+}
+
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
     if (!approved_chord(keycode, record, next_keycode, &next_record)) {
