@@ -270,7 +270,7 @@ En plus de *Caps Word* et *Caps List*, je suis également amené à utiliser *Ca
 - `Ctrl` et `Shift` sont ajoutées à `←` et `→` pour sélectionner ou désélectionner le mot précédent/suivant
 - `Shift` est ajouté à `Home` et `End` pour étendre la sélection au début/à la fin de la ligne
 - `Shift` est ajouté à `↑` et `↓` pour sélectionner ou déselectionner la ligne précédente/suivante
-- `Shift` est ajouté à `PgUp` et `PgDn` pour étendre la sélection au début/à la fin de la page
+- `Shift` est ajouté à `Page Up` et `Page Down` pour étendre la sélection au début/à la fin de la page
 
 *Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive.\
 Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une ligne entière. 
