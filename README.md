@@ -185,7 +185,13 @@ En plus de *Caps Word* et *Caps List*, je suis également amené à utiliser *Ca
 &nbsp;</br>
 
 ### Word Selection
-*Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation tapées ensuite pour étendre la sélection (flèches, `Home` et `End`). *Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive. 
+*Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation tapées ensuite pour étendre ou réduire la sélection : 
+- `Ctrl` et `Shift` sont ajoutées à `←` et `→` pour sélectionner ou désélectionner le mot précédent/suivant
+- `Shift` est ajouté à `Home` et `End` pour étendre la sélection au début/à la fin de la ligne
+- `Shift` est ajouté à `↑` et `↓` pour sélectionner ou déselectionner la ligne précédente/suivante
+- `Shift` est ajouté à `PgUp` et `PgDn` pour étendre la sélection au début/à la fin de la page
+
+*Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive.\
 Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une ligne entière. 
 
 
