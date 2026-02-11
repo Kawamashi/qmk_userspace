@@ -61,7 +61,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 &nbsp;</br> &nbsp;</br>
 
 ## Modificatrices
-Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods]([https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum#oneshot-modifiers)), autrement dit des [one‑shot mods](https://docs.qmk.fm/one_shot_keys) situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
+Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum#oneshot-modifiers), autrement dit des [one‑shot mods](https://docs.qmk.fm/one_shot_keys) situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
 
 
 Les Callum mods peuvent être maintenus comme des modificatrices classiques, ou employés comme sticky keys. Ils ont la particularité de ne pas utiliser de timer. Du coup, ils peuvent être combinés sans être obligé de marquer une pause entre chaque modificatrice.
