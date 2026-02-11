@@ -178,25 +178,58 @@ L’utilisateur peut définir les keycodes qui ne doivent pas interrompre Caps L
 L’utilisateur doit également définir les séparateurs de liste (comme `,␣`, `␣et␣`, `␣ou␣`). Caps List réactivera automatiquement Caps Word après l’un de ces séparateurs, en se servant du buffer des [Clever Keys](#Clever-Keys).
 
 
-Pour chaque séparateur, l’utilisateur peut définir un compteur, pour indiquer à la fonction qu’elle doit se désactiver après le prochain mot. Par exemple, ` et ` déclenche ce compteur mais pas `, `. 
+Pour illustrer le fonctionnement de Caps List, imaginons que je veuille écrire la phrase suivante : `Les principaux firmwares sont QMK, ZMK et KRK, je préfère QMK.` : 
+- J’active Caps List avant de taper ma liste. Caps List active automatiquement Caps Word.
+- Je tape `qmk`. Tous les caractères étant des lettres, Caps List et Caps Word restent activés.
+- Je tape `,`. Caps Word se désactive. La virgule n’interrompt pas Caps List, mais un compteur s’incrémente. Si un séparateur de liste n’est pas détecté avant que celui-ci n’atteigne une certaine valeur, Caps List sera désactivé. En cas de faute de frappe, `Backspace` décrémente le compteur.
+- Je tape `␣`. Caps List est toujours actif. Le compteur s’incrémente.
+- Je tape `z`. Caps List détecte que la séquence précédente (`,␣`) est un séparateur de liste : Caps Word est réactivé, le compteur est réinitialisé.
+- Je tape `mk`. Tous les caractères étant des lettres, Caps List et Caps Word restent activés.
+- Je tape `␣`. Caps Word se désactive. Le compteur de Caps List s’incrémente.
+- Je tape `et␣`. Le compteur s’incrémente.
+- Je tape `k`. Caps List détecte que la séquence précédente (`␣et␣`) est un séparateur final de liste : Caps Word est réactivé, le compteur est réinitialisé et sa valeur limite est modifiée.
+- Je tape `rk`. Tous les caractères étant des lettres, Caps List et Caps Word restent activés.
+- Je tape `,`. Caps Word se désactive. Le compteur de Caps List s’incrémente.
+- Je tape `␣`. Le compteur arrive à sa limite, Caps List se désactive. 
+- Je tape `j`. Un nouveau mot commence, mais Caps Word n’est pas réactivé. `j` ne passe donc pas en majuscule.
+
+&nbsp;</br>
+
+Voilà le paramétrage et l’algorithme de Caps List :
+```c
+bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record) {
+
+    // Keycodes that continue Caps List, but not Caps Word.
+    // These keycodes trigger the counter to deactivate Caps List.
+    switch (keycode) {
+      case KC_BSPC:
+        return update_capslist_counter(-1);
+      case PG_VIRG:
+      case KC_SPC:
+          return update_capslist_counter(1);
+    }
+
+    if (is_letter(keycode) || is_send_string_macro(keycode)) { return update_capslist_counter(1); }
+
+    // This condition can't be merged with the previous one
+    // because caps_word_press_user adds shift to letters and send-string macros.
+    if (caps_word_press_user(keycode)) { return update_capslist_counter(1); }
+
+    return false;  // Deactivate Caps List.
+}
 
 
-Pour illustrer le fonctionnement de Caps List, si je veux écrire `Les principaux firmwares sont QMK, ZMK et KRK, je préfère QMK.` : 
-- j’active Caps List avant de taper ma liste.
-- Caps List active automatiquement Caps Word.
-- je tape `qmk`. Tous les caractères étant des lettres, ni Caps List ni Caps Word ne se désactivent.
-- je tape `,`. Caps Word se désactive. Caps List sera désactivé si un séparateur de liste n’est pas détecté dans les prochains caratères, grâce à un compteur.
-- je tape `␣`. Caps List est toujours actif. Le compteur s’incrémente.
-- je tape `z`. Caps List détecte que la séquence précédente (`,␣`) est un séparateur de liste : Caps Word est réactivé, le compteur est réinitialisé.
-- je tape `mk`. Tous les caractères étant des lettres, ni Caps List ni Caps Word ne se désactivent.
-- je tape `␣`. Caps Word se désactive. Le compteur de Caps List s’incrémente.
-- je tape `et␣`. Le compteur s’incrémente.
-- je tape `k`. Caps List détecte que la séquence précédente (`,␣`) est un séparateur de liste : Caps Word est réactivé, le compteur est réinitialisé. Ce séparateur a été configuré comme séparateur final de liste : il change la valeur limite du compteur.
-- je tape `rk`. Tous les caractères étant des lettres, ni Caps List ni Caps Word ne se désactivent.
-- je tape `,`. Caps Word se désactive. Le compteur de Caps List s’incrémente.
-- je tape `␣`. Le compteur arrive à sa limite, Caps List se désactive. Le prochain mot ne réactivera donc pas Caps Word.
+bool list_separator(void) {
 
-`Backspace` décrémente le compteur.
+    // Words that continue Caps List.
+    if (get_recent_keycode(-1) == KC_SPC) {
+        if (get_recent_keycode(-2) == PG_VIRG) { return true; }
+        if (word_check((uint16_t[]) {KC_SPC, PG_E, PG_T}, 3, 2)) { return true; }
+        if (word_check((uint16_t[]) {KC_SPC, PG_O, PG_U}, 3, 2)) { return true; }
+    }
+    return false;
+}
+```
 
 ```c
 
