@@ -23,16 +23,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
     if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
-    // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
-    if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
-        if (should_add_shift(keycode, record)) {
-            set_oneshot_mods(MOD_BIT(KC_LSFT));
-            if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
-            disable_layerword(get_layerword_layer());  // To fix a bug producing Capsword when typing OS4A + roll between a letter and apostrophe.
-        }
-    }
-
-
     if (previous_1dk) {
         if (get_repeat_key_count() > 0) { tap_code(PG_1DK); }
         previous_1dk = false;
@@ -41,7 +31,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
     // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
         case PG_1DK:
-        case NUM_1DK:
           return deferred_shift_after_dead_key(keycode);
     }
 
@@ -58,6 +47,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_UNDS:
             case PG_AGRV:
             case PG_ECIR:
+            case PG_Q:
             //case KC_SPC:    // When space is added by Clever Keys
             case CNL_1DK:
               return true;
@@ -91,21 +81,4 @@ bool deferred_shift_after_dead_key(uint16_t keycode) {
     if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
 
     return keycode != PG_1DK;
-}
-
-
-bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
-
-  // Shift shouldn't be added if other mods are active
-  if (get_mods() | get_oneshot_mods()) { return false; }
-
-  // Combos and encoder events.
-  if (!IS_KEYEVENT(record->event)) { return true; }
-
-  // Specific exceptions
-  if (not_to_be_shifted(keycode)) { return false; }
-
-  // Otherwise, add shift if the key is on the other side of the keyboard.
-  //return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
-  return IS_LAYER_ON(_R_MODS) == on_left_hand(record->event.key);
 }
