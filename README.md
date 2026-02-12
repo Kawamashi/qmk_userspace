@@ -7,7 +7,7 @@ This is a template repository which allows for an external set of QMK keymaps to
 ## Custom features
 * [Configuration des Layer-Tap](#Configuration-des-Layer-Tap)
 * [Modificatrices](#Modificatrices)
-* [One-shot for All](#One-Shot-for-All)
+* [One-Shot for All](#One-Shot-for-All)
 * [Couches préfixées](#Couches-préfixées)
 * [Combos](#Combos)
 * [Mod Word](#Mod-Word)
@@ -17,7 +17,7 @@ This is a template repository which allows for an external set of QMK keymaps to
 &nbsp;</br> &nbsp;</br>
 
 ## Configuration des Layer-Tap
-J’utilise des Layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation, raccourcis et modificatrices). Transformer les touches [Repeat](https://docs.qmk.fm/features/repeat_key) et [Alt-Repeat](https://docs.qmk.fm/features/repeat_key#alternate-repeating) en Layer-tap demande quelques lignes de code :
+J’utilise des Layer-Tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation, raccourcis et modificatrices). Transformer les touches [Repeat](https://docs.qmk.fm/features/repeat_key) et [Alt-Repeat](https://docs.qmk.fm/features/repeat_key#alternate-repeating) en Layer-Tap demande quelques lignes de code :
 
 ```c
 #define LT_REPT LT(_NUMBERS, KC_1)
@@ -53,11 +53,10 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 }
 ```
 &nbsp;</br> &nbsp;</br>
+En ce qui concerne le [paramétrage des Tap-Hold](https://docs.qmk.fm/tap_hold), j’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#permissive-hold), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
 
-En ce qui concerne le paramétrage des Tap-Hold, j’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#tap-or-hold-decision-modes), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
 
-
-Pour éviter les déclenchements par erreur (lors de roulements par exemple), je me base sur une vérification de la position des touches : avant le typing_term, si l’une de mes touches de pouce principales est enfoncée ainsi qu’une autre touche de la même main, alors la touche de pouce produira immédiatement un tap et non un hold. Pour cela, j’ai adopté l’approche de [Filterpaper](https://github.com/filterpaper/qmk_userspace?tab=readme-ov-file#contextual-mod-taps), que je trouve légère et efficace. Elle est basée sur l’utilisation de la fonction `pre_process_record_user` et sur une utilisation avancée de la fonction `get_hold_on_other_key_press` :
+Pour éviter les déclenchements par erreur (lors de roulements par exemple), je me base sur une vérification de la position des touches : avant le *tapping term*, si l’une de mes touches de pouce principales est enfoncée ainsi qu’une autre touche de la même main, alors la touche de pouce produira immédiatement un tap et non un hold. Pour cela, j’ai adopté l’approche de [Filterpaper](https://github.com/filterpaper/qmk_userspace?tab=readme-ov-file#contextual-mod-taps), que je trouve légère et efficace. Elle est basée sur l’utilisation de la fonction `pre_process_record_user` et sur une utilisation avancée de la fonction `get_hold_on_other_key_press` :
 
 ```c
 #define TAPPING_TERM 200
@@ -100,7 +99,7 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 &nbsp;</br> &nbsp;</br>
 
 ## Modificatrices
-Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parler. Mes modificatrices sont des [Callum mods](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum#oneshot-modifiers), autrement dit des [one‑shot mods](https://docs.qmk.fm/one_shot_keys) situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
+Pour les modificatrices, je n’utilise pas de [Home-Row mods](https://precondition.github.io/home-row-mods#what-are-home-row-mods) à proprement parler. Mes modificatrices sont des [Callum mods](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum#oneshot-modifiers), autrement dit des [One‑Shot mods](https://docs.qmk.fm/one_shot_keys) situés sur la rangée de repos d’une couche spécifique. J’aime cette approche qui ne produit pas de délai dans l’affichage des frappes, contrairement aux HRM. 
 
 
 Les Callum mods peuvent être maintenus comme des modificatrices classiques, ou employés comme sticky keys. Ils ont la particularité de ne pas utiliser de timer. Du coup, ils peuvent être combinés sans être obligé de marquer une pause entre chaque modificatrice.
@@ -157,13 +156,13 @@ J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les 
 
 &nbsp;</br>
 
-## One-shot for All
-Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait de devoir maintenir une touche pour y accéder, je voulais pouvoir le faire avec une one-shot layer. De plus, je voulais conserver des one-shot shift sur ma keymap, et je n’avais pas la place de tout mettre. J’ai donc conçu les One-Shot for All (OS4A) pour tout faire à la fois : 
+## One-Shot for All
+Les Callum mods sont placés sur des layers secondaires. Je n’aime pas le fait de devoir maintenir une touche pour y accéder, je voulais pouvoir le faire avec une One-Shot Layer. De plus, je voulais conserver des One-Shot Shift sur ma keymap, et je n’avais pas la place de tout mettre. J’ai donc conçu les One-Shot for All (OS4A) pour tout faire à la fois : 
 - lors d’un appui maintenu, ces touches produisent `Shift`.
 - après un appui simple, elles activent une couche liée.
 - après un 2e appui, elles désactivent la couche liée et annulent tous les Callum mods.
 
-Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un one-shot shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche liée :
+Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être enchaînées les une avec les autres. Sur l’autre moitié, on retrouve les alphas. En cas d’appui sur une lettre, celle-ci sera shiftée et la couche sera désactivée. On retrouve ainsi le comportement d’un One-Shot Shift. J’ai une touche OS4A pour chaque moitié du clavier, voilà un exemple de couche liée :
 
 ![couche OS4A](OS4A.png)
 
@@ -171,7 +170,7 @@ Sur la moitié de celle-ci, on trouve les modificatrices, qui peuvent être ench
 - Pour faire `Ctrl S`, on tape `OS4A` `⎈` `S`.
 - Pour faire `Ctrl Shift T`, on tape `OS4A` `⎈` `⇧` `S`. L’ordre des modificatrices n’est pas importante, elles peuvent même être tapées simultanément.
 
-Les OS4A fonctionnent grâce à des [couches préfixées](#Couches-préfixées) et à des [Layer Word](#Layer-Word). Les OS4A impliquent des timers, puisqu’au fond ce sont des mod-taps modifiés. Cependant, grâce à la configuration des [Tap-Hold](#Configuration-des-Layer-Tap), on peut faire un roulement sur une touche OS4A et une modificatrice sans aucun souci. En utilisation réelle, il n’y a pas de timer à respecter. 
+Les OS4A fonctionnent grâce à des [couches préfixées](#Couches-préfixées) et à des [Layer Word](#Layer-Word). Leur fonctionnement implique un timer, puisqu’au fond ce sont des mod‑taps modifiés. Cependant, grâce à la configuration des [Tap-Hold](#Configuration-des-Layer-Tap), on peut faire un roulement sur une touche OS4A et une modificatrice sans aucun souci. En utilisation réelle, le timer n’est jamais contraignant. 
 
 &nbsp;</br>
 
