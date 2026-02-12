@@ -477,7 +477,7 @@ Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboa
 
 Les Clever Keys me servent notamment :
 - à ajouter automatiquement le `U` entre le `Q` et une autre voyelle (ou l’apostrophe)
-- à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, or `!`. Autrement dit, `Shift` s’applique automatiquement en début de phrase !
+- à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, ou `!`. Autrement dit, `Shift` s’applique automatiquement en début de phrase !
 - à changer le comportement de la touche `Repeat` dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi//blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
 - à donner des effets “magiques” à n’importe quelle touche, pas seulement la touche `Alt-Repeat`
 - à paramétrer plus finement celle-ci, en tenant compte de la série de touches tapées avant et non pas seulement de la dernière
