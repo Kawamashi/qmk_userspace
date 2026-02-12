@@ -1,6 +1,6 @@
 # Kawamashi’s QMK configuration
 
-This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the main QMK repository.
+Ici vous trouverez les principales fonctionnalités implémentées dans les firmwares de mes claviers grâce à [QMK](https://qmk.fm/). Je ne suis pas développeur, mon code est sans doute naïf !
 
 ![kb](GMKyria-min.jpg)
 
@@ -486,3 +486,8 @@ Les Clever Keys me servent notamment :
 
 
 Parfois, une Clever Key se déclenche, mais ce n’est pas le comportement souhaité. Dans ce cas, il suffit d’effacer les touches produites par l’algorithme, et celui-ci effacera complètement le buffer. Comme ça, si on retape le même caractère, les Clever Keys ne s’appliqueront pas ce coup-ci. Par exemple, si je tape `Q` puis `I`, je vais obtenir `QUI`. Si pour une fois je voulais taper `QI`, il me suffirait de taper deux fois `Backspace` pour effacer `UI` et de retaper `I` pour obtenir `QI`. J’ai également une macro *Panique* qui permet de vider le buffer, pour éviter que les Clever Keys ne modifient la frappe suivante.
+
+&nbsp;</br>
+
+## Remerciements
+Il n’y a pas si longtemps, je n’aurais jamais imaginé qu’on puisse implémenter autant de choses dans un firmware de clavier. Rien de tout cela n’aurait été possible sans les exemples de Pascal Getreuer, Filterpaper, Rafael Romao, Jonas Hietala (Treeman), Callum Oakley, Dalius Dobravolskas, Joshua T (replicaJunction), Cem Aksoylar (caksoylar), Precondition, etc. J’ai appris tellement grâce à vous ! :pray:
