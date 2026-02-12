@@ -17,15 +17,53 @@ This is a template repository which allows for an external set of QMK keymaps to
 &nbsp;</br> &nbsp;</br>
 
 ## Configuration des Layer-Tap
-J’utilise des layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation, raccourcis et modificatrices).
+J’utilise des Layer-tap sur mes touches de pouces pour accéder aux couches dont je me sers le plus (symboles, chiffres, navigation, raccourcis et modificatrices). Transformer les touches [Repeat](https://docs.qmk.fm/features/repeat_key) et [Alt-Repeat](https://docs.qmk.fm/features/repeat_key#alternate-repeating) en Layer-tap demande quelques lignes de code :
 
+```c
+#define LT_REPT LT(_NUMBERS, KC_1)
+#define LT_MGC LT(_SHORTNAV, KC_1)
 
-J’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#tap-or-hold-decision-modes), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
+bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
+
+    if (record->tap.count) {
+        // Special tap-hold keys (on tap).
+        switch (keycode) {
+            case LT_REPT:
+              repeat_key_invoke(&record->event);
+              return false;
+        
+            case LT_MGC:
+              alt_repeat_key_invoke(&record->event);
+              return false;
+        }
+    }
+    return true;
+}
+
+bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+
+    switch (keycode) {
+        case LT_REPT:
+        case LT_MGC:
+          return false;
+        
+        default:
+          return true;
+    }
+}
+```
+&nbsp;</br> &nbsp;</br>
+
+En ce qui concerne le paramétrage des Tap-Hold, j’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#tap-or-hold-decision-modes), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
 
 
 Pour éviter les déclenchements par erreur (lors de roulements par exemple), je me base sur une vérification de la position des touches : avant le typing_term, si l’une de mes touches de pouce principales est enfoncée ainsi qu’une autre touche de la même main, alors la touche de pouce produira immédiatement un tap et non un hold. Pour cela, j’ai adopté l’approche de [Filterpaper](https://github.com/filterpaper/qmk_userspace?tab=readme-ov-file#contextual-mod-taps), que je trouve légère et efficace. Elle est basée sur l’utilisation de la fonction `pre_process_record_user` et sur une utilisation avancée de la fonction `get_hold_on_other_key_press` :
 
 ```c
+#define TAPPING_TERM 200
+#define PERMISSIVE_HOLD
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed) {
@@ -35,9 +73,9 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-```
-```c
+
 bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
+
     switch (tap_hold_keycode) {
         case LT_REPT:
         case LT_MGC:
