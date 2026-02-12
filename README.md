@@ -490,5 +490,5 @@ Parfois, une Clever Key se déclenche, mais ce n’est pas le comportement souha
 
 &nbsp;</br>
 
-## Remerciements
-Il n’y a pas si longtemps, je n’aurais jamais imaginé qu’on puisse implémenter autant de choses dans un firmware de clavier. Rien de tout cela n’aurait été possible sans les exemples de Pascal Getreuer, Filterpaper, Rafael Romao, Jonas Hietala (Treeman), Callum Oakley, Dalius Dobravolskas, Joshua T (replicaJunction), Cem Aksoylar (caksoylar), Precondition, etc. J’ai appris tellement grâce à vous ! :pray:
+## Sur les épaules des géants
+Il n’y a pas si longtemps, je n’aurais jamais imaginé qu’on puisse implémenter autant de choses dans un firmware de clavier. Rien de tout cela n’aurait été possible sans les exemples de [Pascal Getreuer](https://getreuer.info/posts/keyboards/index.html), [Filterpaper](https://github.com/filterpaper/qmk_userspace/tree/main), [Rafael Romao](https://github.com/rafaelromao/keyboards), [Jonas Hietala](https://github.com/treeman/qmk_firmware/tree/master/keyboards/ferris/keymaps/treeman), [Callum Oakley](https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum), [Dalius Dobravolskas](https://blog.ffff.lt/posts/callum-layers/), [Joshua T](https://github.com/qmk/qmk_firmware/tree/906108fb486797ab2f3eb7c3a6f70e099c1199e6/users/replicaJunction#capsword-and-numword), [Cem Aksoylar](https://github.com/caksoylar/qmk_userspace/tree/main), [Precondition](https://precondition.github.io/), etc. J’ai appris tellement grâce à vous ! :pray:
