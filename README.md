@@ -9,6 +9,7 @@ This is a template repository which allows for an external set of QMK keymaps to
 * [Modificatrices](#Modificatrices)
 * [One-shot for All](#One-Shot-for-All)
 * [Couches préfixées](#Couches-préfixées)
+* [Combos](#Combos)
 * [Mod Word](#Mod-Word)
 * [Layer Word](#Layer-Word)
 * [Clever Keys](#Clever-Keys)
@@ -66,6 +67,53 @@ Pour les modificatrices, je n’utilise pas de Home-row Mods à proprement parle
 
 Les Callum mods peuvent être maintenus comme des modificatrices classiques, ou employés comme sticky keys. Ils ont la particularité de ne pas utiliser de timer. Du coup, ils peuvent être combinés sans être obligé de marquer une pause entre chaque modificatrice.
 
+La mise en place de ces modificatrices est très simple. Il faut d’abord définir les keycodes custom des mods ainsi que leur nombre, et les lier à leur modificatrice :
+
+```c
+enum custom_keycodes {
+  OS_SHFT = SAFE_RANGE,
+  OS_CTRL,
+  OS_ALT,
+  OS_GUI,
+};
+
+#define OS_COUNT 4
+
+const oneshot_key_t oneshot_keys[] = {
+  {OS_SHFT, KC_LSFT},
+  {OS_CTRL, KC_LCTL},
+  {OS_ALT, KC_LALT},
+  {OS_GUI, KC_LGUI},
+};
+```
+
+On peut ensuite définir des touches d’annulation, ainsi que des touches qui ne relâchent pas les modificatrices (typiquement des touches de changement de couche, pour appliquer les mods aux touches de la couche) :
+
+```c
+
+bool is_oneshot_cancel_key(uint16_t keycode) {
+  switch (keycode) {
+    case L_OS4A:
+    case R_OS4A:
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+bool should_oneshot_stay_pressed(uint16_t keycode) {
+  switch (keycode) {
+    case OS_FA:       // to be combined with Alt
+    case FUNWORD:
+    case NUMWORD:     // to combine numbers with mods
+      return true;
+
+    default:
+      return false;
+  }
+}
+```
 
 J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les roulements. Dans mon implémentation, un one-shot mod se désactive lorsqu’on appuie une deuxième fois dessus, ou automatiquement au bout d’un certain temps d’inactivité. Le code se trouve [ici](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/oneshot.c).
 
@@ -170,7 +218,9 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 ```
 Pour que certaines combos se déclenchent, il faut donc qu’un temps `TAP_INTERVAL` se soit écoulé entre l’input du dernier caractère et la combo.
 
-J’ai également une combo `PANIC`, pour remettre le clavier dans son état nominal. Cette combo :
+J’ai également une combo pour faire Alt-tab facilement. Il suffit de réappuyer sur l’une des touches de la combo pour envoyer Tab ou Shift-Tab, comme décrit [ici](https://docs.qmk.fm/features/combo#customizable-key-repress).
+
+Enfin, j’ai une combo `PANIC`, pour remettre le clavier dans son état nominal. Cette combo :
 - annule les [one-shot mods](#Modificatrices)
 - désactive les layers autres que la couche de base
 - désactive les [Layer Word](#Layer-Word)
