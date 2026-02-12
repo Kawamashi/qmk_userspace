@@ -1,6 +1,7 @@
 # Kawamashi’s QMK configuration
 
-Ici vous trouverez les principales fonctionnalités implémentées dans les firmwares de mes claviers grâce à [QMK](https://qmk.fm/). Je ne suis pas développeur, mon code est sans doute naïf !
+Ici vous trouverez les principales fonctionnalités implémentées dans les firmwares de mes claviers grâce à [QMK](https://qmk.fm/). \
+Je ne suis pas développeur, mon code est sans doute naïf !
 
 ![kb](GMKyria-min.jpg)
 
