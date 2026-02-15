@@ -14,21 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-//#define TAPPING_TOGGLE 1
-
-// mod tap
-#define TAPPING_TERM 250
-#define PERMISSIVE_HOLD
-#define FLOW_TAP_TERM 150
-#define CHORDAL_HOLD
-#define SPECULATIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+#include "tap_hold_utilities.h"
 
 
-// Timeouts in milliseconds.
-#define RECENT_KEYS_TIMEOUT 5000
-#define CAPS_WORD_IDLE_TIMEOUT 3000
-#define OS4A_EXIT_TIMEOUT 3000
-#define ONESHOT_TIMEOUT 3000
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {    // On press
+      tap_code16(keycode);
+      return false;
+  }
+  return true;
+}

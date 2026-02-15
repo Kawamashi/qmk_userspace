@@ -206,10 +206,6 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           // "aujourd'hui"
           layer_off(_1DK);
           return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, ongoing_keycode, record);
-
-/*         case PG_D:
-          // "déjà"
-          return finish_word((uint16_t[]) {PG_EACU, PG_J, PG_1DK, PG_A}, 4, ongoing_keycode, record); */
         
         default:
           // "à"

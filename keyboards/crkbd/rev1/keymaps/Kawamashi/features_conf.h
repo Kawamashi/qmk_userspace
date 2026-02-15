@@ -16,19 +16,19 @@
 
 #pragma once
 
-//#define TAPPING_TOGGLE 1
+#include "quantum.h"
+#include "keymap.h"
 
-// mod tap
-#define TAPPING_TERM 250
-#define PERMISSIVE_HOLD
-#define FLOW_TAP_TERM 150
-#define CHORDAL_HOLD
-#define SPECULATIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+// Returns whether typographic apostrophe is to be replaced by typewritten apostrophe
+bool replace_apos(void);
 
+// This function extracts the base keycode of MT and LT,
+// even if the tap/hold key is a custom one, with non-basic tap keycode.
+uint16_t tap_hold_extractor(uint16_t keycode);
 
-// Timeouts in milliseconds.
-#define RECENT_KEYS_TIMEOUT 5000
-#define CAPS_WORD_IDLE_TIMEOUT 3000
-#define OS4A_EXIT_TIMEOUT 3000
-#define ONESHOT_TIMEOUT 3000
+// Macros to be executed at the beginning of process_record_user :
+// Layer-tap Repeat and Magic keys
+bool process_macros_I(uint16_t keycode, keyrecord_t *record);
+
+// Other macros, to be executed at the end of process_record_user
+bool process_macros_II(uint16_t keycode, keyrecord_t *record);

@@ -43,7 +43,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record);
 // Also, applies shift to the key following the dead key :
 // when I want to shift a key on the 1DK layer,
 // I prefer to press shift then the one-shot key to the 1DK layer than the opposite.
-bool deferred_shift_after_dead_key(uint16_t keycode);
+bool insert_1dk(uint16_t keycode);
 
 // Function to determine whether shift should be added by OS4A keys
 bool should_add_shift(uint16_t keycode, keyrecord_t *record);

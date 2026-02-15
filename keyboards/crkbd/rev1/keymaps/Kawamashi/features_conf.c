@@ -27,9 +27,7 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
 
   switch (keycode) {
     case SFT_T(COPY):
-      return G(PG_C);
-/*     case LT_REPT:
-      return get_last_keycode(); */
+      return C(PG_C);
 
     default:
       return keycode &= 0xff;
@@ -67,7 +65,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
       case SFT_T(COPY):
-        return process_custom_tap_hold(G(PG_C), record);
+        return process_custom_tap_hold(C(PG_C), record);
 
       case OS_1DK:
         // Custom behaviour when alt-gr

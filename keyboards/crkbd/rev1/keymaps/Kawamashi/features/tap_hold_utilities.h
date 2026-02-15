@@ -16,19 +16,16 @@
 
 #pragma once
 
-//#define TAPPING_TOGGLE 1
+#include "quantum.h"
+#include "keymap.h"
 
-// mod tap
-#define TAPPING_TERM 250
-#define PERMISSIVE_HOLD
-#define FLOW_TAP_TERM 150
-#define CHORDAL_HOLD
-#define SPECULATIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+// Handles the tap function of tap-hold keys using non-basic keycodes
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
-// Timeouts in milliseconds.
-#define RECENT_KEYS_TIMEOUT 5000
-#define CAPS_WORD_IDLE_TIMEOUT 3000
-#define OS4A_EXIT_TIMEOUT 3000
-#define ONESHOT_TIMEOUT 3000
+#ifdef __cplusplus
+}
+#endif

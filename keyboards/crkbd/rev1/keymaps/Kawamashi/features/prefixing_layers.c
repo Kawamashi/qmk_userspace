@@ -31,7 +31,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
     // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
         case PG_1DK:
-          return deferred_shift_after_dead_key(keycode);
+          return insert_1dk(keycode);
     }
 
     if (IS_LAYER_ON(_1DK)) {
@@ -51,29 +51,31 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
                 if (get_recent_keycode(-1) == PG_Q) { return true; }
                 
             default:
-              return deferred_shift_after_dead_key(keycode);
+              return insert_1dk(keycode);
         }
     }
     return true;
 }
 
 
-bool deferred_shift_after_dead_key(uint16_t keycode) {
+bool insert_1dk(uint16_t keycode) {
 
     // Special behaviour of PG_1DK when shifted
     // Shift must apply to the keycode following PG_1DK.
-    const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-
-    if (is_shifted) {
-        del_weak_mods(MOD_MASK_SHIFT);
-        del_oneshot_mods(MOD_MASK_SHIFT);
-        unregister_mods(MOD_MASK_SHIFT);
-    }
+    const bool shift_mods = get_mods() & MOD_MASK_SHIFT;
+    const bool shift_weak_mods = get_weak_mods() & MOD_MASK_SHIFT;
+    const bool shift_oneshot_mods = get_oneshot_mods() & MOD_MASK_SHIFT;
+    
+    if (shift_oneshot_mods) { del_oneshot_mods(MOD_MASK_SHIFT); }
+    if (shift_mods) { del_mods(MOD_BIT(KC_LSFT)); }
+    if (shift_weak_mods) { del_weak_mods(MOD_MASK_SHIFT); }
 
     previous_1dk = true;
     tap_code(PG_1DK);
     
-    if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
+    if (shift_oneshot_mods) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
+    if (shift_mods) { add_mods(MOD_BIT(KC_LSFT)); }
+    if (shift_weak_mods) { add_weak_mods(MOD_BIT(KC_LSFT)); }
 
     return keycode != PG_1DK;
 }

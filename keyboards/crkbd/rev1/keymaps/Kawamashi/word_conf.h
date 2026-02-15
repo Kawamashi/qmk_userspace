@@ -13,22 +13,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 
 #pragma once
 
-//#define TAPPING_TOGGLE 1
+#include "quantum.h"
+#include "keymap.h"
 
-// mod tap
-#define TAPPING_TERM 250
-#define PERMISSIVE_HOLD
-#define FLOW_TAP_TERM 150
-#define CHORDAL_HOLD
-#define SPECULATIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+// Returns whether a keycode is a letter or not
+bool is_letter(uint16_t keycode);
 
+// Returns true for macros used to type sequence of letters
+bool is_send_string_macro(uint16_t keycode);
 
-// Timeouts in milliseconds.
-#define RECENT_KEYS_TIMEOUT 5000
-#define CAPS_WORD_IDLE_TIMEOUT 3000
-#define OS4A_EXIT_TIMEOUT 3000
-#define ONESHOT_TIMEOUT 3000
+// Returns true for letters that can be followed by an apostrophe (in french)
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);

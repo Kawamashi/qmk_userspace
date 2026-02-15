@@ -30,7 +30,6 @@
 
 enum layers {
     _BASE = 0,
-    // OS4A layers should be as closed as base layer as possible
     _1DK,
     _NUMBERS,
     _SYMBOLS,

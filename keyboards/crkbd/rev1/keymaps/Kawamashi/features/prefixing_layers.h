@@ -45,12 +45,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record);
 // I prefer to press shift then the one-shot key to the 1DK layer than the opposite.
 bool insert_1dk(uint16_t keycode);
 
-// Function to determine whether shift should be added by OS4A keys
-bool should_add_shift(uint16_t keycode, keyrecord_t *record);
-
-// Function to specify keys not to be shifted by OS4A keys
-bool not_to_be_shifted(uint16_t keycode);
-
 #ifdef __cplusplus
 }
 #endif

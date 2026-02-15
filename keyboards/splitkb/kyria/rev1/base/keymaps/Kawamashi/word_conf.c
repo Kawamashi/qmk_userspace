@@ -48,7 +48,8 @@ bool is_letter(uint16_t keycode) {
     case KC_U ... KC_Z:
     case PG_L:
     case PG_E:
-    case KC_GRV ... KC_DOT:
+    case PG_F:
+    case PG_W:
     case PG_AGRV:
     case PG_EGRV:
     case PG_ECIR:
@@ -85,6 +86,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
     case PG_M:
     case PG_Y:
     case PG_J:
+    case PG_I:
       if (is_letter(prev_keycode)) { return false; }
     case PG_Q:
       return true;
