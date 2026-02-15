@@ -54,10 +54,10 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 }
 ```
 &nbsp;</br> &nbsp;</br>
-En ce qui concerne le [paramétrage des Tap-Hold](https://docs.qmk.fm/tap_hold), j’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#permissive-hold), qui me permet de ne pas avoir à attendre le *tapping term* en cas de nested tap. Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
+En ce qui concerne le [paramétrage des Tap-Hold](https://docs.qmk.fm/tap_hold), j’utilise le [Permissive Hold](https://docs.qmk.fm/tap_hold#permissive-hold), qui me permet de ne pas avoir à attendre le tapping term en cas de [nested tap](https://precondition.github.io/home-row-mods#permissive-hold). Grâce à ça, je n’ai plus de faux‑négatifs avec mes layers‑tap. 
 
 
-Pour éviter les déclenchements par erreur (lors de roulements par exemple), je me base sur une vérification de la position des touches : avant le *tapping term*, si l’une de mes touches de pouce principales est enfoncée ainsi qu’une autre touche de la même main, alors la touche de pouce produira immédiatement un tap et non un hold. Pour cela, j’ai adopté l’approche de [Filterpaper](https://github.com/filterpaper/qmk_userspace?tab=readme-ov-file#contextual-mod-taps), que je trouve légère et efficace. Elle est basée sur l’utilisation de la fonction `pre_process_record_user` et sur une utilisation avancée de la fonction `get_hold_on_other_key_press` :
+Pour éviter les déclenchements par erreur (lors de roulements par exemple), je me base sur une vérification de la position des touches : avant le tapping term, si l’une de mes touches de pouce principales est enfoncée ainsi qu’une autre touche de la même main, alors la touche de pouce produira immédiatement un tap et non un hold. Pour cela, j’ai adopté l’approche de [Filterpaper](https://github.com/filterpaper/qmk_userspace?tab=readme-ov-file#contextual-mod-taps), que je trouve légère et efficace. Elle est basée sur l’utilisation de la fonction `pre_process_record_user` et sur une utilisation avancée de la fonction `get_hold_on_other_key_press` :
 
 ```c
 #define TAPPING_TERM 200
@@ -153,7 +153,7 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
 }
 ```
 
-J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les roulements. Dans mon implémentation, un one-shot mod se désactive lorsqu’on appuie une deuxième fois dessus, ou automatiquement au bout d’un certain temps d’inactivité. Le code se trouve [ici](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/oneshot.c).
+J’ai modifié le code de Callum Oakley pour corriger un bug qui affectait les roulements. Dans mon implémentation, un One-Shot mod se désactive lorsqu’on appuie une deuxième fois dessus, ou automatiquement au bout d’un certain temps d’inactivité. Le code se trouve [ici](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/oneshot.c).
 
 &nbsp;</br>
 
@@ -176,7 +176,7 @@ Les OS4A fonctionnent grâce à des [couches préfixées](#Couches-préfixées) 
 &nbsp;</br>
 
 ## Couches préfixées
-Mon layout, [Propergol](https://github.com/Kawamashi/Propergol/), utilise une [touche morte de type Lafayette](https://ergol.org/presentation/#impeccable-en-fran%C3%A7ais) (notée 1DK ou `★`) pour taper les caractères accentués, les diacritiques ainsi que les symboles typographiques. Pour m’affranchir de certaines limites liées à cette approche, j’ai remplacé cette touche morte par un one-shot layer, donnant accès à une couche 1DK. Par défaut, un caractère tapé sur cette couche envoie la touche morte avant. Pour l’implémenter, j’ai utilisé [une idée de Pascal Getreuer](https://getreuer.info/posts/keyboards/macros3/index.html#prefixing-layer) :
+Mon layout, [Propergol](https://github.com/Kawamashi/Propergol/), utilise une [touche morte de type Lafayette](https://ergol.org/presentation/#impeccable-en-fran%C3%A7ais) (notée 1DK ou `★`) pour taper les caractères accentués, les diacritiques ainsi que les symboles typographiques. Pour m’affranchir de certaines limites liées à cette approche, j’ai remplacé cette touche morte par un One‑Shot layer, donnant accès à une couche 1DK. Par défaut, un caractère tapé sur cette couche envoie la touche morte avant. Pour l’implémenter, j’ai utilisé [une idée de Pascal Getreuer](https://getreuer.info/posts/keyboards/macros3/index.html#prefixing-layer) :
 
 ```c
 bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
@@ -259,7 +259,7 @@ Pour que certaines combos se déclenchent, il faut donc qu’un temps `TAP_INTER
 J’ai également une combo pour faire Alt-tab facilement. Il suffit de réappuyer sur l’une des touches de la combo pour envoyer Tab ou Shift-Tab, comme décrit [ici](https://docs.qmk.fm/features/combo#customizable-key-repress).
 
 Enfin, j’ai une combo `PANIC`, pour remettre le clavier dans son état nominal. Cette combo :
-- annule les [one-shot mods](#Modificatrices)
+- annule les [One-Shot mods](#Modificatrices)
 - désactive les layers autres que la couche de base
 - désactive les [Layer Word](#Layer-Word)
 - désactive les [Mod Word](#Mod-Word)
@@ -268,9 +268,13 @@ Enfin, j’ai une combo `PANIC`, pour remettre le clavier dans son état nominal
 &nbsp;</br>
 
 ## Mod Word
-Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword.c) chapeaute mon implémentation de [*Caps Word*](https://docs.qmk.fm/features/caps_word), *Caps List*, *Caps Lock* et *Word Selection*.
+Ce [module](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/modword.c) chapeaute mon implémentation de [Caps Word](https://docs.qmk.fm/features/caps_word), Caps List, Caps Lock et Word Selection.
+
+
+&nbsp;</br>
+
 ### Caps List
-J’utilise énormément [Caps Word](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé *Caps List*, une fonctionnalité qui réactive Caps Word entre chaque mot d’une liste. 
+J’utilise énormément [Caps Word](https://docs.qmk.fm/features/caps_word), et je suis régulièrement amené à écrire des listes de noms en majuscule, comme par exemple `QMK, ZMK et KRK`. J’ai donc développé **Caps List**, une fonctionnalité qui réactive Caps Word entre chaque mot d’une liste. 
 
 
 L’utilisateur peut définir les keycodes qui ne doivent pas interrompre Caps List (comme par exemple les lettres, les chiffres, certains symboles, `,` et `␣`). À la saisie d’un caractère différent, Caps List se désactivera automatiquement. \
@@ -328,9 +332,7 @@ bool list_separator(void) {
     }
     return false;
 }
-```
 
-```c
 
 void update_caps_list(uint16_t keycode, keyrecord_t* record) {
     
@@ -350,32 +352,32 @@ void update_caps_list(uint16_t keycode, keyrecord_t* record) {
 &nbsp;</br>
 
 ### Mod Word
-En plus de *Caps Word* et *Caps List*, je suis également amené à utiliser *Caps Lock* régulièrement. Je voulais que l’activation d’une fonctionnalité désactive automatiquement les autres, pour qu’il n’y ait pas d’interférences entre elles. Le module *Mod Word* est là pour les chapeauter. En plus de gérer les activations concurrentielles, *Mod Word* désactive la fonctionnalité en cours au bout d’un certain temps d’inactivité du clavier.
+En plus de Caps Word et Caps List, je suis également amené à utiliser Caps Lock régulièrement. Je voulais que l’activation d’une fonctionnalité désactive automatiquement les autres, pour qu’il n’y ait pas d’interférences entre elles. Le module **Mod Word** est là pour les chapeauter. En plus de gérer les activations concurrentielles, Mod Word désactive la fonctionnalité en cours au bout d’un certain temps d’inactivité du clavier.
 &nbsp;</br>
 
 ### Word Selection
-*Word Selection* est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation tapées ensuite pour étendre ou réduire la sélection : 
+Word Selection est une macro QMK qui permet de sélectionner un mot, et qui ajoute automatiquement shift (et contrôle si nécessaire) aux touches de navigation tapées ensuite pour étendre ou réduire la sélection : 
 - `Ctrl` et `Shift` sont ajoutées à `←` et `→` pour sélectionner ou désélectionner le mot précédent/suivant
 - `Shift` est ajouté à `Home` et `End` pour étendre la sélection au début/à la fin de la ligne
 - `Shift` est ajouté à `↑` et `↓` pour sélectionner ou déselectionner la ligne précédente/suivante
 - `Shift` est ajouté à `Page Up` et `Page Down` pour étendre la sélection au début/à la fin de la page
 
-*Word Selection* supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive.\
-Cette macro existe aussi sous la forme de *Line Selection*, qui sélectionne une ligne entière. 
+Word Selection supporte les changements de direction lors de la sélection, ce qui rend son utilisation très intuitive.\
+Cette macro existe aussi sous la forme de Line Selection, qui sélectionne une ligne entière. 
 
 
-*Word Selection* ajoutant une modificatrice aux inputs successifs, elle est également chapeautée par *Mod Word*.
+Word Selection ajoutant une modificatrice aux inputs successifs, elle est également chapeautée par Mod Word.
 
 &nbsp;</br>
 
 ## Layer Word
-[*Layer Word*](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/layerword.c) est un concept similaire à *Caps Word*, mais il s’applique aux couches. Quand on active un *Layer Word*, on active la couche correspondante, et elle restera activée tant que l’utilisateur ne tape pas de caractère “word breaking”. Par exemple, le *Layer Word* lié à ma couche de nombres restera activé tant que je taperai des symboles numériques. Les caractères permettant de continuer chaque *Layer Word* sont à définir par l’utilisateur.
+[Layer Word](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/layerword.c) est un concept similaire à Caps Word, mais qui s’applique aux couches. Quand on active un Layer Word, on active la couche correspondante, et elle restera activée tant que l’utilisateur ne tape pas de caractère “word breaking”. Par exemple, le Layer Word lié à ma couche de nombres restera activé tant que je taperai des symboles numériques. Les caractères permettant de continuer chaque Layer Word sont à définir par l’utilisateur.
 
 
-Comme pour *Mod Word*, il ne peut y avoir qu’un seul *Layer Word* actif à la fois. Les *Layer Word* peuvent se désactiver automatiquement au bout d’un certain temps d’inactivité du clavier.
+Comme pour Mod Word, il ne peut y avoir qu’un seul Layer Word actif à la fois. Les Layer Word peuvent se désactiver automatiquement au bout d’un certain temps d’inactivité du clavier.
 
 
-La mise en place d’un Layerword est très simple. Il faut d’abord définir un keycode custom, `NUMWORD` par exemple. On lie ensuite ce keycode à une couche et on peut définir le timeout du Layerword : 
+La mise en place d’un Layer Word est très simple. Il faut d’abord définir un keycode custom, `NUMWORD` par exemple. On lie ensuite ce keycode à une couche et on peut définir le timeout du Layerword : 
 
 ```c
 
@@ -407,7 +409,7 @@ uint16_t layerword_exit_timeout(uint8_t layer) {
 }
 ```
 
-Il ne reste plus qu’à définir les caractères qui continuent le Layerword :
+Il ne reste plus qu’à définir les caractères qui continuent le Layer Word :
 
 ```c
 bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record) {
@@ -443,13 +445,13 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
 }
 ```
 
-Tout autre symbole de la couche sera saisi, mais le layerword se terminera et la couche sera désactivée quand la touche sera relâchée.  
-Le paramétrage de mes Layerwords se trouve [ici](https://github.com/Kawamashi/qmk_userspace/blob/main/keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/word_conf.c).
+Tout autre symbole de la couche sera saisi, mais le Layer Word se terminera et la couche sera désactivée quand la touche sera relâchée.  
+Le paramétrage de mes Layer Words se trouve [ici](https://github.com/Kawamashi/qmk_userspace/blob/main/keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/word_conf.c).
 
 &nbsp;</br>
 
 ## Clever Keys
-Je me suis beaucoup inspiré de [ce post](https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys) quand j’ai écrit les [Clever Keys](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/clever_keys_utilities.c). Ce concept repose sur le fait de mémoriser les derniers caractères tapés en les stockant dans un buffer, et de potentiellement remplacer un caractère en cours de traitement par un autre. En un mot, les *Clever Keys* permettent de transformer votre layout en **layout adaptatif**.
+Je me suis beaucoup inspiré de [ce post](https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys) quand j’ai écrit les [Clever Keys](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/features/clever_keys_utilities.c). Ce concept repose sur le fait de mémoriser les derniers caractères tapés en les stockant dans un buffer, et de potentiellement remplacer un caractère en cours de traitement par un autre. En un mot, les Clever Keys permettent de transformer votre layout en **layout adaptatif**.
 
 ```c
 void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
@@ -472,12 +474,12 @@ void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
 Dans un premier temps, l’algorithme analyse la frappe en cours pour déterminer si elle sert à taper un caractère ou pas. Par exemple, une touche de navigation ou une touche affectée par Ctrl ou Alt ne sert pas à taper du texte. Elle ne sera donc pas mémorisée, et effacera le contenu du buffer pour éviter des effets de bord potentiellement catastrophiques. Cette fonction est paramétrable par l’utilisateur. 
 
 
-Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/clever_keys.c) (également paramétrable par l’utilisateur) détermine si celui-ci doit être remplacé (par un autre caractère ou par une macro) ou bien si d’autres caractères doivent être insérés avant lui, en fonction du contenu du buffer. Celui-ci mémorise les 8 dernières touches. Enfin, le caractère est ajouté au buffer, en décalant les touches présentes auparavant. Pour éviter des effets intempestifs, le buffer se vide automatiquement au bout d’un certain temps d’inactivité du clavier.
+Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboards/splitkb/kyria/rev1/base/keymaps/Kawamashi/clever_keys.c) (également paramétrable par l’utilisateur) détermine si celui-ci doit être remplacé (par un autre caractère ou par une macro) ou bien si d’autres caractères doivent être insérés avant lui, en fonction du contenu du buffer. Celui-ci mémorise les 8 dernières touches. Enfin, le caractère est ajouté au buffer, en décalant les touches présentes auparavant. Pour éviter des effets intempestifs, cette mémoire tampon se vide automatiquement au bout d’un certain temps d’inactivité du clavier.
 
 
 Les Clever Keys me servent notamment :
-- à ajouter automatiquement le `U` entre le `Q` et une autre voyelle (ou l’apostrophe)
-- à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, ou `!`. Autrement dit, `Shift` s’applique automatiquement en début de phrase !
+- à ajouter automatiquement `U` entre `Q` et une autre voyelle (ou l’apostrophe)
+- à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, ou `!`. Autrement dit, `Shift` est automatiquement appliqué en début de phrase !
 - à changer le comportement de la touche `Repeat` dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi//blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
 - à donner des effets “magiques” à n’importe quelle touche, pas seulement la touche `Alt-Repeat`
 - à paramétrer plus finement celle-ci, en tenant compte de la série de touches tapées avant et non pas seulement de la dernière
