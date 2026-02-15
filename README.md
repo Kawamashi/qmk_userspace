@@ -176,7 +176,7 @@ Les OS4A fonctionnent grâce à des [couches préfixées](#Couches-préfixées) 
 &nbsp;</br>
 
 ## Couches préfixées
-Mon layout, [Propergol](https://github.com/Kawamashi/Propergol/), utilise une [touche morte de type Lafayette](https://ergol.org/presentation/#impeccable-en-fran%C3%A7ais) (notée 1DK ou `★`) pour taper les caractères accentués, les diacritiques ainsi que les symboles typographiques. Pour m’affranchir de certaines limites liées à cette approche, j’ai remplacé cette touche morte par un One‑Shot layer, donnant accès à une couche 1DK. Par défaut, un caractère tapé sur cette couche envoie la touche morte avant. Pour l’implémenter, j’ai utilisé [une idée de Pascal Getreuer](https://getreuer.info/posts/keyboards/macros3/index.html#prefixing-layer) :
+Mon layout, [Propergol](https://github.com/Kawamashi/Propergol/), utilise une [touche morte de type Lafayette](https://ergol.org/presentation/#impeccable-en-fran%C3%A7ais) (notée 1DK ou `★`) pour taper les caractères accentués, les diacritiques ainsi que les symboles typographiques. Afin de m’affranchir de certaines limites liées à cette approche, j’ai remplacé cette touche morte par un One‑Shot layer, donnant accès à une couche 1DK. Par défaut, un caractère tapé sur cette couche envoie la touche morte avant. Pour l’implémenter, j’ai utilisé [une idée de Pascal Getreuer](https://getreuer.info/posts/keyboards/macros3/index.html#prefixing-layer) :
 
 ```c
 bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
@@ -189,7 +189,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_Q:
                 return true;                
             default:
-                tap_code(PG_1DK);            
+                return insert_1dk(keycode);            
         }
     }
 
@@ -207,19 +207,22 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
 Pour faire `ê` avec l’approche Lafayette, il faut faire `★` `e`. Pour faire `Ê`, il faut faire `★` `Shift`+`e`. Je trouve ça plus logique de faire `Shift`+`ê`, donc `Shift`+`★` `e`. Dans ce même module, j’ai modifié le comportement de la touche 1DK avec `Shift`, pour que ce soit le caractère suivant `★` qui soit shifté :
 ```c
-bool deferred_shift_after_dead_key(uint16_t keycode) {
+bool insert_1dk(uint16_t keycode) {
     // Special behaviour of PG_1DK when shifted
     // Shift must apply to the keycode following PG_1DK.
-    const bool is_shifted = (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-
-    if (is_shifted) {
-        del_weak_mods(MOD_MASK_SHIFT);
-        del_oneshot_mods(MOD_MASK_SHIFT);
-        unregister_mods(MOD_MASK_SHIFT);
-    }
+    const bool shift_mods = get_mods() & MOD_MASK_SHIFT;
+    const bool shift_weak_mods = get_weak_mods() & MOD_MASK_SHIFT;
+    const bool shift_oneshot_mods = get_oneshot_mods() & MOD_MASK_SHIFT;
+    
+    if (shift_oneshot_mods) { del_oneshot_mods(MOD_MASK_SHIFT); }
+    if (shift_mods) { del_mods(MOD_BIT(KC_LSFT)); }
+    if (shift_weak_mods) { del_weak_mods(MOD_MASK_SHIFT); }
 
     tap_code(PG_1DK);
-    if (is_shifted) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
+    
+    if (shift_oneshot_mods) { set_oneshot_mods(MOD_BIT(KC_LSFT)); }    // Don't use weak mods !
+    if (shift_mods) { add_mods(MOD_BIT(KC_LSFT)); }
+    if (shift_weak_mods) { add_weak_mods(MOD_BIT(KC_LSFT)); }
 
     return keycode != PG_1DK;
 }
@@ -480,7 +483,8 @@ Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboa
 Les Clever Keys me servent notamment :
 - à ajouter automatiquement `U` entre `Q` et une autre voyelle (ou l’apostrophe)
 - à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, ou `!`. Autrement dit, `Shift` est automatiquement appliqué en début de phrase !
-- à changer le comportement de la touche `Repeat` dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi//blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
+- à pouvoir doubler des caractères de la couche 1DK avec la touche `Repeat`
+- à changer le comportement de celle-ci dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi//blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
 - à donner des effets “magiques” à n’importe quelle touche, pas seulement la touche `Alt-Repeat`
 - à paramétrer plus finement celle-ci, en tenant compte de la série de touches tapées avant et non pas seulement de la dernière
 
