@@ -56,26 +56,37 @@ enum custom_keycodes {
 };
 
   // Layer changers
-#define LT_SPC LT(_SYMBOLS, KC_SPC)
-#define LT_E LT(_SYMBOLS, PG_E)
-#define LT_REPT LT(_NUMBERS, KC_1)
-#define LT_MGC LT(_SHORTNAV, KC_1)
+#define LT_RSPC LT(_SHORTNAV, KC_SPC)
+#define LT_LSPC LT(_FUNCTIONS, KC_SPC)
+#define LT_E LT(_SHORTNAV, PG_E)
+#define LT_REPT LT(_NUMBERS, KC_0)
+#define LT_MGC LT(_NUMBERS, KC_1)
 #define LT_0 LT(_SYMBOLS, KC_0)
+#define LT_SYM LT(_SYMBOLS, KC_0)
 
 #define OS_1DK OSL(_1DK)
 
   // Mods
-#define HRM_O CTL_T(PG_O)
-#define HRM_A OPT_T(PG_A)
-#define HRM_I CMD_T(PG_I)
-#define HRM_N SFT_T(PG_N)
-#define HRM_T SFT_T(PG_T)
-#define HRM_S CMD_T(PG_S)
-#define HRM_R OPT_T(PG_R)
-#define HRM_L CTL_T(PG_L)
+#define HRM_O GUI_T(PG_O)
+#define HRM_A ALT_T(PG_A)
+#define HRM_I SFT_T(PG_I)
+#define HRM_N CTL_T(PG_N)
+#define HRM_T CTL_T(PG_T)
+#define HRM_S SFT_T(PG_S)
+#define HRM_R ALT_T(PG_R)
+#define HRM_L GUI_T(PG_L)
 #define HRM_H LT(_FUNCTIONS, PG_H)
 #define HRM_D LT(_FUNCTIONS, PG_D)
 
 #define MT_SLSH SFT_T(PG_SLSH)
-#define MT_1 SFT_T(KC_1)
+#define MT_1 KC_1
+#define MT_5 KC_5
+#define MT_2 SFT_T(KC_2)
 #define MT_6 SFT_T(KC_6)
+
+#define MOD_ENT ALT_T(KC_ENT)
+#define MOD_BKP CTL_T(KC_BSPC)
+#define MOD_DEL GUI_T(KC_DEL)
+#define MOD_STB ALT_T(S(KC_TAB))
+#define MOD_TAB CTL_T(KC_TAB)
+#define MOD_ESC GUI_T(KC_ESC)

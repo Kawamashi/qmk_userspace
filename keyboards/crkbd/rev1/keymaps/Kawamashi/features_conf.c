@@ -28,6 +28,8 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     case SFT_T(COPY):
       return C(PG_C);
+    case MOD_STB:
+      return S(KC_TAB);
 
     default:
       return keycode &= 0xff;
@@ -66,6 +68,20 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 
       case SFT_T(COPY):
         return process_custom_tap_hold(C(PG_C), record);
+      case MOD_STB:
+        return process_custom_tap_hold(S(KC_TAB), record);
+
+      case LT_SYM:
+        // This key behave as a layer tap when held,
+        // as CapsLock when tap and shifted
+        // as a one-shot shift otherwise
+        if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+          enable_modword(get_modword(), CAPSLOCK);
+        } else {
+          set_oneshot_mods(MOD_BIT(KC_LSFT));
+        }
+        return false;
+        
 
       case OS_1DK:
         // Custom behaviour when alt-gr

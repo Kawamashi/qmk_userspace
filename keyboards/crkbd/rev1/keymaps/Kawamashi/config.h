@@ -24,11 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // mod tap
 #define TAPPING_TERM 250
-#define PERMISSIVE_HOLD
+#define TAPPING_TERM_PER_KEY
+#define PERMISSIVE_HOLD_PER_KEY
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 #define FLOW_TAP_TERM 150
 #define CHORDAL_HOLD
 #define SPECULATIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
 
 // Timeouts in milliseconds.

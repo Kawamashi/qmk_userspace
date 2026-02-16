@@ -20,7 +20,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "keymap.h"
 
+
+static uint16_t next_keycode;
+static keyrecord_t next_record;
+
+
 // Tap-hold configuration
+
+bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
+/*   switch (tap_hold_keycode) {
+    case LT_REPT:
+    case LT_MGC:
+      return true;
+  } */
+
+  // Otherwise, follow the opposite hands rule.
+  return bilateral_combination(tap_hold_record, other_record);
+}
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LT_E:
+            return 300;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        // Desabling Permissive Hold for `E` when the other key is on the same side
+        case LT_E:
+            if (!approved_chord(keycode, record, next_keycode, &next_record)) { return false; }
+        default:
+            return true;
+    }
+}
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
@@ -30,11 +65,11 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 }
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
-    LAYOUT(
+    LAYOUT_split_3x6_3(
         'L', 'L', 'L', 'L', 'L', 'L',                     'R', 'R', 'R', 'R', 'R', 'R', 
         'L', 'L', 'L', 'L', 'L', 'L',                     'R', 'R', 'R', 'R', 'R', 'R', 
         'L', 'L', 'L', 'L', 'L', 'L',                     'R', 'R', 'R', 'R', 'R', 'R', 
-                            'L', 'L', '*',           '*', 'R', 'R'
+                            '*', '*', '*',           '*', 'R', '*'
     );
 
 
@@ -48,6 +83,16 @@ void housekeeping_task_user(void) {
 
 
 // Key processing
+
+bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+  if (record->event.pressed) {
+      // Cache the next input for mod-tap decisions
+      next_keycode = keycode;
+      next_record  = *record;
+  }
+  return true;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   
@@ -79,38 +124,50 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB, PG_VIRG, PG_EACU,    PG_U,    PG_P, PG_TIRE,                         PG_V,    PG_M,    PG_C,    PG_J,    PG_X, KC_BSPC,
+      MOD_ESC, PG_VIRG, PG_EACU,    PG_U,    PG_P,    PG_B,                         PG_V,    PG_M,    PG_C,    PG_J,    PG_X, MOD_DEL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL,   HRM_O,   HRM_A,   HRM_I,   HRM_N, PG_POIN,                         PG_G,   HRM_T,   HRM_S,   HRM_R,   HRM_L, KC_QUOT,
+      MOD_TAB,   HRM_O,   HRM_A,   HRM_I,   HRM_N, PG_POIN,                         PG_G,   HRM_T,   HRM_S,   HRM_R,   HRM_L, MOD_BKP,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    PG_Q, PG_EGRV,    PG_Y,   HRM_H,    PG_B,                         PG_K,   HRM_D,    PG_F,    PG_W,  OS_1DK,  KC_ESC,
+      MOD_STB,    PG_Q, PG_EGRV,    PG_Y,   HRM_H, PG_TIRE,                         PG_K,   HRM_D,    PG_F,    PG_W,  OS_1DK, MOD_ENT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RALT
+                                          OS_LSFT,    LT_E,  LT_MGC,    LT_REPT, LT_RSPC,  LT_SYM
                                       //`--------------------------'  `--------------------------'
 
   ),
 
+    [_SHORTNAV] = LAYOUT_split_3x6_3(
+  //,-------------------------------------------------------.                    ,-----------------------------------------------------------.
+      _______, KC_BSPC, KC_HOME,   KC_UP,  KC_END,   KC_PGUP,                      CAPSLOCK,  KC_DEL,  C(KC_DEL),  XXXXXXX,  XXXXXXX, _______,
+  //|--------+--------+--------+--------+--------+----------|                    |---------+--------+-----------+---------+---------+--------|
+      _______, C(PG_A), KC_LEFT, KC_DOWN, KC_RGHT,   KC_PGDN,                      CAPSWORD, KC_BSPC, C(KC_BSPC),   KC_ENT,   KC_ESC, _______,
+  //|--------+--------+--------+--------+--------+----------|                    |---------+--------+-----------+---------+---------+--------|
+      _______, C(PG_Z), C(PG_X), C(PG_C), C(PG_V), LCS(PG_Z),                      CAPSLIST,  KC_TAB,  S(KC_TAB), SEL_LINE, SEL_WORD, _______,
+  //|--------+--------+--------+--------+--------+----------+--------|  |--------+---------+--------+-----------+---------+---------+--------|
+                                          _______,   LT_LSPC, KC_BSPC,    NAVWORD, KC_BSPC,  _______
+                                      //`----------------------------'  `---------------------------'
+  ),
+
     [_NUMBERS] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______, NUMWORD,    NAVWORD,   MO(3), KC_RALT
-                                      //`--------------------------'  `--------------------------'
+  //,-------------------------------------------------------.                    ,-----------------------------------------------------.
+      _______,  PG_DLR, _______, _______, PG_EURO,   PG_PERC,                       PG_EXP,  PG_DEG, PG_EGAL, _______,  PG_1DK, _______,
+  //|--------+--------+--------+--------+--------+----------|                    |--------+--------+--------+--------+--------+--------|
+      _______,    KC_8,    KC_7,    MT_6,    MT_5,   PG_2PTS,                       PG_IND,    MT_1,    MT_2,    KC_3,    KC_4, _______,
+  //|--------+--------+--------+--------+--------+----------|                    |--------+--------+--------+--------+--------+--------|
+      _______, XXXXXXX, XXXXXXX, XXXXXXX,    KC_9,   XXXXXXX,                      XXXXXXX, PG_SLSH, PG_MOIN, PG_PLUS, PG_ASTX, _______,
+  //|--------+--------+--------+--------+--------+----------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, S(KC_SPC), KC_BSPC,    NUMWORD,    LT_0, KC_PDOT
+                                      //`----------------------------'  `--------------------------'
   ),
 
     [_FUNCTIONS] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      QK_BOOT, KC_F1,     KC_F2,   KC_F3,   KC_F4, XXXXXXX,                      XXXXXXX, KC_BRID, KC_BRIU, KC_SLEP, XXXXXXX, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       KC_NUM, KC_F5,     KC_F6,   KC_F7,   KC_F8, XXXXXXX,                      XXXXXXX, KC_VOLD, KC_VOLU, KC_MUTE, XXXXXXX, _______,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RM_NEXT, RM_HUED, RM_SATD, RM_VALD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      KC_SCRL, KC_F9,    KC_F10,  KC_F11,  KC_F12, XXXXXXX,                      XXXXXXX, KC_MPRV, KC_MNXT, KC_MPLY, XXXXXXX, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,    FUNWORD, _______, KC_RALT
+                                          _______, _______, _______,    FUNWORD, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -122,7 +179,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+-----------+--------+--------+--------+--------|                    |--------+--------+--------+-----------+--------+--------|
       _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,                      _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
   //|--------+-----------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+-----------+--------+--------|
-                                             KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
+                                              OS_RSA,  KC_SPC, KC_BSPC,    _______, _______, _______
                                          //`--------------------------'  `--------------------------'
   ),
 
@@ -134,7 +191,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, _______,    PG_J, _______, _______, _______,                      _______, _______, _______, _______, CNL_1DK, _______,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
+                                          _______, PG_ECIR, PG_AGRV,    PG_APOS, PG_UNDS, _______
                                       //`--------------------------'  `--------------------------'
   )
 };
