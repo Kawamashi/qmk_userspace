@@ -26,10 +26,12 @@ bool replace_apos(void) {
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
   switch (keycode) {
-    case SFT_T(COPY):
-      return C(PG_C);
     case MOD_STB:
       return S(KC_TAB);
+    case HRM_BKW:
+      return C(KC_BSPC);
+    case HRM_ALL:
+      return C(PG_A);
 
     default:
       return keycode &= 0xff;
@@ -62,14 +64,15 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 /*       case SFT_T(FEN_G):
       case RCTL_T(FEN_B):
-      case SFT_T(COPY):
       case LT_NBSPC:
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
-      case SFT_T(COPY):
-        return process_custom_tap_hold(C(PG_C), record);
       case MOD_STB:
         return process_custom_tap_hold(S(KC_TAB), record);
+      case HRM_BKW:
+        return process_custom_tap_hold(C(KC_BSPC), record);
+      case HRM_ALL:
+        return process_custom_tap_hold(C(PG_A), record);
 
       case LT_SYM:
         // This key behave as a layer tap when held,
