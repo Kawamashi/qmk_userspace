@@ -10,7 +10,7 @@ Avec Krypton, je n’ai pas pour ambition de fournir une configuration “parfai
 Le projet [Selenium](https://onedeadkey.github.io/selenium/) vient de se lancer au sein de la communauté des Ergonautes. J’ai essayé de rendre Krypton aussi proche de Selenium que possible, tout en tenant compte de mon expérience personnelle. Je souhaite que quelqu’un venant d’une configuration Selenium ne soit pas dépaysé en testant Krypton. 
 
 
-Propergol utilisant quatre touches de pouce, il n’est pas possible d’utiliser Selenium telle quelle avec cette disposition. Par exemple, mettre des touches d’édition (backspace, enter, tab et esc) sous les pouces n’est pas vraiment possible.
+Propergol utilisant quatre touches de pouce, il n’est pas possible d’utiliser Selenium telle quelle avec cette disposition. Par exemple, mettre des touches d’édition (Backspace, Enter, Tab et Escape) sous les pouces n’est pas vraiment possible.
 
 
 Krypton s’adapte à l’utilisateur. Quelqu’un qui débute préfèrera sans doute la configuration à six colonnes tandis que quelqu’un de plus expérimenté se dirigera naturellement vers une configuration utilisant les [Home-Row Mods](https://precondition.github.io/home-row-mods) (HRM). Enfin, si vous voulez aller encore plus loin, je vous encourage à utiliser des combos. 
@@ -31,4 +31,15 @@ Propergol a le `E` et la touche magique sous le pouce de gauche. Il faut donc un
 
 Idéale quand on débute, la configuration à 42 touches est simple à appréhender. Elle utilise les colonnes extérieures pour les modificatrices (Ctrl, Alt et Gui) et les principales touches d’édition (Backspace, Delete, Enter, Escape, Tab et reverse Tab). Pour cela, elle utilise les [Mod-Tap](https://docs.qmk.fm/mod_tap#changing-hold-function) de QMK. Pour envisager sereinement une future migration vers une configuration utilisant les home-row mods, il est préférable d’utiliser les mod-taps opposés à la lettre. Par exemple, si vous voulez faire `Gui L`, `L` étant sur la moitié droite du clavier, utilisez la modificatrice de gauche.
 De plus, je vous conseille de prendre l’habitude de relâcher les touches sitôt que vous avez appuyé dessus, d’avoir une frappe “snappy”.
+
+
+## Passer à 5 colonnes
+### La couche de navigation
+Pour passer à 5 colonnes, il faut avoir les touches d’édition sur le pavé principal. Krypton leur dédie la moitié droite de la couche de navigation. On accède très facilement à celle-ci en maintenant enfoncée l’une des touches repos de pouce. Sur la rangée de repos, on y trouve Backspace, Enter et Escape, ainsi que Ctrl + Backspace, qui permet d’effacer un mot entier. Tab et Delete sont sous l’index, pour une bonne accessibilité. On trouve également sur cette moitié de clavier les touches de mon module [Mod Word](https://github.com/Kawamashi/qmk_userspace/tree/main?tab=readme-ov-file#mod-word), dont [Select Word](https://github.com/Kawamashi/qmk_userspace/tree/main?tab=readme-ov-file#word-selection] et [Caps Word](https://docs.qmk.fm/features/caps_word).
+
+
+Les touches de navigation se trouvent sur la moitié gauche de la couche, ainsi que des raccourcis claviers usuels (couper/copier/coller, annuler/rétablir et tout sélectionner). Leur placement à gauche les rend accessibles même avec la souris dans la main droite.
+
+### Les Home-Row Mods
+Supprimer les colonnes extérieures implique également de rapprocher les modificatrices. 
 
