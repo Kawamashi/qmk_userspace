@@ -52,7 +52,8 @@ Urob a élaboré une solution qui permet d’oublier le tapping term, les [Timer
 - pour éviter le deuxième problème, on utilise le [Permissive Hold](https://precondition.github.io/home-row-mods#permissive-hold). C’est une option de QMK qui permet d’activer la modificatrice sans avoir besoin d’attendre le tapping term, quand la 2e touche est pressée puis relâchée alors que la 1ère est encore enfoncée. Cela correspond au geste qu’on fait naturellement quand on utilise un raccourci clavier.
 - malheureusement, cette option augmente le risque de déclenchement inopiné des HRM lors des roulements de plusieurs lettres. Pour éviter ça, on active l’option [Chordal Hold](https://docs.qmk.fm/tap_hold#chordal-hold), qui n’active pas les HRM lorsque la touche mod-tap et l’autre touche sont du même côté du clavier.
 
-Ainsi, simplement en utilisant les modificatrices avec une touche de la main opposée, vous n’aurez plus de faux positifs ni de faux négatifs liés au tapping term !
+Ainsi, il suffit d’utiliser les modificatrices avec une touche de la main opposée pour ne plus avoir de faux positifs ni de faux négatifs liés au tapping term !
+
 
 Je vous conseille quand même d’utiliser le one-shot shift au pouce pour les majuscules, et de réserver le home-row shift pour les raccourcis clavier qui nécessitent shift en plus d’une autre modificatrice.
 
