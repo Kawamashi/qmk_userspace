@@ -53,3 +53,8 @@ Urob a élaboré une solution qui permet d’oublier le tapping term, les [Timer
 - malheureusement, cette option augmente le risque de déclenchement inopiné des HRM lors des roulements de plusieurs lettres. Pour éviter ça, on active l’option [Chordal Hold](https://docs.qmk.fm/tap_hold#chordal-hold), qui n’active pas les HRM lorsque la touche mod-tap et l’autre touche sont du même côté du clavier.
 
 Ainsi, simplement en utilisant les modificatrices avec une touche de la main opposée, vous n’aurez plus de faux positifs ni de faux négatifs liés au tapping term !
+
+Je vous conseille quand même d’utiliser le one-shot shift au pouce pour les majuscules, et de réserver le home-row shift pour les raccourcis clavier qui nécessitent shift en plus d’une autre modificatrice.
+
+
+### Paramétrage des Layer-Tap
