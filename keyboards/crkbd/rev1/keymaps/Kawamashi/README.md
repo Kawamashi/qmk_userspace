@@ -19,7 +19,7 @@ Krypton s’adapte à l’utilisateur. Quelqu’un qui débute préfèrera sans 
 
 ## Les touches de pouce
 
-Cinq des six touches de pouces sont des Layer-Tap. Par exemple, la touche `Espace` vous envoie sur la couche de navigation quand on la maintient plus d’un certain temps (le [tapping term](https://precondition.github.io/home-row-mods#default)).
+La majorité des touches de pouces sont des Layer-Tap. Par exemple, la touche `Espace` vous envoie sur la couche de navigation quand on la maintient plus d’un certain temps (le [tapping term](https://precondition.github.io/home-row-mods#default)).
 
 Shift est une modificatrice particulière. Elle est principalement utilisée en cours de frappe, contrairement à Ctrl, Alt et Gui. Par conséquent, il est plus confortable d’avoir Shift sous les pouces. À gauche, Krypton utilise un [One-Shot](https://docs.qmk.fm/one_shot_keys) Shift. Ce genre de modificatrices fonctionne comme une touche morte : on presse et on relâche le one-shot, et la touche suivante (et rien qu’elle !) sera affectée par la modificatrice. Quand on maintient appuyé le one-shot shift, il se comporte comme une modificatrice classique : ça permet de l’utiliser avec la souris, ou pour mettre en majuscule plusieurs lettres.
 
