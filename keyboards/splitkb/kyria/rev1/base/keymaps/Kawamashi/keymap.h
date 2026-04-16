@@ -35,10 +35,11 @@ enum layers {
     _L_MODS,
     _R_MODS,
     _1DK,
-    _NUMBERS,
     _SYMBOLS,
+    _NUMBERS,
     _SHORTNAV,
     _FUNCAPPS,
+    _FUNCTIONS
 };
 
 enum custom_keycodes {
@@ -74,11 +75,13 @@ enum custom_keycodes {
 #define LT_REPT LT(_NUMBERS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define LT_0 LT(_SYMBOLS, KC_0)
-#define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
+#define LT_NUMW LT(_SHORTNAV, NNB_SPC)
+#define LT_APOS LT(_NUMBERS, PG_APOS)
 
 #define OS_1DK OSL(_1DK)
 #define NUM_1DK OSL(_NUMBERS)
 #define OS_FA OSL(_FUNCAPPS)
+#define OS_NUM OSL(_NUMBERS)
 
   // Mods
 #define MT_SLSH SFT_T(PG_SLSH)

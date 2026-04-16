@@ -114,6 +114,10 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
           layer_clear();
           //if (is_select_word()) { end_select_word(); }
           clear_oneshot();
+          unregister_code(KC_LCTL);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LALT);
+          unregister_code(KC_LGUI);
           //clear_oneshot_mods();
           //clear_weak_mods();
           if (get_modword() != idle) { disable_modword(get_modword()); }

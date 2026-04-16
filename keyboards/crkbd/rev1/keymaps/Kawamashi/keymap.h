@@ -95,9 +95,12 @@ enum custom_keycodes {
     #define HRM_L _GUI_T(PG_L)
 
     #define HRM_ALL _GUI_T(C(PG_A))
-    #define HRM_LA _ALT_T(KC_LEFT)
-    #define HRM_DA SFT_T(KC_DOWN)
-    #define HRM_RA _CTL_T(KC_RGHT)
+    #define HRM_LA KC_LEFT
+    #define HRM_DA KC_DOWN
+    #define HRM_RA KC_RGHT
+    //#define HRM_LA _ALT_T(KC_LEFT)
+    //#define HRM_DA SFT_T(KC_DOWN)
+    //#define HRM_RA _CTL_T(KC_RGHT)
     #define HRM_BKS _CTL_T(KC_BSPC)
     #define HRM_BKW SFT_T(C(KC_BSPC))
     #define HRM_ENT _ALT_T(KC_ENT)

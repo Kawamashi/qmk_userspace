@@ -26,8 +26,8 @@ bool replace_apos(void) {
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
   switch (keycode) {
-    case LT_NBSPC:
-      return NNB_SPC;
+    case LT_NUMW:
+      return NUMWORD;
     case SFT_T(COPY):
       return C(PG_C);
     case SFT_T(FEN_G):
@@ -69,7 +69,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 /*       case SFT_T(FEN_G):
       case RCTL_T(FEN_B):
       case SFT_T(COPY):
-      case LT_NBSPC:
+      case LT_NUMW:
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
       case SFT_T(FEN_G):
@@ -81,7 +81,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
       case SFT_T(COPY):
         return process_custom_tap_hold(C(PG_C), record);
 
-      case LT_NBSPC:
+      case LT_NUMW:
         return process_custom_tap_hold(NNB_SPC, record);
 
       case OS_1DK:

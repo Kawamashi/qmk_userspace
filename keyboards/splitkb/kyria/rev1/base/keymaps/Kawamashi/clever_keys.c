@@ -88,9 +88,9 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
     case PG_P:
       switch (*ongoing_keycode) {
-        case PG_C:
+/*         case PG_C:
           // "pas"
-          return finish_word((uint16_t[]) {PG_A, PG_S}, 2, ongoing_keycode, record);
+          return finish_word((uint16_t[]) {PG_A, PG_S}, 2, ongoing_keycode, record); */
         
         case PG_J:
           // "pour"

@@ -26,6 +26,16 @@ static keyrecord_t next_record;
 
 // Tap-hold configuration
 
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LT_E:
+            if (next_keycode != PG_U && next_keycode != LT_E) { return TAPPING_TERM; }
+            return TAPPING_TERM + 300;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
 bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
   switch (tap_hold_keycode) {
     case LT_REPT:
@@ -124,8 +134,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
       KC_NO, PG_VIRG, PG_EACU, PG_U,  PG_P,   PG_TIRE,                                 PG_V,   PG_M,  PG_C, PG_J, PG_X,   KC_NO,
       KC_NO, PG_O,    PG_A,    PG_I,  PG_N,   PG_POIN,                                 PG_G,   PG_T,  PG_S, PG_R, PG_L,   KC_NO,
-      KC_NO, PG_Q,    PG_EGRV, PG_Y,  PG_H,   KC_NO,   KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,  PG_F, PG_W, OS_1DK, KC_NO,
-                               KC_NO, KC_SPC, L_OS4A,  LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_NO, KC_NO
+      KC_NO, PG_Q,    PG_EGRV, PG_Y,  PG_H,   KC_T,    KC_NO, KC_NO,  KC_NO,   KC_NO,  KC_NO,  PG_D,  PG_F, PG_W, OS_1DK, KC_NO,
+                               KC_NO, KC_SPC, L_OS4A, LT_E,  LT_MGC, LT_REPT, LT_SPC, R_OS4A, KC_NO, KC_NO
     ),
 
 /*
@@ -143,10 +153,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_L_MODS] = LAYOUT(
-      KC_NO, KC_NO,  KC_NO,  OS_GUI,  KC_RGUI, KC_NO,                                        _______,  _______, _______, _______, _______, _______,
-      KC_NO, OS_RSA, OS_FA,  OS_CTRL, OS_SHFT, KC_NO,                                        _______,  _______, _______, _______, _______, _______,
-      KC_NO, OS_ALT, KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______,  _______, _______, _______, _______, _______,
-                               KC_NO,   KC_NO, _______, _______, _______, CAPSWORD, _______, CAPSLIST, _______, _______
+      KC_NO, CAPSLOCK, CAPSLIST, OS_GUI,  KC_RGUI, KC_NO,                                        _______, _______, _______, _______, _______, _______,
+      KC_NO, OS_RSA,   OS_FA,    OS_CTRL, OS_SHFT, KC_NO,                                        _______, _______, _______, _______, _______, _______,
+      KC_NO, OS_ALT,   KC_NO,    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,  _______, _______, _______, _______, _______, _______, _______,
+                                 KC_NO,   KC_NO,   _______, _______, _______, CAPSWORD, _______, _______, _______, _______
     ),
 
 /*
@@ -186,10 +196,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NUMBERS] = LAYOUT(
       // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                      PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), PG_1DK,  _______,
-       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                      PG_IND,  MT_6,    KC_7,    KC_8,       KC_9,    _______,
-       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______,  _______, _______, _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
-                                  _______, _______, KC_PDOT, LT_0   , LT_NBSPC, _______, LT_SPC,  _______, _______, _______
+       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                     PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), PG_1DK,  _______,
+       _______, KC_4,    KC_3,    KC_2,    MT_1,    PG_2PTS,                                     PG_IND,  MT_6,    KC_7,    KC_8,       KC_9,    _______,
+       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______, _______, _______, _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
+                                  _______, _______, KC_PDOT, LT_0   , LT_NUMW, NNB_SPC, LT_SPC,  _______, _______, _______
      ),
 
 /*
@@ -209,7 +219,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                                     PG_HASH, PG_DQUO, PG_EGAL, ALGR(PG_J), PG_GRV,  _______,
       _______, ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, PG_2PTS,                                     PG_BSLS, MT_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
       _______, PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______, _______, _______, _______, _______, _______, PG_APOD, PG_ESPR, PG_PIPE,    PG_TILD, _______,
-                                    _______, _______, _______, KC_SPC,  _______, _______, _______, _______, _______, _______
+                                    _______, _______, OS_RSA,  KC_SPC,  OS_NUM,  OS_NUM,  _______, _______, _______, _______
     ),
 
 
@@ -230,7 +240,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______, _______, _______, _______, N_TILD,  PG_X,                                        PG_W,    _______, _______, _______, _______, _______,
        _______, _______, _______, _______, PG_Z,    _______,                                     _______, PG_K,    PG_D,    _______, _______, _______,
        _______, OU_GRV,  PG_J,    _______, PG_H,    _______, _______, _______, _______, _______, _______, PG_B,    _______, PG_S,    CNL_1DK, _______,
-                                  _______, _______, _______, PG_ECIR, PG_AGRV, PG_APOS, PG_UNDS, _______, _______, _______
+                                  _______, _______, OS_NUM,  PG_ECIR, PG_AGRV, LT_APOS, PG_UNDS, _______, _______, _______
      ),
 
 
@@ -249,10 +259,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = LAYOUT(
-      _______, SEL_LINE, LGUI(KC_TAB), LGUI(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), _______, _______,
-      _______, C(PG_A),  C(PG_X),      C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
-      _______, SEL_WORD, _______,      KC_MUTE,    C(PG_Z),     _______,  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
-                                       _______,    _______,     _______,  _______, _______, NAVWORD, _______, _______, _______,    _______
+      _______, SEL_LINE, OS_FA,     LGUI(PG_V), RCS(PG_V),   KC_VOLU,                                      KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), LGUI(KC_TAB), _______,
+      _______, C(PG_A),  C(PG_X),   C(PG_V),    SFT_T(COPY), KC_VOLD,                                      KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   KC_F2  , _______,
+      _______, SEL_WORD, S(KC_TAB), KC_MUTE,    C(PG_Z),     _______,  _______, _______, _______, _______, _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    _______, _______,
+                                       _______, _______,     _______,  _______, _______, NAVWORD, _______, _______, _______,    _______
     ),
 
 /*
@@ -275,6 +285,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, ALT_T(KC_F10), KC_F3, KC_F2,   KC_F1,        _______,    _______, _______, _______, _______, _______, _______,       _______,       _______,        _______,   _______,
                                      _______, _______,      _______,    _______, _______, _______, _______, _______, _______,       _______
     ),
+
+/*
+ * Layer 1 : Numbers
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |      |  -   |  +   |  €   |  %   |                              |Expos.|  °   |  =   |      |  1DK |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |  4   |  3   |  2   |  1   |  :   |                              |Indice|  6   |  7   |  8   |  9   |        |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |      |      |  H   |  5   |      |      |      |  |      |      |      |  /   |  -   |  +   |  *   |        |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |  .   |  0   |NbSpc |  |      |Space |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_FUNCTIONS] = LAYOUT(
+      // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
+       _______, _______,  _______, _______, _______, CAPSLOCK,                                     _______, _______, _______, _______, _______, _______,
+       _______, KC_F4,    KC_F3,   KC_F2,   KC_F1,   CAPSLIST,                                     _______, KC_F6,   KC_F7,   KC_F8,   KC_F9,   _______,
+       _______, _______,  _______, _______, KC_F5,   _______,  _______, _______, _______, _______, _______, KC_F10,  KC_F11,  KC_F12,  PG_ASTX, _______,
+                                   _______, _______, CAPSWORD, _______, FUNWORD, _______, _______, _______, _______, _______
+     ),
 
 // /*
 //  * Layer template

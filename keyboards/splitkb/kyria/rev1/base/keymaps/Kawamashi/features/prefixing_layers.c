@@ -41,7 +41,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
     // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
         case PG_1DK:
-        case NUM_1DK:
+        //case NUM_1DK:
           return insert_1dk(keycode);
     }
 
@@ -53,7 +53,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_B:
             case PG_H:
             case PG_Z:
-            case PG_APOS:
             case OU_GRV:
             case PG_UNDS:
             case PG_AGRV:
@@ -61,6 +60,10 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             //case KC_SPC:    // When space is added by Clever Keys
             case CNL_1DK:
               return true;
+
+            case LT_APOS:
+                if (record->tap.count) { return true; }
+                return insert_1dk(keycode);
 
             case PG_U:
                 if (get_recent_keycode(-1) == PG_Q) { return true; }

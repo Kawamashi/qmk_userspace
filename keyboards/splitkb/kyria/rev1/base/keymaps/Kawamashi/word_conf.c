@@ -89,6 +89,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
     case PG_I:
       if (is_letter(prev_keycode)) { return false; }
     case PG_Q:
+    case PG_U:
       return true;
 
     default:
@@ -221,6 +222,7 @@ uint8_t layerword_layer_from_trigger(uint16_t keycode) {
     case L_OS4A: return _L_MODS;
     case R_OS4A: return _R_MODS;
     case NUMWORD: return _NUMBERS;
+    case LT_NUMW: return _NUMBERS;
     case NAVWORD: return _SHORTNAV;
     case FUNWORD: return _FUNCAPPS;
     default: return 0;
