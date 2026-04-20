@@ -24,13 +24,13 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
     if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
     // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
-    if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
+/*     if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
         if (should_add_shift(keycode, record)) {
             set_oneshot_mods(MOD_BIT(KC_LSFT));
             if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
             disable_layerword(get_layerword_layer());  // To fix a bug producing Capsword when typing OS4A + roll between a letter and apostrophe.
         }
-    }
+    } */
 
 
     if (previous_1dk) {
@@ -41,7 +41,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
     // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
         case PG_1DK:
-        //case NUM_1DK:
           return insert_1dk(keycode);
     }
 
@@ -99,7 +98,7 @@ bool insert_1dk(uint16_t keycode) {
 }
 
 
-bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
+/* bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
 
   // Shift shouldn't be added if other mods are active
   if (get_mods() | get_oneshot_mods()) { return false; }
@@ -113,4 +112,4 @@ bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
   // Otherwise, add shift if the key is on the other side of the keyboard.
   //return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
   return IS_LAYER_ON(_R_MODS) == on_left_hand(record->event.key);
-}
+} */

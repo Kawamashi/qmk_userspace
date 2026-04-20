@@ -26,10 +26,12 @@ bool replace_apos(void) {
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
   switch (keycode) {
-    case LT_NUMW:
-      return NUMWORD;
-    case SFT_T(COPY):
-      return C(PG_C);
+    case LT_NNBS:
+      return NNB_SPC;
+/*     case SFT_T(COPY):
+      return C(PG_C); */
+    case M(C(PG_V)) :
+      return C(PG_V);
     case SFT_T(FEN_G):
       return LGUI(KC_LEFT);
     case RCTL_T(FEN_B):
@@ -72,6 +74,9 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
       case LT_NUMW:
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
+      case M(C(PG_V)) :
+        return process_custom_tap_hold(C(PG_V), record);
+
       case SFT_T(FEN_G):
         return process_custom_tap_hold(LGUI(KC_LEFT), record);
 
@@ -81,7 +86,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
       case SFT_T(COPY):
         return process_custom_tap_hold(C(PG_C), record);
 
-      case LT_NUMW:
+      case LT_NNBS:
         return process_custom_tap_hold(NNB_SPC, record);
 
       case OS_1DK:
@@ -178,7 +183,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 
 // One-shot mods
 
-const oneshot_key_t oneshot_keys[] = {
+/* const oneshot_key_t oneshot_keys[] = {
   {OS_SHFT, KC_LSFT},
   {OS_CTRL, KC_LCTL},
   {OS_ALT, KC_LALT},
@@ -209,7 +214,7 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
       if (mods & MOD_BIT(KC_ALGR)) { return false; }
       return true;
 
-    case OS_FA:       // to be combined with Alt
+    case OS_WINM:       // to be combined with Alt
     case FUNWORD:
     case NUMWORD:     // to combine numbers with mods
     //case NUM_1DK:   // NUM_1DK sends PG_1DK when pressed. When shifted, PG_1DK sends one-shot shift.
@@ -218,7 +223,7 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
     default:
       return false;
   }
-}
+} */
 
 
 // Repeat and Magic keys

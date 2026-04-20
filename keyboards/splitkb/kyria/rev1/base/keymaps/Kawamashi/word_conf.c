@@ -219,12 +219,13 @@ void word_selection_press_user(uint16_t keycode) {
 uint8_t layerword_layer_from_trigger(uint16_t keycode) {
 
   switch (keycode) {
-    case L_OS4A: return _L_MODS;
-    case R_OS4A: return _R_MODS;
+    //case L_OS4A: return _L_MODS;
+    //case R_OS4A: return _R_MODS;
     case NUMWORD: return _NUMBERS;
     case LT_NUMW: return _NUMBERS;
     case NAVWORD: return _SHORTNAV;
-    case FUNWORD: return _FUNCAPPS;
+    case FUNWORD: return _FUNCTIONS;
+    //case FUNWORD: return _FUNCAPPS;
     default: return 0;
   }
 }
@@ -234,9 +235,9 @@ uint16_t layerword_exit_timeout(uint8_t layer) {
   switch (layer) {
     case _NUMBERS:
     case _SHORTNAV:
-    case _L_MODS:
+/*     case _L_MODS:
     case _R_MODS:
-        return 3000;
+        return 3000; */
     case _FUNCAPPS:
         return 30000;
     default:
@@ -247,7 +248,7 @@ uint16_t layerword_exit_timeout(uint8_t layer) {
 bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record) {
 
   switch (layer) {
-    case _L_MODS:
+/*     case _L_MODS:
     case _R_MODS:
       switch (keycode) {
         case OS_SHFT:
@@ -257,7 +258,7 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
             return true;
         default:
             return false;
-      }
+      } */
 
     case _NUMBERS:
       switch (keycode) {
@@ -321,7 +322,7 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
 
 // One-shot 4 all configuration
 
-bool not_to_be_shifted(uint16_t keycode) {
+/* bool not_to_be_shifted(uint16_t keycode) {
   // keycodes that exit os4a layers w/o being shifted
   switch (keycode) {
       case KC_CAPS:
@@ -332,4 +333,4 @@ bool not_to_be_shifted(uint16_t keycode) {
       default:
         return false;
   }
-}
+} */
