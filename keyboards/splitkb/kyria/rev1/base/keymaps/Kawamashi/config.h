@@ -45,7 +45,7 @@
 
 // mod tap
 #define TAPPING_TERM 250
-#define TAPPING_TERM_PER_KEY
+//#define TAPPING_TERM_PER_KEY
 
 #define PERMISSIVE_HOLD
 //#define PERMISSIVE_HOLD_PER_KEY

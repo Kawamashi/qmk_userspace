@@ -32,10 +32,6 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
       return C(PG_C); */
     case M(C(PG_V)) :
       return C(PG_V);
-    case SFT_T(FEN_G):
-      return LGUI(KC_LEFT);
-    case RCTL_T(FEN_B):
-      return LGUI(KC_DOWN);
 /*     case LT_REPT:
       return get_last_keycode(); */
 
@@ -76,15 +72,6 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 
       case M(C(PG_V)) :
         return process_custom_tap_hold(C(PG_V), record);
-
-      case SFT_T(FEN_G):
-        return process_custom_tap_hold(LGUI(KC_LEFT), record);
-
-      case RCTL_T(FEN_B):
-        return process_custom_tap_hold(LGUI(KC_DOWN), record);
-
-      case SFT_T(COPY):
-        return process_custom_tap_hold(C(PG_C), record);
 
       case LT_NNBS:
         return process_custom_tap_hold(NNB_SPC, record);

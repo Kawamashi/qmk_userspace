@@ -25,15 +25,12 @@
 #include "features/clever_keys_utilities.h"
 #include "features/layerword.h"
 #include "features/modword.h"
-//#include "features/oneshot.h"
+#include "features/speculative_hold.h"
 #include "features/prefixing_layers.h"
 
 
 enum layers {
     _BASE = 0,
-    // OS4A layers should be as closed as base layer as possible
-    //_L_MODS,
-    //_R_MODS,
     _1DK,
     _SYMBOLS,
     _NUMBERS,
@@ -51,17 +48,10 @@ enum custom_keycodes {
   CAPSLOCK,
   SEL_WORD,
   SEL_LINE,
-  FEN_G,
-  FEN_B,
-  COPY,
   OS4A,
   OU_GRV,
   N_TILD,
   MAGIC,
-  //OS_SHFT,
-  //OS_CTRL,
-  //OS_ALT,
-  //OS_GUI,
   LETTER_1DK,
   SYMBOL_1DK,
   CNL_1DK,
@@ -82,9 +72,6 @@ enum custom_keycodes {
 #define OS_WINM OSL(_FUNCAPPS)
 #define OS_NUM OSL(_NUMBERS)
 
-  // OS4A
-//#define L_OS4A LSFT_T(OS4A)
-//#define R_OS4A RSFT_T(OS4A)
 
   // HRM
 #ifdef KRYPTON_ENABLE_HRM

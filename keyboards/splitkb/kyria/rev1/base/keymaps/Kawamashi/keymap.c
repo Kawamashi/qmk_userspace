@@ -20,33 +20,6 @@
 #include "keymap.h"
 
 
-static uint16_t next_keycode;
-static keyrecord_t next_record;
-
-
-// Tap-hold configuration
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case LT_E:
-            if (next_keycode != PG_U && next_keycode != LT_E) { return TAPPING_TERM; }
-            return TAPPING_TERM + 300;
-        default:
-            return TAPPING_TERM;
-    }
-}
-
-bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
-  switch (tap_hold_keycode) {
-    case LT_REPT:
-    case LT_MGC:
-      return true;
-  }
-
-  // Otherwise, follow the opposite hands rule.
-  return bilateral_combination(tap_hold_record, other_record);
-}
-
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
 
   // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
@@ -54,12 +27,6 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   if (keycode == OS_1DK) { return true; }
   //if (keycode == OS_1DK) { return false; }
 
-/*   if (!approved_chord(keycode, record, next_keycode, &next_record)) {
-      // When a layer-tap key overlaps with another key on the same hand, send its base keycode.
-      record->tap.interrupted = false;
-      record->tap.count = 1;
-      return true;
-  } */
   return false;
 }
 
@@ -85,16 +52,17 @@ void housekeeping_task_user(void) {
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-  if (record->event.pressed) {
-      // Cache the next input for mod-tap decisions
-      next_keycode = keycode;
-      next_record  = *record;
-  }
+  process_tap_flow(keycode, record);
+  pre_process_speculative_hold(keycode, record);
+
   return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  
+
+  // Speculative Hold
+  if (!process_record_speculative_hold(keycode, record)) { return false; }
+
   // LT Repeat and Magic keys
   if (!process_macros_I(keycode, record)) { return false; }
 
@@ -243,7 +211,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_FUNCAPPS] = LAYOUT(
       _______, KC_F12,        KC_F9, KC_F8,   KC_F7,        QK_BOOT,                                        _______, LSG(KC_LEFT),  LGUI(KC_UP),   LSG(KC_RIGHT),  KC_NUM,    _______,
-      _______, KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                                     _______, SFT_T(FEN_G),  RCTL_T(FEN_B), LGUI(KC_RIGHT), A(KC_ESC), _______,
+      _______, KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                                     _______, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RIGHT), A(KC_ESC), _______,
       _______, ALT_T(KC_F10), KC_F3, KC_F2,   KC_F1,        _______,    _______, _______, _______, _______, _______, _______,       _______,       _______,        _______,   _______,
                                      _______, _______,      _______,    _______, _______, _______, _______, _______, _______,       _______
     ),

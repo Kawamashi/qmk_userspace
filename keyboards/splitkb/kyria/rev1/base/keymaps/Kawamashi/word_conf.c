@@ -222,7 +222,7 @@ uint8_t layerword_layer_from_trigger(uint16_t keycode) {
     //case L_OS4A: return _L_MODS;
     //case R_OS4A: return _R_MODS;
     case NUMWORD: return _NUMBERS;
-    case LT_NUMW: return _NUMBERS;
+    //case LT_NUMW: return _NUMBERS;
     case NAVWORD: return _SHORTNAV;
     case FUNWORD: return _FUNCTIONS;
     //case FUNWORD: return _FUNCAPPS;

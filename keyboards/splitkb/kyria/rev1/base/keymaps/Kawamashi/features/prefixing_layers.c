@@ -96,20 +96,3 @@ bool insert_1dk(uint16_t keycode) {
 
     return keycode != PG_1DK;
 }
-
-
-/* bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
-
-  // Shift shouldn't be added if other mods are active
-  if (get_mods() | get_oneshot_mods()) { return false; }
-
-  // Combos and encoder events.
-  if (!IS_KEYEVENT(record->event)) { return true; }
-
-  // Specific exceptions
-  if (not_to_be_shifted(keycode)) { return false; }
-
-  // Otherwise, add shift if the key is on the other side of the keyboard.
-  //return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
-  return IS_LAYER_ON(_R_MODS) == on_left_hand(record->event.key);
-} */

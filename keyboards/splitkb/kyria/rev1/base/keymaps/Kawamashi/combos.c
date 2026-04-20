@@ -71,10 +71,6 @@ combo_t key_combos[] = {
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
 
-    // Chorded mods shouldn't be considered as combos.
-/*     if (IS_LAYER_ON(_R_MODS)) { return on_left_hand(record->event.key); }
-    if (IS_LAYER_ON(_L_MODS)) { return !on_left_hand(record->event.key); } */
-
     // Some combos should trigger regardless of the idle time.
     switch (combo_index) {
         case R_BKSPC:

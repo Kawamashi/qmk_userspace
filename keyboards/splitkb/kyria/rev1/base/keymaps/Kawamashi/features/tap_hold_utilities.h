@@ -53,6 +53,8 @@ bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uin
 // Handles the tap function of tap-hold keys using non-basic keycodes
 bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
+void process_tap_flow(uint16_t keycode, keyrecord_t* record);
+
 #ifdef __cplusplus
 }
 #endif
