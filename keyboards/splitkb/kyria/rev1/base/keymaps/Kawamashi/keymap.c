@@ -20,24 +20,22 @@
 #include "keymap.h"
 
 
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-
-  // Permet de doubler rapidement un caractère présent sur la moitié droite du clavier.
-  // Fait également gagner pas mal de place sur le FW.
-  if (keycode == OS_1DK) { return true; }
-  //if (keycode == OS_1DK) { return false; }
-
-  return false;
-}
-
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
     LAYOUT(
         'L', 'L', 'L', 'L', 'L', 'L',                     'R', 'R', 'R', 'R', 'R', 'R', 
         'L', 'L', 'L', 'L', 'L', 'L',                     'R', 'R', 'R', 'R', 'R', 'R', 
-        'L', 'L', 'L', 'L', 'L', 'L', '*', '*', '*', '*', 'R', 'R', 'R', 'R', 'R', 'R', 
+        'L', 'L', 'L', 'L', 'L', 'L', '*', '*', '*', '*', 'R', 'R', 'R', 'R', '*', 'R', 
                        '*', '*', '*', 'L', '*', '*', 'R', '*', '*', '*'
     );
 
+bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
+  switch (keycode) {  // Enable speculative holding for these keys.
+    case M(PG_I):
+    case I(PG_N):
+      return true;
+  }
+  return false;  // Disable otherwise.
+}
 
 // Housekeeping
 

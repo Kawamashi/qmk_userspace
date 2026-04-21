@@ -52,7 +52,7 @@ void process_tap_flow(uint16_t keycode, keyrecord_t* record) {
   if (IS_KEYEVENT(record->event) && pos.row < MATRIX_ROWS && pos.col < MATRIX_COLS &&
       IS_QK_MOD_TAP(keycode)) {
     // The event is on an MT with a valid matrix position.
-    const uint16_t tap_keycode = keycode &= 0xff;
+    const uint16_t tap_keycode = tap_hold_extractor(keycode);
 
     // Determine the key's index in the bit arrays.
     const uint16_t index = pos.row * MATRIX_COLS + pos.col;
