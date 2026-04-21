@@ -32,8 +32,9 @@
 enum layers {
     _BASE = 0,
     _1DK,
+    _NUMROW,
     _SYMBOLS,
-    _NUMBERS,
+    _NUMPAD,
     _SHORTNAV,
     _FUNCAPPS,
     _FUNCTIONS
@@ -41,6 +42,8 @@ enum layers {
 
 enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
+  NUMPAD,
+  NUMROW,
   NAVWORD,
   FUNWORD,
   CAPSWORD,
@@ -65,12 +68,13 @@ enum custom_keycodes {
 #define LT_REPT LT(_FUNCTIONS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define LT_0 LT(_SYMBOLS, KC_0)
+#define LT_P0 LT(_SYMBOLS, KC_P0)
 #define LT_NNBS LT(_SHORTNAV, NNB_SPC)
-#define LT_APOS LT(_NUMBERS, PG_APOS)
+#define LT_APOS LT(_NUMROW, PG_APOS)
 
 #define OS_1DK OSL(_1DK)
 #define OS_WINM OSL(_FUNCAPPS)
-#define OS_NUM OSL(_NUMBERS)
+#define OS_NUM OSL(_NUMPAD)
 
 
   // HRM

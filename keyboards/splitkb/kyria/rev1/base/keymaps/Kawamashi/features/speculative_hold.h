@@ -5,8 +5,11 @@
 extern "C" {
 #endif
 
+// Applies the HRM modifier before the tap-hold decision is made.
+// It's especially usefull when using mod-tap keys with a mouse.
 void pre_process_speculative_hold(uint16_t keycode, keyrecord_t* record);
 
+// Clears the speculatively-held mod once the tap-hold decision is made.
 bool process_record_speculative_hold(uint16_t keycode, keyrecord_t* record);
 
 /**

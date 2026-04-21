@@ -50,7 +50,7 @@ void housekeeping_task_user(void) {
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-  process_tap_flow(keycode, record);
+  process_flow_tap(keycode, record);
   pre_process_speculative_hold(keycode, record);
 
   return true;
@@ -122,12 +122,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |  .   |  0   |NbSpc |  |      |Space |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_NUMBERS] = LAYOUT(
+    [_NUMROW] = LAYOUT(
       // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
-       _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                     PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), PG_1DK,  _______,
-       _______, KC_4,    KC_3,    M(KC_2), KC_1,    PG_2PTS,                                     PG_IND,  KC_6,    M(KC_7), KC_8,       KC_9,    _______,
-       _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______, _______, _______, _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
-                                  _______, _______, KC_PDOT, LT_0   , LT_NNBS, NNB_SPC, LT_SPC,  _______, _______, _______
+      _______, PG_DLR,  PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                                     PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), NUMPAD,  _______,
+      _______, KC_4,    KC_3,    M(KC_2), KC_1,    PG_2PTS,                                     PG_IND,  KC_6,    M(KC_7), KC_8,       KC_9,    _______,
+      _______, S(KC_4), S(KC_3), PG_H,    KC_5,    _______, _______, _______, _______, _______, _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX, _______,
+                                 _______, _______, KC_PDOT, LT_0   , LT_NNBS, NNB_SPC, LT_SPC,  NUMWORD, _______, _______
      ),
 
 /*
@@ -150,6 +150,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                     _______, _______, OS_RSA,  KC_SPC,  OS_NUM,  OS_NUM,  _______, OS_NUM, _______, _______
     ),
 
+/*
+ * Layer : Numpad
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |      |  -   |  +   |  €   |  %   |                              |Expos.|  °   |  =   |      |  1DK |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |  4   |  3   |  2   |  1   |  :   |                              |Indice|  6   |  7   |  8   |  9   |        |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |      |      |  H   |  5   |      |      |      |  |      |      |      |  /   |  -   |  +   |  *   |        |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |  .   |  0   |NbSpc |  |      |Space |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_NUMPAD] = LAYOUT(
+      _______, PG_DLR,  PG_MOIN, PG_PLUS,  PG_EURO, PG_PERC,                                     PG_EXP,  PG_DEG,  PG_EGAL,  _______, NUMROW, _______,
+      _______, KC_P4,   KC_P3,   M(KC_P2), KC_P1,   PG_2PTS,                                     PG_IND,  KC_P6,   M(KC_P7), KC_P8,   KC_P9,   _______,
+      _______, _______, _______, PG_H,     KC_P5,   _______, _______, _______, _______, _______, _______, PG_SLSH, PG_MOIN,  PG_PLUS, PG_ASTX, _______,
+                                 _______,  _______, KC_PDOT, LT_P0  , LT_NNBS, NNB_SPC, LT_SPC,  NUMWORD,  _______, _______
+     ),
 
 /*
  * Layer : One Dead Key

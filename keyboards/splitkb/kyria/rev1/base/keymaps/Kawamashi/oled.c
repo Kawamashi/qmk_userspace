@@ -52,7 +52,7 @@ bool oled_task_user(void) {
             case _SYMBOLS:
                 oled_write_P(PSTR("Symboles\n"), false);
                 break;
-            case _NUMBERS:
+            case _NUMROW:
                 oled_write_P(PSTR("Nombres\n"), false);
                 break;
             case _SHORTNAV:

@@ -38,20 +38,24 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
 
 static uint8_t is_tapped[(MATRIX_ROWS * MATRIX_COLS + 7) / 8] = {0};
 
-/* static uint16_t get_tap_keycode(uint16_t keycode) {
-  switch (keycode) {
-    case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-      return QK_MOD_TAP_GET_TAP_KEYCODE(keycode);
-  }
-  return keycode;
-} */
+bool is_hrm_event(uint16_t keycode, keyrecord_t* record, keypos_t pos) {
+  // The event is not a combo
+  if (!IS_KEYEVENT(record->event)) { return false; }
+  // The key is a mod-tap
+  if (!IS_QK_MOD_TAP(keycode)) { return false; }
+  // The key is on the home-row
+  if (pos.row != 2 && pos.row != 5) { return false; }
+  // The keyrecord has a valid matrix position
+  if (pos.col >= MATRIX_COLS) { return false; }
 
-void process_tap_flow(uint16_t keycode, keyrecord_t* record) {
+  return true;
+}
+
+void process_flow_tap(uint16_t keycode, keyrecord_t* record) {
   const keypos_t pos = record->event.key;
 
-  if (IS_KEYEVENT(record->event) && pos.row < MATRIX_ROWS && pos.col < MATRIX_COLS &&
-      IS_QK_MOD_TAP(keycode)) {
-    // The event is on an MT with a valid matrix position.
+  if (is_hrm_event(keycode, record, pos)) {
+    // The event is on a home-row MT with a valid matrix position.
     const uint16_t tap_keycode = tap_hold_extractor(keycode);
 
     // Determine the key's index in the bit arrays.

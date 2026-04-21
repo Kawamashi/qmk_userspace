@@ -114,16 +114,3 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-
-
-void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
-    
-    // The OS4A layer must be exited only when ctrl or shift are registered,
-    // not when the OSM are released without having being held.
-    //if (get_mods() & QK_ONE_SHOT_MOD_GET_MODS(keycode)) { 
-
-    // When ctrl or shift are released after being held, exit the OS4A layer.
-    if (!record->tap.count) {
-      disable_layerword(layerword_layer);
-    }
-}

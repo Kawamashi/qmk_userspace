@@ -61,5 +61,3 @@ uint8_t layerword_layer_from_trigger(uint16_t keycode);
  * If you want to exit layer before key processing, call `disable_layerword()` before returning false.
 */
 bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record);
-
-void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record);

@@ -17,9 +17,18 @@
 #include "features_conf.h"
 
 static bool is_apos_dr = false;
+static bool is_numpad = false;
 
 bool replace_apos(void) {
   return is_apos_dr;
+}
+
+void set_numpad(bool target) {
+  is_numpad = target;
+}
+
+bool replace_numpad(void) {
+  return is_numpad;
 }
 
 
@@ -28,12 +37,8 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     case LT_NNBS:
       return NNB_SPC;
-/*     case SFT_T(COPY):
-      return C(PG_C); */
     case M(C(PG_V)) :
       return C(PG_V);
-/*     case LT_REPT:
-      return get_last_keycode(); */
 
     default:
       return keycode &= 0xff;
@@ -166,51 +171,6 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   }
   return KC_TRNS;
 }
-
-
-// One-shot mods
-
-/* const oneshot_key_t oneshot_keys[] = {
-  {OS_SHFT, KC_LSFT},
-  {OS_CTRL, KC_LCTL},
-  {OS_ALT, KC_LALT},
-  {OS_GUI, KC_LGUI},
-};
-
-bool is_oneshot_cancel_key(uint16_t keycode) {
-  switch (keycode) {
-    case L_OS4A:
-    case R_OS4A:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-bool should_oneshot_stay_pressed(uint16_t keycode) {
-
-  switch (keycode) {
-    case OS_1DK:
-      // On veut que les one-shot mods soient transmis aux touches de la couche 1DK, par ex pour faire Ctrl + K.
-      // Il faut donc que cette fonction appliquée à OS_1DK renvoie true pour la plupart des mods.
-      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_1DK.
-      // Alt-gr doit être relâché après appui sur OS_1DK.
-      // Cette fonction appliquée à OS_1DK ne doit donc renvoyer false que quand Alt-gr est utilisé.
-      const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-      if (mods & MOD_BIT(KC_ALGR)) { return false; }
-      return true;
-
-    case OS_WINM:       // to be combined with Alt
-    case FUNWORD:
-    case NUMWORD:     // to combine numbers with mods
-    //case NUM_1DK:   // NUM_1DK sends PG_1DK when pressed. When shifted, PG_1DK sends one-shot shift.
-      return true;
-
-    default:
-      return false;
-  }
-} */
 
 
 // Repeat and Magic keys

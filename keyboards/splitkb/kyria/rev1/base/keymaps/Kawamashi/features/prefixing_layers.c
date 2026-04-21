@@ -23,16 +23,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
     if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
-    // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
-/*     if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
-        if (should_add_shift(keycode, record)) {
-            set_oneshot_mods(MOD_BIT(KC_LSFT));
-            if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
-            disable_layerword(get_layerword_layer());  // To fix a bug producing Capsword when typing OS4A + roll between a letter and apostrophe.
-        }
-    } */
-
-
     if (previous_1dk) {
         if (get_repeat_key_count() > 0) { tap_code(PG_1DK); }
         previous_1dk = false;
