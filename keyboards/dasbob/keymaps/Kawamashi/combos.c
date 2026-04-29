@@ -1,0 +1,156 @@
+/* Copyright 2025 @Kawamashi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include QMK_KEYBOARD_H
+
+#include "keymap.h"
+
+enum combos {
+  R_BKSPC, 
+  DELETE, 
+  BK_WORD,
+  DEL_WORD, 
+  L_BKSPC, 
+  HOME, 
+  END, 
+  ENTER,
+  TAB,
+  ESC, 
+  HELP, 
+  PANIC,
+  ALTTAB,
+  ALTESC,
+  L_SPACE,
+  VOLDOWN
+};
+
+const uint16_t PROGMEM del_combo_d[] = {I(PG_T), M(PG_S), COMBO_END};
+const uint16_t PROGMEM bkspc_combo_d[] = {M(PG_S), R(PG_R), COMBO_END};
+const uint16_t PROGMEM del_word_combo[] = {PG_M, PG_C, COMBO_END};
+const uint16_t PROGMEM bk_word_combo[] = {PG_C, PG_J, COMBO_END};
+const uint16_t PROGMEM enter_combo[] = {PG_P, PG_U, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {I(PG_N), M(PG_I), COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {I(PG_N), R(PG_A), COMBO_END};
+const uint16_t PROGMEM bkspc_combo_g[] = {R(PG_A), M(PG_I), COMBO_END};
+const uint16_t PROGMEM home_combo[] = {PG_EGRV, PG_Y, COMBO_END};
+const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
+const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
+const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
+const uint16_t PROGMEM altesc_combo[] = {R(PG_A), M(PG_I), I(PG_N), COMBO_END};
+const uint16_t PROGMEM space_combo[] = {PG_EGRV, PG_H, COMBO_END};
+const uint16_t PROGMEM voldown_combo[] = {PG_D, PG_F, COMBO_END};
+
+combo_t key_combos[] = {
+    [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
+    [DELETE] = COMBO(del_combo_d, KC_DEL),
+    [BK_WORD] = COMBO(bk_word_combo, LCTL(KC_BSPC)), 
+    [DEL_WORD] = COMBO(del_word_combo, LCTL(KC_DEL)), 
+    [L_BKSPC] = COMBO(bkspc_combo_g, KC_BSPC),
+    [HOME] = COMBO(home_combo, KC_HOME),
+    [END] = COMBO(end_combo, KC_END),
+    [ENTER] = COMBO(enter_combo, KC_ENT),
+    [TAB] = COMBO(tab_combo, KC_TAB),
+    [ESC] = COMBO(esc_combo, KC_ESC),
+    [PANIC] = COMBO(panic_combo, KC_NO),
+    [ALTTAB] = COMBO(alttab_combo, KC_NO),
+    [ALTESC] = COMBO(altesc_combo, LALT(KC_ESC)),
+    [L_SPACE] = COMBO(space_combo, KC_SPC),
+    [VOLDOWN] = COMBO(voldown_combo, KC_VOLD)
+    };
+
+
+bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+
+    // Some combos should trigger regardless of the idle time.
+    switch (combo_index) {
+        case R_BKSPC:
+        case BK_WORD:
+        case ENTER:
+        case HOME:
+        case END:
+        case L_SPACE:
+          return true;
+
+        default:
+          //return enough_time_before_combo();    // takes more space
+          if (get_idle_time() < TAP_INTERVAL) { return false; }
+    }
+    return true;
+}
+
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+  switch (combo_index) {
+      case ALTTAB:
+        if (pressed) {
+            register_mods(MOD_LALT);
+            tap_code(KC_TAB);
+            layer_on(_SHORTNAV);
+        } else {
+            layer_off(_SHORTNAV);
+            unregister_mods(MOD_LALT);
+        }
+        break;
+
+      case PANIC:
+        if (pressed) {
+          if (!host_keyboard_led_state().num_lock) { tap_code(KC_NUM_LOCK); }
+          
+          if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
+          layer_clear();
+          set_numpad(false);
+          clear_oneshot();
+          //clear_oneshot_mods();
+          unregister_code(KC_LCTL);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LALT);
+          unregister_code(KC_LGUI);
+          //clear_weak_mods();
+          if (get_modword() != idle) { disable_modword(get_modword()); }
+          clear_recent_keys();
+        }
+        break;
+  }
+}
+
+bool process_combo_key_repress(uint16_t combo_index, combo_t *combo, uint8_t key_index, uint16_t keycode) {
+  switch (combo_index) {
+
+      case ALTTAB:
+        switch (keycode) {
+          case PG_Y:
+              tap_code16(S(KC_TAB));
+              return true;
+          case PG_H:
+              tap_code(KC_TAB);
+              return true;
+        }
+        break;
+
+      case VOLDOWN:
+        switch (keycode) {
+          case PG_D:
+              tap_code(KC_VOLD);
+              return true;
+          case PG_F:
+              tap_code(KC_VOLU);
+              return true;
+        }
+        break;
+
+  }
+  return false;
+}

@@ -31,7 +31,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
     // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
         case OS_WNUM:
-            set_oneshot_mods(MOD_BIT(KC_LGUI));
+            //set_oneshot_mods(MOD_BIT(KC_LGUI));
 /*             tap_code(PG_D);
             return false; */
             return true;

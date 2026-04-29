@@ -173,6 +173,13 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 // Repeat and Magic keys
 
 bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+  if (is_letter(tap_hold_extractor(keycode))) {
+    // Forget Shift on letter keys when Shift or AltGr are the only mods.
+    if ((*remembered_mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_RALT))) == 0) {
+      *remembered_mods &= ~MOD_MASK_SHIFT;
+      return true;
+    }
+  }
   switch (keycode) {
     case KC_BSPC:
     case LT_REPT:
@@ -217,4 +224,43 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
   if (get_last_keycode() == KC_NO) { return MAGIC; }
   
   return KC_TRNS;  // Defer to default definitions. */
+}
+
+
+// One-shot mods
+
+const oneshot_key_t oneshot_keys[] = {
+  {OS_SHFT, KC_LSFT},
+};
+
+bool is_oneshot_cancel_key(uint16_t keycode) {
+  return false;
+  switch (keycode) {
+
+    default:
+      return false;
+  }
+}
+
+bool should_oneshot_stay_pressed(uint16_t keycode) {
+
+  switch (keycode) {
+    case OS_1DK:
+      // On veut que les one-shot mods soient transmis aux touches de la couche 1DK, par ex pour faire Ctrl + K.
+      // Il faut donc que cette fonction appliquée à OS_1DK renvoie true pour la plupart des mods.
+      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_1DK.
+      // Alt-gr doit être relâché après appui sur OS_1DK.
+      // Cette fonction appliquée à OS_1DK ne doit donc renvoyer false que quand Alt-gr est utilisé.
+      const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+      if (mods & MOD_BIT(KC_ALGR)) { return false; }
+      return true;
+
+    case FUNWORD:
+    case NUMWORD:     // to combine numbers with mods
+    //case NUM_1DK:   // NUM_1DK sends PG_1DK when pressed. When shifted, PG_1DK sends one-shot shift.
+      return true;
+
+    default:
+      return false;
+  }
 }

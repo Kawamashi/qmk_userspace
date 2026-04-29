@@ -13,31 +13,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 
 #pragma once
 
 #include "quantum.h"
 #include "keymap.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// Returns whether a keycode is a letter or not
+bool is_letter(uint16_t keycode);
 
-// Returns true if `pos` on the left hand of the keyboard, false if right.
-bool on_left_hand(keypos_t pos);
+// Returns true for macros used to type sequence of letters
+bool is_send_string_macro(uint16_t keycode);
 
-// Handles the tap function of tap-hold keys using non-basic keycodes
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
-
-
-void housekeeping_task_tap_flow(void);
-
-// Checks if the event is on a home-row MT with a valid matrix position.
-bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);
-
-// Disables the hold behaviour of HRM during typing.
-void process_flow_tap(uint16_t keycode, keyrecord_t* record);
-
-#ifdef __cplusplus
-}
-#endif
+// Returns true for letters that can be followed by an apostrophe (in french)
+bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);

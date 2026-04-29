@@ -27,6 +27,7 @@
 #include "features/modword.h"
 #include "features/speculative_hold.h"
 #include "features/prefixing_layers.h"
+#include "features/oneshot.h"
 
 
 enum layers {
@@ -51,7 +52,7 @@ enum custom_keycodes {
   CAPSLOCK,
   SEL_WORD,
   SEL_LINE,
-  OS4A,
+  OS_SHFT,
   OU_GRV,
   N_TILD,
   MAGIC,
@@ -74,7 +75,7 @@ enum custom_keycodes {
 
 #define OS_1DK OSL(_1DK)
 #define OS_WINM OSL(_FUNCAPPS)
-#define OS_NUM OSL(_NUMPAD)
+#define OS_NUM OSL(_NUMROW)
 #define OS_WNUM OSL(_NUMROW)
 
 
