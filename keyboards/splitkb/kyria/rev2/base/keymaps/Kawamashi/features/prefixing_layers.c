@@ -16,58 +16,52 @@
 
 #include "prefixing_layers.h"
 
+// Keep track of the 1DK, for the Repeat Key
 static bool previous_1dk = false;
 
 bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
-    if (!record->event.pressed) { 
-        if (previous_1dk && get_repeat_key_count() > 0) {
-            clear_oneshot_layer_state(ONESHOT_PRESSED); 
-            previous_1dk = false;
-        }
-        return true; 
-    }
-
-    // OS4A keys behave like one-shot shifts for the opposite side of the keyboard
-    if (IS_LAYER_ON(_L_MODS) || IS_LAYER_ON(_R_MODS)) {
-        if (should_add_shift(keycode, record)) {
-            set_oneshot_mods(MOD_BIT(KC_LSFT));
-            if (!is_letter(keycode)) { set_last_keycode(S(keycode)); }
-            disable_layerword(get_layerword_layer());  // To correct a bug producing Capsword when typing OS4A + roll between a letter and apostrophe.
-        }
-    }
+    if (!record->event.pressed) { return true; }    // Nothing special happens on release
 
     if (previous_1dk) {
-        if (get_repeat_key_count() > 0) { 
-            set_oneshot_layer(_1DK, ONESHOT_START);
-        } else {
-            previous_1dk = false;
-        }
+        if (get_repeat_key_count() > 0) { tap_code(PG_1DK); }
+        previous_1dk = false;
     }
 
     // Handling keys and layers related to the One Dead Key (1DK)
     switch (keycode) {
+        case OS_WNUM:
+            set_oneshot_mods(MOD_BIT(KC_LGUI));
+/*             tap_code(PG_D);
+            return false; */
+            return true;
         case PG_1DK:
-        case NUM_1DK:
-          return deferred_shift_after_dead_key(keycode);
+          return insert_1dk(keycode);
     }
 
     if (IS_LAYER_ON(_1DK)) {
-        previous_1dk = true;
+        //previous_1dk = true;
 
         switch (keycode) {
-            case PG_AROB:
             case PG_K:
             case PG_B:
             case PG_H:
             case PG_Z:
-            case PG_APOS:
             case OU_GRV:
             case PG_UNDS:
+            case PG_AGRV:
+            case PG_ECIR:
             //case KC_SPC:    // When space is added by Clever Keys
             case CNL_1DK:
               return true;
 
+            case LT_APOS:
+                if (record->tap.count) { return true; }
+                return insert_1dk(keycode);
+
+            case PG_U:
+                if (get_recent_keycode(-1) == PG_Q) { return true; }
+                
             default:
               return insert_1dk(keycode);
         }
@@ -96,21 +90,4 @@ bool insert_1dk(uint16_t keycode) {
     if (shift_weak_mods) { add_weak_mods(MOD_BIT(KC_LSFT)); }
 
     return keycode != PG_1DK;
-}
-
-
-bool should_add_shift(uint16_t keycode, keyrecord_t *record) {
-
-  // Shift shouldn't be added if other mods are active
-  if (get_mods() | get_oneshot_mods()) { return false; }
-
-  // Combos and encoder events.
-  if (!IS_KEYEVENT(record->event)) { return true; }
-
-  // Specific exceptions
-  if (not_to_be_shifted(keycode)) { return false; }
-
-  // Otherwise, add shift if the key is on the other side of the keyboard.
-  //return (layerword_layer == _R_MODS) == on_left_hand(record->event.key);
-  return IS_LAYER_ON(_R_MODS) == on_left_hand(record->event.key);
 }

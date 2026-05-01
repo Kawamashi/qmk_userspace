@@ -1,4 +1,4 @@
-OLED_ENABLE = yes
+OLED_ENABLE = no
 ENCODER_ENABLE = no       # Enables the use of one or more encoders
 RGB_MATRIX_ENABLE = no     # Disable keyboard RGB matrix, as it is enabled by default on rev3
 RGBLIGHT_ENABLE = no      # Disable keyboard RGB underglow
@@ -24,13 +24,13 @@ CAPS_WORD_ENABLE = no
 COMBO_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
 
+SRC += features/speculative_hold.c
 SRC += features/tap_hold_utilities.c
-SRC += oled.c
+#SRC += oled.c
 SRC += features/clever_keys_utilities.c
 SRC += clever_keys.c
 SRC += features/layerword.c
 SRC += features/modword.c
-SRC += features/oneshot.c
 SRC += features_conf.c
 SRC += word_conf.c
 SRC += features/prefixing_layers.c

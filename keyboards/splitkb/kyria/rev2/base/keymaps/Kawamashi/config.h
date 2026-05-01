@@ -40,15 +40,14 @@
 //#define COMBO_TERM_PER_COMBO
 #define COMBO_ONLY_FROM_LAYER 0
 #define COMBO_SHOULD_TRIGGER
-#define COMBO_PROCESS_KEY_REPRESS 
+#define COMBO_PROCESS_KEY_REPRESS
 #define TAP_INTERVAL 300
 
 // mod tap
-#define TAPPING_TERM 200
-
+#define TAPPING_TERM 250
 #define PERMISSIVE_HOLD
-//#define PERMISSIVE_HOLD_PER_KEY
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+//#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+#define CHORDAL_HOLD
 
 // EC11K encoders have a different resolution than other EC11 encodeisrs.
 // When using the default resolution of 4, if you notice your encoder skipping
@@ -59,13 +58,15 @@
 #endif */
 
 // One shot modifiers
-#define OS_COUNT 4
+//#define OS_COUNT 4
 
 // Timeouts in milliseconds.
 #define RECENT_KEYS_TIMEOUT 5000
 #define CAPS_WORD_IDLE_TIMEOUT 3000
 #define OS4A_EXIT_TIMEOUT 3000
 #define ONESHOT_TIMEOUT 3000
+
+#define KRYPTON_ENABLE_HRM
 
 
 //Faire de la place !

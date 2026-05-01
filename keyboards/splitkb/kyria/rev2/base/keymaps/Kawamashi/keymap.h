@@ -25,24 +25,25 @@
 #include "features/clever_keys_utilities.h"
 #include "features/layerword.h"
 #include "features/modword.h"
-#include "features/oneshot.h"
+#include "features/speculative_hold.h"
 #include "features/prefixing_layers.h"
 
 
 enum layers {
     _BASE = 0,
-    // OS4A layers should be as closed as base layer as possible
-    _L_MODS,
-    _R_MODS,
     _1DK,
-    _NUMBERS,
+    _NUMROW,
     _SYMBOLS,
     _SHORTNAV,
+    _NUMPAD,
     _FUNCAPPS,
+    _FUNCTIONS
 };
 
 enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
+  NUMPAD,
+  NUMROW,
   NAVWORD,
   FUNWORD,
   CAPSWORD,
@@ -50,19 +51,10 @@ enum custom_keycodes {
   CAPSLOCK,
   SEL_WORD,
   SEL_LINE,
-  FEN_G,
-  FEN_B,
-  COPY,
   OS4A,
   OU_GRV,
   N_TILD,
-  PG_AE,
-  E_CIRC,
   MAGIC,
-  OS_SHFT,
-  OS_CTRL,
-  OS_ALT,
-  OS_WIN,
   LETTER_1DK,
   SYMBOL_1DK,
   CNL_1DK,
@@ -73,21 +65,33 @@ enum custom_keycodes {
   // Layer changers
 #define LT_SPC LT(_SYMBOLS, KC_SPC)
 #define LT_E LT(_SYMBOLS, PG_E)
-#define LT_REPT LT(_NUMBERS, KC_1)
+#define LT_REPT LT(_FUNCTIONS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
 #define LT_0 LT(_SYMBOLS, KC_0)
-#define LT_NBSPC LT(_SHORTNAV, NNB_SPC)
+#define LT_P0 LT(_SYMBOLS, KC_P0)
+#define LT_PDOT LT(_SHORTNAV, KC_PDOT)
+#define LT_APOS LT(_NUMROW, PG_APOS)
 
 #define OS_1DK OSL(_1DK)
-#define NUM_1DK OSL(_NUMBERS)
-#define OS_FA OSL(_FUNCAPPS)
+#define OS_WINM OSL(_FUNCAPPS)
+#define OS_NUM OSL(_NUMPAD)
+#define OS_WNUM OSL(_NUMROW)
 
-  // Mods
-#define MT_SLSH SFT_T(PG_SLSH)
-#define MT_1 SFT_T(KC_1)
-#define MT_6 SFT_T(KC_6)
-//#define OS_RSA OSM(MOD_RALT | MOD_LSFT)
 
-  // OS4A
-#define L_OS4A LSFT_T(OS4A)
-#define R_OS4A RSFT_T(OS4A)
+  // HRM
+#ifdef KRYPTON_ENABLE_HRM
+  #define P(k) LALT_T(k)
+  #define R(k) LGUI_T(k)
+  #define M(k) SFT_T(k)
+  #define I(k) LCTL_T(k)
+#else
+  #define P(k) k
+  #define R(k) k
+  #define M(k) k
+  #define I(k) k
+#endif
+
+#define P_MOD KC_LALT
+#define R_MOD KC_LGUI
+#define M_MOD KC_LSFT
+#define I_MOD KC_LCTL

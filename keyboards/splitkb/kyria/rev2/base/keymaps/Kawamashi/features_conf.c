@@ -17,25 +17,26 @@
 #include "features_conf.h"
 
 static bool is_apos_dr = false;
+static bool is_numpad = false;
 
 bool replace_apos(void) {
   return is_apos_dr;
+}
+
+void set_numpad(bool target) {
+  is_numpad = target;
+}
+
+bool replace_numpad(void) {
+  return is_numpad;
 }
 
 
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
   switch (keycode) {
-    case LT_NBSPC:
-      return NNB_SPC;
-    case SFT_T(COPY):
-      return C(PG_C);
-    case SFT_T(FEN_G):
-      return LWIN(KC_LEFT);
-    case RCTL_T(FEN_B):
-      return LWIN(KC_DOWN);
-/*     case LT_REPT:
-      return get_last_keycode(); */
+    case M(C(PG_V)) :
+      return C(PG_V);
 
     default:
       return keycode &= 0xff;
@@ -48,9 +49,9 @@ bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
   if (record->tap.count) {
     // Special tap-hold keys (on tap).
     switch (keycode) {
-/*       case CAPSWORD:
-        if (IS_LAYER_OFF(_L_MODS)) { break; } */
       case LT_REPT:
+        const uint8_t mods = get_mods() | get_oneshot_mods();
+        if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); }
         repeat_key_invoke(&record->event);
         return false;
 
@@ -71,21 +72,11 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 /*       case SFT_T(FEN_G):
       case RCTL_T(FEN_B):
       case SFT_T(COPY):
-      case LT_NBSPC:
+      case LT_NUMW:
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
-      case SFT_T(FEN_G):
-        return process_custom_tap_hold(LWIN(KC_LEFT), record);
-
-      case RCTL_T(FEN_B):
-        return process_custom_tap_hold(LWIN(KC_DOWN), record);
-
-      case SFT_T(COPY):
-        //enable_layerword(_SHORTNAV);
-        return process_custom_tap_hold(C(PG_C), record);
-
-      case LT_NBSPC:
-        return process_custom_tap_hold(NNB_SPC, record);
+      case M(C(PG_V)) :
+        return process_custom_tap_hold(C(PG_V), record);
 
       case OS_1DK:
         // Custom behaviour when alt-gr
@@ -107,7 +98,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 
       case PG_DEG:
         tap_code(PG_1DK);
-        tap_code(KC_9);
+        tap_code(KC_0);
         return false;
     }
   }
@@ -140,13 +131,12 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
         case PG_B:
         case PG_H:
         case PG_Z:
+        case PG_ECIR:
         //case KC_SPC:  // When space is added by clever keys, for ex. in order to uppercase K after '?' for ex.
           return keycode;
 
         case PG_POIN:
           return PG_3PTS;
-        case PG_O:
-          return E_CIRC;
 
         default:
           if (is_letter(keycode)) { return LETTER_1DK; }
@@ -180,54 +170,17 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 }
 
 
-// One-shot mods
-
-const oneshot_key_t oneshot_keys[] = {
-  {OS_SHFT, KC_LSFT},
-  {OS_CTRL, KC_LCTL},
-  {OS_ALT, KC_LALT},
-  {OS_WIN, KC_LWIN},
-};
-
-bool is_oneshot_cancel_key(uint16_t keycode) {
-  switch (keycode) {
-    case L_OS4A:
-    case R_OS4A:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-bool should_oneshot_stay_pressed(uint16_t keycode) {
-
-  switch (keycode) {
-    case OS_1DK:
-      // On veut que les one-shot mods soient transmis aux touches de la couche 1DK, par ex pour faire Ctrl + K.
-      // Il faut donc que cette fonction appliquée à OS_1DK renvoie true pour la plupart des mods.
-      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_1DK.
-      // Alt-gr doit être relâché après appui sur OS_1DK.
-      // Cette fonction appliquée à OS_1DK ne doit donc renvoyer false que quand Alt-gr est utilisé.
-      const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-      if (mods & MOD_BIT(KC_ALGR)) { return false; }
-      return true;
-
-    case OS_FA:       // to be combined with Alt
-    case FUNWORD:
-    case NUMWORD:     // to combine numbers with mods
-    //case NUM_1DK:   // NUM_1DK sends PG_1DK when pressed. When shifted, PG_1DK sends one-shot shift.
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-
 // Repeat and Magic keys
 
 bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+  
+    if (is_letter(tap_hold_extractor(keycode))) {
+    // Forget Shift on letter keys when Shift or AltGr are the only mods.
+    if ((*remembered_mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_RALT))) == 0) {
+      *remembered_mods &= ~MOD_MASK_SHIFT;
+      return true;
+    }
+  }
   switch (keycode) {
     case KC_BSPC:
     case LT_REPT:

@@ -36,20 +36,20 @@ enum combos {
   L_SPACE
 };
 
-const uint16_t PROGMEM del_combo_d[] = {PG_T, PG_S, COMBO_END};
-const uint16_t PROGMEM bkspc_combo_d[] = {PG_S, PG_R, COMBO_END};
+const uint16_t PROGMEM del_combo_d[] = {I(PG_T), M(PG_S), COMBO_END};
+const uint16_t PROGMEM bkspc_combo_d[] = {M(PG_S), R(PG_R), COMBO_END};
 const uint16_t PROGMEM del_word_combo[] = {PG_M, PG_C, COMBO_END};
 const uint16_t PROGMEM bk_word_combo[] = {PG_C, PG_J, COMBO_END};
 const uint16_t PROGMEM enter_combo[] = {PG_P, PG_U, COMBO_END};
-const uint16_t PROGMEM tab_combo[] = {PG_N, PG_I, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {PG_N, PG_A, COMBO_END};
-const uint16_t PROGMEM bkspc_combo_g[] = {PG_A, PG_I, COMBO_END};
-const uint16_t PROGMEM home_combo[] = {PG_Z, PG_Y, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {I(PG_N), M(PG_I), COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {I(PG_N), R(PG_A), COMBO_END};
+const uint16_t PROGMEM bkspc_combo_g[] = {R(PG_A), M(PG_I), COMBO_END};
+const uint16_t PROGMEM home_combo[] = {PG_EGRV, PG_Y, COMBO_END};
 const uint16_t PROGMEM end_combo[] = {PG_U, PG_EACU, COMBO_END};
 const uint16_t PROGMEM panic_combo[] = {PG_U, PG_C, COMBO_END};
 const uint16_t PROGMEM alttab_combo[] = {PG_H, PG_Y, COMBO_END};
-const uint16_t PROGMEM altesc_combo[] = {PG_A, PG_I, PG_N, COMBO_END};
-const uint16_t PROGMEM space_combo[] = {PG_Z, PG_H, COMBO_END};
+const uint16_t PROGMEM altesc_combo[] = {R(PG_A), M(PG_I), I(PG_N), COMBO_END};
+const uint16_t PROGMEM space_combo[] = {PG_EGRV, PG_H, COMBO_END};
 
 combo_t key_combos[] = {
     [R_BKSPC] = COMBO(bkspc_combo_d, KC_BSPC),
@@ -70,10 +70,6 @@ combo_t key_combos[] = {
 
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
-
-    // Chorded mods shouldn't be considered as combos.
-    if (IS_LAYER_ON(_R_MODS)) { return on_left_hand(record->event.key); }
-    if (IS_LAYER_ON(_L_MODS)) { return !on_left_hand(record->event.key); }
 
     // Some combos should trigger regardless of the idle time.
     switch (combo_index) {
@@ -112,9 +108,12 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
           
           if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
           layer_clear();
-          //if (is_select_word()) { end_select_word(); }
-          clear_oneshot();
-          //clear_oneshot_mods();
+          set_numpad(false);
+          clear_oneshot_mods();
+          unregister_code(KC_LCTL);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LALT);
+          unregister_code(KC_LGUI);
           //clear_weak_mods();
           if (get_modword() != idle) { disable_modword(get_modword()); }
           clear_recent_keys();

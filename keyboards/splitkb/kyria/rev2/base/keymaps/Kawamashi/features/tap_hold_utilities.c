@@ -26,17 +26,6 @@ bool on_left_hand(keypos_t pos) {
 #endif
 }
 
-bool bilateral_combination(const keyrecord_t* tap_hold_record, const keyrecord_t* other_record) {
-  return on_left_hand(tap_hold_record->event.key) != on_left_hand(other_record->event.key);
-}
-
-// By default, use the BILATERAL_COMBINATIONS rule to consider the tap-hold key
-// "held" only when it and the other key are on opposite hands.
-__attribute__((weak)) bool approved_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
-                                           uint16_t other_keycode, keyrecord_t* other_record) {
-  return bilateral_combination(tap_hold_record, other_record);
-}
-
 
 bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {    // On press
@@ -44,4 +33,72 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
       return false;
   }
   return true;
+}
+
+// Events bypass tap_flow when there are unsettled LT keys in action_tapping's
+// waiting_queue. Particularly, supposing an LT settles as held, the layer state
+// will change and buffered events following the LT will be reconsidered as keys
+// on that layer. That may change whether tap_flow is enabled or the timeout
+// to use on those keys. We don't know in advance how the LT will settle.
+static uint16_t settle_timer = 0;
+static uint8_t is_tapped[(MATRIX_ROWS * MATRIX_COLS + 7) / 8] = {0};
+
+void housekeeping_task_tap_flow(void) {
+  if (settle_timer && timer_expired(timer_read(), settle_timer)) {
+    settle_timer = 0;
+  }
+}
+
+bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos) {
+  // The event is not a combo
+  if (!IS_KEYEVENT(record->event)) { return false; }
+  // The key is a mod-tap or a layer-tap
+  if (!IS_QK_MOD_TAP(keycode) && !IS_QK_LAYER_TAP(keycode) && !IS_QK_ONE_SHOT_LAYER(keycode)) { return false; }
+  // The keyrecord has a valid matrix position
+  if (pos.row >= MATRIX_ROWS || pos.col >= MATRIX_COLS) { return false; }
+
+  return true;
+}
+
+void process_flow_tap(uint16_t keycode, keyrecord_t* record) {
+  const keypos_t pos = record->event.key;
+
+  if (is_tap_hold_event(keycode, record, pos)) {
+    // The event is on an MT or LT with a valid matrix position.
+    const uint16_t tap_keycode = tap_hold_extractor(keycode);
+
+    // Determine the key's index in the bit arrays.
+    const uint16_t index = pos.row * MATRIX_COLS + pos.col;
+    const uint16_t array_index = index / 8;
+    const uint8_t bit_mask = UINT8_C(1) << (index % 8);
+
+    if (record->event.pressed) {  // On press.
+
+      if (IS_QK_MOD_TAP(keycode) && !settle_timer && get_idle_time() < TAP_INTERVAL) {
+        // Rewrite the event as a press of the tap keycode. This way, it
+        // bypasses the usual action_tapping logic.
+        record->keycode = tap_keycode;
+        // Record this key as tapped.
+        is_tapped[array_index] |= bit_mask;
+
+      } else if (IS_QK_LAYER_TAP(keycode) || IS_QK_ONE_SHOT_LAYER(keycode)) {
+        // Otherwise if this is an LT key, track when it will settle according
+        // to its tapping term.
+        // NOTE: To be precise, the key could settle before the tapping term.
+        // This is an approximation.
+        const uint16_t term = GET_TAPPING_TERM(keycode, record);
+        const uint16_t now = timer_read();
+        if (!settle_timer || term > TIMER_DIFF_16(settle_timer, now)) {
+          settle_timer = (now + term) | 1;
+        }
+      }
+
+    } else if ((is_tapped[array_index] & bit_mask) != 0) {  // On tap release.
+
+      // Rewrite the event as a release of the tap keycode.
+      record->keycode = tap_keycode;
+      // Record the key as released.
+      is_tapped[array_index] &= ~bit_mask;
+    }
+  }
 }

@@ -24,7 +24,8 @@ uint8_t get_modword(void) {
 }
 
 void caps_word_on(void) {
-  clear_oneshot();
+  //clear_oneshot();
+  clear_oneshot_mods();
 /*   clear_mods();
   clear_oneshot_mods(); */
 
@@ -53,7 +54,7 @@ void enable_modword(modword_state_t modword, uint16_t keycode) {
         break;
 
     case SEL_WORD:
-        tap_code16(C(KC_RIGHT));
+        //tap_code16(C(KC_RIGHT));
         tap_code16(C(KC_LEFT));
         tap_code16(RCS(KC_RIGHT));
         nb_word_selected = 1;

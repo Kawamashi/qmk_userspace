@@ -43,16 +43,16 @@ bool oled_task_user(void) {
             case _BASE:
                 oled_write_P(PSTR("Propergol\n"), false);
                 break;
-            case _L_MODS:
+/*             case _L_MODS:
                 oled_write_P(PSTR("Mods G\n"), false);
                 break;
             case _R_MODS:
                 oled_write_P(PSTR("Mods D\n"), false);
-                break;
+                break; */
             case _SYMBOLS:
                 oled_write_P(PSTR("Symboles\n"), false);
                 break;
-            case _NUMBERS:
+            case _NUMROW:
                 oled_write_P(PSTR("Nombres\n"), false);
                 break;
             case _SHORTNAV:
