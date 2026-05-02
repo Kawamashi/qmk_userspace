@@ -16,7 +16,6 @@
 
 // Correction automatique
 
-//#include "clever_keys.h"
 #include "features/clever_keys_utilities.h"
 
 
@@ -26,8 +25,6 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
     // Apostrophe
     if (is_followed_by_apos(*ongoing_keycode, prev_keycode)) {
-      //const uint8_t mods = get_mods() | get_oneshot_mods();
-      //if (mods & MOD_MASK_SHIFT) { set_last_mods(get_last_mods() & ~cleared_mods); }
       set_last_keycode(PG_APOS);
     }
   

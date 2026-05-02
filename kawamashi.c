@@ -19,7 +19,7 @@
 
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
-    KAWA_LAYOUT(
+    CHORDAL_HOLD_KAWA_LAYOUT(
         'L', 'L', 'L', 'L', 'L',           'R', 'R', 'R', 'R', 'R',
         'L', 'L', 'L', 'L', 'L',           'R', 'R', 'R', 'R', 'R',
         'L', 'L', 'L', 'L', 'L',           'R', 'R', 'R', 'R', '*',
@@ -59,7 +59,7 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Speculative Hold
-  //if (!process_record_speculative_hold(keycode, record)) { return false; }
+  if (!process_record_speculative_hold(keycode, record)) { return false; }
 
   // LT Repeat and Magic keys
   if (!process_macros_I(keycode, record)) { return false; }
