@@ -18,7 +18,7 @@
 #pragma once
 
 #include "quantum.h"
-#include "keymap.h"
+#include "kawamashi.h"
 
 // Returns whether a keycode is a letter or not
 bool is_letter(uint16_t keycode);

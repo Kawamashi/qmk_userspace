@@ -1,7 +1,7 @@
 #pragma once
 
 #include "quantum.h"
-#include "keymap.h"
+#include "kawamashi.h"
 
 // Represents the five states a one-shot key can be in
 typedef enum {

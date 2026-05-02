@@ -18,7 +18,7 @@
 #pragma once
 
 #include "quantum.h"
-#include "keymap.h"
+#include "kawamashi.h"
 
 #ifdef __cplusplus
 extern "C" {

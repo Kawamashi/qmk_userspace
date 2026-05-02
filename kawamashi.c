@@ -15,10 +15,7 @@
  */
 
 
-#include QMK_KEYBOARD_H
-
-#include "keymap.h"
-#include "layout.h"
+#include "kawamashi.h"
 
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
@@ -54,7 +51,7 @@ void housekeeping_task_user(void) {
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   process_flow_tap(keycode, record);
-  //pre_process_speculative_hold(keycode, record);
+  pre_process_speculative_hold(keycode, record);
 
   return true;
 }

@@ -16,7 +16,7 @@
 
 #pragma once
 #include QMK_KEYBOARD_H
-#include "keymap.h"
+#include "kawamashi.h"
 
 /* Idle timeout:
  *

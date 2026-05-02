@@ -17,7 +17,7 @@
 #pragma once
 
 #include "quantum.h"
-#include "keymap.h"
+#include "kawamashi.h"
 
 // Returns whether typographic apostrophe is to be replaced by typewritten apostrophe
 bool replace_apos(void);
