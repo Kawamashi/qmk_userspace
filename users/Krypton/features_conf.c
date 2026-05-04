@@ -37,8 +37,6 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     case M(C(PG_V)) :
       return C(PG_V);
-    case LT_NUMW:
-      return NUMWORD;
 
     default:
       return keycode &= 0xff;
@@ -77,10 +75,8 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
       case LT_NUMW:
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
 
-      case M(C(PG_V)):
+      case M(C(PG_V)) :
         return process_custom_tap_hold(C(PG_V), record);
-/*       case LT_NUMW:
-        return process_custom_tap_hold(NUMWORD, record); */
 
       case OS_1DK:
         // Custom behaviour when alt-gr

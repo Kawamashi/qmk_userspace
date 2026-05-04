@@ -68,10 +68,10 @@ enum custom_keycodes {
 #define LT_E LT(_SYMBOLS, PG_E)
 #define LT_REPT LT(_FUNCTIONS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
-#define LT_NUMW LT(_NUMROW, NUMWORD)
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_P0 LT(_SYMBOLS, KC_P0)
 #define LT_PDOT LT(_SHORTNAV, KC_PDOT)
+#define LT_APOS LT(_NUMROW, PG_APOS)
 
 #define OS_1DK OSL(_1DK)
 #define OS_WINM OSL(_FUNCAPPS)

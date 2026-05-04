@@ -66,7 +66,6 @@
 #define ONESHOT_TIMEOUT 3000
 
 #define KRYPTON_ENABLE_HRM
-#define KYRIA_KEYMAP
 
 
 //Faire de la place !

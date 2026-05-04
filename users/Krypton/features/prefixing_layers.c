@@ -49,12 +49,15 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_Z:
             case OU_GRV:
             case PG_UNDS:
-            case PG_APOS:
             case PG_AGRV:
             case PG_ECIR:
             //case KC_SPC:    // When space is added by Clever Keys
             case CNL_1DK:
               return true;
+
+            case LT_APOS:
+                if (record->tap.count) { return true; }
+                return insert_1dk(keycode);
 
             case PG_U:
                 if (get_recent_keycode(-1) == PG_Q) { return true; }

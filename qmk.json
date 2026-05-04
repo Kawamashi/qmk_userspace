@@ -2,6 +2,7 @@
     "userspace_version": "1.1",
     "build_targets": [
         ["dasbob", "kawamashi"],
-        ["splitkb/halcyon/kyria/rev4", "kawamashi"]
+        ["splitkb/halcyon/kyria/rev4", "kawamashi"],
+        ["dasbob", "krypton"]
     ]
 }
