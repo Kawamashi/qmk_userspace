@@ -17,7 +17,7 @@
 #pragma once
 
 #include "quantum.h"
-#include "keymap.h"
+#include "krypton.h"
 
 
 #ifdef __cplusplus

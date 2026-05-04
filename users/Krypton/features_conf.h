@@ -17,10 +17,16 @@
 #pragma once
 
 #include "quantum.h"
-#include "keymap.h"
+#include "krypton.h"
 
 // Returns whether typographic apostrophe is to be replaced by typewritten apostrophe
 bool replace_apos(void);
+
+// Set whether numbers from numrow are to be replaced by numbers from numpad 
+void set_numpad(bool target);
+
+// Returns whether numbers from numrow are to be replaced by numbers from numpad
+bool replace_numpad(void);
 
 // This function extracts the base keycode of MT and LT,
 // even if the tap/hold key is a custom one, with non-basic tap keycode.

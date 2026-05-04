@@ -25,21 +25,26 @@
 #include "features/clever_keys_utilities.h"
 #include "features/layerword.h"
 #include "features/modword.h"
+#include "features/speculative_hold.h"
 #include "features/prefixing_layers.h"
+#include "features/oneshot.h"
 
 
 enum layers {
     _BASE = 0,
-    // OS4A layers should be as closed as base layer as possible
     _1DK,
-    _NUMBERS,
+    _NUMROW,
     _SYMBOLS,
     _SHORTNAV,
-    _FUNCTIONS,
+    _NUMPAD,
+    _FUNCAPPS,
+    _FUNCTIONS
 };
 
 enum custom_keycodes {
   NUMWORD = SAFE_RANGE,
+  NUMPAD,
+  NUMROW,
   NAVWORD,
   FUNWORD,
   CAPSWORD,
@@ -47,7 +52,9 @@ enum custom_keycodes {
   CAPSLOCK,
   SEL_WORD,
   SEL_LINE,
-  COPY,
+  OS_SHFT,
+  OU_GRV,
+  N_TILD,
   MAGIC,
   LETTER_1DK,
   SYMBOL_1DK,
@@ -59,24 +66,33 @@ enum custom_keycodes {
   // Layer changers
 #define LT_SPC LT(_SYMBOLS, KC_SPC)
 #define LT_E LT(_SYMBOLS, PG_E)
-#define LT_REPT LT(_NUMBERS, KC_1)
+#define LT_REPT LT(_FUNCTIONS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
+#define LT_NUMW LT(_NUMROW, NUMWORD)
 #define LT_0 LT(_SYMBOLS, KC_0)
+#define LT_P0 LT(_SYMBOLS, KC_P0)
+#define LT_PDOT LT(_SHORTNAV, KC_PDOT)
 
 #define OS_1DK OSL(_1DK)
+#define OS_WINM OSL(_FUNCAPPS)
+#define OS_NUM OSL(_NUMROW)
+#define OS_WNUM OSL(_NUMROW)
 
-  // Mods
-#define HRM_O CTL_T(PG_O)
-#define HRM_A OPT_T(PG_A)
-#define HRM_I CMD_T(PG_I)
-#define HRM_N SFT_T(PG_N)
-#define HRM_T SFT_T(PG_T)
-#define HRM_S CMD_T(PG_S)
-#define HRM_R OPT_T(PG_R)
-#define HRM_L CTL_T(PG_L)
-#define HRM_H LT(_FUNCTIONS, PG_H)
-#define HRM_D LT(_FUNCTIONS, PG_D)
 
-#define MT_SLSH SFT_T(PG_SLSH)
-#define MT_1 SFT_T(KC_1)
-#define MT_6 SFT_T(KC_6)
+  // HRM
+#ifdef KRYPTON_ENABLE_HRM
+  #define P(k) LALT_T(k)
+  #define R(k) LGUI_T(k)
+  #define M(k) SFT_T(k)
+  #define I(k) LCTL_T(k)
+#else
+  #define P(k) k
+  #define R(k) k
+  #define M(k) k
+  #define I(k) k
+#endif
+
+#define P_MOD KC_LALT
+#define R_MOD KC_LGUI
+#define M_MOD KC_LSFT
+#define I_MOD KC_LCTL

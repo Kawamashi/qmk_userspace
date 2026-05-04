@@ -46,7 +46,7 @@ void disable_layerword(uint8_t layer) {
 }
 
 void toggle_layerword(uint16_t keycode) {
-    uint8_t layerword_target = layerword_layer_from_trigger(keycode);
+    uint8_t layerword_target = get_layerword_layer_from_trigger(keycode);
 
     if (layerword_layer != layerword_target) {
         // Activate layerword layer
@@ -75,7 +75,7 @@ bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
 
 bool process_layerword(uint16_t keycode, keyrecord_t *record) {
     // Handle the custom keycodes that go with this feature
-    if (layerword_layer_from_trigger(keycode)) { return process_layerword_triggers(keycode, record); }
+    if (get_layerword_layer_from_trigger(keycode)) { return process_layerword_triggers(keycode, record); }
 
     // Other than the custom keycodes, nothing else in this feature will activate
     // if the behavior is not on, so allow QMK to handle the event as usual.
@@ -113,17 +113,4 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
         }
     }
     return true;
-}
-
-
-void mouse_mods_key_up(uint16_t keycode, keyrecord_t *record) {
-    
-    // The OS4A layer must be exited only when ctrl or shift are registered,
-    // not when the OSM are released without having being held.
-    //if (get_mods() & QK_ONE_SHOT_MOD_GET_MODS(keycode)) { 
-
-    // When ctrl or shift are released after being held, exit the OS4A layer.
-    if (!record->tap.count) {
-      disable_layerword(layerword_layer);
-    }
 }

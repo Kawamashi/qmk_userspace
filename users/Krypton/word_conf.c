@@ -33,10 +33,10 @@ bool is_letter(uint16_t keycode) {
       case PG_X:
       case PG_G:    // greek dead key
       case PG_T:
-      case PG_R:    // pour le trait d’union insécable
+      case PG_R:
       case PG_L:
       case PG_D:    // pour le tréma
-      case PG_W:
+      case PG_W:    // pour le trait d’union insécable
         return false;
     }
   }
@@ -63,6 +63,8 @@ bool is_letter(uint16_t keycode) {
 
 bool is_send_string_macro(uint16_t keycode) {
   switch (keycode) {
+    case OU_GRV:
+    case N_TILD:
     case MAGIC:
     //case PG_AROB:   // because of Clever Keys
       return true;
@@ -87,6 +89,7 @@ bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode) {
     case PG_I:
       if (is_letter(prev_keycode)) { return false; }
     case PG_Q:
+    case PG_U:
       return true;
 
     default:
@@ -213,10 +216,23 @@ void word_selection_press_user(uint16_t keycode) {
 
 // Layer Word
 
-uint8_t layerword_layer_from_trigger(uint16_t keycode) {
+uint8_t get_layerword_layer_from_trigger(uint16_t keycode) {
 
   switch (keycode) {
-    case NUMWORD: return _NUMBERS;
+
+    case NUMROW:
+        set_numpad(false);
+        return _NUMROW;
+        
+    case NUMPAD:
+        set_numpad(true);
+        return _NUMPAD;
+
+    case NUMWORD:
+    case LT_NUMW:
+        return replace_numpad() ? _NUMPAD : _NUMROW;
+
+    //case LT_NUMW: return _NUMROW;
     case NAVWORD: return _SHORTNAV;
     case FUNWORD: return _FUNCTIONS;
     default: return 0;
@@ -226,10 +242,11 @@ uint8_t layerword_layer_from_trigger(uint16_t keycode) {
 uint16_t layerword_exit_timeout(uint8_t layer) {
 
   switch (layer) {
-    case _NUMBERS:
+    case _NUMROW:
+    case _NUMPAD:
     case _SHORTNAV:
         return 3000;
-    case _FUNCTIONS:
+    case _FUNCAPPS:
         return 30000;
     default:
         return 0;
@@ -240,11 +257,13 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
 
   switch (layer) {
 
-    case _NUMBERS:
+    case _NUMROW:
+    case _NUMPAD:
       switch (keycode) {
-        // Keycodes that should not disable num word.
+        // Keycodes that should not disable numword.
         // Numpad keycodes
         case KC_1 ... KC_0:
+        case KC_P1 ... KC_P0:
         case KC_PDOT:
         case PG_MOIN:
         case PG_ASTX: 
@@ -255,12 +274,15 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
         case PG_IND:
         case PG_H:
         case PG_2PTS:
-        //case NNB_SPC:
+        case NNB_SPC:
+        case PG_POIN:
+        case PG_VIRG:
+
+        //case TG_NUM:
 
         // Misc
         case KC_BSPC:
-        case PG_1DK:   // Not to exit Numword when chording it with 1DK
-        //case NUMWORD:   // For the combo NUMWORD to work
+        case OS_LSFT:
             return true; 
         default:
             return false;
@@ -287,12 +309,12 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
             return false;
       }
 
-    case _FUNCTIONS:
+    case _FUNCAPPS:
       switch (keycode) {
         case KC_F8:
             return true;
         default:
-            disable_layerword(_FUNCTIONS);
+            disable_layerword(_FUNCAPPS);
             return false;
       }
   }

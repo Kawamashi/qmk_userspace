@@ -17,7 +17,7 @@
 #pragma once
 
 #include QMK_KEYBOARD_H
-#include "kawamashi.h"
+#include "krypton.h"
 
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
