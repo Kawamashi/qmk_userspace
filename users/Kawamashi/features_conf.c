@@ -37,6 +37,8 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     case M(C(PG_V)) :
       return C(PG_V);
+    case LT_NUMW:
+      return NUMWORD;
 
     default:
       return keycode &= 0xff;

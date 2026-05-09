@@ -35,6 +35,16 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
   return false;  // Disable otherwise.
 }
 
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case OS_1DK:
+            return true;
+        default:
+            return false;
+    }
+}
+
+
 // Housekeeping
 
 void housekeeping_task_user(void) {
@@ -65,7 +75,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_macros_I(keycode, record)) { return false; }
 
   // 
-  if (!process_custom_oneshot(keycode, record)) { return false; }
+  //if (!process_custom_oneshot(keycode, record)) { return false; }
 
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }
@@ -108,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG, PG_EACU, PG_U,    PG_P,    PG_TIRE,                 PG_V,   PG_M,    PG_C,    PG_J,    PG_X,   
       P(PG_O), R(PG_A), M(PG_I), I(PG_N), PG_POIN,                 PG_G,   I(PG_T), M(PG_S), R(PG_R), P(PG_L),
       PG_Q,    PG_EGRV, PG_Y,    PG_H,    KC_T,                    KC_NO,  PG_D,    PG_F,    PG_W,    OS_1DK, 
-                                 OS_LSFT, LT_E,   LT_MGC, LT_REPT, LT_SPC, NUMWORD
+                                 OS_LSFT, LT_E,   LT_MGC, LT_REPT, LT_SPC, LT_NUMW
     ),
 
 
@@ -187,10 +197,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_1DK] = KAWA_LAYOUT(
-       _______, _______, _______, N_TILD,  PG_X,                      PG_W,    _______, _______, _______, _______,
-       _______, _______, _______, PG_Z,    _______,                   _______, PG_K,    PG_D,    _______, _______,
-       OU_GRV,  PG_J,    _______, PG_H,    _______,                   _______, PG_B,    _______, PG_S,    CNL_1DK,
-                                  _______, PG_ECIR, PG_AGRV, LT_APOS, PG_UNDS, OS_NUM
+       _______, PG_J   , _______, N_TILD,  PG_X,                      PG_W,    _______, _______, _______, _______,
+       _______, _______, _______, PG_Z,    _______,                   _______, PG_K,    PG_Y,    PG_EACU, _______,
+       OU_GRV,  PG_LPRN, PG_RPRN, PG_H,    _______,                   _______, PG_B,    PG_D,    PG_S,    CNL_1DK,
+                                  _______, PG_ECIR, PG_AGRV, PG_APOS, PG_UNDS, OS_NUM
      ),
 
 
