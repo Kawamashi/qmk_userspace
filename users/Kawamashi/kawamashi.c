@@ -75,7 +75,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_macros_I(keycode, record)) { return false; }
 
   // 
-  //if (!process_custom_oneshot(keycode, record)) { return false; }
+  if (!process_oneshot_on_steroids(keycode, record)) { return false; }
 
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }
@@ -118,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG, PG_EACU, PG_U,    PG_P,    PG_TIRE,                 PG_V,   PG_M,    PG_C,    PG_J,    PG_X,   
       P(PG_O), R(PG_A), M(PG_I), I(PG_N), PG_POIN,                 PG_G,   I(PG_T), M(PG_S), R(PG_R), P(PG_L),
       PG_Q,    PG_EGRV, PG_Y,    PG_H,    KC_T,                    KC_NO,  PG_D,    PG_F,    PG_W,    OS_1DK, 
-                                 OS_LSFT, LT_E,   LT_MGC, LT_REPT, LT_SPC, LT_NUMW
+                                 OS_SHFT, LT_E,   LT_MGC, LT_REPT, LT_SPC, LT_NUMW
     ),
 
 

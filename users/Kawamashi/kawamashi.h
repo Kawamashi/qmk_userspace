@@ -27,7 +27,7 @@
 #include "features/modword.h"
 #include "features/speculative_hold.h"
 #include "features/prefixing_layers.h"
-#include "features/oneshot.h"
+#include "features/oneshot_on_steroids.h"
 
 
 enum layers {
@@ -54,7 +54,6 @@ enum custom_keycodes {
   SEL_LINE,
   OS_SHFT,
   U_CIRC,
-  //OU_GRV,
   N_TILD,
   MAGIC,
   LETTER_1DK,

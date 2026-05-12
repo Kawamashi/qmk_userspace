@@ -233,7 +233,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
 // One-shot mods
 
-const oneshot_key_t oneshot_keys[] = {
+const oneshot_t oneshot[] = {
   {OS_SHFT, KC_LSFT},
 };
 
