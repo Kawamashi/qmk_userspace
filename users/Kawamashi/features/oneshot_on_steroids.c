@@ -17,7 +17,8 @@ void clear_oneshot(void) {
   for (uint8_t i = 0; i < OS_COUNT; i++) {
     if (oneshot_state[i] == os_up_queued) {
       oneshot_state[i] = os_idle;
-      unregister_code(oneshot[i].modifier);
+      if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+      if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
     }
   }
 }
@@ -28,56 +29,60 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
 
   for (uint8_t i = 0; i < OS_COUNT; i++) {
 
-    //if (record->event.pressed) {
+    if (record->event.pressed) {
 
-    if (keycode == oneshot[i].trigger) {
-      if (record->event.pressed) {
-        // Trigger keydown
-        if (oneshot_state[i] == os_idle) {
-            register_code(oneshot[i].modifier);
-            oneshot_holding_time[i] = timer_read();
-            oneshot_state[i] = os_down_unused;
-        } else {
-            oneshot_state[i] = os_idle;
-            unregister_code(oneshot[i].modifier);
-        }
-        return false;
-      //}
-
-      } else {
-
-      //if (keycode == oneshot[i].suppressor){
-        switch (oneshot_state[i]) {
-            case os_down_unused:
-                if (timer_elapsed(oneshot_holding_time[i]) > TAPPING_TERM) {
-                    // The key has been held longer than the tapping term.
-                    // It’s not considered as one-shot key.
-                    oneshot_state[i] = os_idle;
-                    unregister_code(oneshot[i].modifier);
-                    break;
-                } else {
-                    // If we didn't use the mod while trigger was held, queue it.
-                    oneshot_state[i] = os_up_queued;
-                    idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
-                    break;
-                }
-            case os_down_used:
-                // If we did use the mod while trigger was held, unregister it.
+        if (keycode == oneshot[i].trigger) {
+            // Trigger keydown
+            if (oneshot_state[i] == os_idle) {
+                if (oneshot[i].modifier != KC_NO) { register_code(oneshot[i].modifier); }
+                if (oneshot[i].layer != _BASE) { 
+                    uint8_t key_layer = read_source_layers_cache(record->event.key);
+                    if (key_layer != _BASE) { layer_off(key_layer); } 
+                    layer_on(oneshot[i].layer); }
+                oneshot_holding_time[i] = timer_read();
+                oneshot_state[i] = os_down_unused;
+            } else {
                 oneshot_state[i] = os_idle;
-                unregister_code(oneshot[i].modifier);
-                break;
-            case os_idle:
-                // If the oneshot hasn’t been triggered and the suppressor is not the trigger,
-                // process the suppressor normally.
-                if (keycode != oneshot[i].trigger) { return true; }
-            default:
-                break;
-          }
-      }
-        return false;
-/*       }
-      if (keycode == oneshot[i].trigger) { return false; }
-      continue; */
+                if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
+            }
+            return false;
+        }
+
+    } else {
+
+        if (keycode == oneshot[i].suppressor){
+            switch (oneshot_state[i]) {
+                case os_down_unused:
+                    if (timer_elapsed(oneshot_holding_time[i]) > TAPPING_TERM) {
+                        // The key has been held longer than the tapping term.
+                        // It’s not considered as one-shot key.
+                        oneshot_state[i] = os_idle;
+                        if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                        if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
+                        break;
+                    } else {
+                        // If we didn't use the mod while trigger was held, queue it.
+                        oneshot_state[i] = os_up_queued;
+                        idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
+                        break;
+                    }
+                case os_down_used:
+                    // If we did use the mod while trigger was held, unregister it.
+                    oneshot_state[i] = os_idle;
+                    if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                    if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
+                    break;
+                case os_idle:
+                    // If the oneshot hasn’t been triggered and the suppressor is not the trigger,
+                    // process the suppressor normally.
+                    if (keycode != oneshot[i].trigger) { return true; }
+                default:
+                    break;
+            }
+            return false;
+        }
+        if (keycode == oneshot[i].trigger) { return false; }
     }
   }
 
@@ -88,7 +93,8 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
         if (record->event.pressed) {
             // Cancel oneshot on press of specific keys.
             oneshot_state[i] = os_idle;
-            unregister_code(oneshot[i].modifier);
+            if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+            if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
         }
         continue;
     }
@@ -103,7 +109,8 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
     // Regular key released / roll between two regular keys
     if (oneshot_state[i] == os_up_queued_used) {
         oneshot_state[i] = os_idle;
-        unregister_code(oneshot[i].modifier);
+        if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+        if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
         continue;
     }
 
@@ -123,7 +130,8 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
             // Roll between a mod key and a regular key
             case os_up_queued:
                 oneshot_state[i] = os_idle;
-                unregister_code(oneshot[i].modifier);
+                if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
                 break;
             default:
                 break;

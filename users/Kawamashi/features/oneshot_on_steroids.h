@@ -7,8 +7,9 @@
 // your keymap. The `modifier` field must use the KC_* prefix.
 typedef struct {
   uint16_t trigger;
-  //uint16_t suppressor;
+  uint16_t suppressor;
   uint8_t modifier;
+  uint8_t layer;
 } oneshot_t;
 
 // Table of custom one-shot modifiers.

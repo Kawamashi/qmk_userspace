@@ -37,8 +37,8 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case OS_1DK:
-            return true;
+/*         case OS_1DK:
+            return true; */
         default:
             return false;
     }
