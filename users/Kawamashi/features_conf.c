@@ -94,10 +94,6 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     // Other macros (on press).
     switch (keycode) {
-      case TG_APOS:
-        is_apos_dr = !is_apos_dr;
-        return false;
-
       case PG_DEG:
         tap_code(PG_1DK);
         tap_code(KC_0);
@@ -235,13 +231,12 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
 const oneshot_t oneshot[] = {
   {OS_SHFT, OS_SHFT, KC_LSFT, _BASE},
-  {OS_1DK, OS_1DK, KC_NO, _1DK},
+  //{OS_1DK, OS_1DK, KC_NO, _1DK},
   {OS_WINM, LT_MGC, KC_NO, _FUNCAPPS},
   {OS_WNUM, LT_REPT, KC_LGUI, _NUMROW}
 };
 
 bool is_oneshot_cancel_key(uint16_t keycode) {
-  return false;
   switch (keycode) {
 
     default:

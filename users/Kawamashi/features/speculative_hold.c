@@ -95,8 +95,7 @@ bool process_record_speculative_hold(uint16_t keycode, keyrecord_t* record) {
       const uint8_t cleared_mods = held_keys[i].mods;
       held_keys_del_index(i);
 
-      // Clear the speculatively-held mod. The hold press handling will apply
-      // the mod again.
+      // Clear the speculatively-held mod. The hold press handling will apply the mod again.
       speculative_mods &= ~cleared_mods;
       del_weak_mods(cleared_mods);
     }
