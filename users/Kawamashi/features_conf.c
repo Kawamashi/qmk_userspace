@@ -110,6 +110,9 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 
   if (is_send_string_macro(keycode)) { return keycode; }
 
+  // Custom oneshots don't type anything on their own.
+  if (is_custom_oneshot(keycode)) { return KC_NO; }
+
   if (keycode == KC_BSPC) {
     // Setting the key to be repeated to match the key buffer.
     if (is_followed_by_apos(get_recent_keycode(-1), get_recent_keycode(-2))) {
@@ -172,6 +175,10 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 // Repeat and Magic keys
 
 bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+
+  // Custom oneshots don't type anything on their own. They mustn't be remembered.
+  if (is_custom_oneshot(keycode)) { return false; }
+
   if (is_letter(tap_hold_extractor(keycode))) {
     // Forget Shift on letter keys when Shift or AltGr are the only mods.
     if ((*remembered_mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_RALT))) == 0) {
@@ -179,10 +186,12 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
       return true;
     }
   }
+
   switch (keycode) {
     case KC_BSPC:
     case LT_REPT:
     case LT_MGC:
+
       return false;
     
     default:
@@ -252,6 +261,7 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
 
     case FUNWORD:
     case NUMWORD:     // to combine numbers with mods
+    case LT_MGC:    // custom one-shot shift must shift the character produced by the magic key
       return true;
 
     default:

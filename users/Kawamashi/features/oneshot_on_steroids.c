@@ -23,9 +23,14 @@ void clear_oneshot(void) {
   }
 }
 
-bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
+bool is_custom_oneshot(uint16_t keycode) {
+    for (uint8_t i = 0; i < OS_COUNT; i++) {
+        if (keycode == oneshot[i].trigger) { return true; }
+    }
+    return false;
+}
 
-  //bool pass = true;
+bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
 
     for (uint8_t i = 0; i < OS_COUNT; i++) {
 
@@ -125,10 +130,9 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
         }
 
         if (record->event.pressed) {
+
             // Regular key pressed
-            if (oneshot_state[i] == os_up_queued) {
-                oneshot_state[i] = os_up_queued_used;
-            }
+            if (oneshot_state[i] == os_up_queued) { oneshot_state[i] = os_up_queued_used; }
 
         } else {
             // Regular key release

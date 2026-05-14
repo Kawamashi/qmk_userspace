@@ -71,11 +71,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Speculative Hold
   if (!process_record_speculative_hold(keycode, record)) { return false; }
 
+    // Custom one-shot keys
+  if (!process_oneshot_on_steroids(keycode, record)) { return false; }
+
   // LT Repeat and Magic keys
   if (!process_macros_I(keycode, record)) { return false; }
-
-  // Custom one-shot keys
-  if (!process_oneshot_on_steroids(keycode, record)) { return false; }
 
   // Layer word
   if (!process_layerword(keycode, record)) { return false; }

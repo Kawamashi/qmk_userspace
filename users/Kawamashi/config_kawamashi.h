@@ -56,7 +56,7 @@
 #endif */
 
 // One shot modifiers
-#define OS_COUNT 4
+#define OS_COUNT 3
 
 // Timeouts in milliseconds.
 #define RECENT_KEYS_TIMEOUT 5000
