@@ -262,9 +262,9 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case N_TILD:
       return replace_ongoing_key(PG_H, ongoing_keycode, record);
 
-    case PG_APOS:
+/*     case PG_APOS:
       if (replace_apos()) { return replace_ongoing_key(PG_APOD, ongoing_keycode, record); }
-      break;
+      break; */
   }
 
 }

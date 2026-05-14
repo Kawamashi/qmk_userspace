@@ -53,7 +53,6 @@ enum custom_keycodes {
   SEL_WORD,
   SEL_LINE,
   OS_SHFT,
-  //OS_1DK,
   OS_WINM,
   OS_WNUM,
   U_CIRC,
@@ -76,9 +75,7 @@ enum custom_keycodes {
 #define LT_PDOT LT(_SHORTNAV, KC_PDOT)
 
 #define OS_1DK OSL(_1DK)
-//#define OS_WINM OSL(_FUNCAPPS)
-#define OS_NUM OSL(_NUMROW)
-//#define OS_WNUM OSL(_NUMROW)
+#define OS_NUM OSL(_NUMPAD)
 
 
   // HRM

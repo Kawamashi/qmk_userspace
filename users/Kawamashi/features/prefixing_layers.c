@@ -43,7 +43,6 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_H:
             case PG_Z:
             case PG_Q:
-            //case OU_GRV:
             case PG_UNDS:
             case PG_APOS:
             case PG_AGRV:

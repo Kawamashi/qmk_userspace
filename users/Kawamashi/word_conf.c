@@ -126,6 +126,7 @@ bool caps_word_press_user(uint16_t keycode) {
     case PG_TIRE:
     case PG_SLSH:
     case KC_1 ... KC_0:
+    case KC_P1 ... KC_P0:
     case KC_BSPC:
     case LCTL(KC_BSPC):
     case KC_DEL:

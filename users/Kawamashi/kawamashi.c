@@ -74,7 +74,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // LT Repeat and Magic keys
   if (!process_macros_I(keycode, record)) { return false; }
 
-  // 
+  // Custom one-shot keys
   if (!process_oneshot_on_steroids(keycode, record)) { return false; }
 
   // Layer word
@@ -215,14 +215,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |        |  F6  |  F7  |  F8  |  F9  |  F10 |      |      |  |      |      |      |Ctrl Z|Ctrl Y|  F11 |  F12 |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        |      |      |      |      |      |  | !!!  |   ,  |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = KAWA_LAYOUT(
-      SEL_LINE, OS_WINM,   LGUI(PG_V), RCS(PG_V), KC_PGUP,                   PG_LPRN, C(KC_LEFT), KC_UP,      C(KC_RGHT), CAPSLOCK,
-      C(PG_A),  C(PG_X),   M(C(PG_V)), C(PG_C),   KC_PGDN,                   PG_RPRN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   CAPSWORD,
-      SEL_WORD, KC_MUTE,   KC_F2,      C(PG_Z),   _______,                   _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    CAPSLIST,
-                                       _______,   _______, _______, NAVWORD, _______, OS_WNUM
+      SEL_LINE, OS_WINM,   LGUI(PG_V), RCS(PG_V),  KC_VOLU,                   KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), CAPSLOCK,
+      C(PG_A),  C(PG_X),   M(C(PG_V)), I(C(PG_C)), KC_VOLD,                   KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   CAPSWORD,
+      SEL_WORD, KC_MUTE,   KC_F2,      C(PG_Z),    _______,                   _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    CAPSLIST,
+                                       _______,    _______, _______, NAVWORD, _______, OS_WNUM
     ),
 
 /*
@@ -240,10 +240,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_FUNCAPPS] = KAWA_LAYOUT(
-      KC_F12,        KC_F9, KC_F8,   KC_F7,        QK_BOOT,                     _______, LSG(KC_LEFT),  LGUI(KC_UP),   LSG(KC_RIGHT),  _______,
-      KC_F11,        KC_F6, KC_F5,   SFT_T(KC_F4), C(KC_PAUS),                  _______, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RIGHT), _______,
-      ALT_T(KC_F10), KC_F3, KC_F2,   KC_F1,        _______,                     _______, _______,       _______,       _______,        _______,
-                                     _______,      _______,   _______, _______, _______, _______
+      _______, OS_WINM, _______, _______, _______,                   _______, LSG(KC_LEFT),  LGUI(KC_UP),   LSG(KC_RIGHT),  _______,
+      _______, _______, _______, _______, _______,                   _______, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RIGHT), _______,
+      _______, _______, _______, _______, _______,                   _______, _______,       _______,       _______,        _______,
+                                 _______, _______, _______, _______, _______, _______
     ),
 
 /*
@@ -260,7 +260,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_FUNCTIONS] = KAWA_LAYOUT(
-      // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
        _______,  _______, _______,  _______,  KC_VOLU,                    QK_BOOT, _______,  _______,  OS_WNUM, _______, 
        P(KC_F4), KC_F3,   M(KC_F2), I(KC_F1), KC_VOLD,                    KC_NUM,  I(KC_F6), M(KC_F7), KC_F8,   P(KC_F9),
        _______,  KC_MUTE, _______,  KC_F5,    _______,                    _______, KC_F10,   KC_F11,   KC_F12,  _______, 

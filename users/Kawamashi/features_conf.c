@@ -16,12 +16,7 @@
 
 #include "features_conf.h"
 
-static bool is_apos_dr = false;
 static bool is_numpad = false;
-
-bool replace_apos(void) {
-  return is_apos_dr;
-}
 
 void set_numpad(bool target) {
   is_numpad = target;
@@ -37,6 +32,8 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
   switch (keycode) {
     case M(C(PG_V)) :
       return C(PG_V);
+    case I(C(PG_C)):
+      return C(PG_C);
     case LT_NUMW:
       return NUMWORD;
 
@@ -79,6 +76,8 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
 
       case M(C(PG_V)) :
         return process_custom_tap_hold(C(PG_V), record);
+      case I(C(PG_C)):
+        return process_custom_tap_hold(C(PG_C), record);
 
       case OS_1DK:
         // Custom behaviour when alt-gr
@@ -219,11 +218,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
         return KC_TRNS;
   }
   return MAGIC;
-
-/*   if (get_recent_keycode(-1) != KC_NO) { return MAGIC; }
-  if (get_last_keycode() == KC_NO) { return MAGIC; }
-  
-  return KC_TRNS;  // Defer to default definitions. */
 }
 
 
@@ -231,7 +225,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
 const oneshot_t oneshot[] = {
   {OS_SHFT, OS_SHFT, KC_LSFT, _BASE},
-  //{OS_1DK, OS_1DK, KC_NO, _1DK},
   {OS_WINM, LT_MGC, KC_NO, _FUNCAPPS},
   {OS_WNUM, LT_REPT, KC_LGUI, _NUMROW}
 };
@@ -259,7 +252,6 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
 
     case FUNWORD:
     case NUMWORD:     // to combine numbers with mods
-    //case NUM_1DK:   // NUM_1DK sends PG_1DK when pressed. When shifted, PG_1DK sends one-shot shift.
       return true;
 
     default:

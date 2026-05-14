@@ -19,9 +19,6 @@
 #include "quantum.h"
 #include "kawamashi.h"
 
-// Returns whether typographic apostrophe is to be replaced by typewritten apostrophe
-bool replace_apos(void);
-
 // Set whether numbers from numrow are to be replaced by numbers from numpad 
 void set_numpad(bool target);
 
