@@ -189,6 +189,7 @@ void update_caps_word(uint16_t keycode, keyrecord_t* record) {
       // Invert on shift
       if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
         set_weak_mods(get_weak_mods() ^ MOD_BIT(KC_LSFT));
+        unregister_code(KC_LSFT);
         //del_oneshot_mods(MOD_MASK_SHIFT);
       }
       send_keyboard_report();
