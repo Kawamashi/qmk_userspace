@@ -17,7 +17,7 @@ void clear_oneshot(void) {
   for (uint8_t i = 0; i < OS_COUNT; i++) {
     if (oneshot_state[i] == os_up_queued) {
       oneshot_state[i] = os_idle;
-      if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+      if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
       if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
     }
   }
@@ -39,7 +39,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
             if (keycode == oneshot[i].trigger) {
                 // Trigger keydown
                 if (oneshot_state[i] == os_idle) {
-                    if (oneshot[i].modifier != KC_NO) { register_code(oneshot[i].modifier); }
+                    if (oneshot[i].modifier != KC_NO) { register_mods(oneshot[i].modifier); }
                     if (oneshot[i].layer != _BASE) { 
                         uint8_t key_layer = read_source_layers_cache(record->event.key);
                         if (key_layer != _BASE) {
@@ -52,7 +52,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                     oneshot_state[i] = os_down_unused;
                 } else {
                     oneshot_state[i] = os_idle;
-                    if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                    if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
                     if (oneshot[i].layer != _BASE) {
                         layer_off(oneshot[i].layer);
                         layer_on(oneshot_origin_layer[i]);
@@ -72,7 +72,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                                 // The key has been held longer than the tapping term.
                                 // It’s not considered as one-shot key.
                                 oneshot_state[i] = os_idle;
-                                if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                                if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
                                 if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
                                 break;
                             } else { 
@@ -84,7 +84,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                         case os_down_used:
                             // If we did use the mod while trigger was held, unregister it.
                             oneshot_state[i] = os_idle;
-                            if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                            if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
                             if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
                             break;
     /*                     case os_idle:
@@ -108,7 +108,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
             if (record->event.pressed) {
                 // Cancel oneshot on press of specific keys.
                 oneshot_state[i] = os_idle;
-                if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
                 if (oneshot[i].layer != _BASE) {
                     layer_off(oneshot[i].layer);
                     layer_on(is_oneshot_cancel_key(keycode));
@@ -127,7 +127,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
         // Regular key released / roll between two regular keys
         if (oneshot_state[i] == os_up_queued_used) {
             oneshot_state[i] = os_idle;
-            if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+            if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
             if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
             continue;
         }
@@ -148,7 +148,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                 // Roll between a mod key and a regular key
                 case os_up_queued:
                     oneshot_state[i] = os_idle;
-                    if (oneshot[i].modifier != KC_NO) { unregister_code(oneshot[i].modifier); }
+                    if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
                     if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
                     break;
                 default:

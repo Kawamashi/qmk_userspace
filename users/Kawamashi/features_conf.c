@@ -233,9 +233,9 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 // One-shot mods
 
 const oneshot_t oneshot[] = {
-  {OS_SHFT, OS_SHFT, KC_LSFT, _BASE},
+  {OS_SHFT, OS_SHFT, MOD_LSFT, _BASE},
   {OS_WINM, LT_MGC, KC_NO, _FUNCAPPS},
-  {OS_WNUM, LT_REPT, KC_LGUI, _NUMROW}
+  {OS_WNUM, LT_REPT, MOD_LGUI, _NUMROW}
 };
 
 bool is_oneshot_cancel_key(uint16_t keycode) {

@@ -10,7 +10,8 @@
  * Trigger and suppressor can be the same key, but they can be different, to drift between layers.
  * 
  * 
- * For one-shot mods, the `modifier` field must use the KC_* prefix.
+ * For one-shot mods, the `modifier` field must use the MOD_* prefix.
+ * Modifiers can be combined, for ex. MOD_LCTL | MOD_LSFT
  * KC_NO must be used if no modifiers are triggered by the one-shot key.
  * The `target_layer` field is used for one-shot layers.
  * `_BASE` must be used 
