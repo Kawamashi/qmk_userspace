@@ -81,13 +81,17 @@ uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
   }
 
   switch (keycode) {
+    // Ignore mod keys.
+    case KC_LCTL ... KC_RGUI:
+    //case KC_HYPR:
+    //case KC_MEH:
     // Sticky keys don't type anything on their own.
     case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
     // Ignore MO, TO, TG, TT, and OSL layer switch keys.
     //case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
     case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
-/*     case QK_MOMENTARY ... QK_MOMENTARY_MAX:
-    case QK_TO ... QK_TO_MAX:
+    case QK_MOMENTARY ... QK_MOMENTARY_MAX:
+/*     case QK_TO ... QK_TO_MAX:
     case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
     case QK_TRI_LAYER_LOWER ... QK_TRI_LAYER_UPPER: */
         return KC_NO;
