@@ -37,8 +37,8 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case OS_1DK:
-            return true;
+/*         case OS_1DK:
+            return true; */
         default:
             return false;
     }
@@ -60,6 +60,7 @@ void housekeeping_task_user(void) {
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
+  if (!process_oneshot_on_steroids(keycode, record)) { return false; }
   process_flow_tap(keycode, record);
   pre_process_speculative_hold(keycode, record);
 

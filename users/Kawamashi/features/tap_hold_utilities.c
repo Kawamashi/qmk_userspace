@@ -82,10 +82,8 @@ void process_flow_tap(uint16_t keycode, keyrecord_t* record) {
         is_tapped[array_index] |= bit_mask;
 
       } else if (IS_QK_LAYER_TAP(keycode) || IS_QK_ONE_SHOT_LAYER(keycode)) {
-        // Otherwise if this is an LT key, track when it will settle according
-        // to its tapping term.
-        // NOTE: To be precise, the key could settle before the tapping term.
-        // This is an approximation.
+        // Otherwise if this is an LT key, track when it will settle according to its tapping term.
+        // NOTE: To be precise, the key could settle before the tapping term. This is an approximation.
         const uint16_t term = GET_TAPPING_TERM(keycode, record);
         const uint16_t now = timer_read();
         if (!settle_timer || term > TIMER_DIFF_16(settle_timer, now)) {

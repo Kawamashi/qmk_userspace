@@ -61,7 +61,7 @@ enum custom_keycodes {
   LETTER_1DK,
   SYMBOL_1DK,
   CNL_1DK,
-  PG_DEG
+  PG_DEG,
 };
 
   // Layer changers
@@ -74,7 +74,8 @@ enum custom_keycodes {
 #define LT_P0 LT(_SYMBOLS, KC_P0)
 #define LT_PDOT LT(_SHORTNAV, KC_PDOT)
 
-#define OS_1DK OSL(_1DK)
+//#define OS_1DK OSL(_1DK)
+#define OS_1DK MO(_1DK)
 #define OS_NUM OSL(_NUMPAD)
 
 
