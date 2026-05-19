@@ -55,7 +55,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                     if (oneshot[i].modifier != KC_NO) { del_oneshot_mods(oneshot[i].modifier); }
                     if (oneshot[i].layer != _BASE) {
                         layer_off(oneshot[i].layer);
-                        layer_on(oneshot_origin_layer[i]);
+                        if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
                     }
                 }
                 return false;
@@ -93,7 +93,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                 if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
                 if (oneshot[i].layer != _BASE) {
                     layer_off(oneshot[i].layer);
-                    layer_on(oneshot_origin_layer[i]);
+                    if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
                 }
             }
             continue;
@@ -112,7 +112,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
             //if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
             if (oneshot[i].layer != _BASE) { 
                 layer_off(oneshot[i].layer);
-                layer_on(oneshot_origin_layer[i]);
+                if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
             }
             continue;
         }
