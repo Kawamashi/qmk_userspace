@@ -43,7 +43,7 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
 static uint16_t settle_timer = 0;
 static uint8_t is_tapped[(MATRIX_ROWS * MATRIX_COLS + 7) / 8] = {0};
 
-void housekeeping_task_tap_flow(void) {
+void tap_flow_task(void) {
   if (settle_timer && timer_expired(timer_read(), settle_timer)) {
     settle_timer = 0;
   }

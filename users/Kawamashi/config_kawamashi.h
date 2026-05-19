@@ -44,7 +44,6 @@
 // mod tap
 #define TAPPING_TERM 250
 #define PERMISSIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 #define CHORDAL_HOLD
 
 // EC11K encoders have a different resolution than other EC11 encodeisrs.

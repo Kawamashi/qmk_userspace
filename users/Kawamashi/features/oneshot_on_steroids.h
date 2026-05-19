@@ -49,6 +49,8 @@ void clear_oneshot(void);
 // Returns whether a keycode is a custom one-shot key or not
 bool is_custom_oneshot(uint16_t keycode);
 
+void pre_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
+
 // Custom one-shot keys implementation that doesn't rely on timers.
 // If a mod is used while it is held it will be unregistered on keyup as normal.
 // Otherwise it will be queued and only released after the next non-mod keyup.

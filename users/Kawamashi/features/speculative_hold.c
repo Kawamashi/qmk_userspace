@@ -80,7 +80,7 @@ void pre_process_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 
 // This hook is called for every key event, *after* the core tapping processing,
 // but before most other feature handlers.
-bool process_record_speculative_hold(uint16_t keycode, keyrecord_t* record) {
+bool process_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 
   if (num_held_keys == 0 || !record->event.pressed) {
     return true;
