@@ -51,7 +51,7 @@ void housekeeping_task_user(void) {
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-  pre_process_oneshot_on_steroids(keycode, record);
+  //post_process_oneshot_on_steroids(keycode, record);
   process_flow_tap(keycode, record);
   pre_process_speculative_hold(keycode, record);
 
@@ -86,6 +86,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Process all other keycodes normally
   return true;
+}
+
+void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
+  post_process_oneshot_on_steroids(keycode, record);
 }
 
 
