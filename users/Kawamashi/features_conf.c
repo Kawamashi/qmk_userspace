@@ -189,6 +189,7 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 
   switch (keycode) {
     case KC_BSPC:
+    case OS_SHFT:
     case LT_REPT:
     case LT_MGC:
 

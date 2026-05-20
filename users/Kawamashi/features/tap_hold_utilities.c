@@ -53,7 +53,7 @@ bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos) {
   // The event is not a combo
   if (!IS_KEYEVENT(record->event)) { return false; }
   // The key is a mod-tap or a layer-tap
-  if (!IS_QK_MOD_TAP(keycode) && !IS_QK_LAYER_TAP(keycode) && !IS_QK_ONE_SHOT_LAYER(keycode)) { return false; }
+  if (!IS_QK_MOD_TAP(keycode) && !IS_QK_LAYER_TAP(keycode)) { return false; }
   // The keyrecord has a valid matrix position
   if (pos.row >= MATRIX_ROWS || pos.col >= MATRIX_COLS) { return false; }
 
@@ -81,7 +81,7 @@ void process_flow_tap(uint16_t keycode, keyrecord_t* record) {
         // Record this key as tapped.
         is_tapped[array_index] |= bit_mask;
 
-      } else if (IS_QK_LAYER_TAP(keycode) || IS_QK_ONE_SHOT_LAYER(keycode)) {
+      } else if (IS_QK_LAYER_TAP(keycode)) {
         // Otherwise if this is an LT key, track when it will settle according to its tapping term.
         // NOTE: To be precise, the key could settle before the tapping term. This is an approximation.
         const uint16_t term = GET_TAPPING_TERM(keycode, record);

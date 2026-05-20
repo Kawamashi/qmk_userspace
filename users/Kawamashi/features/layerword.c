@@ -20,11 +20,11 @@
 static uint8_t layerword_layer = 0;
 static bool continue_layerword = false;
 
-static uint16_t idle_timer = 0;
+static uint16_t exit_time = 0;
 
 void layerword_task(void) {
     if (layerword_layer != 0) {
-        if (timer_expired(timer_read(), idle_timer)) { disable_layerword(layerword_layer); }
+        if (timer_expired(timer_read(), exit_time)) { disable_layerword(layerword_layer); }
     }
 }
 
@@ -37,7 +37,7 @@ void enable_layerword(uint8_t layer) {
     layer_on(layer);
     layerword_layer = layer;
     continue_layerword = true;
-    idle_timer = timer_read() + layerword_exit_timeout(layer);
+    exit_time = timer_read() + layerword_exit_timeout(layer);
 }
   
 void disable_layerword(uint8_t layer) {
@@ -100,7 +100,7 @@ bool process_layerword(uint16_t keycode, keyrecord_t *record) {
         }
 
         if (layerword_exit_timeout(layerword_layer) > 0) {
-            idle_timer = record->event.time + layerword_exit_timeout(layerword_layer);
+            exit_time = record->event.time + layerword_exit_timeout(layerword_layer);
         }
         continue_layerword = should_continue_layerword(layerword_layer, keycode, record);
 
