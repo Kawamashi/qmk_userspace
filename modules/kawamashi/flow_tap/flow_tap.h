@@ -23,20 +23,13 @@
 extern "C" {
 #endif
 
-// Returns true if `pos` on the left hand of the keyboard, false if right.
-bool on_left_hand(keypos_t pos);
-
-// Handles the tap function of tap-hold keys using non-basic keycodes
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
-
-
-/* void tap_flow_task(void);
+void housekeeping_task_flow_tap(void);
 
 // Checks if the event is on a home-row MT with a valid matrix position.
 bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);
 
 // Disables the hold behaviour of HRM during typing.
-void process_flow_tap(uint16_t keycode, keyrecord_t* record); */
+bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record);
 
 #ifdef __cplusplus
 }

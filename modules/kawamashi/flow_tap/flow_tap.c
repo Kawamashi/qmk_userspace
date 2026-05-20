@@ -14,36 +14,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tap_hold_utilities.h"
+#include "flow_tap.h"
 
 
-bool on_left_hand(keypos_t pos) {
-#ifdef SPLIT_KEYBOARD
-  return pos.row < MATRIX_ROWS / 2;
-#else
-  return (MATRIX_COLS > MATRIX_ROWS) ? pos.col < MATRIX_COLS / 2
-                                     : pos.row < MATRIX_ROWS / 2;
-#endif
-}
-
-
-bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {    // On press
-      tap_code16(keycode);
-      return false;
-  }
-  return true;
-}
-
-// Events bypass tap_flow when there are unsettled LT keys in action_tapping's
+// Events bypass flow_tap when there are unsettled LT keys in action_tapping's
 // waiting_queue. Particularly, supposing an LT settles as held, the layer state
 // will change and buffered events following the LT will be reconsidered as keys
-// on that layer. That may change whether tap_flow is enabled or the timeout
+// on that layer. That may change whether flow_tap is enabled or the timeout
 // to use on those keys. We don't know in advance how the LT will settle.
-/* static uint16_t settle_timer = 0;
+static uint16_t settle_timer = 0;
 static uint8_t is_tapped[(MATRIX_ROWS * MATRIX_COLS + 7) / 8] = {0};
 
-void tap_flow_task(void) {
+void housekeeping_task_flow_tap(void) {
   if (settle_timer && timer_expired(timer_read(), settle_timer)) {
     settle_timer = 0;
   }
@@ -60,7 +42,7 @@ bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos) {
   return true;
 }
 
-void process_flow_tap(uint16_t keycode, keyrecord_t* record) {
+bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record) {
   const keypos_t pos = record->event.key;
 
   if (is_tap_hold_event(keycode, record, pos)) {
@@ -99,4 +81,6 @@ void process_flow_tap(uint16_t keycode, keyrecord_t* record) {
       is_tapped[array_index] &= ~bit_mask;
     }
   }
-} */
+  
+  return true;
+}

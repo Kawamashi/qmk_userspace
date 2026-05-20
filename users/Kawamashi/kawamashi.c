@@ -39,7 +39,7 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 // Housekeeping
 
 void housekeeping_task_user(void) {
-  tap_flow_task();
+  //tap_flow_task();
   recent_keys_task();
   modword_task();
   layerword_task();
@@ -51,7 +51,7 @@ void housekeeping_task_user(void) {
 
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-  process_flow_tap(keycode, record);
+  //process_flow_tap(keycode, record);
   pre_process_speculative_hold(keycode, record);
 
   return true;
