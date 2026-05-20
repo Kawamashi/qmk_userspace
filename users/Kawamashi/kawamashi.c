@@ -35,20 +35,11 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
   return false;  // Disable otherwise.
 }
 
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case OS_1DK:
-            return true;
-        default:
-            return false;
-    }
-}
-
 
 // Housekeeping
 
 void housekeeping_task_user(void) {
-  housekeeping_task_tap_flow();
+  tap_flow_task();
   recent_keys_task();
   modword_task();
   layerword_task();
@@ -69,7 +60,7 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Speculative Hold
-  if (!process_record_speculative_hold(keycode, record)) { return false; }
+  if (!process_speculative_hold(keycode, record)) { return false; }
 
     // Custom one-shot keys
   if (!process_oneshot_on_steroids(keycode, record)) { return false; }
@@ -94,6 +85,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Process all other keycodes normally
   return true;
+}
+
+void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
+  post_process_oneshot_on_steroids(keycode, record);
 }
 
 

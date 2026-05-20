@@ -30,6 +30,7 @@ bool is_custom_oneshot(uint16_t keycode) {
     return false;
 }
 
+
 bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
 
     for (uint8_t i = 0; i < OS_COUNT; i++) {
@@ -66,6 +67,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
             if (oneshot_state[i] != os_idle) {
 
                 if (keycode == oneshot[i].suppressor){
+
                     if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
 
                     if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_holding_time[i]) < TAPPING_TERM) {
@@ -74,7 +76,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                         idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
                     } else {
                         oneshot_state[i] = os_idle;
-                        if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
+                        if (oneshot[i].layer != _BASE) {layer_off(oneshot[i].layer); }
                     }
                     return false;
                 }
@@ -106,17 +108,6 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
             continue;
         }
 
-        // Regular key released / roll between two regular keys
-        if (oneshot_state[i] == os_up_queued_used) {
-            oneshot_state[i] = os_idle;
-            //if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
-            if (oneshot[i].layer != _BASE) { 
-                layer_off(oneshot[i].layer);
-                if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
-            }
-            continue;
-        }
-
         if (record->event.pressed) {
             // Regular key pressed
             switch (oneshot_state[i]) {
@@ -134,4 +125,19 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
         }
     }
     return true;
+}
+
+void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
+    for (uint8_t i = 0; i < OS_COUNT; i++) {
+        // Regular key released / roll between two regular keys
+        if (oneshot_state[i] == os_up_queued_used) {
+            oneshot_state[i] = os_idle;
+            //if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
+            if (oneshot[i].layer != _BASE) {
+                layer_off(oneshot[i].layer);
+                if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
+            }
+            continue;
+        }
+    }
 }

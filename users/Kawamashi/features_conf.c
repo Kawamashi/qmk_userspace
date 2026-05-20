@@ -189,6 +189,7 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 
   switch (keycode) {
     case KC_BSPC:
+    case OS_SHFT:
     case LT_REPT:
     case LT_MGC:
 
@@ -235,7 +236,8 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 const oneshot_t oneshot[] = {
   {OS_SHFT, OS_SHFT, MOD_LSFT, _BASE},
   {OS_WINM, LT_MGC, KC_NO, _FUNCAPPS},
-  {OS_WNUM, LT_REPT, MOD_LGUI, _NUMROW}
+  {OS_WNUM, LT_REPT, MOD_LGUI, _NUMROW},
+  {OS_1DK, OS_1DK, KC_NO, _1DK}
 };
 
 bool is_oneshot_cancel_key(uint16_t keycode) {

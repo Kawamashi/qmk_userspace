@@ -30,7 +30,7 @@ bool on_left_hand(keypos_t pos);
 bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
 
 
-void housekeeping_task_tap_flow(void);
+void tap_flow_task(void);
 
 // Checks if the event is on a home-row MT with a valid matrix position.
 bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);

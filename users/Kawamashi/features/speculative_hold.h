@@ -10,7 +10,7 @@ extern "C" {
 void pre_process_speculative_hold(uint16_t keycode, keyrecord_t* record);
 
 // Clears the speculatively-held mod once the tap-hold decision is made.
-bool process_record_speculative_hold(uint16_t keycode, keyrecord_t* record);
+bool process_speculative_hold(uint16_t keycode, keyrecord_t* record);
 
 /**
  * Optional callback to define per-key where Speculative Hold applies.
