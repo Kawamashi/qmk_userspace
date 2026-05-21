@@ -22,11 +22,10 @@
 #include "features_conf.h"
 #include "word_conf.h"
 #include "features/clever_keys_utilities.h"
-//#include "features/layerword.h"
 #include "features/modword.h"
 #include "features/prefixing_layers.h"
-#include "features/oneshot_on_steroids.h"
 #include "../../modules/Kawamashi/layer_word/layer_word.h"
+#include "../../modules/Kawamashi/oneshots_on_steroids/oneshots_on_steroids.h"
 
 
 enum layers {

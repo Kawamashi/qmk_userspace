@@ -126,7 +126,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
   if (is_send_string_macro(keycode)) { return keycode; }
 
   // Custom oneshots don't type anything on their own.
-  if (is_custom_oneshot(keycode)) { return KC_NO; }
+  //if (is_custom_oneshot(keycode)) { return KC_NO; }
 
   if (keycode == KC_BSPC) {
     // Setting the key to be repeated to match the key buffer.
@@ -163,6 +163,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
     // There are no symbols on _SHORTNAV or _FUNCAPPS
     case _SHORTNAV:
     case _FUNCAPPS:
+    case _FUNCTIONS:
       clear_recent_keys();
       return KC_NO;
   }

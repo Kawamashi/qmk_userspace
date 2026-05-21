@@ -1,10 +1,10 @@
-#include "oneshot_on_steroids.h"
+#include "oneshots_on_steroids.h"
 
 oneshot_state_t oneshot_state[OS_COUNT] = { [0 ... OS_COUNT - 1] = os_idle };
 
 static uint16_t idle_timer = 0;
 uint16_t oneshot_holding_time[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
-uint8_t oneshot_origin_layer[OS_COUNT] = { [0 ... OS_COUNT - 1] = _BASE };
+uint8_t oneshot_origin_layer[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
 
 void oneshot_task(void) {
   if (idle_timer && timer_expired(timer_read(), idle_timer)) {
@@ -18,7 +18,7 @@ void clear_oneshot(void) {
     if (oneshot_state[i] == os_up_queued) {
       oneshot_state[i] = os_idle;
       if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
-      if (oneshot[i].layer != _BASE) { layer_off(oneshot[i].layer); }
+      if (oneshot[i].layer != 0) { layer_off(oneshot[i].layer); }
     }
   }
 }
@@ -31,7 +31,7 @@ bool is_custom_oneshot(uint16_t keycode) {
 }
 
 
-bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
+bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
     for (uint8_t i = 0; i < OS_COUNT; i++) {
 
@@ -41,9 +41,10 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                 // Trigger keydown
                 if (oneshot_state[i] == os_idle) {
                     if (oneshot[i].modifier != KC_NO) { register_mods(oneshot[i].modifier); }
-                    if (oneshot[i].layer != _BASE) { 
+                    if (oneshot[i].layer != 0) { 
                         uint8_t key_layer = read_source_layers_cache(record->event.key);
-                        if (key_layer != _BASE) {
+                        uint8_t default_layer = get_highest_layer(default_layer_state);
+                        if (key_layer != default_layer) {
                             oneshot_origin_layer[i] = key_layer;
                             layer_off(key_layer);
                         } 
@@ -54,9 +55,9 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                 } else {
                     oneshot_state[i] = os_idle;
                     if (oneshot[i].modifier != KC_NO) { del_oneshot_mods(oneshot[i].modifier); }
-                    if (oneshot[i].layer != _BASE) {
+                    if (oneshot[i].layer != 0) {
                         layer_off(oneshot[i].layer);
-                        if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
+                        if (oneshot_origin_layer[i] != 0) { layer_on(oneshot_origin_layer[i]); }
                     }
                 }
                 return false;
@@ -76,7 +77,7 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                         idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
                     } else {
                         oneshot_state[i] = os_idle;
-                        if (oneshot[i].layer != _BASE) {layer_off(oneshot[i].layer); }
+                        if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
                     }
                     return false;
                 }
@@ -93,9 +94,9 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
                 // Cancel oneshot on press of specific keys.
                 oneshot_state[i] = os_idle;
                 if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
-                if (oneshot[i].layer != _BASE) {
+                if (oneshot[i].layer != 0) {
                     layer_off(oneshot[i].layer);
-                    if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
+                    if (oneshot_origin_layer[i] != 0) { layer_on(oneshot_origin_layer[i]); }
                 }
             }
             continue;
@@ -127,15 +128,15 @@ bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
     return true;
 }
 
-void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record){
+void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     for (uint8_t i = 0; i < OS_COUNT; i++) {
         // Regular key released / roll between two regular keys
         if (oneshot_state[i] == os_up_queued_used) {
             oneshot_state[i] = os_idle;
             //if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
-            if (oneshot[i].layer != _BASE) {
+            if (oneshot[i].layer != 0) {
                 layer_off(oneshot[i].layer);
-                if (oneshot_origin_layer[i] != _BASE) { layer_on(oneshot_origin_layer[i]); }
+                if (oneshot_origin_layer[i] != 0) { layer_on(oneshot_origin_layer[i]); }
             }
             continue;
         }

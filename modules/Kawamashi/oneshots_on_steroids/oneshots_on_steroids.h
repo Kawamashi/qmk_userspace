@@ -1,7 +1,10 @@
 #pragma once
 
-#include QMK_KEYBOARD_H
-#include "kawamashi.h"
+#include "quantum.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*Custom one-shot key structure.
  * 
@@ -41,7 +44,7 @@ typedef enum {
  * This is useful to prevent unexpected behaviours.
  * In config.h, define `ONESHOT_TIMEOUT` with a time in milliseconds.
  */
-void oneshot_task(void);
+//void oneshot_task(void);
 
 // Deactivate all one-shot keys
 void clear_oneshot(void);
@@ -49,12 +52,12 @@ void clear_oneshot(void);
 // Returns whether a keycode is a custom one-shot key or not
 bool is_custom_oneshot(uint16_t keycode);
 
-void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
+//void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 
 // Custom one-shot keys implementation that doesn't rely on timers.
 // If a mod is used while it is held it will be unregistered on keyup as normal.
 // Otherwise it will be queued and only released after the next non-mod keyup.
-bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
+//bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 
 // To be implemented by the user. Defines keys to cancel one-shot mods and layers.
 bool is_oneshot_cancel_key(uint16_t keycode);
@@ -64,3 +67,7 @@ bool is_oneshot_cancel_key(uint16_t keycode);
 // whether a one-shot mod has been used
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
 bool should_oneshot_stay_pressed(uint16_t keycode);
+
+#ifdef __cplusplus
+}
+#endif

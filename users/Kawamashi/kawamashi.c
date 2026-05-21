@@ -41,8 +41,6 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 void housekeeping_task_user(void) {
   recent_keys_task();
   modword_task();
-  //layerword_task();
-  oneshot_task();
 }
 
 
@@ -50,14 +48,8 @@ void housekeeping_task_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-    // Custom one-shot keys
-  if (!process_oneshot_on_steroids(keycode, record)) { return false; }
-
   // LT Repeat and Magic keys
   if (!process_macros_I(keycode, record)) { return false; }
-
-  // Layer word
-  //if (!process_layerword(keycode, record)) { return false; }
 
   // Prefixed layers
   if (!process_prefixing_layers(keycode, record)) { return false; }
@@ -73,10 +65,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Process all other keycodes normally
   return true;
-}
-
-void post_process_record_user(uint16_t keycode, keyrecord_t *record) {
-  post_process_oneshot_on_steroids(keycode, record);
 }
 
 
