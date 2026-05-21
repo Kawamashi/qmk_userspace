@@ -95,7 +95,7 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
             case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
                 // Earlier return if this has not been considered tapped yet
                 if (record->tap.count == 0) { return true; }
-                keycode = tap_hold_extractor(keycode);
+                keycode &= 0xff;
                 break;
         }
 
