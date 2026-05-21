@@ -1,5 +1,6 @@
 {
   "modules": [
-    "kawamashi/flow_tap"
+    "kawamashi/flow_tap",
+    "kawamashi/speculative_hold"
   ]
 }

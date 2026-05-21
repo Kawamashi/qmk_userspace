@@ -23,13 +23,13 @@
 extern "C" {
 #endif
 
-void housekeeping_task_flow_tap(void);
+//void housekeeping_task_flow_tap(void);
 
 // Checks if the event is on a home-row MT with a valid matrix position.
-bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);
+//bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);
 
 // Disables the hold behaviour of HRM during typing.
-bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record);
+//bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record);
 
 #ifdef __cplusplus
 }

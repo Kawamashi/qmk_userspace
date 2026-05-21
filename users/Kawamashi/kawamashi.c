@@ -52,7 +52,7 @@ void housekeeping_task_user(void) {
 bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   //process_flow_tap(keycode, record);
-  pre_process_speculative_hold(keycode, record);
+  //pre_process_speculative_hold(keycode, record);
 
   return true;
 }
@@ -60,7 +60,7 @@ bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   // Speculative Hold
-  if (!process_speculative_hold(keycode, record)) { return false; }
+  //if (!process_speculative_hold(keycode, record)) { return false; }
 
     // Custom one-shot keys
   if (!process_oneshot_on_steroids(keycode, record)) { return false; }
