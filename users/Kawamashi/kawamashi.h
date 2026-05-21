@@ -23,7 +23,7 @@
 #include "word_conf.h"
 #include "features/tap_hold_utilities.h"
 #include "features/clever_keys_utilities.h"
-#include "features/layerword.h"
+//#include "features/layerword.h"
 #include "features/modword.h"
 //#include "features/speculative_hold.h"
 #include "features/prefixing_layers.h"

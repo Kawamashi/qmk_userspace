@@ -1,6 +1,7 @@
 {
   "modules": [
-    "kawamashi/flow_tap",
-    "kawamashi/speculative_hold"
+    "Kawamashi/flow_tap",
+    "Kawamashi/speculative_hold",
+    "Kawamashi/layer_word"
   ]
 }
