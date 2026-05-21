@@ -1,0 +1,3 @@
+[submodule "modules/Kawamashi"]
+	path = modules/Kawamashi
+	url = https://github.com/Kawamashi/qmk_modules.git
