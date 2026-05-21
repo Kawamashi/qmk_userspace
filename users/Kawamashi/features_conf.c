@@ -43,8 +43,6 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
       return C(PG_V);
     case I(C(PG_C)):
       return C(PG_C);
-    case LT_NUMW:
-      return NUMWORD;
 
     default:
       return keycode &= 0xff;
@@ -279,7 +277,7 @@ bool should_oneshot_stay_pressed(uint16_t keycode) {
       return true;
 
     case FUNWORD:
-    case NUMWORD:     // to combine numbers with mods
+    case LT_NUMW:   // to combine numbers with mods
     case LT_MGC:    // custom one-shot shift must shift the character produced by the magic key
       return true;
 
