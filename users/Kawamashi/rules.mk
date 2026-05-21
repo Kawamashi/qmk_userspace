@@ -20,8 +20,6 @@ CAPS_WORD_ENABLE = no
 COMBO_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
 
-#SRC += features/speculative_hold.c
-SRC += features/tap_hold_utilities.c
 #SRC += oled.c
 SRC += features/clever_keys_utilities.c
 SRC += clever_keys.c

@@ -39,28 +39,16 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 // Housekeeping
 
 void housekeeping_task_user(void) {
-  //tap_flow_task();
   recent_keys_task();
   modword_task();
-  layerword_task();
+  //layerword_task();
   oneshot_task();
 }
 
 
 // Key processing
 
-bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
-
-  //process_flow_tap(keycode, record);
-  //pre_process_speculative_hold(keycode, record);
-
-  return true;
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-
-  // Speculative Hold
-  //if (!process_speculative_hold(keycode, record)) { return false; }
 
     // Custom one-shot keys
   if (!process_oneshot_on_steroids(keycode, record)) { return false; }
@@ -69,7 +57,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_macros_I(keycode, record)) { return false; }
 
   // Layer word
-  if (!process_layerword(keycode, record)) { return false; }
+  //if (!process_layerword(keycode, record)) { return false; }
 
   // Prefixed layers
   if (!process_prefixing_layers(keycode, record)) { return false; }

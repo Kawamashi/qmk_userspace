@@ -19,6 +19,12 @@
 #include "quantum.h"
 #include "kawamashi.h"
 
+// Returns true if `pos` on the left hand of the keyboard, false if right.
+bool on_left_hand(keypos_t pos);
+
+// Handles the tap function of tap-hold keys using non-basic keycodes
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record);
+
 // Set whether numbers from numrow are to be replaced by numbers from numpad 
 void set_numpad(bool target);
 

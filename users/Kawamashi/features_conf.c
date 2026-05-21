@@ -16,6 +16,15 @@
 
 #include "features_conf.h"
 
+bool on_left_hand(keypos_t pos) {
+#ifdef SPLIT_KEYBOARD
+  return pos.row < MATRIX_ROWS / 2;
+#else
+  return (MATRIX_COLS > MATRIX_ROWS) ? pos.col < MATRIX_COLS / 2
+                                     : pos.row < MATRIX_ROWS / 2;
+#endif
+}
+
 static bool is_numpad = false;
 
 void set_numpad(bool target) {
@@ -40,6 +49,14 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
     default:
       return keycode &= 0xff;
   }
+}
+
+bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {    // On press
+      tap_code16(keycode);
+      return false;
+  }
+  return true;
 }
 
 
