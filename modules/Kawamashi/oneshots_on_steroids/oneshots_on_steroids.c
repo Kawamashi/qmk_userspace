@@ -32,6 +32,8 @@ bool is_custom_oneshot(uint16_t keycode) {
 
 
 bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
+    
+    bool should_continue_processing = true;
 
     for (uint8_t i = 0; i < OS_COUNT; i++) {
 
@@ -79,12 +81,14 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                         oneshot_state[i] = os_idle;
                         if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
                     }
-                    return false;
+                    should_continue_processing = false;
+                    continue;
                 }
             }
             if (keycode == oneshot[i].trigger) { return false; }
         }
     }
+    if (!should_continue_processing) { return false; }
 
     for (uint8_t i = 0; i < OS_COUNT; i++) {
         if (oneshot_state[i] == os_idle) { continue; }
