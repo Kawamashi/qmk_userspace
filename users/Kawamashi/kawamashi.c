@@ -37,10 +37,10 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 
 bool is_tapping_sequence(uint16_t keycode) {
   // To trigger Tap Flow, the last input must have been a character,
-  // the time between the keypresses must be lower than TAP_INTERVAL
+  // the time between the keypresses must be lower than FLOW_TAP_INTERVAL
   // and the ongoing keypress must be on a layer used for characters with mod-tap keys on it
   if (get_recent_keycode(-1) == KC_NO) { return false; }
-  if (get_idle_time() > TAP_INTERVAL) { return false; }
+  if (get_idle_time() > FLOW_TAP_INTERVAL) { return false; }
   
   switch (get_highest_layer(layer_state)) {
     case _BASE:
@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NUMROW] = KAWA_LAYOUT(
       // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
       PG_VIRG, PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                   PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), NUMPAD, 
-      KC_4,    KC_3,    M(KC_2), KC_1,    PG_POIN,                   PG_IND,  KC_6,    M(KC_7), KC_8,       KC_9,   
+      KC_4,    KC_3,    M(KC_2), I(KC_1), PG_POIN,                   PG_IND,  I(KC_6), M(KC_7), KC_8,       KC_9,   
       S(KC_4), S(KC_3), PG_H,    KC_5,    _______,                   _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX,
                                  _______, LT_0   , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
      ),
@@ -165,10 +165,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMPAD] = KAWA_LAYOUT(
-      PG_VIRG, PG_MOIN, PG_PLUS,  PG_EURO, PG_PERC,                   PG_EXP,  PG_DEG,  PG_EGAL,  _______, NUMROW, 
-      KC_P4,   KC_P3,   M(KC_P2), KC_P1,   PG_POIN,                   PG_IND,  KC_P6,   M(KC_P7), KC_P8,   KC_P9,  
-      _______, _______, PG_H,     KC_P5,   _______,                   _______, PG_SLSH, PG_MOIN,  PG_PLUS, PG_ASTX,
-                                  _______, LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
+      PG_VIRG, PG_MOIN, PG_PLUS,  PG_EURO,  PG_PERC,                   PG_EXP,  PG_DEG,   PG_EGAL,  _______, NUMROW, 
+      KC_P4,   KC_P3,   M(KC_P2), I(KC_P1), PG_POIN,                   PG_IND,  I(KC_P6), M(KC_P7), KC_P8,   KC_P9,  
+      _______, _______, PG_H,     KC_P5,    _______,                   _______, PG_SLSH,  PG_MOIN,  PG_PLUS, PG_ASTX,
+                                  _______,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
      ),
 
 /*

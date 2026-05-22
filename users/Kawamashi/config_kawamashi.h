@@ -39,12 +39,13 @@
 #define COMBO_ONLY_FROM_LAYER 0
 #define COMBO_SHOULD_TRIGGER
 #define COMBO_PROCESS_KEY_REPRESS
-#define TAP_INTERVAL 300
+#define IDLE_TIME_BEFORE_COMBO 300
 
 // mod tap
 #define TAPPING_TERM 250
 #define PERMISSIVE_HOLD
 #define CHORDAL_HOLD
+#define FLOW_TAP_INTERVAL 210
 
 // EC11K encoders have a different resolution than other EC11 encodeisrs.
 // When using the default resolution of 4, if you notice your encoder skipping

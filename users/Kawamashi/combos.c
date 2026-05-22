@@ -86,7 +86,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 
         default:
           //return enough_time_before_combo();    // takes more space
-          if (get_idle_time() < TAP_INTERVAL) { return false; }
+          if (get_idle_time() < IDLE_TIME_BEFORE_COMBO) { return false; }
     }
     return true;
 }
