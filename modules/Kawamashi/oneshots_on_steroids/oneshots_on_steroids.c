@@ -6,7 +6,7 @@ static uint16_t idle_timer = 0;
 uint16_t oneshot_holding_time[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
 uint8_t oneshot_origin_layer[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
 
-void oneshot_task(void) {
+void housekeeping_task_oneshots_on_steroids(void) {
     if (idle_timer && timer_expired(timer_read(), idle_timer)) {
         clear_oneshots();
         idle_timer = 0;
