@@ -35,6 +35,23 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
   return false;  // Disable otherwise.
 }
 
+bool is_tapping_sequence(uint16_t keycode) {
+  // To trigger Tap Flow, the last input must have been a character,
+  // the time between the keypresses must be lower than TAP_INTERVAL
+  // and the ongoing keypress must be on a layer used for characters with mod-tap keys on it
+  if (get_recent_keycode(-1) == KC_NO) { return false; }
+  if (get_idle_time() > TAP_INTERVAL) { return false; }
+  
+  switch (get_highest_layer(layer_state)) {
+    case _BASE:
+    case _NUMROW:
+    case _NUMPAD:
+        return true;
+    default:
+        return false;
+  }
+}
+
 
 // Housekeeping
 
