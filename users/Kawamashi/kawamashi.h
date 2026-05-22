@@ -19,10 +19,10 @@
 #include QMK_KEYBOARD_H
 
 #include "keymap_french_propergol.h"
-#include "features/clever_keys_utilities.h"
 #include "features/modword.h"
 #include "../../modules/Kawamashi/layer_word/layer_word.h"
 #include "../../modules/Kawamashi/oneshots_on_steroids/oneshots_on_steroids.h"
+#include "../../modules/Kawamashi/clever_keys/clever_keys.h"
 
 
 enum layers {
@@ -93,9 +93,6 @@ enum custom_keycodes {
 
 
 // conf_words
-
-// Returns whether a keycode is a letter or not
-bool is_letter(uint16_t keycode);
 
 // Returns true for macros used to type sequence of letters
 bool is_send_string_macro(uint16_t keycode);

@@ -16,7 +16,7 @@
 
 // Correction automatique
 
-#include "features/clever_keys_utilities.h"
+#include "kawamashi.h"
 
 
 void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {

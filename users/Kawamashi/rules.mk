@@ -21,7 +21,6 @@ COMBO_ENABLE = yes
 REPEAT_KEY_ENABLE = yes
 
 #SRC += oled.c
-SRC += features/clever_keys_utilities.c
 SRC += features/modword.c
 SRC += conf_clever_keys.c
 SRC += conf_features.c

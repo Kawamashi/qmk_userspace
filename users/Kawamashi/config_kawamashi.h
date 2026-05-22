@@ -58,9 +58,13 @@
 // One shot modifiers
 #define OS_COUNT 4
 
+// Clever Keys
+# define CK_BUFFER_SIZE 8
+# define CK_EXPLICIT_HOOK
+
 // Timeouts in milliseconds.
-#define RECENT_KEYS_TIMEOUT 5000
-#define CAPS_WORD_IDLE_TIMEOUT 3000
+#define CLEVER_KEYS_TIMEOUT 5000
+#define CAPS_WORD_TIMEOUT 3000
 #define ONESHOT_TIMEOUT 3000
 
 #define KRYPTON_ENABLE_HRM

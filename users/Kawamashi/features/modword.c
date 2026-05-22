@@ -70,7 +70,7 @@ void enable_modword(modword_state_t modword, uint16_t keycode) {
         break;
   }
   modword_state = modword;
-  idle_timer = timer_read() + CAPS_WORD_IDLE_TIMEOUT;
+  idle_timer = timer_read() + CAPS_WORD_TIMEOUT;
 }
   
 void disable_modword(modword_state_t modword) {
@@ -134,7 +134,7 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
   if (modword_state == idle) { return true; }
 
   if (modword_state == capslock) { 
-    idle_timer = record->event.time + CAPS_WORD_IDLE_TIMEOUT;
+    idle_timer = record->event.time + CAPS_WORD_TIMEOUT;
     return true;
   }
 
@@ -172,7 +172,7 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
     }
   }
 
-  idle_timer = record->event.time + CAPS_WORD_IDLE_TIMEOUT;
+  idle_timer = record->event.time + CAPS_WORD_TIMEOUT;
 
   if (caps_word_active) { update_caps_word(keycode, record); }
   if (modword_state == capslist && !caps_word_active) { update_caps_list(keycode, record); }     // Do not merge into a single 'if' block !

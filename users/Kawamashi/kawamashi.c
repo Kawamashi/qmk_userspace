@@ -56,7 +56,6 @@ bool is_tapping_sequence(uint16_t keycode) {
 // Housekeeping
 
 void housekeeping_task_user(void) {
-  recent_keys_task();
   modword_task();
 }
 

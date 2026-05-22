@@ -17,103 +17,233 @@
 #include "clever_keys.h"
 
 
-// Events bypass flow_tap when there are unsettled LT keys in action_tapping's
-// waiting_queue. Particularly, supposing an LT settles as held, the layer state
-// will change and buffered events following the LT will be reconsidered as keys
-// on that layer. That may change whether flow_tap is enabled or the timeout
-// to use on those keys. We don't know in advance how the LT will settle.
-static uint16_t settle_timer = 0;
-static uint8_t is_tapped[(MATRIX_ROWS * MATRIX_COLS + 7) / 8] = {0};
+static uint16_t recent[CK_BUFFER_SIZE] = {KC_NO};
+static unsigned char bkspc_countdown = CK_BUFFER_SIZE + 1;
 
-void housekeeping_task_flow_tap(void) {
-  if (settle_timer && timer_expired(timer_read(), settle_timer)) {
-    settle_timer = 0;
-  }
+//static keyrecord_t mod_record;
+static bool processingCK = false;
+
+static uint16_t last_keypress_time = 0;
+
+uint16_t get_idle_time(void) {
+  return timer_elapsed(last_keypress_time);
 }
 
-bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos) {
-  // The event is not a combo
-  if (!IS_KEYEVENT(record->event)) { return false; }
-  // The key is a mod-tap or a layer-tap
-  if (!IS_QK_MOD_TAP(keycode) && !IS_QK_LAYER_TAP(keycode)) { return false; }
-  // The keyrecord has a valid matrix position
-  if (pos.row >= MATRIX_ROWS || pos.col >= MATRIX_COLS) { return false; }
-
-  return true;
+uint16_t get_recent_keycode(signed char i) {
+  return recent[CK_BUFFER_SIZE + i];
 }
 
-bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record) {
-  const keypos_t pos = record->event.key;
+bool was_keycode_replaced(void) {
+  return processingCK;
+}
 
-  if (is_tap_hold_event(keycode, record, pos)) {
-    // The event is on an MT or LT with a valid matrix position.
-    const uint16_t tap_keycode = keycode & 0xff;
+void update_bkspc_countdown(unsigned char i) {
+  bkspc_countdown = i;
+}
 
-    // Determine the key's index in the bit arrays.
-    const uint16_t index = pos.row * MATRIX_COLS + pos.col;
-    const uint16_t array_index = index / 8;
-    const uint8_t bit_mask = UINT8_C(1) << (index % 8);
+void clear_recent_keys(void) {
+  memset(recent, 0, sizeof(recent));  // Set all zeros (KC_NO).
+  bkspc_countdown = CK_BUFFER_SIZE + 1;
+}
 
-    if (record->event.pressed) {  // On press.
-
-      if (IS_QK_MOD_TAP(keycode) && !settle_timer && is_tapping_sequence(keycode)) {
-        // Rewrite the event as a press of the tap keycode. This way, it
-        // bypasses the usual action_tapping logic.
-        record->keycode = tap_keycode;
-        // Record this key as tapped.
-        is_tapped[array_index] |= bit_mask;
-
-      } else if (IS_QK_LAYER_TAP(keycode)) {
-        // Otherwise if this is an LT key, track when it will settle according to its tapping term.
-        // NOTE: To be precise, the key could settle before the tapping term. This is an approximation.
-        const uint16_t term = GET_TAPPING_TERM(keycode, record);
-        const uint16_t now = timer_read();
-        if (!settle_timer || term > TIMER_DIFF_16(settle_timer, now)) {
-          settle_timer = (now + term) | 1;
-        }
-      }
-
-    } else if ((is_tapped[array_index] & bit_mask) != 0) {  // On tap release.
-
-      // Rewrite the event as a release of the tap keycode.
-      record->keycode = tap_keycode;
-      // Record the key as released.
-      is_tapped[array_index] &= ~bit_mask;
+void housekeeping_task_clever_keys(void) {
+  if (recent[CK_BUFFER_SIZE - 1] != KC_NO) {
+    //if (timer_expired(timer_read(), idle_timer)) {
+    if (get_idle_time() > CLEVER_KEYS_TIMEOUT) {
+      clear_recent_keys();  // Timed out; clear the buffer.
     }
   }
-  
-  return true;
 }
 
-// By default, enable Tap Flow for Space, A-Z, or main alphas area punctuation.
-/* __attribute__((weak)) bool is_tap_flow_key(uint16_t keycode) {
-  switch (get_tap_keycode(keycode)) {
-    case KC_SPC:
+
+uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
+
+  uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
+
+  if (mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_ALGR))) {
+    clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
+    return KC_NO;
+  }
+
+  if (IS_QK_MODS(keycode)) { 
+    switch (QK_MODS_GET_MODS(keycode)) {
+      case MOD_LSFT:
+      case MOD_RSFT:
+        mods |= MOD_BIT(KC_LSFT);
+        break;
+      case MOD_RALT:
+        mods |= MOD_BIT(KC_ALGR);
+        break;
+      
+      default:
+        clear_recent_keys();  // Avoid interfering with ctrl, alt and gui.
+        return KC_NO;
+    }
+  }
+
+  switch (keycode) {
+    // Ignore mod keys.
+    case KC_LCTL ... KC_RGUI:
+    //case KC_HYPR:
+    //case KC_MEH:
+    // Sticky keys don't type anything on their own.
+    case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
+    // Ignore MO, TO, TG, TT, and OSL layer switch keys.
+    //case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
+    case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
+    case QK_MOMENTARY ... QK_MOMENTARY_MAX:
+/*     case QK_TO ... QK_TO_MAX:
+    case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
+    case QK_TRI_LAYER_LOWER ... QK_TRI_LAYER_UPPER: */
+        return KC_NO;
+  }
+
+  // Extract keycode from regular tap-hold keys.
+  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
+      if (record->tap.count == 0) { return KC_NO; }
+      // Get tapping keycode.
+      keycode &= 0xff;
+  }
+
+  // Handle backspace.
+  if (keycode == KC_BSPC) {
+      bkspc_countdown--;
+      if (bkspc_countdown == 0) {
+        // Clear the key buffers.
+        clear_recent_keys();
+      } else {
+        // Rewind the key buffers.
+        memmove(recent + 1, recent, (CK_BUFFER_SIZE - 1) * sizeof(uint16_t));
+        recent[0] = KC_NO;
+      }
+  }
+
+  // Handles custom keycodes.
+  uint16_t custom_keycode = get_ongoing_keycode_user(keycode, record);
+  if (custom_keycode != KC_TRNS) { return custom_keycode; }
+
+
+  uint16_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
+
+  switch (basic_keycode) {
+    case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
+
+      if (mods & MOD_BIT(KC_ALGR)) { 
+        basic_keycode = ALGR(basic_keycode);
+        keycode = ALGR(keycode);
+      }
+
+      // Handle keys with embedded modifier, for ex on symbols layer
+      if (basic_keycode != keycode) { return keycode; }
+
+      if (is_letter(basic_keycode)) { return keycode; }
+
+      if (mods & MOD_MASK_SHIFT) { return S(keycode); }
+      
+      // Handle shifted symbols (ex shift + '-' = '!')
+      // Convert 8-bit mods to the 5-bit format used in keycodes. This is lossy: if
+      // left and right handed mods were mixed, they all become right handed.
+      //mods = ((mods & 0xf0) ? /* set right hand bit */ 0x10 : 0)
+            // Combine right and left hand mods.
+/*             | (((mods >> 4) | mods) & 0xf);
+      // Combine basic keycode with mods.
+      keycode = (mods << 8) | basic_keycode; */
+      return keycode;
+  }
+
+  // Avoid acting otherwise, particularly on navigation keys.
+  clear_recent_keys();
+  return KC_NO;
+}
+
+__attribute__((weak)) uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
+
+  switch (keycode) {
+    case KC_BSPC:
+      return KC_NO;
+    
+    default:
+      return KC_TRNS;
+  }
+}
+
+void store_keycode(uint16_t keycode, keyrecord_t* record) {
+  // Slide the buffer left by one element.
+  memmove(recent, recent + 1, (CK_BUFFER_SIZE - 1) * sizeof(*recent));
+  recent[CK_BUFFER_SIZE - 1] = keycode;
+  bkspc_countdown++;
+}
+
+void invoke_key(uint16_t keycode, keyrecord_t* record) {
+  // Copy of the record argument for the clever key.
+  static keyrecord_t mod_record;
+  mod_record = *record;
+  mod_record.keycode = keycode;
+  // Send the `keycode` key down event
+  process_record(&mod_record);
+  // Send the `keycode` key up event
+  mod_record.event.pressed = false;
+  process_record(&mod_record);
+}
+
+void replace_ongoing_key(uint16_t clever_keycode, uint16_t* ongoing_keycode, keyrecord_t* record) {
+  record->keycode = clever_keycode;
+  *ongoing_keycode = clever_keycode;
+  set_last_keycode(clever_keycode);
+  processingCK = true;
+}
+
+void process_word(uint16_t keycodes[], uint8_t num_keycodes, keyrecord_t* record) {
+  for (int i = 0; i < num_keycodes; ++i) {
+    invoke_key(keycodes[i], record);  // tap_code doesn't work with caps word.
+  }
+}
+
+void finish_word(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
+  process_word(keycodes, num_keycodes - 1, record);
+  bkspc_countdown = num_keycodes - 1;
+  replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
+}
+
+/* void finish_magic(uint16_t keycodes[], uint8_t num_keycodes, uint16_t* ongoing_keycode, keyrecord_t* record) {
+  process_word(keycodes, num_keycodes - 1, record);
+  replace_ongoing_key(keycodes[num_keycodes - 1], ongoing_keycode, record);
+} */
+
+
+void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
+
+  if (record->event.pressed) {
+    uint16_t ongoing_keycode = get_ongoing_keycode(keycode, record);
+
+    if (ongoing_keycode != KC_NO) {
+      get_clever_keycode(&ongoing_keycode, record);
+      store_keycode(ongoing_keycode, record);
+
+      // Global quick tap implementation for combos and flow_tap.
+      // IS_KEYEVENT prevents combos from updating last_keypress_time, to allow combos to be chained.
+      if (IS_KEYEVENT(record->event)) { last_keypress_time = record->event.time; }
+    }
+
+  } else if (processingCK) {    // On keyrelease
+    processingCK = false;
+    record->keycode = recent[CK_BUFFER_SIZE - 1];
+  }
+}
+
+#ifndef CK_EXPLICIT_HOOK
+    void process_record_clever_keys(uint16_t keycode, keyrecord_t* record) {
+        process_clever_keys(keycode, record);
+    }
+#endif  // CK_EXPLICIT_HOOK
+
+__attribute__((weak)) bool is_letter(uint16_t keycode) {
+
+  switch (keycode) {
     case KC_A ... KC_Z:
-    case KC_DOT:
-    case KC_COMM:
-    case KC_SCLN:
-    case KC_SLSH:
       return true;
+    
+    default:
+      return false;
   }
-  return false;
 }
-
-__attribute__((weak)) uint16_t get_tap_flow_term(
-    uint16_t keycode, keyrecord_t* record, uint16_t prev_keycode) {
-  return get_tap_flow(keycode, record, prev_keycode);
-}
-
-// By default, enable filtering when both the tap-hold key and previous key
-// return true for `is_tap_flow_key()`.
-__attribute__((weak)) uint16_t get_tap_flow(
-    uint16_t keycode, keyrecord_t* record, uint16_t prev_keycode) {
-  if (is_tap_flow_key(keycode) && is_tap_flow_key(prev_keycode)) {
-    return g_tap_flow_term;
-  }
-  return 0;  // Disable Tap Flow.
-} */
-
-/* __attribute__((weak)) bool is_tapping_sequence(uint16_t keycode) {
-  //get_idle_time() < TAP_INTERVAL
-} */
