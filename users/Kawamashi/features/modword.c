@@ -24,7 +24,7 @@ uint8_t get_modword(void) {
 }
 
 void caps_word_on(void) {
-  //clear_oneshot();
+  //clear_oneshots();
   clear_oneshot_mods();
 /*   clear_mods();
   clear_oneshot_mods(); */

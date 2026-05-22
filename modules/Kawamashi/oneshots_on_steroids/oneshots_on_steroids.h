@@ -46,8 +46,11 @@ typedef enum {
  */
 //void oneshot_task(void);
 
+// Deactivate a specific one-shot key 
+void clear_oneshot(uint8_t index);
+
 // Deactivate all one-shot keys
-void clear_oneshot(void);
+void clear_oneshots(void);
 
 // Returns whether a keycode is a custom one-shot key or not
 bool is_custom_oneshot(uint16_t keycode);

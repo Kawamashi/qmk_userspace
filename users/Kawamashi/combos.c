@@ -112,8 +112,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
           if (get_layerword_layer() != 0) { disable_layerword(get_layerword_layer()); }
           layer_clear();
           set_numpad(false);
-          clear_oneshot();
-          //clear_oneshot_mods();
+          clear_oneshots();
           unregister_code(KC_LCTL);
           unregister_code(KC_LSFT);
           unregister_code(KC_LALT);
