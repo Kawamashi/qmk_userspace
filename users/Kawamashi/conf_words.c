@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "word_conf.h"
+#include "kawamashi.h"
 
 bool is_letter(uint16_t keycode) {
 

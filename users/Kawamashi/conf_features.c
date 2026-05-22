@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "features_conf.h"
+#include "kawamashi.h"
 
 bool on_left_hand(keypos_t pos) {
 #ifdef SPLIT_KEYBOARD

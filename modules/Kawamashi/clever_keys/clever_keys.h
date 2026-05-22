@@ -13,18 +13,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
 
 #pragma once
 
 #include "quantum.h"
-#include "kawamashi.h"
 
-// Returns whether a keycode is a letter or not
-bool is_letter(uint16_t keycode);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-// Returns true for macros used to type sequence of letters
-bool is_send_string_macro(uint16_t keycode);
+bool is_tapping_sequence(uint16_t keycode);
 
-// Returns true for letters that can be followed by an apostrophe (in french)
-bool is_followed_by_apos(uint16_t keycode, uint16_t prev_keycode);
+//void housekeeping_task_flow_tap(void);
+
+// Checks if the event is on a home-row MT with a valid matrix position.
+//bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);
+
+// Disables the hold behaviour of HRM during typing.
+//bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record);
+
+#ifdef __cplusplus
+}
+#endif
