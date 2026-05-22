@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NUMROW] = KAWA_LAYOUT(
       // S(KC_4), S(KC_3) and S(PG_EGAL) are here to give easy access to ⅔, ¾ and ≠.
       PG_VIRG, PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                   PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), NUMPAD, 
-      KC_4,    KC_3,    M(KC_2), I(KC_1), PG_POIN,                   PG_IND,  I(KC_6), M(KC_7), KC_8,       KC_9,   
+      P(KC_4), R(KC_3), M(KC_2), I(KC_1), PG_POIN,                   PG_IND,  I(KC_6), M(KC_7), R(KC_8),    P(KC_9),
       S(KC_4), S(KC_3), PG_H,    KC_5,    _______,                   _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX,
                                  _______, LT_0   , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
      ),
@@ -165,10 +165,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NUMPAD] = KAWA_LAYOUT(
-      PG_VIRG, PG_MOIN, PG_PLUS,  PG_EURO,  PG_PERC,                   PG_EXP,  PG_DEG,   PG_EGAL,  _______, NUMROW, 
-      KC_P4,   KC_P3,   M(KC_P2), I(KC_P1), PG_POIN,                   PG_IND,  I(KC_P6), M(KC_P7), KC_P8,   KC_P9,  
-      _______, _______, PG_H,     KC_P5,    _______,                   _______, PG_SLSH,  PG_MOIN,  PG_PLUS, PG_ASTX,
-                                  _______,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
+      PG_VIRG,  PG_MOIN,  PG_PLUS,  PG_EURO,  PG_PERC,                   PG_EXP,  PG_DEG,   PG_EGAL,  _______,  NUMROW, 
+      P(KC_P4), R(KC_P3), M(KC_P2), I(KC_P1), PG_POIN,                   PG_IND,  I(KC_P6), M(KC_P7), R(KC_P8), P(KC_P9),  
+      _______,  _______,  PG_H,     KC_P5,    _______,                   _______, PG_SLSH,  PG_MOIN,  PG_PLUS,  PG_ASTX,
+                                    _______,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
      ),
 
 /*
@@ -229,7 +229,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_FUNCAPPS] = KAWA_LAYOUT(
       _______, OS_WINM, _______, _______, _______,                   _______, LSG(KC_LEFT),  LGUI(KC_UP),   LSG(KC_RIGHT),  _______,
-      _______, _______, _______, _______, _______,                   _______, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RIGHT), _______,
+      P_MOD,   R_MOD,   M_MOD,   I_MOD,   _______,                   _______, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RIGHT), _______,
       _______, _______, _______, _______, _______,                   _______, _______,       _______,       _______,        _______,
                                  _______, _______, _______, _______, _______, _______
     ),
