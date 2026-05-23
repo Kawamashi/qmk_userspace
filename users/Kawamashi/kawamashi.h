@@ -53,7 +53,6 @@ enum custom_keycodes {
   MAGIC,
   LETTER_1DK,
   SYMBOL_1DK,
-  CNL_1DK,
   PG_DEG,
 };
 
