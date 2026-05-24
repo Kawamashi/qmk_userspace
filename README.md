@@ -483,6 +483,7 @@ Quand le résultat d’une frappe est un caractère, une [autre fonction](keyboa
 Les Clever Keys me servent notamment :
 - à ajouter automatiquement `U` entre `Q` et une autre voyelle (ou l’apostrophe)
 - à mettre en majuscule la première lettre suivant une espace, lorsqu’elle est précédée par `.`, `?`, ou `!`. Autrement dit, `Shift` est automatiquement appliqué en début de phrase !
+- à détecter les séquences de frappes de caractères, pour paramétrer finement [Flow Tap](https://docs.qmk.fm/tap_hold#flow-tap).
 - à pouvoir doubler des caractères de la couche 1DK avec la touche `Repeat`
 - à changer le comportement de celle-ci dans certaines circonstances. En français, je l’utilise aussi comme une touche [apostrophe](https://github.com/Kawamashi//blob/main/README.md#pour-le-fran%C3%A7ais-et-langlais).
 - à donner des effets “magiques” à n’importe quelle touche, pas seulement la touche `Alt-Repeat`
