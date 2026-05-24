@@ -53,6 +53,7 @@ bool is_letter(uint16_t keycode) {
     case PG_AGRV:
     case PG_EGRV:
     case PG_ECIR:
+    case A_CIRC:
     case U_CIRC:
     case LETTER_1DK:
       return true;

@@ -151,6 +151,8 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
           return PG_3PTS;
         case PG_U:
           return U_CIRC;
+        case PG_A:
+          return A_CIRC;
 
         default:
           if (is_letter(keycode)) { return LETTER_1DK; }

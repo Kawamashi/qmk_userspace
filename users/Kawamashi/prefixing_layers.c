@@ -51,7 +51,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
             case PG_RPRN:
             //case KC_SPC:    // When space is added by Clever Keys
               return true;
-
+            // to handle `quê`
             case PG_U:
                 if (get_recent_keycode(-1) == PG_Q) { return true; }
                 

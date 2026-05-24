@@ -126,6 +126,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case PG_U:
     case PG_Y:
     case PG_EGRV:
+    case A_CIRC:
       if (*ongoing_keycode == PG_H && IS_LAYER_OFF(_1DK)) {
           update_bkspc_countdown(0);
           return replace_ongoing_key(PG_B, ongoing_keycode, record);

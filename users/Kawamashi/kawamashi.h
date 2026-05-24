@@ -48,6 +48,7 @@ enum custom_keycodes {
   SEL_LINE,
   OS_WINM,
   OS_WNUM,
+  A_CIRC,
   U_CIRC,
   N_TILD,
   MAGIC,
