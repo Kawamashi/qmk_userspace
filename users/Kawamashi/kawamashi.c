@@ -36,7 +36,7 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
 }
 
 bool is_tapping_sequence(uint16_t keycode) {
-  // To trigger Tap Flow, the last input must have been a character,
+  // To trigger Tap Flow, the last input must be a character,
   // the time between the keypresses must be lower than FLOW_TAP_INTERVAL
   // and the ongoing keypress must be on a layer used for characters with mod-tap keys on it
   if (get_recent_keycode(-1) == KC_NO) { return false; }

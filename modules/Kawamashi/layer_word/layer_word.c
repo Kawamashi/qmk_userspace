@@ -2,7 +2,7 @@
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,6 +15,8 @@
  */
 
 #include "layer_word.h"
+
+ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 
 
 static uint8_t layerword_layer = 0;
@@ -59,10 +61,13 @@ void toggle_layerword(uint16_t keycode) {
   
 bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
 
+#ifndef NO_ACTION_TAPPING
     // Normal processing when hold
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
         if (record->tap.count == 0) { return true; }
     }
+#endif  // NO_ACTION_TAPPING
+
     // Tap action
     if (record->event.pressed) {
         toggle_layerword(keycode);
@@ -81,14 +86,9 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
     // if the behavior is not on, so allow QMK to handle the event as usual.
     if (layerword_layer == 0) { return true; }
 
-    // Should exit layer word on key release or on 2nd keypress of rolled keys
-    if (!continue_layerword) {
-        disable_layerword(layerword_layer);
-        return true;
-    }
-
     if (record->event.pressed) {
 
+    #ifndef NO_ACTION_TAPPING
         // Get the base keycode of a mod or layer tap key
         switch (keycode) {
             case QK_MOD_TAP ... QK_MOD_TAP_MAX:
@@ -98,6 +98,7 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
                 keycode &= 0xff;
                 break;
         }
+    #endif  // NO_ACTION_TAPPING
 
         if (layerword_exit_timeout(layerword_layer) > 0) {
             idle_timer = record->event.time + layerword_exit_timeout(layerword_layer);
@@ -105,12 +106,23 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
         continue_layerword = should_continue_layerword(layerword_layer, keycode, record);
 
     } else {  // On keyrelease
-        
+    #ifndef NO_ACTION_TAPPING
         if (IS_QK_LAYER_TAP(keycode) && record->tap.count == 0) {
             // Release event on a held layer-tap key when layerword is on.
             // Skip default handling so that layer stays on.
             if (QK_LAYER_TAP_GET_LAYER(keycode) == layerword_layer) { return false; }
         }
     }
+    #endif  // NO_ACTION_TAPPING
     return true;
+}
+
+void post_process_record_layer_word(uint16_t keycode, keyrecord_t *record){
+    // Exit layerword just after a breaking character
+
+    // In post_process_record instead of process_record because of a bug
+    // when rolling two keys with the layerword exit after the first one
+    // and the second one being a mod-tap on base layer.
+
+    if (!continue_layerword) { disable_layerword(layerword_layer); }
 }

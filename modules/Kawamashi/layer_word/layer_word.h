@@ -18,6 +18,10 @@
 
 #include "quantum.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Idle timeout:
  *
  * Layerword can be configured to deactivate if the keyboard is idle
@@ -61,3 +65,7 @@ uint8_t get_layerword_layer_from_trigger(uint16_t keycode);
  * If you want to exit layer before key processing, call `disable_layerword()` before returning false.
 */
 bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record);
+
+#ifdef __cplusplus
+}
+#endif

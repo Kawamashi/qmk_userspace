@@ -126,8 +126,12 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 }
 
 void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
+
+    // In post_process_record instead of process_record because of a bug
+    // when rolling two keys, the first one affected by a custom oneshot
+    // and the second one being a mod-tap on base layer.
+
     for (uint8_t i = 0; i < OS_COUNT; i++) {
-        // Regular key released / roll between two regular keys
         if (oneshot_state[i] == os_up_queued_used) {
             oneshot_state[i] = os_idle;
             if (oneshot[i].layer != 0) { layer_off(oneshot[i].layer); }
