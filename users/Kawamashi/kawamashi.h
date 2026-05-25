@@ -75,9 +75,9 @@ enum custom_keycodes {
 
   // HRM
 #ifdef KRYPTON_ENABLE_HRM
-  #define P(k) LALT_T(k)
-  #define R(k) LGUI_T(k)
-  #define M(k) SFT_T(k)
+  #define P(k) SFT_T(k)
+  #define R(k) LALT_T(k)
+  #define M(k) LGUI_T(k)
   #define I(k) LCTL_T(k)
 #else
   #define P(k) k
@@ -86,9 +86,9 @@ enum custom_keycodes {
   #define I(k) k
 #endif
 
-#define P_MOD KC_LALT
-#define R_MOD KC_LGUI
-#define M_MOD KC_LSFT
+#define P_MOD KC_LSFT
+#define R_MOD KC_LALT
+#define M_MOD KC_LGUI
 #define I_MOD KC_LCTL
 
 
