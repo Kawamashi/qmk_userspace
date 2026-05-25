@@ -61,12 +61,12 @@ void toggle_layerword(uint16_t keycode) {
   
 bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
 
-#ifndef NO_ACTION_TAPPING
+  #ifndef NO_ACTION_TAPPING
     // Normal processing when hold
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
         if (record->tap.count == 0) { return true; }
     }
-#endif  // NO_ACTION_TAPPING
+  #endif  // NO_ACTION_TAPPING
 
     // Tap action
     if (record->event.pressed) {
@@ -88,7 +88,7 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed) {
 
-    #ifndef NO_ACTION_TAPPING
+      #ifndef NO_ACTION_TAPPING
         // Get the base keycode of a mod or layer tap key
         switch (keycode) {
             case QK_MOD_TAP ... QK_MOD_TAP_MAX:
@@ -98,7 +98,7 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
                 keycode &= 0xff;
                 break;
         }
-    #endif  // NO_ACTION_TAPPING
+      #endif  // NO_ACTION_TAPPING
 
         if (layerword_exit_timeout(layerword_layer) > 0) {
             idle_timer = record->event.time + layerword_exit_timeout(layerword_layer);
@@ -106,14 +106,14 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
         continue_layerword = should_continue_layerword(layerword_layer, keycode, record);
 
     } else {  // On keyrelease
-    #ifndef NO_ACTION_TAPPING
+      #ifndef NO_ACTION_TAPPING
         if (IS_QK_LAYER_TAP(keycode) && record->tap.count == 0) {
             // Release event on a held layer-tap key when layerword is on.
             // Skip default handling so that layer stays on.
             if (QK_LAYER_TAP_GET_LAYER(keycode) == layerword_layer) { return false; }
         }
     }
-    #endif  // NO_ACTION_TAPPING
+      #endif  // NO_ACTION_TAPPING
     return true;
 }
 

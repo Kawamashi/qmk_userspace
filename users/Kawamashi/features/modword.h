@@ -99,3 +99,6 @@ void select_word(signed char nb_word);
 // Function to select a line, downward or upward.
 // Updates the number of lines selected.
 void select_line(signed char nb_line);
+
+// Set the number of words selected.
+void set_nb_word_selected(signed char nb_word);

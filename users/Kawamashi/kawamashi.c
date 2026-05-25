@@ -89,7 +89,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
  * Base Layer: ALPHAS
- *»\
+ *
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |        |   ,  |   É  |   U  |   P  |   -  |                              |   V  |   M  |   C  |   J  |   X  |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
@@ -206,9 +206,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = KAWA_LAYOUT(
-      SEL_LINE, OS_WINM,   LGUI(PG_V), RCS(PG_V),  KC_VOLU,                   KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), CAPSLOCK,
+      SEL_WORD, OS_WINM,   LGUI(PG_V), RCS(PG_V),  KC_VOLU,                   KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), CAPSLOCK,
       C(PG_A),  C(PG_X),   M(C(PG_V)), I(C(PG_C)), KC_VOLD,                   KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   CAPSWORD,
-      SEL_WORD, KC_MUTE,   KC_F2,      C(PG_Z),    _______,                   _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    CAPSLIST,
+      SEL_LINE, KC_MUTE,   KC_F2,      C(PG_Z),    _______,                   _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    CAPSLIST,
                                        _______,    _______, _______, NAVWORD, _______, OS_WNUM
     ),
 

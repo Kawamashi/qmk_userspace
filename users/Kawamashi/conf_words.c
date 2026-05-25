@@ -181,14 +181,24 @@ bool list_separator(void) {
 void word_selection_press_user(uint16_t keycode) {
 
   switch (keycode) {
-    case KC_LEFT:
     case C(KC_LEFT):
+        set_nb_word_selected(1);
+        tap_code(KC_LEFT);
+        add_weak_mods(MOD_BIT_LSHIFT);
+        break;
+
+    case C(KC_RGHT):
+        set_nb_word_selected(1);
+        tap_code(KC_RGHT);
+        add_weak_mods(MOD_BIT_LSHIFT);
+        break;
+
+    case KC_LEFT:
         select_word(-1);
         set_weak_mods(MOD_BIT_LCTRL | MOD_BIT_LSHIFT);
         break;
 
     case KC_RIGHT:
-    case C(KC_RGHT):
         select_word(1);
         set_weak_mods(MOD_BIT_LCTRL | MOD_BIT_LSHIFT);
         break;

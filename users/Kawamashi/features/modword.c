@@ -124,10 +124,11 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
         return toggle_modword(capslock, keycode, record);
 
     case SEL_WORD:
-        return toggle_modword(selectword, keycode, record);
-    
     case SEL_LINE:
         return toggle_modword(selectword, keycode, record);
+    
+    //case SEL_LINE:
+        //return toggle_modword(selectword, keycode, record);
   }
 
 
@@ -189,8 +190,8 @@ void update_caps_word(uint16_t keycode, keyrecord_t* record) {
       // Invert on shift
       if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
         set_weak_mods(get_weak_mods() ^ MOD_BIT(KC_LSFT));
-        unregister_code(KC_LSFT);
-        //del_oneshot_mods(MOD_MASK_SHIFT);
+        //unregister_code(KC_LSFT);
+        del_oneshot_mods(MOD_MASK_SHIFT);
       }
       send_keyboard_report();
       return;
@@ -265,4 +266,8 @@ void select_line(signed char nb_line) {
     }
     nb_line_selected = 2*nb_line;
   }
+}
+
+void set_nb_word_selected(signed char nb_word) {
+  nb_word_selected = nb_word;
 }
