@@ -1,0 +1,9 @@
+{
+  "modules": [
+    "Kawamashi/flow_tap",
+    "Kawamashi/speculative_hold",
+    "Kawamashi/oneshots_on_steroids",
+    "Kawamashi/layer_word"
+    "Kawamashi/clever_keys"
+  ]
+}

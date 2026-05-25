@@ -206,7 +206,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SHORTNAV] = KAWA_LAYOUT(
-      SEL_LINE,   SEL_WORD,   OS_WINM,    LGUI(PG_V), KC_VOLU,                   KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), CAPSLOCK,
+      SEL_WORD,   SEL_LINE,   OS_WINM,    LGUI(PG_V), KC_VOLU,                   KC_PGUP, C(KC_LEFT), KC_UP,      C(KC_RGHT), CAPSLOCK,
       P(C(PG_A)), R(C(PG_X)), M(C(PG_C)), I(C(PG_V)), KC_VOLD,                   KC_PGDN, KC_LEFT,    KC_DOWN,    KC_RIGHT,   CAPSWORD,
       KC_MUTE,    KC_MUTE,    KC_F2,      C(PG_Z),    _______,                   _______, C(KC_PGUP), C(KC_PGDN), C(PG_W),    CAPSLIST,
                                           _______,    _______, _______, NAVWORD, _______, OS_WNUM
@@ -227,7 +227,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_FUNCAPPS] = KAWA_LAYOUT(
-      _______, OS_WINM, _______, _______, _______,                   _______, LSG(KC_LEFT),  LGUI(KC_UP),   LSG(KC_RIGHT),  _______,
+      _______, _______, OS_WINM, _______, _______,                   _______, LSG(KC_LEFT),  LGUI(KC_UP),   LSG(KC_RIGHT),  _______,
       P_MOD,   R_MOD,   M_MOD,   I_MOD,   _______,                   _______, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RIGHT), _______,
       _______, _______, _______, _______, _______,                   _______, _______,       _______,       _______,        _______,
                                  _______, _______, _______, _______, _______, _______
@@ -247,7 +247,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_FUNCTIONS] = KAWA_LAYOUT(
-       _______,  _______,  _______,  _______,  KC_VOLU,                    QK_BOOT, _______,  _______,  OS_WNUM,  _______, 
+       _______,  _______,  _______,  _______,  KC_VOLU,                    QK_BOOT, _______,  OS_WNUM,  _______,  _______, 
        P(KC_F4), R(KC_F3), M(KC_F2), I(KC_F1), KC_VOLD,                    KC_NUM,  I(KC_F6), M(KC_F7), R(KC_F8), P(KC_F9),
        _______,  KC_MUTE,  _______,  KC_F5,    _______,                    _______, KC_F10,   KC_F11,   KC_F12,   _______, 
                                      CAPSWORD, _______,  FUNWORD, _______, _______, _______

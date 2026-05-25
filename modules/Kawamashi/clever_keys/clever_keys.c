@@ -20,7 +20,6 @@
 static uint16_t recent[CK_BUFFER_SIZE] = {KC_NO};
 static unsigned char bkspc_countdown = CK_BUFFER_SIZE + 1;
 
-//static keyrecord_t mod_record;
 static bool processingCK = false;
 
 static uint16_t last_keypress_time = 0;
@@ -46,14 +45,16 @@ void clear_recent_keys(void) {
   bkspc_countdown = CK_BUFFER_SIZE + 1;
 }
 
-void housekeeping_task_clever_keys(void) {
-  if (recent[CK_BUFFER_SIZE - 1] != KC_NO) {
-    //if (timer_expired(timer_read(), idle_timer)) {
-    if (get_idle_time() > CLEVER_KEYS_TIMEOUT) {
-      clear_recent_keys();  // Timed out; clear the buffer.
+
+#if CLEVER_KEYS_TIMEOUT > 0
+  void housekeeping_task_clever_keys(void) {
+    if (recent[CK_BUFFER_SIZE - 1] != KC_NO) {
+      if (get_idle_time() > CLEVER_KEYS_TIMEOUT) {
+        clear_recent_keys();  // Timed out; clear the buffer.
+      }
     }
-  }
-}
+  }  
+#endif  // CLEVER_KEYS_TIMEOUT > 0
 
 
 uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {

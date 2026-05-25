@@ -36,10 +36,19 @@ uint8_t get_layerword_layer(void) {
 
 void enable_layerword(uint8_t layer) {
     if (layerword_layer != 0) { layer_off(layerword_layer); }   // Only one layerword can be active at a time
+
+  #ifndef NO_ACTION_ONESHOT
+    if (layer == get_oneshot_layer()) {
+        reset_oneshot_layer();  // Reset OSL to prevent it to turn the layer off.
+    }
+  #endif  // NO_ACTION_ONESHOT
+
     layer_on(layer);
     layerword_layer = layer;
     continue_layerword = true;
-    idle_timer = timer_read() + layerword_exit_timeout(layer);
+    if (layerword_exit_timeout(layerword_layer) > 0) {
+        idle_timer = timer_read() + layerword_exit_timeout(layer);
+    }
 }
   
 void disable_layerword(uint8_t layer) {
@@ -54,7 +63,7 @@ void toggle_layerword(uint16_t keycode) {
         // Activate layerword layer
         enable_layerword(layerword_target);
     } else {
-        // Press again an layerword key to exit the layerword layer
+        // Press again a layerword key to exit the layerword layer
         disable_layerword(layerword_target);
     }
 }
@@ -77,6 +86,17 @@ bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+// Handles `MO` and `TT` keys.
+static bool mo_and_tt_handling(uint8_t mo_tt_layer, keyrecord_t* record) {
+    if (mo_tt_layer == layerword_layer) {
+        if (record->event.pressed) {
+            // On press, deactivate layerword
+            disable_layerword(layerword_layer);
+        }
+        return false;  // Skip default handling.
+    }
+    return true;
+}
 
 bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
     // Handle the custom keycodes that go with this feature
@@ -85,6 +105,13 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
     // Other than the custom keycodes, nothing else in this feature will activate
     // if the behavior is not on, so allow QMK to handle the event as usual.
     if (layerword_layer == 0) { return true; }
+
+    if (IS_QK_MOMENTARY(keycode)) {  // `MO` keys
+        return mo_and_tt_handling(QK_MOMENTARY_GET_LAYER(keycode), record);
+    }
+    if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
+        return mo_and_tt_handling(QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode), record);
+    }
 
     if (record->event.pressed) {
 
@@ -105,15 +132,15 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
         }
         continue_layerword = should_continue_layerword(layerword_layer, keycode, record);
 
+  #ifndef NO_ACTION_TAPPING
     } else {  // On keyrelease
-      #ifndef NO_ACTION_TAPPING
         if (IS_QK_LAYER_TAP(keycode) && record->tap.count == 0) {
             // Release event on a held layer-tap key when layerword is on.
             // Skip default handling so that layer stays on.
             if (QK_LAYER_TAP_GET_LAYER(keycode) == layerword_layer) { return false; }
         }
+  #endif  // NO_ACTION_TAPPING
     }
-      #endif  // NO_ACTION_TAPPING
     return true;
 }
 
