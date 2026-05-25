@@ -43,10 +43,10 @@ uint16_t tap_hold_extractor(uint16_t keycode) {
       return C(PG_A);
     case R(C(PG_X)):
       return C(PG_X);
-    case M(C(PG_V)) :
-      return C(PG_V);
-    case I(C(PG_C)):
+    case M(C(PG_C)) :
       return C(PG_C);
+    case I(C(PG_V)):
+      return C(PG_V);
 
     default:
       return keycode &= 0xff;
@@ -96,10 +96,10 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
         return process_custom_tap_hold(C(PG_A), record);
       case R(C(PG_X)):
         return process_custom_tap_hold(C(PG_X), record);
-      case M(C(PG_V)) :
-        return process_custom_tap_hold(C(PG_V), record);
-      case I(C(PG_C)):
+      case M(C(PG_C)) :
         return process_custom_tap_hold(C(PG_C), record);
+      case I(C(PG_V)):
+        return process_custom_tap_hold(C(PG_V), record);
 
       case OS_1DK:
         // Custom behaviour when alt-gr
