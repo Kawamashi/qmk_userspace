@@ -39,6 +39,10 @@ bool replace_numpad(void) {
 uint16_t tap_hold_extractor(uint16_t keycode) {
 
   switch (keycode) {
+    case P(C(PG_A)):
+      return C(PG_A);
+    case R(C(PG_X)):
+      return C(PG_X);
     case M(C(PG_V)) :
       return C(PG_V);
     case I(C(PG_C)):
@@ -88,7 +92,10 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
       case SFT_T(COPY):
       case LT_NUMW:
         return process_custom_tap_hold(tap_hold_extractor(keycode), record); */
-
+      case P(C(PG_A)):
+        return process_custom_tap_hold(C(PG_A), record);
+      case R(C(PG_X)):
+        return process_custom_tap_hold(C(PG_X), record);
       case M(C(PG_V)) :
         return process_custom_tap_hold(C(PG_V), record);
       case I(C(PG_C)):
