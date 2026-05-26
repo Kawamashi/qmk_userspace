@@ -22,11 +22,15 @@ ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 static uint8_t layerword_layer = 0;
 static bool continue_layerword = false;
 
-static uint16_t idle_timer = 0;
+static uint16_t layerword_start_time = 0;
 
 void housekeeping_task_layer_word(void) {
     if (layerword_layer != 0) {
-        if (timer_expired(timer_read(), idle_timer)) { disable_layerword(layerword_layer); }
+        if (layerword_exit_timeout(layerword_layer) > 0) {
+            if (timer_elapsed(layerword_start_time) > layerword_exit_timeout(layerword_layer)) {
+                disable_layerword(layerword_layer);
+            }
+        }
     }
 }
 
@@ -47,7 +51,7 @@ void enable_layerword(uint8_t layer) {
     layerword_layer = layer;
     continue_layerword = true;
     if (layerword_exit_timeout(layerword_layer) > 0) {
-        idle_timer = timer_read() + layerword_exit_timeout(layer);
+        layerword_start_time = timer_read();
     }
 }
   
@@ -128,7 +132,7 @@ bool process_record_layer_word(uint16_t keycode, keyrecord_t *record) {
       #endif  // NO_ACTION_TAPPING
 
         if (layerword_exit_timeout(layerword_layer) > 0) {
-            idle_timer = record->event.time + layerword_exit_timeout(layerword_layer);
+            layerword_start_time = record->event.time;
         }
         continue_layerword = should_continue_layerword(layerword_layer, keycode, record);
 

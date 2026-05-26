@@ -64,7 +64,7 @@
 
 // Timeouts in milliseconds.
 #define CLEVER_KEYS_TIMEOUT 5000
-#define CAPS_WORD_TIMEOUT 3000
+#define MODWORD_TIMEOUT 3000
 #define ONESHOT_TIMEOUT 3000
 
 #define KRYPTON_ENABLE_HRM

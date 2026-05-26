@@ -2,16 +2,21 @@
 
 oneshot_state_t oneshot_state[OS_COUNT] = { [0 ... OS_COUNT - 1] = os_idle };
 
-static uint16_t idle_timer = 0;
+static uint16_t oneshot_start_time = 0;
+
 uint16_t oneshot_holding_time[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
 uint8_t oneshot_origin_layer[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
 
-void housekeeping_task_oneshots_on_steroids(void) {
-    if (idle_timer && timer_expired(timer_read(), idle_timer)) {
-        clear_oneshots();
-        idle_timer = 0;
+#ifdef ONESHOT_TIMEOUT
+    void housekeeping_task_oneshots_on_steroids(void) {
+        if (oneshot_start_time) {
+            if (timer_elapsed(oneshot_start_time) > ONESHOT_TIMEOUT) {
+                clear_all_oneshots();
+                oneshot_start_time = 0;
+            }
+        }
     }
-}
+#endif  // ONESHOT_TIMEOUT
 
 void clear_oneshot(uint8_t index) {
     oneshot_state[index] = os_idle;
@@ -19,7 +24,7 @@ void clear_oneshot(uint8_t index) {
     if (oneshot[index].layer != 0) { layer_off(oneshot[index].layer); }
 }
 
-void clear_oneshots(void) {
+void clear_all_oneshots(void) {
     for (uint8_t i = 0; i < OS_COUNT; i++) {
         if (oneshot_state[i] == os_up_queued) { clear_oneshot(i); }
     }
@@ -74,7 +79,9 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_holding_time[i]) < TAPPING_TERM) {
                         oneshot_state[i] = os_up_queued;
                         if (oneshot[i].modifier != KC_NO) { set_oneshot_mods(oneshot[i].modifier); }
-                        idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
+                        #ifdef ONESHOT_TIMEOUT
+                          oneshot_start_time = (record->event.time | 1);
+                        #endif  // ONESHOT_TIMEOUT
                     } else {
                         oneshot_state[i] = os_idle;
                         if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
@@ -101,7 +108,9 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
         if (should_oneshot_stay_pressed(keycode)) {
             if (record->event.pressed) {
-                idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
+                #ifdef ONESHOT_TIMEOUT
+                  oneshot_start_time = (record->event.time | 1);
+                #endif  // ONESHOT_TIMEOUT
             }
             continue;
         }

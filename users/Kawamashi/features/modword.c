@@ -10,14 +10,17 @@ static unsigned char counter_limit = 6;
 static signed char nb_word_selected = 0;
 static signed char nb_line_selected = 0;
 
-static uint16_t idle_timer = 0;
+static uint16_t modword_start_time = 0;
 
-
-void modword_task(void) {
-  if (modword_state != idle) {
-    if (timer_expired(timer_read(), idle_timer)) { disable_modword(modword_state); }
+#ifdef MODWORD_TIMEOUT
+  void modword_task(void) {
+    if (modword_state != idle) {
+      if (timer_elapsed(modword_start_time) > MODWORD_TIMEOUT){
+        disable_modword(modword_state);
+      }
+    }
   }
-}
+#endif  // MODWORD_TIMEOUT
 
 uint8_t get_modword(void) {
   return (modword_state);
@@ -70,7 +73,9 @@ void enable_modword(modword_state_t modword, uint16_t keycode) {
         break;
   }
   modword_state = modword;
-  idle_timer = timer_read() + CAPS_WORD_TIMEOUT;
+#ifdef MODWORD_TIMEOUT
+  modword_start_time = timer_read();
+#endif  // MODWORD_TIMEOUT
 }
   
 void disable_modword(modword_state_t modword) {
@@ -134,8 +139,10 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
 
   if (modword_state == idle) { return true; }
 
-  if (modword_state == capslock) { 
-    idle_timer = record->event.time + CAPS_WORD_TIMEOUT;
+  if (modword_state == capslock) {
+  #ifdef MODWORD_TIMEOUT
+    modword_start_time = record->event.time;
+  #endif  // MODWORD_TIMEOUT
     return true;
   }
 
@@ -173,7 +180,9 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
     }
   }
 
-  idle_timer = record->event.time + CAPS_WORD_TIMEOUT;
+#ifdef MODWORD_TIMEOUT
+  modword_start_time = record->event.time;
+#endif  // MODWORD_TIMEOUT
 
   if (caps_word_active) { update_caps_word(keycode, record); }
   if (modword_state == capslist && !caps_word_active) { update_caps_list(keycode, record); }     // Do not merge into a single 'if' block !
