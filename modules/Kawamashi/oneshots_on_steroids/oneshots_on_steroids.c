@@ -1,3 +1,19 @@
+/* Copyright 2025 @Kawamashi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "oneshots_on_steroids.h"
 
 ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
@@ -118,7 +134,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] == os_idle) { continue; }
 
-        if (is_oneshot_cancel_key(keycode)) {
+        if (is_oneshot_on_steroids_cancel_key(keycode)) {
             if (record->event.pressed) {
                 // Cancel oneshot on press of specific keys.
                 clear_oneshot_on_steroids(i);
@@ -126,7 +142,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
             continue;
         }
 
-        if (should_oneshot_stay_pressed(keycode)) {
+        if (should_oneshot_on_steroids_stay_pressed(keycode)) {
             if (record->event.pressed) {
                 #ifdef ONESHOT_TIMEOUT
                   idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
@@ -169,7 +185,7 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
     }
 }
 
-__attribute__((weak)) bool is_oneshot_cancel_key(uint16_t keycode) {
+__attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
     switch (keycode) {
 
         default:
@@ -177,7 +193,7 @@ __attribute__((weak)) bool is_oneshot_cancel_key(uint16_t keycode) {
     }
 }
 
-__attribute__((weak)) bool should_oneshot_stay_pressed(uint16_t keycode) {
+__attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode) {
     switch (keycode) {
 
         default:

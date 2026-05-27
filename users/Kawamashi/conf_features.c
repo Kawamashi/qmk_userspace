@@ -262,15 +262,7 @@ const oneshot_t oneshot[] = {
   {OS_NUMR, OS_NUMR, KC_NO, _NUMROW}
 };
 
-bool is_oneshot_cancel_key(uint16_t keycode) {
-  switch (keycode) {
-
-    default:
-      return false;
-  }
-}
-
-bool should_oneshot_stay_pressed(uint16_t keycode) {
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode) {
 
   switch (keycode) {
     case OS_1DK:

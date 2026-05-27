@@ -1,3 +1,19 @@
+/* Copyright 2025 @Kawamashi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include "quantum.h"
@@ -69,13 +85,13 @@ bool is_oneshot_on_steroids(uint16_t keycode);
 //bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 
 // To be implemented by the user. Defines keys to cancel one-shot mods and layers.
-bool is_oneshot_cancel_key(uint16_t keycode);
+bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 
 // To be implemented by the user. 
 // Defines keys not to release the modifier when determining
 // whether a one-shot mod has been used
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
-bool should_oneshot_stay_pressed(uint16_t keycode);
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode);
 
 #ifdef __cplusplus
 }
