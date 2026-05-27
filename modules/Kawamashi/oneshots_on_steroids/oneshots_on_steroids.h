@@ -10,14 +10,14 @@ extern "C" {
  * 
  * The `trigger` field is the keycode that triggers the modifier or the layer-change.
  * The `suppressor` field is the keycode that 
- * Trigger and suppressor can be the same key, but they can be different, to drift between layers.
+ * Trigger and suppressor can be the same key, but they can be different, to "bounce" between layers.
  * 
  * 
  * For one-shot mods, the `modifier` field must use the MOD_* prefix.
  * Modifiers can be combined, for ex. MOD_LCTL | MOD_LSFT
  * KC_NO must be used if no modifiers are triggered by the one-shot key.
- * The `target_layer` field is used for one-shot layers.
- * `_BASE` must be used 
+ * The `layer` field is used for one-shot layers.
+ * `0` must be used 
  */ 
 typedef struct {
   uint16_t trigger;
@@ -47,16 +47,19 @@ typedef enum {
 //void oneshot_task(void);
 
 // Deactivate a specific one-shot key 
-void clear_oneshot(uint8_t index);
+void clear_oneshot_on_steroids(uint8_t index);
 
 // Deactivate all one-shot keys
-void clear_all_oneshots(void);
+void clear_all_oneshots_on_steroids(void);
 
-// Deactivate all one-shot layers
-void clear_oneshot_layer(uint8_t layer);
+// Deactivate one-shot keys involving a layer
+void clear_oneshot_layer_on_steroids(uint8_t layer);
+
+// Deactivate all one-shot keys involving a modifier
+void clear_all_oneshot_mod_on_steroids(void);
 
 // Returns whether a keycode is a custom one-shot key or not
-bool is_custom_oneshot(uint16_t keycode);
+bool is_oneshot_on_steroids(uint16_t keycode);
 
 //void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 

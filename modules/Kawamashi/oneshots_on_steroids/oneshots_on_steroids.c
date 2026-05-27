@@ -1,47 +1,56 @@
 #include "oneshots_on_steroids.h"
 
+ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
+
+#ifdef NO_ACTION_ONESHOT
+#error "Oneshots on Steroids can't work when NO_ACTION_ONESHOT is defined. Please undefined NO_ACTION_ONESHOT."
+#endif  // NO_ACTION_ONESHOT
+
 oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
 
 static uint16_t idle_timer = 0;
-//static uint16_t oneshot_start_time = 0;
 
 uint16_t oneshot_holding_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 uint8_t oneshot_origin_layer[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 
 #ifdef ONESHOT_TIMEOUT
     void housekeeping_task_oneshots_on_steroids(void) {
-/*         if (oneshot_start_time && timer_elapsed(oneshot_start_time) > ONESHOT_TIMEOUT) {
-            clear_all_oneshots();
-            oneshot_start_time = 0;
-        } */
         if (idle_timer && timer_expired(timer_read(), idle_timer)) {
-            clear_all_oneshots();
+            clear_all_oneshots_on_steroids();
             idle_timer = 0;
         }
     }
 #endif  // ONESHOT_TIMEOUT
 
-void clear_oneshot(uint8_t index) {
+void clear_oneshot_on_steroids(uint8_t index) {
     oneshot_state[index] = os_idle;
     if (oneshot[index].modifier != KC_NO) { del_oneshot_mods(oneshot[index].modifier); }
     if (oneshot[index].layer != 0) { layer_off(oneshot[index].layer); }
 }
 
-void clear_all_oneshots(void) {
+void clear_all_oneshots_on_steroids(void) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
-        if (oneshot_state[i] == os_up_queued) { clear_oneshot(i); }
+        if (oneshot_state[i] == os_up_queued) { clear_oneshot_on_steroids(i); }
     }
 }
 
-void clear_oneshot_layer(uint8_t layer) {
+void clear_oneshot_layer_on_steroids(uint8_t layer) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot[i].layer == layer && oneshot_state[i] != os_idle) {
-            clear_oneshot(i);
+            clear_oneshot_on_steroids(i);
         }
     }
 }
 
-bool is_custom_oneshot(uint16_t keycode) {
+void clear_all_oneshot_mod_on_steroids() {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
+        if (oneshot[i].modifier != KC_NO && oneshot_state[i] != os_idle) {
+            clear_oneshot_on_steroids(i);
+        }
+    }
+}
+
+bool is_oneshot_on_steroids(uint16_t keycode) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (keycode == oneshot[i].trigger) { return true; }
     }
@@ -73,7 +82,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     oneshot_holding_time[i] = timer_read();
                     oneshot_state[i] = os_down_unused;
                 } else {
-                    clear_oneshot(i);
+                    clear_oneshot_on_steroids(i);
                     if (oneshot_origin_layer[i] != 0) { layer_on(oneshot_origin_layer[i]); }
                 }
                 return false;
@@ -91,7 +100,6 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                         oneshot_state[i] = os_up_queued;
                         if (oneshot[i].modifier != KC_NO) { set_oneshot_mods(oneshot[i].modifier); }
                         #ifdef ONESHOT_TIMEOUT
-                          //oneshot_start_time = record->event.time | 1;
                           idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
                         #endif  // ONESHOT_TIMEOUT
                     } else {
@@ -113,7 +121,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
         if (is_oneshot_cancel_key(keycode)) {
             if (record->event.pressed) {
                 // Cancel oneshot on press of specific keys.
-                clear_oneshot(i);
+                clear_oneshot_on_steroids(i);
             }
             continue;
         }
@@ -121,7 +129,6 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
         if (should_oneshot_stay_pressed(keycode)) {
             if (record->event.pressed) {
                 #ifdef ONESHOT_TIMEOUT
-                  //oneshot_start_time = record->event.time | 1;
                   idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
                 #endif  // ONESHOT_TIMEOUT
             }
@@ -160,4 +167,20 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
             continue;
         }
     }
+}
+
+__attribute__((weak)) bool is_oneshot_cancel_key(uint16_t keycode) {
+    switch (keycode) {
+
+        default:
+            return false;
+    }
+}
+
+__attribute__((weak)) bool should_oneshot_stay_pressed(uint16_t keycode) {
+    switch (keycode) {
+
+        default:
+            return false;
+  }
 }

@@ -52,7 +52,7 @@ void enable_layerword(uint8_t layer) {
   #endif  // NO_ACTION_ONESHOT
 
   #ifdef OS_STEROIDS_COUNT
-    clear_oneshot_layer(layer);
+    clear_oneshot_layer_on_steroids(layer);
   #endif  // OS_STEROIDS_COUNT
 
     layer_on(layer);
@@ -92,10 +92,7 @@ bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
     // Tap action
     if (record->event.pressed) {
         toggle_layerword(keycode);
-        //return false;
     }
-    // Normal processing on release
-    //return true;
     return false;
 }
 

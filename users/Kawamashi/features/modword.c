@@ -27,10 +27,14 @@ uint8_t get_modword(void) {
 }
 
 void caps_word_on(void) {
-  //clear_oneshots();
+
+#ifdef OS_STEROIDS_COUNT
+  clear_all_oneshot_mod_on_steroids();
+#endif  // OS_STEROIDS_COUNT
+  clear_mods();
+#ifndef NO_ACTION_ONESHOT
   clear_oneshot_mods();
-/*   clear_mods();
-  clear_oneshot_mods(); */
+#endif  // NO_ACTION_ONESHOT
 
   caps_word_active = true;
 }
@@ -102,6 +106,15 @@ void disable_modword(modword_state_t modword) {
 }
 
 bool toggle_modword(modword_state_t modword_target, uint16_t keycode, keyrecord_t* record) {
+
+#ifndef NO_ACTION_TAPPING
+  // Normal processing when hold
+  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
+      if (record->tap.count == 0) { return true; }
+  }
+#endif  // NO_ACTION_TAPPING
+
+    // Tap action
   if (record->event.pressed) {
     if (modword_state != modword_target) {
         // Activate layerword layer
@@ -110,9 +123,7 @@ bool toggle_modword(modword_state_t modword_target, uint16_t keycode, keyrecord_
         // Press again an layerword key to exit the layerword layer
         disable_modword(modword_target);
     }
-    //return false;
   }
-  //return true;
   return false;
 }
 

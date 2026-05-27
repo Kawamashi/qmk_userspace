@@ -199,7 +199,7 @@ uint16_t get_ongoing_keycode_user(uint16_t keycode, keyrecord_t* record) {
 bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
 
   // Custom oneshots don't type anything on their own. They mustn't be remembered.
-  if (is_custom_oneshot(keycode)) { return false; }
+  if (is_oneshot_on_steroids(keycode)) { return false; }
 
   if (is_letter(tap_hold_extractor(keycode))) {
     // Forget Shift on letter keys when Shift or AltGr are the only mods.
@@ -211,7 +211,6 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* reme
 
   switch (keycode) {
     case KC_BSPC:
-    case OS_SHFT:
     case LT_REPT:
     case LT_MGC:
 

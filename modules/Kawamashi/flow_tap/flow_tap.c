@@ -16,6 +16,8 @@
 
 #include "flow_tap.h"
 
+ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
+
 
 // Events bypass flow_tap when there are unsettled LT keys in action_tapping's
 // waiting_queue. Particularly, supposing an LT settles as held, the layer state

@@ -46,7 +46,9 @@ enum custom_keycodes {
   CAPSLOCK,
   SEL_WORD,
   SEL_LINE,
+  OS_SHFT,
   OS_NUMR,
+  OS_1DK,
   OS_WINM,
   OS_WNUM,
   A_CIRC,
@@ -67,11 +69,7 @@ enum custom_keycodes {
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_P0 LT(_SYMBOLS, KC_P0)
 
-//#define OS_1DK OSL(_1DK)
-#define OS_SHFT KC_RCTL
-#define OS_1DK MO(_1DK)
 #define OS_NUM OSL(_NUMPAD)
-//#define OS_NUMR OSL(_NUMROW)
 
 
   // HRM
