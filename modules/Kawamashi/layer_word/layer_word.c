@@ -18,6 +18,10 @@
 
 ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 
+#ifdef OS_STEROIDS_COUNT
+  #include "../oneshots_on_steroids/oneshots_on_steroids.h"
+#endif  // OS_STEROIDS_COUNT
+
 
 static uint8_t layerword_layer = 0;
 static bool continue_layerword = false;
@@ -46,6 +50,10 @@ void enable_layerword(uint8_t layer) {
         reset_oneshot_layer();  // Reset OSL to prevent it to turn the layer off.
     }
   #endif  // NO_ACTION_ONESHOT
+
+  #ifdef OS_STEROIDS_COUNT
+    clear_oneshot_layer(layer);
+  #endif  // OS_STEROIDS_COUNT
 
     layer_on(layer);
     layerword_layer = layer;

@@ -259,7 +259,8 @@ const oneshot_t oneshot[] = {
   {OS_SHFT, OS_SHFT, MOD_LSFT, _BASE},
   {OS_WINM, LT_MGC, KC_NO, _FUNCAPPS},
   {OS_WNUM, LT_REPT, MOD_LGUI, _NUMROW},
-  {OS_1DK, OS_1DK, KC_NO, _1DK}
+  {OS_1DK, OS_1DK, KC_NO, _1DK},
+  {OS_NUMR, OS_NUMR, KC_NO, _NUMROW}
 };
 
 bool is_oneshot_cancel_key(uint16_t keycode) {

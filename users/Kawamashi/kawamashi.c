@@ -105,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG, PG_EACU, PG_U,    PG_P,    PG_TIRE,                 PG_V,   PG_M,    PG_C,    PG_J,    PG_X,   
       P(PG_O), R(PG_A), M(PG_I), I(PG_N), PG_POIN,                 PG_G,   I(PG_T), M(PG_S), R(PG_R), P(PG_L),
       PG_Q,    PG_EGRV, PG_Y,    PG_H,    KC_T,                    KC_NO,  PG_D,    PG_F,    PG_W,    OS_1DK, 
-                                 OS_SHFT, LT_E,   LT_MGC, LT_REPT, LT_SPC, LT_NUMW
+                                 OS_SHFT, LT_E,   LT_MGC, LT_REPT, LT_SPC, OS_NUMR
     ),
 
 
@@ -127,7 +127,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG, PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                   PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), NUMPAD, 
       P(KC_4), R(KC_3), M(KC_2), I(KC_1), PG_POIN,                   PG_IND,  I(KC_6), M(KC_7), R(KC_8),    P(KC_9),
       S(KC_4), S(KC_3), PG_H,    KC_5,    _______,                   _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX,
-                                 _______, LT_0   , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
+                                 MT_PDOT, LT_0   , LT_NUMW, NNB_SPC, LT_SPC,  OS_NUMR
      ),
 
 /*
@@ -167,7 +167,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG,  PG_MOIN,  PG_PLUS,  PG_EURO,  PG_PERC,                   PG_EXP,  PG_DEG,   PG_EGAL,  _______,  NUMROW, 
       P(KC_P4), R(KC_P3), M(KC_P2), I(KC_P1), PG_POIN,                   PG_IND,  I(KC_P6), M(KC_P7), R(KC_P8), P(KC_P9),  
       _______,  _______,  PG_H,     KC_P5,    _______,                   _______, PG_SLSH,  PG_MOIN,  PG_PLUS,  PG_ASTX,
-                                    _______,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  LT_NUMW
+                                    MT_PDOT,  LT_P0  , LT_NUMW, NNB_SPC, LT_SPC,  OS_NUM
      ),
 
 /*
@@ -249,8 +249,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_FUNCTIONS] = KAWA_LAYOUT(
        _______,  _______,  _______,  _______,  KC_VOLU,                    QK_BOOT, _______,  OS_WNUM,  _______,  _______, 
        P(KC_F4), R(KC_F3), M(KC_F2), I(KC_F1), KC_VOLD,                    KC_NUM,  I(KC_F6), M(KC_F7), R(KC_F8), P(KC_F9),
-       _______,  KC_MUTE,  _______,  KC_F5,    _______,                    _______, KC_F10,   KC_F11,   KC_F12,   _______, 
-                                     CAPSWORD, _______,  FUNWORD, _______, _______, _______
+       KC_MUTE,  KC_MUTE,  _______,  KC_F5,    _______,                    _______, KC_F10,   KC_F11,   KC_F12,   _______, 
+                                     _______,  _______,  FUNWORD, _______, _______, _______
      ),
 
 // /*

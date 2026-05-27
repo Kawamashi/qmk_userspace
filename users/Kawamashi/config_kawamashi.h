@@ -56,7 +56,7 @@
 #endif */
 
 // One shot modifiers
-#define OS_COUNT 4
+#define OS_STEROIDS_COUNT 5
 
 // Clever Keys
 # define CK_BUFFER_SIZE 8

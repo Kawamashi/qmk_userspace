@@ -1,11 +1,11 @@
 #include "oneshots_on_steroids.h"
 
-oneshot_state_t oneshot_state[OS_COUNT] = { [0 ... OS_COUNT - 1] = os_idle };
+oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
 
 static uint16_t oneshot_start_time = 0;
 
-uint16_t oneshot_holding_time[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
-uint8_t oneshot_origin_layer[OS_COUNT] = { [0 ... OS_COUNT - 1] = 0 };
+uint16_t oneshot_holding_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
+uint8_t oneshot_origin_layer[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 
 #ifdef ONESHOT_TIMEOUT
     void housekeeping_task_oneshots_on_steroids(void) {
@@ -25,13 +25,21 @@ void clear_oneshot(uint8_t index) {
 }
 
 void clear_all_oneshots(void) {
-    for (uint8_t i = 0; i < OS_COUNT; i++) {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] == os_up_queued) { clear_oneshot(i); }
     }
 }
 
+void clear_oneshot_layer(uint8_t layer) {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
+        if (oneshot[i].layer == layer && oneshot_state[i] != os_idle) {
+            clear_oneshot(i);
+        }
+    }
+}
+
 bool is_custom_oneshot(uint16_t keycode) {
-    for (uint8_t i = 0; i < OS_COUNT; i++) {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (keycode == oneshot[i].trigger) { return true; }
     }
     return false;
@@ -42,7 +50,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     
     bool should_continue_processing = true;
 
-    for (uint8_t i = 0; i < OS_COUNT; i++) {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
 
         if (record->event.pressed) {
 
@@ -95,7 +103,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     }
     if (!should_continue_processing) { return false; }
 
-    for (uint8_t i = 0; i < OS_COUNT; i++) {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] == os_idle) { continue; }
 
         if (is_oneshot_cancel_key(keycode)) {
@@ -140,7 +148,7 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
     // when rolling two keys, the first one affected by a custom oneshot
     // and the second one being a mod-tap on base layer.
 
-    for (uint8_t i = 0; i < OS_COUNT; i++) {
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] == os_up_queued_used) {
             oneshot_state[i] = os_idle;
             if (oneshot[i].layer != 0) { layer_off(oneshot[i].layer); }

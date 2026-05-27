@@ -46,7 +46,7 @@ void clear_recent_keys(void) {
 }
 
 
-#if CLEVER_KEYS_TIMEOUT > 0
+#ifdef CLEVER_KEYS_TIMEOUT
   void housekeeping_task_clever_keys(void) {
     if (recent[CK_BUFFER_SIZE - 1] != KC_NO) {
       if (get_idle_time() > CLEVER_KEYS_TIMEOUT) {
@@ -54,7 +54,7 @@ void clear_recent_keys(void) {
       }
     }
   }  
-#endif  // CLEVER_KEYS_TIMEOUT > 0
+#endif  // CLEVER_KEYS_TIMEOUT
 
 
 uint16_t get_ongoing_keycode(uint16_t keycode, keyrecord_t* record) {
@@ -233,8 +233,9 @@ void process_clever_keys(uint16_t keycode, keyrecord_t* record) {
 }
 
 #ifndef CK_EXPLICIT_HOOK
-    void process_record_clever_keys(uint16_t keycode, keyrecord_t* record) {
+    bool process_record_clever_keys(uint16_t keycode, keyrecord_t* record) {
         process_clever_keys(keycode, record);
+        return true;
     }
 #endif  // CK_EXPLICIT_HOOK
 

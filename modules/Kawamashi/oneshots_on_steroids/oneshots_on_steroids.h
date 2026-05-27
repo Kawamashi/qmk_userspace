@@ -52,6 +52,9 @@ void clear_oneshot(uint8_t index);
 // Deactivate all one-shot keys
 void clear_all_oneshots(void);
 
+// Deactivate all one-shot layers
+void clear_oneshot_layer(uint8_t layer);
+
 // Returns whether a keycode is a custom one-shot key or not
 bool is_custom_oneshot(uint16_t keycode);
 
