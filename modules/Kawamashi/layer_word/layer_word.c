@@ -163,3 +163,29 @@ void post_process_record_layer_word(uint16_t keycode, keyrecord_t *record){
 
     if (!continue_layerword) { disable_layerword(layerword_layer); }
 }
+
+__attribute__((weak)) uint8_t get_layerword_layer_from_trigger(uint16_t keycode) {
+
+  switch (keycode) {
+
+    default:
+        return 0;
+  }
+}
+
+__attribute__((weak)) uint16_t layerword_exit_timeout(uint8_t layer) {
+
+  switch (layer) {
+
+    default:
+        return 0;
+  }
+}
+
+__attribute__((weak)) bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *record) {
+
+  switch (layer) {
+
+  }
+  return false;
+}

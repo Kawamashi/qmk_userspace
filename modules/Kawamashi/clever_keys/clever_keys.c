@@ -16,6 +16,7 @@
 
 #include "clever_keys.h"
 
+ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 
 static uint16_t recent[CK_BUFFER_SIZE] = {KC_NO};
 static unsigned char bkspc_countdown = CK_BUFFER_SIZE + 1;
