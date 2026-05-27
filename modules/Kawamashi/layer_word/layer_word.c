@@ -92,10 +92,11 @@ bool process_layerword_triggers(uint16_t keycode, keyrecord_t *record) {
     // Tap action
     if (record->event.pressed) {
         toggle_layerword(keycode);
-        return false;
+        //return false;
     }
     // Normal processing on release
-    return true;
+    //return true;
+    return false;
 }
 
 // Handles `MO` and `TT` keys.

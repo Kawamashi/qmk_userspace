@@ -110,9 +110,10 @@ bool toggle_modword(modword_state_t modword_target, uint16_t keycode, keyrecord_
         // Press again an layerword key to exit the layerword layer
         disable_modword(modword_target);
     }
-    return false;
+    //return false;
   }
-  return true;
+  //return true;
+  return false;
 }
 
 
@@ -131,9 +132,6 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
     case SEL_WORD:
     case SEL_LINE:
         return toggle_modword(selectword, keycode, record);
-    
-    //case SEL_LINE:
-        //return toggle_modword(selectword, keycode, record);
   }
 
 
@@ -148,8 +146,13 @@ bool process_modword(uint16_t keycode, keyrecord_t* record) {
 
   // Caps word or caps list is active //
 
+  // à passer dans post_process_record_user quand je le transformerai en module ?
+  // ça permettrait de ne faire clear_weak_mods qu’à la fin du traitement d’une touche
+  // et non pas au début de la suivante (cas d’un roulement)
   if (caps_word_active || modword_state == selectword) { clear_weak_mods(); }
 
+  // à passer dans post_process_record_user quand je le transformerai en module ?
+  // ce serait sans doute plus robuste (par rapport à la gestion des couches)
   if (modword_state == selectword) {
     if (IS_LAYER_OFF(_SHORTNAV)) { disable_modword(selectword); }
   }
