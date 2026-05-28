@@ -36,10 +36,10 @@ uint16_t layerword_exit_timeout(uint8_t layer);
 // Returns the active Layerword layer
 uint8_t get_layerword_layer(void);
 
-// Turns on Layerword
+// Turns Layerword on
 void enable_layerword(uint8_t layer);
 
-// Turns off Layerword
+// Turns Layerword off
 void disable_layerword(uint8_t layer);
 
 // Toggles Layerword

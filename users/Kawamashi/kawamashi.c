@@ -27,8 +27,11 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
     );
 
 bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
+
+  if (get_idle_time() < FLOW_TAP_INTERVAL) { return false; }
+  if (get_mods() != 0) { return false; }
+
   switch (keycode) {  // Enable speculative holding for these keys.
-    //case M(PG_I):
     case I(PG_N):
       return true;
   }

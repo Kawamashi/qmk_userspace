@@ -43,6 +43,7 @@ uint8_t get_layerword_layer(void) {
 }
 
 void enable_layerword(uint8_t layer) {
+    if (layer == 0) { return; }
     if (layerword_layer != 0) { layer_off(layerword_layer); }   // Only one layerword can be active at a time
 
   #ifndef NO_ACTION_ONESHOT
@@ -64,12 +65,14 @@ void enable_layerword(uint8_t layer) {
 }
   
 void disable_layerword(uint8_t layer) {
+    if (layer == 0) { return; }
     layer_off(layer);
     layerword_layer = 0;
 }
 
 void toggle_layerword(uint16_t keycode) {
     uint8_t layerword_target = get_layerword_layer_from_trigger(keycode);
+    if (layerword_target == 0) { return; }
 
     if (layerword_layer != layerword_target) {
         // Activate layerword layer
