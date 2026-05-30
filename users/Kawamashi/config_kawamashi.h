@@ -68,6 +68,7 @@
 #define ONESHOT_TIMEOUT 3000
 
 #define KRYPTON_ENABLE_HRM
+#define ONE_DEAD_KEY_DEFFERED_SHIFT
 
 
 //Faire de la place !

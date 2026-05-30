@@ -92,7 +92,11 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                         if (key_layer != default_layer) {
                             oneshot_origin_layer[i] = key_layer;
                             layer_off(key_layer);
-                        } 
+                        } else {
+                            // It's important to reinitialize oneshot_origin_layer
+                            // ex: same OSLs, one on base layer, one on a secondary layer
+                            oneshot_origin_layer[i] = 0;
+                        }
                         layer_on(oneshot[i].layer);
                     }
                     oneshot_holding_time[i] = timer_read();
@@ -179,7 +183,12 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] == os_up_queued_used) {
             oneshot_state[i] = os_idle;
-            if (oneshot[i].layer != 0) { layer_off(oneshot[i].layer); }
+            if (oneshot[i].layer != 0) {
+                layer_off(oneshot[i].layer);
+                if (oneshot[i].suppressor == oneshot[i].trigger) {
+                    if (oneshot_origin_layer[i] != 0) { layer_on(oneshot_origin_layer[i]); }
+                }
+            }
             continue;
         }
     }
