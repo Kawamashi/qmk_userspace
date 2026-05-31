@@ -55,6 +55,14 @@ typedef enum {
     os_down_used,
 } oneshot_state_t;
 
+// oneshot-type wrapper
+#ifdef OS_STEROIDS_RELEASED_ON_OTHER_KEY
+  #define OS(key1, key2, mod, layer) key1, key2, mod, layer
+#else
+  #define OS(key, mod, layer) key, key, mod, layer
+#endif  // OS_STEROIDS_RELEASED_ON_OTHER_KEY
+
+
 /* Idle timeout:
  * Custom one-shot mods are configured to deactivate if the keyboard is idle for some time.
  * This is useful to prevent unexpected behaviours.
@@ -91,7 +99,7 @@ bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 // Defines keys not to release the modifier when determining
 // whether a one-shot mod has been used
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode);
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger);
 
 #ifdef __cplusplus
 }

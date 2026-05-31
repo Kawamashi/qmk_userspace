@@ -255,14 +255,22 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 // One-shot mods
 
 const oneshot_t oneshot[] = {
-  {OS_SHFT, OS_SHFT, MOD_LSFT, _BASE},
-  {OS_WINM, LT_MGC, KC_NO, _FUNCAPPS},
-  {OS_WNUM, LT_REPT, MOD_LGUI, _NUMROW},
-  {OS_1DK, OS_1DK, KC_NO, _1DK},
-  {OS_NUMR, OS_NUMR, KC_NO, _NUMROW}
+  {OS(OS_SHFT, OS_SHFT, MOD_LSFT, _BASE)},
+  {OS(OS_WINM, LT_MGC, KC_NO, _FUNCAPPS)},
+  {OS(OS_WNUM, LT_REPT, MOD_LGUI, _NUMROW)},
+  {OS(OS_1DK, OS_1DK, KC_NO, _1DK)},
+  {OS(OS_NUMR, OS_NUMR, KC_NO, _NUMROW)}
 };
 
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode) {
+/* const oneshot_t oneshot[] = {
+  {OS(OS_SHFT, MOD_LSFT, _BASE)},
+  {OS(OS_WINM, KC_NO, _FUNCAPPS)},
+  {OS(OS_WNUM, MOD_LGUI, _NUMROW)},
+  {OS(OS_1DK, KC_NO, _1DK)},
+  {OS(OS_NUMR, KC_NO, _NUMROW)}
+}; */
+
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger) {
 
   switch (keycode) {
     case OS_1DK:

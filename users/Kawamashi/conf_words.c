@@ -295,7 +295,7 @@ bool should_continue_layerword(uint8_t layer, uint16_t keycode, keyrecord_t *rec
 
         // Misc
         case KC_BSPC:
-        case OS_LSFT:
+        //case OS_LSFT:
             return true; 
         default:
             return false;
