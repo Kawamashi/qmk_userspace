@@ -69,7 +69,7 @@ enum custom_keycodes {
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_P0 LT(_SYMBOLS, KC_P0)
 
-#define OS_NUM OSL(_NUMPAD)
+#define OS_NUM OSL(_NUMROW)
 
 
   // HRM

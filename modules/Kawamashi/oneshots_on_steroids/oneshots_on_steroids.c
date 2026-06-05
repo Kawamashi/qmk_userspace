@@ -22,25 +22,37 @@ ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 #error "Oneshots on Steroids can't work when NO_ACTION_ONESHOT is defined. Please undefined NO_ACTION_ONESHOT."
 #endif  // NO_ACTION_ONESHOT
 
-oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
+static oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
 
 static uint16_t idle_timer = 0;
 
-uint16_t oneshot_holding_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
-uint8_t oneshot_origin_layer[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
+static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
+
+#ifdef OS_STEROIDS_MODS_CARRIERS
+static uint8_t oneshot_mods_on_press[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
+static uint8_t oneshot_added_mods[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
+#endif  // OS_STEROIDS_MODS_CARRIERS
+
+//static uint8_t oneshot_origin_layer[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 
 #ifdef ONESHOT_TIMEOUT
-    void housekeeping_task_oneshots_on_steroids(void) {
-        if (idle_timer && timer_expired(timer_read(), idle_timer)) {
-            clear_all_oneshots_on_steroids();
-            idle_timer = 0;
-        }
+void housekeeping_task_oneshots_on_steroids(void) {
+    if (idle_timer && timer_expired(timer_read(), idle_timer)) {
+        clear_all_oneshots_on_steroids();
+        idle_timer = 0;
     }
+}
 #endif  // ONESHOT_TIMEOUT
 
 void clear_oneshot_on_steroids(uint8_t index) {
     oneshot_state[index] = os_idle;
-    if (oneshot[index].modifier != KC_NO) { del_oneshot_mods(oneshot[index].modifier); }
+    if (oneshot[index].modifier != 0) { del_oneshot_mods(oneshot[index].modifier); }
+  #ifdef OS_STEROIDS_MODS_CARRIERS
+    if (oneshot_added_mods[index] != 0) {
+        oneshot_added_mods[index] = 0;
+        del_oneshot_mods(oneshot_added_mods[index]);
+    }
+  #endif  // OS_STEROIDS_MODS_CARRIERS
     if (oneshot[index].layer != 0) { layer_off(oneshot[index].layer); }
 }
 
@@ -60,8 +72,17 @@ void clear_oneshot_layer_on_steroids(uint8_t layer) {
 
 void clear_all_oneshot_mod_on_steroids(void) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
-        if (oneshot[i].modifier != KC_NO && oneshot_state[i] != os_idle) {
-            clear_oneshot_on_steroids(i);
+        if (oneshot_state[i] != os_idle){
+            if (oneshot[i].modifier != 0) {
+                clear_oneshot_on_steroids(i);
+          #ifdef OS_STEROIDS_MODS_CARRIERS
+            } else if (oneshot_added_mods[i] != 0) {
+                // Case of OSL carrying modifiers
+                // In this case, we must remove modifiers w/o cancelling the OSL.
+                oneshot_added_mods[i] = 0;
+                del_oneshot_mods(oneshot_added_mods[i]);
+          #endif  // OS_STEROIDS_MODS_CARRIERS
+            }
         }
     }
 }
@@ -73,19 +94,51 @@ bool is_oneshot_on_steroids(uint16_t keycode) {
     return false;
 }
 
+#ifdef OS_STEROIDS_MODS_CARRIERS
+bool handle_mods(uint8_t index, uint8_t mod) {
+    if (mod & oneshot_mods_on_press[index]) {
+        oneshot_added_mods[index] |= mod;
+        oneshot_mods_on_press[index] &= ~mod;
+
+        switch (oneshot_state[index]) {
+            case os_down_unused:
+                //register_mods(mod);
+                return false;
+            case os_up_queued:
+                set_oneshot_mods(mod);
+                return true;
+            default:
+                return true;
+        }
+    }
+    return true;
+}
+#endif  // OS_STEROIDS_MODS_CARRIERS
+
 
 bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     
     bool should_continue_processing = true;
 
+    // Processing triggers and suppressors
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
 
-        if (record->event.pressed) {
+        if (record->event.pressed) {    // On
 
             if (keycode == oneshot[i].trigger) {
                 // Trigger keydown
                 if (oneshot_state[i] == os_idle) {
-                    if (oneshot[i].modifier != KC_NO) { register_mods(oneshot[i].modifier); }
+                    if (oneshot[i].modifier != 0) { register_mods(oneshot[i].modifier); }
+                  #ifdef OS_STEROIDS_MODS_CARRIERS
+                    oneshot_mods_on_press[i] = get_mods();
+                    uint8_t oneshot_mod = get_oneshot_mods();
+                    if (oneshot_mod) {
+                        oneshot_added_mods[i] |= oneshot_mod;
+                        register_mods(oneshot_mod);
+                    }
+                  #endif  // OS_STEROIDS_MODS_CARRIERS
+                    //if (oneshot[i].modifier != 0) { oneshot_mods_on_press[i] |= oneshot[i].modifier; }
+                    //if (oneshot_mods_on_press[i] != 0) { register_mods(oneshot[i].modifier); }
                     if (oneshot[i].layer != 0) { 
 /*                         uint8_t key_layer = read_source_layers_cache(record->event.key);
                         uint8_t default_layer = get_highest_layer(default_layer_state);
@@ -99,7 +152,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                         } */
                         layer_on(oneshot[i].layer);
                     }
-                    oneshot_holding_time[i] = timer_read();
+                    oneshot_tap_time[i] = timer_read();
                     oneshot_state[i] = os_down_unused;
                 } else {
                     clear_oneshot_on_steroids(i);
@@ -108,7 +161,52 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                 return false;
             }
 
-            if (oneshot_state[i] == os_idle) { continue; }
+        } else {    // On release
+
+            if (oneshot_state[i] == os_idle) {
+                // Case of canceled oneshot (oneshot tapped twice)
+                if (keycode == oneshot[i].trigger) { return false; }
+                continue;
+            }
+
+            if (keycode == oneshot[i].suppressor){
+                if (oneshot[i].modifier != 0) { unregister_mods(oneshot[i].modifier); }
+              #ifdef OS_STEROIDS_MODS_CARRIERS
+                if (oneshot_added_mods[i] != 0) { unregister_mods(oneshot_added_mods[i]); }
+              #endif  // OS_STEROIDS_MODS_CARRIERS
+
+                if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < TAPPING_TERM) {
+                    oneshot_state[i] = os_up_queued;
+                    if (oneshot[i].modifier != 0) { set_oneshot_mods(oneshot[i].modifier); }
+                  #ifdef OS_STEROIDS_MODS_CARRIERS
+                    if (oneshot_added_mods[i] != 0) { set_oneshot_mods(oneshot_added_mods[i]); }
+                  #endif  // OS_STEROIDS_MODS_CARRIERS
+                  #ifdef ONESHOT_TIMEOUT
+                    idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
+                  #endif  // ONESHOT_TIMEOUT
+                } else {
+                    oneshot_state[i] = os_idle;
+                  #ifdef OS_STEROIDS_MODS_CARRIERS
+                    if (oneshot_added_mods[i] != 0) { oneshot_added_mods[i] = 0; }
+                  #endif  // OS_STEROIDS_MODS_CARRIERS
+                    if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
+                }
+                if (keycode == oneshot[i].trigger) { should_continue_processing = false; }
+                continue;
+            }
+
+            // Case of trigger released, with trigger ≠ suppressor
+            if (keycode == oneshot[i].trigger) { return false; }
+        }
+    }
+    if (!should_continue_processing) { return false; }
+
+    // Processing other keys
+    for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
+
+        if (oneshot_state[i] == os_idle) { continue; }
+
+        if (record->event.pressed) {    // On press
 
             if (is_oneshot_on_steroids_cancel_key(keycode)) {
                 // Cancel oneshot on press of specific keys.
@@ -121,6 +219,12 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                 idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
             #endif  // ONESHOT_TIMEOUT
                 continue;
+            }
+
+            if (IS_QK_MOD_TAP(keycode)) {
+                // Étoffer ces cas.
+                // Il faut qu’ils décallent le chrono comme le bloc au-dessus
+                if (!record->tap.count) { return true; }
             }
             
             // Regular key pressed
@@ -138,93 +242,18 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
         } else {    // On release
 
-            if (oneshot_state[i] == os_idle) {
-                // Case of canceled oneshot (oneshot tapped twice)
-                if (keycode == oneshot[i].trigger) { return false; }
-                continue;
-            }
-
-            if (keycode == oneshot[i].suppressor){
-
-                if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
-
-                if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_holding_time[i]) < TAPPING_TERM) {
-                    oneshot_state[i] = os_up_queued;
-                    if (oneshot[i].modifier != KC_NO) { set_oneshot_mods(oneshot[i].modifier); }
-                    #ifdef ONESHOT_TIMEOUT
-                        idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
-                    #endif  // ONESHOT_TIMEOUT
-                } else {
-                    oneshot_state[i] = os_idle;
-                    if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
+              #ifdef OS_STEROIDS_MODS_CARRIERS
+                if (IS_MODIFIER_KEYCODE(keycode)) {
+                    //if (MOD_BIT(keycode) & oneshot_mods_on_press[i]) { return false; }
+                    if (!handle_mods(i, MOD_BIT(keycode))) { return false; }
+                } else if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
+                    //if (QK_MOD_TAP_GET_MODS(keycode) & oneshot_mods_on_press[i]) { return false; }
+                    if (!handle_mods(i, QK_MOD_TAP_GET_MODS(keycode))) { return false; }
                 }
-                if (keycode == oneshot[i].trigger) { should_continue_processing = false; }
-                continue;
-            }
-
-            // Case of trigger released, with trigger ≠ suppressor
-            if (keycode == oneshot[i].trigger) { return false; }
-
-/*             if (oneshot_state[i] != os_idle) {
-
-                if (keycode == oneshot[i].suppressor){
-
-                    if (oneshot[i].modifier != KC_NO) { unregister_mods(oneshot[i].modifier); }
-
-                    if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_holding_time[i]) < TAPPING_TERM) {
-                        oneshot_state[i] = os_up_queued;
-                        if (oneshot[i].modifier != KC_NO) { set_oneshot_mods(oneshot[i].modifier); }
-                        #ifdef ONESHOT_TIMEOUT
-                          idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
-                        #endif  // ONESHOT_TIMEOUT
-                    } else {
-                        oneshot_state[i] = os_idle;
-                        if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
-                    }
-                    if (keycode == oneshot[i].trigger) { should_continue_processing = false; }
-                    continue;
-                }
-            }
-            // Case of canceled oneshot (oneshot tapped twice)
-            // Case of trigger released, with trigger ≠ suppressor
-            if (keycode == oneshot[i].trigger) { return false; } */
+              #endif  // OS_STEROIDS_MODS_CARRIERS
         }
     }
-    if (!should_continue_processing) { return false; }
     return true;
-
-/*     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
-        if (oneshot_state[i] == os_idle) { continue; }
-
-        if (record->event.pressed) {
-            if (is_oneshot_on_steroids_cancel_key(keycode)) {
-                // Cancel oneshot on press of specific keys.
-                clear_oneshot_on_steroids(i);
-                continue;
-            }
-
-            if (should_oneshot_on_steroids_stay_pressed(keycode, oneshot[i].trigger)) {
-            #ifdef ONESHOT_TIMEOUT
-                idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
-            #endif  // ONESHOT_TIMEOUT
-                continue;
-            }
-            
-            // Regular key pressed
-            switch (oneshot_state[i]) {
-                case os_down_unused:
-                    // When the mod key is still pressed
-                    oneshot_state[i] = os_down_used;
-                    break;
-                case os_up_queued:
-                    oneshot_state[i] = os_up_queued_used;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    return true; */
 }
 
 void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
@@ -260,5 +289,6 @@ __attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keyc
 
         default:
             return false;
-  }
+    }
 }
+
