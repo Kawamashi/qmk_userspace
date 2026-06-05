@@ -58,7 +58,8 @@
 // One shot modifiers
 #define OS_STEROIDS_COUNT 5
 #define OS_STEROIDS_RELEASED_ON_OTHER_KEY
-//#define OS_STEROIDS_MODS_CARRIERS
+#define OS_STEROIDS_RELAY_MODS
+#define OS_STEROIDS_RELAY_MODS_PER_KEY
 
 // Clever Keys
 # define CK_BUFFER_SIZE 8

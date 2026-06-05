@@ -101,6 +101,8 @@ bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
 bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger);
 
+bool should_oneshot_on_steroids_relay_mods(uint16_t keycode);
+
 #ifdef __cplusplus
 }
 #endif
