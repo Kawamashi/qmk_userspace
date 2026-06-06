@@ -29,7 +29,7 @@ static uint16_t idle_timer = 0;
 static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 
 #if defined OS_STEROIDS_RELAY_MODS || defined OS_STEROIDS_RELAY_MODS_PER_KEY
-static uint8_t oneshot_mods_on_press[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
+static uint8_t oneshot_pressed_mods[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 static uint8_t oneshot_added_mods[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 #endif  // OS_STEROIDS_RELAY_MODS
 
@@ -102,9 +102,9 @@ bool is_oneshot_on_steroids(uint16_t keycode) {
 
 #ifdef OS_STEROIDS_RELAY_MODS
 bool handle_mods(uint8_t index, uint8_t mod) {
-    if (mod & oneshot_mods_on_press[index]) {
+    if (mod & oneshot_pressed_mods[index]) {
         oneshot_added_mods[index] |= mod;
-        oneshot_mods_on_press[index] &= ~mod;
+        oneshot_pressed_mods[index] &= ~mod;
 
         switch (oneshot_state[index]) {
             case os_down_unused:
@@ -138,7 +138,9 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     if (SHOULD_RELAY_MODS) {
                         // removing the oneshot mod of mods
                         uint8_t mods = get_mods() & ~oneshot[i].modifier;
-                        if (mods) { oneshot_mods_on_press[i] = mods; }
+                        if (mods) {
+                            oneshot_pressed_mods[i] = mods;
+                        }
                         uint8_t oneshot_mod = get_oneshot_mods() & ~oneshot[i].modifier;
                         if (oneshot_mod) {
                             oneshot_added_mods[i] |= oneshot_mod;
@@ -179,9 +181,13 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
             }
 
             if (keycode == oneshot[i].suppressor) {
-                if (oneshot[i].modifier != 0) { unregister_mods(oneshot[i].modifier); }
+                if (oneshot[i].modifier != 0) {
+                    unregister_mods(oneshot[i].modifier);
+                }
 #                   ifdef OS_STEROIDS_RELAY_MODS
-                if (oneshot_added_mods[i] != 0) { unregister_mods(oneshot_added_mods[i]); }
+                if (oneshot_added_mods[i] != 0) {
+                    unregister_mods(oneshot_added_mods[i]);
+                }
 #                   endif  // OS_STEROIDS_RELAY_MODS
 
                 if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < TAPPING_TERM) {
