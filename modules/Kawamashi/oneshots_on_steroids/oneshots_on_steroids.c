@@ -52,13 +52,29 @@ void housekeeping_task_oneshots_on_steroids(void) {
 
 void clear_oneshot_on_steroids(uint8_t index) {
     oneshot_state[index] = os_idle;
-    if (oneshot[index].modifier != 0) { del_oneshot_mods(oneshot[index].modifier); }
+    if (oneshot[index].modifier != 0) { 
+        if (should_mod_be_held(oneshot[index].modifier, oneshot[index].trigger)) {
+#               ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+            //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+            neutralize_flashing_modifiers(oneshot[index].modifier);
+#               endif // DUMMY_MOD_NEUTRALIZER_KEYCODE
+            unregister_mods(oneshot[index].modifier);
+        } else {
+            del_oneshot_mods(oneshot[index].modifier);
+        }
+    }
+
 #       ifdef OS_STEROIDS_RELAY_MODS
     if (oneshot_added_mods[index] != 0) {
+#           ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+        //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+        neutralize_flashing_modifiers(oneshot_added_mods[index]);
+#           endif // DUMMY_MOD_NEUTRALIZER_KEYCODE
+        unregister_mods(oneshot_added_mods[index]);
         oneshot_added_mods[index] = 0;
-        del_oneshot_mods(oneshot_added_mods[index]);
     }
 #       endif  // OS_STEROIDS_RELAY_MODS
+
     if (oneshot[index].layer != 0) { layer_off(oneshot[index].layer); }
 }
 
@@ -85,8 +101,12 @@ void clear_all_oneshot_mod_on_steroids(void) {
             } else if (oneshot_added_mods[i] != 0) {
                 // Case of OSL carrying modifiers
                 // In this case, we must remove modifiers w/o cancelling the OSL.
+#                   ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+                //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+                neutralize_flashing_modifiers(oneshot_added_mods[i]);
+#                   endif // DUMMY_MOD_NEUTRALIZER_KEYCODE
+                unregister_mods(oneshot_added_mods[i]);
                 oneshot_added_mods[i] = 0;
-                del_oneshot_mods(oneshot_added_mods[i]);
 #               endif  // OS_STEROIDS_RELAY_MODS
             }
         }
@@ -103,15 +123,15 @@ bool is_oneshot_on_steroids(uint16_t keycode) {
 #ifdef OS_STEROIDS_RELAY_MODS
 bool handle_mods(uint8_t index, uint8_t mod) {
     if (mod & oneshot_pressed_mods[index]) {
-        oneshot_added_mods[index] |= mod;
-        oneshot_pressed_mods[index] &= ~mod;
 
         switch (oneshot_state[index]) {
             case os_down_unused:
-                return false;
             case os_up_queued:
-                add_oneshot_mods(mod);
-                return true;
+                //oneshot_added_mods[index] = mod;
+                oneshot_added_mods[index] |= mod;
+                oneshot_pressed_mods[index] &= ~mod;
+                return false;
+
             default:
                 return true;
         }
@@ -181,33 +201,54 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
             }
 
             if (keycode == oneshot[i].suppressor) {
-                if (oneshot[i].modifier != 0) {
+/*                 if (oneshot[i].modifier != 0) {
                     unregister_mods(oneshot[i].modifier);
-                }
-#                   ifdef OS_STEROIDS_RELAY_MODS
+                } */
+/* #                   ifdef OS_STEROIDS_RELAY_MODS
                 if (oneshot_added_mods[i] != 0) {
                     unregister_mods(oneshot_added_mods[i]);
                 }
-#                   endif  // OS_STEROIDS_RELAY_MODS
+#                   endif  // OS_STEROIDS_RELAY_MODS */
 
                 if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < TAPPING_TERM) {
 
                     oneshot_state[i] = os_up_queued;
-                    if (oneshot[i].modifier != 0) { add_oneshot_mods(oneshot[i].modifier); }
+                    if (oneshot[i].modifier != 0) {
+                        if (!should_mod_be_held(oneshot[i].modifier, oneshot[i].trigger)) {
+                            unregister_mods(oneshot[i].modifier);
+                            add_oneshot_mods(oneshot[i].modifier);
+                        }
+                    }
+/*                     if (oneshot[i].modifier != 0) { add_oneshot_mods(oneshot[i].modifier); }
 #                       ifdef OS_STEROIDS_RELAY_MODS
                     if (oneshot_added_mods[i] != 0) { add_oneshot_mods(oneshot_added_mods[i]); }
-#                       endif  // OS_STEROIDS_RELAY_MODS
+#                       endif  // OS_STEROIDS_RELAY_MODS */
 #                       ifdef ONESHOT_TIMEOUT
                     idle_timer = (record->event.time + ONESHOT_TIMEOUT) | 1;
 #                       endif  // ONESHOT_TIMEOUT
 
                 } else {
 
-                    oneshot_state[i] = os_idle;
 #                       ifdef OS_STEROIDS_RELAY_MODS
-                    if (oneshot_added_mods[i] != 0) { oneshot_added_mods[i] = 0; }
+                    if (oneshot_added_mods[i] != 0) {
+#                           ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+                        //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+                        neutralize_flashing_modifiers(oneshot_added_mods[i]);
+#                           endif // DUMMY_MOD_NEUTRALIZER_KEYCODE
+                        unregister_mods(oneshot_added_mods[i]);
+                        oneshot_added_mods[i] = 0;
+                    }
 #                       endif  // OS_STEROIDS_RELAY_MODS
-                    if (oneshot[i].layer != 0) {layer_off(oneshot[i].layer); }
+
+                    oneshot_state[i] = os_idle;
+                    if (oneshot[i].modifier != 0) {
+#                           ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+                        //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+                        neutralize_flashing_modifiers(oneshot[i].modifier);
+#                           endif // DUMMY_MOD_NEUTRALIZER_KEYCODE
+                        unregister_mods(oneshot[i].modifier);
+                    }
+                    if (oneshot[i].layer != 0) { layer_off(oneshot[i].layer); }
                 }
                 if (keycode == oneshot[i].trigger) { should_continue_processing = false; }
                 continue;
@@ -284,6 +325,28 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] == os_up_queued_used) {
             oneshot_state[i] = os_idle;
+
+#               ifdef OS_STEROIDS_RELAY_MODS
+            if (oneshot_added_mods[i] != 0) {
+/* #                   ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+                //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+                neutralize_flashing_modifiers(oneshot_added_mods[i]);
+#                   endif // DUMMY_MOD_NEUTRALIZER_KEYCODE */
+                unregister_mods(oneshot_added_mods[i]);
+                oneshot_added_mods[i] = 0;
+            }
+#               endif  // OS_STEROIDS_RELAY_MODS
+
+            if (oneshot[i].modifier != 0) {
+                if (should_mod_be_held(oneshot[i].modifier, oneshot[i].trigger)) {
+/* #                       ifdef DUMMY_MOD_NEUTRALIZER_KEYCODE
+                    //neutralize_flashing_modifiers(MOD_BIT(KC_LEFT_GUI));
+                    neutralize_flashing_modifiers(mod);
+#                       endif // DUMMY_MOD_NEUTRALIZER_KEYCODE */
+                    unregister_mods(oneshot[i].modifier);
+                }
+            }
+
             if (oneshot[i].layer != 0) {
                 layer_off(oneshot[i].layer);
                 if (oneshot[i].suppressor == oneshot[i].trigger) {
@@ -305,10 +368,24 @@ __attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
 
 __attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger) {
     switch (keycode) {
-
+        case MOD_BIT(KC_LCTL):
+        
         default:
             return false;
     }
+}
+
+__attribute__((weak)) bool should_mod_be_held(uint8_t mod, uint16_t trigger) {
+    // shift and ctrl shouldn't be held,
+    // not to interfere with the mouse
+    return (mod & (MOD_MASK_CTRL | MOD_MASK_SHIFT)) == 0;
+/*     switch (mod) {
+        case MOD_BIT(KC_LCTL):
+        case MOD_BIT(KC_LSFT):
+            return false;
+        default:
+            return true;
+    } */
 }
 
 #ifdef OS_STEROIDS_RELAY_MODS_PER_KEY
