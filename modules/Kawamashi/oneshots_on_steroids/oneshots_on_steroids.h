@@ -55,11 +55,15 @@ typedef enum {
     os_down_used,
 } oneshot_state_t;
 
-// oneshot-type wrapper
+// Convert 5-bit to 8-bit packed modifiers by extracting the
+// upper bit and shift by 4 if bit 12 is set, otherwise by 8
+#define GET_MOD_BITS(mod) ((mod & 0x10) == 0) ? mod : (mod << 4)
+
+// Oneshot-type wrapper
 #ifdef OS_STEROIDS_RELEASED_ON_OTHER_KEY
-  #define OS(key1, key2, mod, layer) key1, key2, mod, layer
+#  define OS(key1, key2, mods, layer) key1, key2, GET_MOD_BITS(mods), layer
 #else
-  #define OS(key, mod, layer) key, key, mod, layer
+#  define OS(key, mods, layer) key, key, GET_MOD_BITS(mods), layer
 #endif  // OS_STEROIDS_RELEASED_ON_OTHER_KEY
 
 

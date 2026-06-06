@@ -38,6 +38,15 @@ bool get_speculative_hold(uint16_t keycode, keyrecord_t* record) {
   return false;  // Disable otherwise.
 }
 
+bool should_oneshot_on_steroids_relay_mods(uint16_t keycode) {
+    switch (keycode) {
+        case OS_SHFT:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool is_tapping_sequence(uint16_t keycode) {
   // To trigger Tap Flow, the last input must be a character,
   // the time between the keypresses must be lower than FLOW_TAP_INTERVAL
