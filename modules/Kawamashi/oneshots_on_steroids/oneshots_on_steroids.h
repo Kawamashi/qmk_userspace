@@ -56,14 +56,14 @@ typedef enum {
 } oneshot_state_t;
 
 // Convert 5-bit to 8-bit packed modifiers by extracting the
-// upper bit and shift by 4 if bit 12 is set, otherwise by 8
-#define GET_MOD_BITS(mod) ((mod & 0x10) == 0) ? mod : (mod << 4)
+// upper bit and shift by 4 if bit 5 is set
+//#define GET_MOD_BITS(mod) ((mod & 0x10) == 0) ? mod : (mod << 4)
 
 // Oneshot-type wrapper
 #ifdef OS_STEROIDS_RELEASED_ON_OTHER_KEY
-#  define OS(key1, key2, mods, layer) key1, key2, GET_MOD_BITS(mods), layer
+#  define OS(key1, key2, mods, layer) key1, key2, mods, layer
 #else
-#  define OS(key, mods, layer) key, key, GET_MOD_BITS(mods), layer
+#  define OS(key, mods, layer) key, key, mods, layer
 #endif  // OS_STEROIDS_RELEASED_ON_OTHER_KEY
 
 
@@ -107,7 +107,11 @@ bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger)
 
 bool should_mod_be_held(uint8_t mod, uint16_t trigger);
 
-bool should_oneshot_on_steroids_relay_mods(uint16_t keycode);
+bool should_oneshot_on_steroids_relay_mods(uint16_t keycode, keyrecord_t* record);
+
+bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record);
+
+bool is_oneshot_layer_on_steroids_active(void);
 
 #ifdef __cplusplus
 }
