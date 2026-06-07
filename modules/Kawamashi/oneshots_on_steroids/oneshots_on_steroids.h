@@ -75,7 +75,7 @@ typedef enum {
 //void oneshot_task(void);
 
 // Deactivate a specific one-shot key 
-void clear_oneshot_on_steroids(uint8_t index);
+void clear_oneshot_on_steroids(uint8_t index, bool unregister_all_mods);
 
 // Deactivate all one-shot keys
 void clear_all_oneshots_on_steroids(void);
