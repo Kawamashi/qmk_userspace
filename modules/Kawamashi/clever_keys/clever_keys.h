@@ -33,6 +33,8 @@ extern "C" {
 #endif  // SENTENCE_CASE_TIMEOUT
 
 // Returns the n-th key of the buffer
+// ex: get_recent_keycode(-1) returns the latest key,
+// get_recent_keycode(-2) the key before, etc.
 uint16_t get_recent_keycode(signed char n);
 
 // Returns whether the last key was replaced
@@ -42,8 +44,7 @@ bool was_keycode_replaced(void);
  * Backspace countdown:
  * When a clever key is found, it supersede the ongoing key.
  * Sometimes, it's is not the desired behaviour.
- * In this case, the user just has to delete the clever(s) key(s),
- * and type again the desired letter.
+ * In this case, just delete the clever(s) key(s) and type again the desired letter.
  * To make it work, registering a clever key settles a "backspace countdown".
  * When it reaches 0, the buffer of recent keys is cleared.
  * This function updates the countdown.

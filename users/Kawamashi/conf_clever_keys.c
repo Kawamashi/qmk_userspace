@@ -32,7 +32,8 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
 
     case NNB_SPC:
       switch (*ongoing_keycode) {
-        // Shift auto de la ponctuation après une espace fine insécable
+
+        // Capitalize punctuation after a thin non-breaking space
         case PG_POIN:
           // uses less space than process_word
           tap_code(KC_BSPC);
@@ -49,7 +50,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
         case PG_QUES:
         case PG_3PTS:
         case PG_POIN:
-          // Shift the letter at the beginning of sentences.
+          // Capitalize the letter starting a new sentence.
           if (is_letter(*ongoing_keycode) || is_send_string_macro(*ongoing_keycode)) {
             set_oneshot_mods(MOD_BIT(KC_LSFT));     // Don't use weak mods !
           }
@@ -60,7 +61,7 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
     case PG_Q:
       switch (*ongoing_keycode) {
         
-        // Ajout automatique du "u" après le "q"
+        // Automatically adds `u` after `q`
         case PG_ECIR:
         case PG_E:
         case PG_I:
@@ -74,12 +75,12 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           set_last_keycode(*ongoing_keycode);
           break;
 
-        // Raccourci pour "quoi"
+        // "quoi"
         case PG_H:
           finish_word((uint16_t[]) {PG_U, PG_O, PG_I}, 3, ongoing_keycode, record);
           break;
 
-        // Raccourci pour "quand"
+        // "quand"
         case PG_N:
           return finish_word((uint16_t[]) {PG_U, PG_A, PG_N, PG_D}, 4, ongoing_keycode, record);
       }
@@ -207,37 +208,11 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           // "aujourd'hui"
           layer_off(_1DK);
           return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, ongoing_keycode, record);
-
-/*         case PG_D:
-          // "déjà"
-          return finish_word((uint16_t[]) {PG_EACU, PG_J, PG_1DK, PG_A}, 4, ongoing_keycode, record); */
         
         default:
           // "à"
-/*           invoke_key(PG_1DK, record);
-          return replace_ongoing_key(PG_A, ongoing_keycode, record); */
           return replace_ongoing_key(PG_AGRV, ongoing_keycode, record);
       }
-
-/*     case PG_AROB:
-      if (!is_letter(get_recent_keycode(-2))) {
-        switch (prev_keycode) {
-
-          case PG_A:
-            // "a@" -> "aujourd'hui"
-            layer_off(_1DK);
-            return finish_word((uint16_t[]) {PG_U, PG_J, PG_O, PG_U, PG_R, PG_D, PG_APOS, PG_H, PG_U, PG_I}, 10, ongoing_keycode, record);
-        }
-      }
-      break; */
-
-/*     case PG_M:
-      if (prev_keycode == PG_C) {
-        // "cm" -> "ch"
-        update_bkspc_countdown(0);
-        return replace_ongoing_key(PG_H, ongoing_keycode, record);
-      }
-      break; */
 
     case PG_EACU:
       if (prev_keycode == PG_E) {
@@ -255,17 +230,8 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
       }
       break;
 
-/*     case OU_GRV:
-      layer_off(_1DK);
-      return finish_word((uint16_t[]) {PG_O, PG_1DK, PG_P}, 3, ongoing_keycode, record); */
-      //return replace_ongoing_key(prev_keycode, ongoing_keycode, record);
-
     case N_TILD:
       return replace_ongoing_key(PG_H, ongoing_keycode, record);
-
-/*     case PG_APOS:
-      if (replace_apos()) { return replace_ongoing_key(PG_APOD, ongoing_keycode, record); }
-      break; */
   }
 
 }
