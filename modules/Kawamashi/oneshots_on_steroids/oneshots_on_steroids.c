@@ -206,6 +206,8 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     
     bool should_continue_processing = true;
 
+    if (!is_oneshot_on_steroids_custom_behaviour(keycode, record)) { return false; }
+
     // Processing triggers and suppressors
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
 
@@ -233,22 +235,20 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                 
                     if (oneshot[i].layer != 0) {
 #                           ifdef OS_STEROIDS_FREE_LAYER_STACK
-                        //if (keycode == oneshot[i].suppressor) {
-                            if (!is_oneshot_layer_active() && !is_oneshot_layer_on_steroids_active()) {
-                            // Oneshots can deactivate another layer only when their release key is not a layer-changer key
-                            // and when no oneshot layer is ongoing, not to mess up with the layer stack.
-                                uint8_t key_layer = read_source_layers_cache(record->event.key);
-                                uint8_t default_layer = get_highest_layer(default_layer_state);
-                                if (SHOULD_FREE_LAYER_STACK && key_layer != default_layer) {
-                                    oneshot_origin_layer[i] = key_layer;
-                                    layer_off(key_layer);
-                                } else {
-                                    // It's important to reinitialize oneshot_origin_layer
-                                    // ex: same OSLs, one on base layer, one on a secondary layer
-                                    oneshot_origin_layer[i] = 0;
-                                }
+                        if (!is_oneshot_layer_active() && !is_oneshot_layer_on_steroids_active()) {
+                        // Oneshots can deactivate another layer only when no oneshot layer is ongoing,
+                        // not to mess up with the layer stack.
+                            uint8_t key_layer = read_source_layers_cache(record->event.key);
+                            //uint8_t default_layer = get_highest_layer(default_layer_state);
+                            if (SHOULD_FREE_LAYER_STACK && key_layer > oneshot[i].layer) {  // && key_layer != default_layer
+                                oneshot_origin_layer[i] = key_layer;
+                                layer_off(key_layer);
+                            } else {
+                                // It's important to reinitialize oneshot_origin_layer
+                                // ex: same OSLs, one on base layer, one on a secondary layer
+                                oneshot_origin_layer[i] = 0;
                             }
-                        //}
+                        }
 #                           endif  // OS_STEROIDS_FREE_LAYER_STACK
                         layer_on(oneshot[i].layer);
                     }
@@ -388,6 +388,14 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
             finish_oneshot_on_steroids(i, false);
             continue;
         }
+    }
+}
+
+__attribute__((weak)) bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record) {
+    switch (keycode) {
+
+        default:
+            return true;
     }
 }
 

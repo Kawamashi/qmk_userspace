@@ -65,7 +65,7 @@ enum custom_keycodes {
 #define LT_E LT(_SYMBOLS, PG_E)
 #define LT_REPT LT(_FUNCTIONS, KC_1)
 #define LT_MGC LT(_SHORTNAV, KC_1)
-#define LT_NUMW LT(_SHORTNAV, KC_2)
+#define LT_PDOT LT(_SHORTNAV, KC_PDOT)
 #define LT_0 LT(_SYMBOLS, KC_0)
 #define LT_P0 LT(_SYMBOLS, KC_P0)
 
@@ -85,7 +85,7 @@ enum custom_keycodes {
   #define I(k) k
 #endif
 
-#define MT_PDOT LSFT_T(KC_PDOT)
+#define MT_NUMW LSFT_T(KC_PDOT)
 
 #define P_MOD KC_LSFT
 #define R_MOD KC_LALT

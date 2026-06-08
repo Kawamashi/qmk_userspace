@@ -113,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG, PG_MOIN, PG_PLUS, PG_EURO, PG_PERC,                   PG_EXP,  PG_DEG,  PG_EGAL, S(PG_EGAL), NUMPAD, 
       P(KC_4), R(KC_3), M(KC_2), I(KC_1), PG_POIN,                   PG_IND,  I(KC_6), M(KC_7), R(KC_8),    P(KC_9),
       S(KC_4), S(KC_3), PG_H,    KC_5,    _______,                   _______, PG_SLSH, PG_MOIN, PG_PLUS,    PG_ASTX,
-                                 MT_PDOT, LT_0   , LT_NUMW, NNB_SPC, LT_SPC,  OS_NUMR
+                                 MT_NUMW, LT_0   , LT_PDOT, NNB_SPC, LT_SPC,  OS_NUMR
      ),
 
 
@@ -129,7 +129,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG,  PG_MOIN,  PG_PLUS,  PG_EURO,  PG_PERC,                   PG_EXP,  PG_DEG,   PG_EGAL,  _______,  NUMROW, 
       P(KC_P4), R(KC_P3), M(KC_P2), I(KC_P1), PG_POIN,                   PG_IND,  I(KC_P6), M(KC_P7), R(KC_P8), P(KC_P9),  
       _______,  _______,  PG_H,     KC_P5,    _______,                   _______, PG_SLSH,  PG_MOIN,  PG_PLUS,  PG_ASTX,
-                                    MT_PDOT,  LT_P0  , LT_NUMW, NNB_SPC, LT_SPC,  OS_NUM
+                                    MT_NUMW,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  OS_NUM
      ),
 
 

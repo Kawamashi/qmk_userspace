@@ -241,7 +241,7 @@ uint8_t get_layerword_layer_from_trigger(uint16_t keycode) {
         set_numpad(true);
         return _NUMPAD;
 
-    case LT_NUMW:
+    case MT_NUMW:
         return _NUMROW;
         //return replace_numpad() ? _NUMPAD : _NUMROW;
 

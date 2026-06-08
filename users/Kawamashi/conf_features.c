@@ -61,7 +61,6 @@ bool process_custom_tap_hold(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-
 bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
 
   if (record->tap.count) {
@@ -270,6 +269,17 @@ const oneshot_t oneshot[] = {
   {OS(OS_NUMR, KC_NO, _NUMROW)}
 }; */
 
+bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record) {
+  switch (keycode) {
+    case OS_NUMR:
+      const uint8_t mods = get_mods() | get_oneshot_mods();
+      if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); }
+        
+      default:
+        return true;
+  }
+}
+
 bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger) {
 
   switch (keycode) {
@@ -284,7 +294,7 @@ bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger)
       return true;
 
     case FUNWORD:
-    case LT_NUMW:   // to combine numbers with mods
+    case LT_PDOT:   // to combine numbers with mods
     case LT_MGC:    // custom one-shot shift must shift the character produced by the magic key
       return true;
 
