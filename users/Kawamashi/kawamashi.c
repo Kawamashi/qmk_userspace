@@ -121,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_ACIR,    PG_LCBR, PG_RCBR, PG_DLR,  PG_PERC,                  PG_HASH, PG_DQUO, PG_EGAL,    ALGR(PG_J), PG_GRV, 
       ALGR(PG_O), PG_LPRN, PG_RPRN, PG_PVIR, PG_2PTS,                  PG_BSLS, PG_SLSH, M(PG_MOIN), PG_PLUS,    PG_ASTX,
       PG_INF,     PG_LSBR, PG_RSBR, PG_SUP,  _______,                  _______, PG_APOD, PG_ESPR,    PG_PIPE,    PG_TILD,
-                                    OS_RSA,  KC_SPC,  OS_NUM,  OS_NUM, _______, OS_NUMR
+                                    OS_RAS,  KC_SPC,  OS_NUMR,  OS_NUMR, _______, OS_NUMR
     ),
 
 
@@ -129,7 +129,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       PG_VIRG,  PG_MOIN,  PG_PLUS,  PG_EURO,  PG_PERC,                   PG_EXP,  PG_DEG,   PG_EGAL,  _______,  NUMROW, 
       P(KC_P4), R(KC_P3), M(KC_P2), I(KC_P1), PG_POIN,                   PG_IND,  I(KC_P6), M(KC_P7), R(KC_P8), P(KC_P9),  
       _______,  _______,  PG_H,     KC_P5,    _______,                   _______, PG_SLSH,  PG_MOIN,  PG_PLUS,  PG_ASTX,
-                                    MT_NUMW,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  OS_NUM
+                                    MT_NUMW,  LT_P0  , LT_PDOT, NNB_SPC, LT_SPC,  OS_NUMR
      ),
 
 
@@ -137,7 +137,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______, PG_J   , _______, N_TILD,  PG_X,                      PG_W,    _______, _______, _______, _______,
        _______, _______, _______, PG_Z,    _______,                   _______, PG_K,    PG_Y,    PG_EACU, _______,
        _______, PG_LPRN, PG_RPRN, PG_H,    _______,                   _______, PG_B,    PG_D,    PG_S,    OS_1DK,
-                                  _______, PG_ECIR, PG_AGRV, PG_APOS, PG_UNDS, OS_NUM
+                                  _______, PG_ECIR, PG_AGRV, PG_APOS, PG_UNDS, OS_NUMR
      ),
 
 

@@ -56,7 +56,7 @@
 #endif */
 
 // One shot modifiers
-#define OS_STEROIDS_COUNT 5
+#define OS_STEROIDS_COUNT 6
 #define OS_STEROIDS_RELEASED_ON_OTHER_KEY
 #define DUMMY_MOD_NEUTRALIZER_KEYCODE KC_F18
 //#define OS_STEROIDS_RELAY_MODS

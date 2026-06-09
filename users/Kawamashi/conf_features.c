@@ -67,8 +67,8 @@ bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
     // Special tap-hold keys (on tap).
     switch (keycode) {
       case LT_REPT:
-        const uint8_t mods = get_mods() | get_oneshot_mods();
-        if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); }
+/*         const uint8_t mods = get_mods() | get_oneshot_mods();
+        if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); } */
         repeat_key_invoke(&record->event);
         return false;
 
@@ -99,15 +99,6 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
         return process_custom_tap_hold(C(PG_C), record);
       case I(C(PG_V)):
         return process_custom_tap_hold(C(PG_V), record);
-
-      case OS_1DK:
-        // Custom behaviour when alt-gr
-        const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-        if (mods & MOD_BIT(KC_ALGR)) {
-            tap_code16(ALGR(PG_1DK));
-            return false;
-        }
-        return true;
     }
   }
 
@@ -254,11 +245,12 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 // One-shot mods
 
 const oneshot_t oneshot[] = {
-  {OS(OS_SHFT, OS_SHFT, MOD_BIT(KC_LSFT), _BASE)},
-  {OS(OS_WINM, LT_MGC,  0,                _FUNCAPPS)},
-  {OS(OS_WNUM, LT_REPT, MOD_BIT(KC_LGUI), _NUMROW)},
-  {OS(OS_1DK,  OS_1DK,  0,                _1DK)},
-  {OS(OS_NUMR, OS_NUMR, 0,                _NUMROW)}
+  {OS(OS_SHFT, OS_SHFT, MOD_BIT(KC_LSFT),                    _BASE    )},
+  {OS(OS_WINM, LT_MGC,  0,                                   _FUNCAPPS)},
+  {OS(OS_WNUM, LT_REPT, MOD_BIT(KC_LGUI),                    _NUMROW  )},
+  {OS(OS_1DK,  OS_1DK,  0,                                   _1DK     )},
+  {OS(OS_NUMR, OS_NUMR, 0,                                   _NUMROW  )},
+  {OS(OS_RAS,  OS_RAS,  MOD_BIT(KC_RSFT) | MOD_BIT(KC_ALGR), _BASE    )}
 };
 
 /* const oneshot_t oneshot[] = {
@@ -270,32 +262,45 @@ const oneshot_t oneshot[] = {
 }; */
 
 bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record) {
+  
+  const uint8_t mods = get_mods() | get_oneshot_mods();
   switch (keycode) {
+
     case OS_NUMR:
-      const uint8_t mods = get_mods() | get_oneshot_mods();
-      if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); }
-        
-      default:
-        return true;
+      // On _1DK layer, OS_NUMR can be combined with shift to tap symbols like ⅔, ¾ etc.
+      if (get_oneshot_on_steroids_state(OS_SHFT) > 0 && IS_LAYER_OFF(_1DK)) { return toggle_modword(capsword, CAPSWORD, record); }
+      break;
+
+    case OS_1DK:
+      // Custom behaviour when alt-gr
+      if (mods & MOD_BIT(KC_ALGR)) {
+          tap_code16(ALGR(PG_1DK));
+          return false;
+      }
+      break;
   }
+  return true;
 }
 
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger) {
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger, keyrecord_t* record) {
 
+  // Ignore oneshot on steroids
+  const uint8_t mods = get_mods() | get_oneshot_mods();
+  if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }
+  if (is_oneshot_on_steroids(keycode)) { return true; }
+
+  // Ignore tap-hold keys when held
+  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
+    if (!record->tap.count) { return true; }
+  }
+
+  return false;
+}
+
+bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record) {
   switch (keycode) {
-    case OS_1DK:
-      // On veut que les one-shot mods soient transmis aux touches de la couche 1DK, par ex pour faire Ctrl + K.
-      // Il faut donc que cette fonction appliquée à OS_1DK renvoie true pour la plupart des mods.
-      // Par contre, pour faire la touche morte "~", il faut taper shift + alt-gr + OS_1DK.
-      // Alt-gr doit être relâché après appui sur OS_1DK.
-      // Cette fonction appliquée à OS_1DK ne doit donc renvoyer false que quand Alt-gr est utilisé.
-      const uint8_t mods = get_mods() | get_weak_mods() | get_oneshot_mods();
-      if (mods & MOD_BIT(KC_ALGR)) { return false; }
-      return true;
-
-    case FUNWORD:
-    case LT_PDOT:   // to combine numbers with mods
-    case LT_MGC:    // custom one-shot shift must shift the character produced by the magic key
+    case OS_NUMR:
+    case OS_WNUM:
       return true;
 
     default:

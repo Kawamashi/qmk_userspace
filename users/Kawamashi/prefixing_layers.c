@@ -36,6 +36,8 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 
     if (IS_LAYER_ON(_1DK)) {
         //previous_1dk = true;
+        // because of HRM on _NUM layer, to tap symbols like ⅔, ¾ etc.
+        if (IS_QK_MOD_TAP(keycode) && !record->tap.count) { return true; }
 
         switch (keycode) {
             case PG_K:

@@ -30,8 +30,8 @@ enum layers {
     _1DK,
     _NUMROW,
     _SYMBOLS,
-    _SHORTNAV,
     _NUMPAD,
+    _SHORTNAV,
     _FUNCAPPS,
     _FUNCTIONS
 };
@@ -58,6 +58,7 @@ enum custom_keycodes {
   LETTER_1DK,
   SYMBOL_1DK,
   PG_DEG,
+  OS_RAS
 };
 
   // Layer changers

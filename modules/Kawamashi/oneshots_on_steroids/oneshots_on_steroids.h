@@ -74,17 +74,21 @@ typedef enum {
  */
 //void oneshot_task(void);
 
-// Deactivate a specific one-shot key 
+// Deactivate a specific one-shot on steroids key 
 void clear_oneshot_on_steroids(uint8_t index, bool unregister_all_mods);
 
-// Deactivate all one-shot keys
+// Deactivate all one-shot on steroids keys
 void clear_all_oneshots_on_steroids(void);
 
-// Deactivate one-shot keys involving a layer
+// Deactivate one-shot on steroids keys involving a layer
 void clear_oneshot_layer_on_steroids(uint8_t layer);
 
-// Deactivate all one-shot keys involving a modifier
+// Deactivate all one-shot on steroids keys involving a modifier
 void clear_all_oneshot_mod_on_steroids(void);
+
+// If the keycode is a one-shot on steroids key, returns its state
+// Otherwise, returns -1
+int8_t get_oneshot_on_steroids_state(uint16_t keycode);
 
 // Returns whether a keycode is a custom one-shot key or not
 bool is_oneshot_on_steroids(uint16_t keycode);
@@ -100,14 +104,13 @@ bool is_oneshot_on_steroids(uint16_t keycode);
 bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 
 // To be implemented by the user. 
-// Defines keys not to release the modifier when determining
-// whether a one-shot mod has been used
+// Defines keys not to release the modifier when determining whether a one-shot mod has been used.
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger);
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
 
 bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record);
 
-bool should_mod_be_held(uint8_t mod, uint16_t trigger);
+bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger);
 
 bool should_oneshot_on_steroids_relay_mods(uint16_t keycode, keyrecord_t* record);
 
