@@ -35,7 +35,7 @@ extern "C" {
 // Returns the n-th key of the buffer
 // ex: get_recent_keycode(-1) returns the latest key,
 // get_recent_keycode(-2) the key before, etc.
-uint16_t get_recent_keycode(signed char n);
+uint16_t get_recent_keycode(int8_t n);
 
 // Returns whether the last key was replaced
 bool was_keycode_replaced(void);
@@ -49,7 +49,7 @@ bool was_keycode_replaced(void);
  * When it reaches 0, the buffer of recent keys is cleared.
  * This function updates the countdown.
 */ 
-void update_bkspc_countdown(unsigned char i);
+void update_bkspc_countdown(uint8_t i);
 
 // Clears the buffer by replacing all keys by KC_NO
 void clear_recent_keys(void);

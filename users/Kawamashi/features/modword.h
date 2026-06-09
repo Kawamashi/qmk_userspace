@@ -75,14 +75,14 @@ bool should_continue_caps_list(uint16_t keycode, keyrecord_t* record);
  * When the counter reach the limit, Caps List is deactivated
  * This function updates the counter on each non-list-breaking keypress.
  */
-bool update_capslist_counter(signed char i);
+bool update_capslist_counter(int8_t i);
 
 // Caps List reactivates Caps Word after list separators (e.g. `, `, `and`, `or`).
 // List separators must be defined in this function.
 bool list_separator(void);
 
 // Determines whether the last keys form a list separator.
-bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_counter_limit);
+bool word_check(uint16_t keycodes[], uint8_t num_keycodes, uint8_t new_counter_limit);
 
 
 /* Handler function for Word Selection
@@ -94,11 +94,11 @@ void word_selection_press_user(uint16_t keycode);
 
 // Function to select a word, forward or backward.
 // Updates the number of words selected.
-void select_word(signed char nb_word);
+void select_word(int8_t nb_word);
 
 // Function to select a line, downward or upward.
 // Updates the number of lines selected.
-void select_line(signed char nb_line);
+void select_line(int8_t nb_line);
 
 // Set the number of words selected.
-void set_nb_word_selected(signed char nb_word);
+void set_nb_word_selected(int8_t nb_word);

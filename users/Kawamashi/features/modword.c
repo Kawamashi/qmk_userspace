@@ -4,11 +4,11 @@ modword_state_t modword_state = idle;
 
 static bool caps_word_active = false;
 
-static signed char capslist_counter = 1;
-static unsigned char counter_limit = 6;
+static int8_t capslist_counter = 1;
+static uint8_t counter_limit = 6;
 
-static signed char nb_word_selected = 0;
-static signed char nb_line_selected = 0;
+static int8_t nb_word_selected = 0;
+static int8_t nb_line_selected = 0;
 
 static uint16_t modword_start_time = 0;
 
@@ -240,12 +240,12 @@ void update_caps_list(uint16_t keycode, keyrecord_t* record) {
   disable_modword(capslist);
 }
 
-bool update_capslist_counter(signed char i) {
+bool update_capslist_counter(int8_t i) {
   capslist_counter = capslist_counter + i;
   return true;
 }
 
-bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_counter_limit) {
+bool word_check(uint16_t keycodes[], uint8_t num_keycodes, uint8_t new_counter_limit) {
   for (int i = 0; i < num_keycodes; ++i) {
     if (get_recent_keycode(- 2 - i) != keycodes[num_keycodes - 1 - i]) { return false; }
   }
@@ -256,7 +256,7 @@ bool word_check(uint16_t keycodes[], uint8_t num_keycodes, unsigned char new_cou
 
 // Word selection utilities //
 
-void select_word(signed char nb_word) {
+void select_word(int8_t nb_word) {
 
   if (nb_line_selected == 0) {
     nb_word_selected = nb_word_selected + nb_word;
@@ -274,7 +274,7 @@ void select_word(signed char nb_word) {
   }
 }
 
-void select_line(signed char nb_line) {
+void select_line(int8_t nb_line) {
   nb_line_selected = nb_line_selected + nb_line;
 
   if (nb_line_selected == 0) {
@@ -291,6 +291,6 @@ void select_line(signed char nb_line) {
   }
 }
 
-void set_nb_word_selected(signed char nb_word) {
+void set_nb_word_selected(int8_t nb_word) {
   nb_word_selected = nb_word;
 }

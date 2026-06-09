@@ -19,7 +19,7 @@
 ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 
 static uint16_t recent[CK_BUFFER_SIZE] = {KC_NO};
-static unsigned char bkspc_countdown = CK_BUFFER_SIZE + 1;
+static uint8_t bkspc_countdown = CK_BUFFER_SIZE + 1;
 
 static bool processingCK = false;
 
@@ -29,7 +29,7 @@ uint16_t get_idle_time(void) {
   return timer_elapsed(last_keypress_time);
 }
 
-uint16_t get_recent_keycode(signed char i) {
+uint16_t get_recent_keycode(int8_t i) {
   return recent[CK_BUFFER_SIZE + i];
 }
 
@@ -37,7 +37,7 @@ bool was_keycode_replaced(void) {
   return processingCK;
 }
 
-void update_bkspc_countdown(unsigned char i) {
+void update_bkspc_countdown(uint8_t i) {
   bkspc_countdown = i;
 }
 
