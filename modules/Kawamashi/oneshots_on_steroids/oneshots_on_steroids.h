@@ -42,8 +42,8 @@ typedef struct {
   uint8_t layer;
 } oneshot_t;
 
-// Table of custom one-shot modifiers.
-// Each custom OSM must also be declared in custom_keycodes.
+// Array of one-shot on steroids keys.
+// Each custom OSoS must also be declared in custom_keycodes.
 extern const oneshot_t oneshot[];
 
 // Represents the five states a one-shot key can be in
@@ -75,7 +75,7 @@ typedef enum {
 //void oneshot_task(void);
 
 // Deactivate a specific one-shot on steroids key 
-void clear_oneshot_on_steroids(uint8_t index, bool unregister_all_mods);
+void clear_oneshot_on_steroids(int8_t index);
 
 // Deactivate all one-shot on steroids keys
 void clear_all_oneshots_on_steroids(void);
@@ -89,6 +89,10 @@ void clear_all_oneshot_mod_on_steroids(void);
 // If the keycode is a one-shot on steroids key, returns its state
 // Otherwise, returns -1
 int8_t get_oneshot_on_steroids_state(uint16_t keycode);
+
+// If the keycode is a one-shot on steroids key, returns its index in the array of OSoS
+// Otherwise, returns -1
+int8_t get_oneshot_on_steroids_index(uint16_t keycode);
 
 // Returns whether a keycode is a custom one-shot key or not
 bool is_oneshot_on_steroids(uint16_t keycode);
