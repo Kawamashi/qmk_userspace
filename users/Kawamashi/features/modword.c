@@ -29,7 +29,7 @@ uint8_t get_modword(void) {
 void caps_word_on(void) {
 
 #ifdef OS_STEROIDS_COUNT
-  clear_all_oneshot_mod_on_steroids();
+  clear_oneshot_mods_on_steroids();
 #endif  // OS_STEROIDS_COUNT
   clear_mods();
 #ifndef NO_ACTION_ONESHOT

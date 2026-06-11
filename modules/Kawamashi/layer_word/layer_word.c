@@ -53,7 +53,9 @@ void enable_layerword(uint8_t layer) {
   #endif  // NO_ACTION_ONESHOT
 
   #ifdef OS_STEROIDS_COUNT
-    clear_oneshot_layer_on_steroids(layer);
+    if (layer == get_oneshot_layer_on_steroids()) {
+        reset_oneshot_layer_on_steroids();
+    }
   #endif  // OS_STEROIDS_COUNT
 
     layer_on(layer);

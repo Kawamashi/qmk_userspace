@@ -263,16 +263,21 @@ const oneshot_t oneshot[] = {
 
 bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record) {
   
-  const uint8_t mods = get_mods() | get_oneshot_mods();
   switch (keycode) {
 
     case OS_NUMR:
+      if (get_oneshot_layer_on_steroids() == _1DK) { insert_1dk(keycode); }
+      if (IS_LAYER_ON(_1DK)) {
+
+      }
+      // OS_SHFT + OS_NUMR -> Capsword only if layer _1DK is off.
       // On _1DK layer, OS_NUMR can be combined with shift to tap symbols like ⅔, ¾ etc.
       if (get_oneshot_on_steroids_state(OS_SHFT) > 0 && IS_LAYER_OFF(_1DK)) { return toggle_modword(capsword, CAPSWORD, record); }
       break;
 
     case OS_1DK:
       // Custom behaviour when alt-gr
+      const uint8_t mods = get_mods() | get_oneshot_mods();
       if (mods & MOD_BIT(KC_ALGR)) {
           tap_code16(ALGR(PG_1DK));
           return false;
@@ -287,6 +292,9 @@ bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger,
   // Ignore oneshot on steroids
   const uint8_t mods = get_mods() | get_oneshot_mods();
   if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }
+  
+  //
+  if (is_oneshot_layer_on_steroids(keycode)) { return false; }
   if (is_oneshot_on_steroids(keycode)) { return true; }
 
   // Ignore tap-hold keys when held

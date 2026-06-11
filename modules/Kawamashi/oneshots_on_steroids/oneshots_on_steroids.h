@@ -49,10 +49,10 @@ extern const oneshot_t oneshot[];
 // Represents the five states a one-shot key can be in
 typedef enum {
     os_idle,
-    os_up_queued,
-    os_up_queued_used,
     os_down_unused,
     os_down_used,
+    os_up_queued,
+    os_up_queued_used,
 } oneshot_state_t;
 
 // Convert 5-bit to 8-bit packed modifiers by extracting the
@@ -74,17 +74,20 @@ typedef enum {
  */
 //void oneshot_task(void);
 
-// Deactivate a specific one-shot on steroids key 
-void clear_oneshot_on_steroids(int8_t index);
+// Deactivates a specific one-shot on steroids key 
+void cancel_oneshot_on_steroids(int8_t index);
 
-// Deactivate all one-shot on steroids keys
+// Deactivates a specific one-shot on steroids key after another key has been pressed
+void finish_oneshot_on_steroids(uint8_t index);
+
+// Deactivates all one-shot on steroids keys
 void clear_all_oneshots_on_steroids(void);
 
-// Deactivate one-shot on steroids keys involving a layer
-void clear_oneshot_layer_on_steroids(uint8_t layer);
+// Deactivates the active one-shot layer
+void reset_oneshot_layer_on_steroids(void);
 
-// Deactivate all one-shot on steroids keys involving a modifier
-void clear_all_oneshot_mod_on_steroids(void);
+// Deactivates all one-shot on steroids keys involving a modifier
+void clear_oneshot_mods_on_steroids(void);
 
 // If the keycode is a one-shot on steroids key, returns its state
 // Otherwise, returns -1
@@ -94,8 +97,14 @@ int8_t get_oneshot_on_steroids_state(uint16_t keycode);
 // Otherwise, returns -1
 int8_t get_oneshot_on_steroids_index(uint16_t keycode);
 
+
+uint8_t get_oneshot_layer_on_steroids(void);
+
 // Returns whether a keycode is a custom one-shot key or not
 bool is_oneshot_on_steroids(uint16_t keycode);
+
+// Returns whether a keycode is a custom one-shot layer key or not
+bool is_oneshot_layer_on_steroids(uint16_t keycode);
 
 //void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 
