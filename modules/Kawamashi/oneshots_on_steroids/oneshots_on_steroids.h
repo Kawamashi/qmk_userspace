@@ -81,7 +81,7 @@ void cancel_oneshot_on_steroids(uint16_t keycode);
 void deactivate_oneshot_on_steroids(int8_t index);
 
 // Deactivates all one-shot on steroids keys
-void clear_all_oneshots_on_steroids(void);
+void clear_oneshots_on_steroids(void);
 
 // Deactivates the active one-shot layer
 void reset_oneshot_layer_on_steroids(void);
@@ -128,7 +128,7 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
 
 bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger);
 
-bool should_oneshot_on_steroids_relay_mods(uint16_t keycode, keyrecord_t* record);
+bool should_osl_on_steroids_absorb_mods(uint16_t keycode, keyrecord_t* record);
 
 bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record);
 
