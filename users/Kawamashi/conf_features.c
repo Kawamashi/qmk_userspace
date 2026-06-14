@@ -67,8 +67,8 @@ bool process_macros_I(uint16_t keycode, keyrecord_t *record) {
     // Special tap-hold keys (on tap).
     switch (keycode) {
       case LT_REPT:
-/*         const uint8_t mods = get_mods() | get_oneshot_mods();
-        if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); } */
+        const uint8_t mods = get_mods() | get_oneshot_mods();
+        if (mods & MOD_MASK_SHIFT) { return toggle_modword(capsword, CAPSWORD, record); }
         repeat_key_invoke(&record->event);
         return false;
 
@@ -250,6 +250,7 @@ const oneshot_t oneshot[] = {
   {OS(OS_WNUM, LT_REPT, MOD_BIT(KC_LGUI),                    _NUMROW  )},
   {OS(OS_1DK,  OS_1DK,  0,                                   _1DK     )},
   {OS(OS_NUMR, OS_NUMR, 0,                                   _NUMROW  )},
+  //{OS(OS_CTRL, OS_CTRL, MOD_BIT(KC_LCTL),                    _BASE    )},
   {OS(OS_RAS,  OS_RAS,  MOD_BIT(KC_RSFT) | MOD_BIT(KC_ALGR), _BASE    )}
 };
 
@@ -266,13 +267,15 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
   switch (keycode) {
 
     case OS_NUMR:
-      if (get_oneshot_layer_on_steroids() == _1DK) { insert_1dk(keycode); }
+      //if (get_oneshot_layer_on_steroids() == _1DK) { insert_1dk(keycode); }
       if (IS_LAYER_ON(_1DK)) {
-
+        insert_1dk(keycode);
+      } else if (get_oneshot_on_steroids_state(OS_SHFT) > 0) {
+        return toggle_modword(capsword, CAPSWORD, record);
       }
       // OS_SHFT + OS_NUMR -> Capsword only if layer _1DK is off.
       // On _1DK layer, OS_NUMR can be combined with shift to tap symbols like ⅔, ¾ etc.
-      if (get_oneshot_on_steroids_state(OS_SHFT) > 0 && IS_LAYER_OFF(_1DK)) { return toggle_modword(capsword, CAPSWORD, record); }
+      //if (get_oneshot_on_steroids_state(OS_SHFT) > 0 && IS_LAYER_OFF(_1DK)) { return toggle_modword(capsword, CAPSWORD, record); }
       break;
 
     case OS_1DK:
@@ -287,9 +290,28 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
   return true;
 }
 
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger, keyrecord_t* record) {
+bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
 
-  // Ignore oneshot on steroids
+  // Oneshot on steroids applied one after another
+  if (is_oneshot_on_steroids(keycode)) {
+    if (is_oneshot_layer_on_steroids(oneshot)) {
+      // Two OSL can't be active at the same time:
+      // if another OSL is active, it must be reset.
+      if (is_oneshot_layer_on_steroids(keycode)) { return false; }
+        // keycode is not a OSL, it’s a OSM.
+#         ifdef SHOULD_OSM_STAY_ON_OSL_LAYER
+        return true;
+#         else
+        // When using OSM as Callum mods, an OSL tapped before must be reset.
+        return false;
+#         endif
+    } else {
+      // oneshot is OSM on steroids, it should stay pressed
+      // whether keycode is OSM or OSL on steroids.
+      return true;
+    }
+  }
+
   const uint8_t mods = get_mods() | get_oneshot_mods();
   if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }
   

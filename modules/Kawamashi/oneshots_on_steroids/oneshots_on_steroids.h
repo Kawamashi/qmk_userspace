@@ -74,11 +74,11 @@ typedef enum {
  */
 //void oneshot_task(void);
 
-// Deactivates a specific one-shot on steroids key 
-void cancel_oneshot_on_steroids(int8_t index);
+// Deactivates a specific one-shot on steroids key (by keycode)
+void cancel_oneshot_on_steroids(uint16_t keycode);
 
-// Deactivates a specific one-shot on steroids key after another key has been pressed
-void finish_oneshot_on_steroids(uint8_t index);
+// Deactivates a specific one-shot on steroids key (by index)
+void deactivate_oneshot_on_steroids(int8_t index);
 
 // Deactivates all one-shot on steroids keys
 void clear_all_oneshots_on_steroids(void);
@@ -105,6 +105,9 @@ bool is_oneshot_on_steroids(uint16_t keycode);
 
 // Returns whether a keycode is a custom one-shot layer key or not
 bool is_oneshot_layer_on_steroids(uint16_t keycode);
+
+// Returns whether a keycode is a custom one-shot mod key or not
+bool is_oneshot_mod_on_steroids(uint16_t keycode);
 
 //void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 
