@@ -292,6 +292,9 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
 
 bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
 
+  const uint8_t mods = get_mods() | get_oneshot_mods();
+  if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }
+
   // Oneshot on steroids applied one after another
   if (is_oneshot_on_steroids(keycode)) {
     if (is_oneshot_layer_on_steroids(oneshot)) {
@@ -299,25 +302,26 @@ bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t oneshot,
       // if another OSL is active, it must be reset.
       if (is_oneshot_layer_on_steroids(keycode)) { return false; }
         // keycode is not a OSL, it’s a OSM.
-#         ifdef SHOULD_OSM_STAY_ON_OSL_LAYER
+#         ifdef OSM_SHOULD_STAY_ON_OSL_LAYER
         return true;
 #         else
         // When using OSM as Callum mods, an OSL tapped before must be reset.
         return false;
-#         endif
+#         endif  // OSM_SHOULD_STAY_ON_OSL_LAYER
     } else {
-      // oneshot is OSM on steroids, it should stay pressed
-      // whether keycode is OSM or OSL on steroids.
-      return true;
+            // oneshot is OSM on steroids
+#               ifdef OSL_STEROIDS_ABSORB_MODS
+            if (is_oneshot_layer_on_steroids(keycode)) {
+                if (SHOULD_OSL_ABSORB_MODS) { return false; }
+            }
+#               endif  // OSL_STEROIDS_ABSORB_MODS
+            // OSM on steroids should stay pressed
+            // whether keycode is OSM or OSL on steroids.
+            return true;
     }
   }
 
-  const uint8_t mods = get_mods() | get_oneshot_mods();
-  if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }
-  
-  //
-  if (is_oneshot_layer_on_steroids(keycode)) { return false; }
-  if (is_oneshot_on_steroids(keycode)) { return true; }
+  //if (is_oneshot_layer_on_steroids(keycode)) { return false; }
 
   // Ignore tap-hold keys when held
   if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {

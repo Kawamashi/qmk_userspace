@@ -66,6 +66,18 @@ typedef enum {
 #  define OS(key, mods, layer) key, key, mods, layer
 #endif  // OS_STEROIDS_RELEASED_ON_OTHER_KEY
 
+#ifdef OSL_STEROIDS_ABSORB_MODS_PER_KEY
+#   define SHOULD_OSL_ABSORB_MODS should_osl_on_steroids_absorb_mods(oneshot[i].trigger, record)
+#else
+#   define SHOULD_OSL_ABSORB_MODS true
+#endif
+
+#ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
+#   define SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer, record)
+#else
+#   define SHOULD_FREE_LAYER_STACK true
+#endif
+
 
 /* Idle timeout:
  * Custom one-shot mods are configured to deactivate if the keyboard is idle for some time.
@@ -133,6 +145,8 @@ bool should_osl_on_steroids_absorb_mods(uint16_t keycode, keyrecord_t* record);
 bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record);
 
 bool is_oneshot_layer_on_steroids_active(void);
+
+bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
 #ifdef __cplusplus
 }

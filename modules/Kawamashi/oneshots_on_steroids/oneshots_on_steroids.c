@@ -32,45 +32,33 @@ ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 
 static oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
 
-static uint16_t idle_timer = 0;
-
 static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 
 //static uint8_t oneshot_on_steroids_layer = 0;
 static int8_t active_osl_index = -1;
 
-#if defined OSL_STEROIDS_ABSORB_MODS
+#   if defined OSL_STEROIDS_ABSORB_MODS
 static uint8_t oneshot_pressed_mods = 0;
 static uint8_t oneshot_added_mods = 0;
 //static uint8_t oneshot_pressed_mods[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 //static uint8_t oneshot_added_mods[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
-#endif  // OSL_STEROIDS_ABSORB_MODS
+#   endif  // OSL_STEROIDS_ABSORB_MODS
 
-#ifdef OSL_STEROIDS_ABSORB_MODS_PER_KEY
-#   define SHOULD_OSL_ABSORB_MODS should_osl_on_steroids_absorb_mods(oneshot[i].trigger, record)
-#else
-#   define SHOULD_OSL_ABSORB_MODS true
-#endif
-
-#ifdef OS_STEROIDS_FREE_LAYER_STACK
+#   ifdef OS_STEROIDS_FREE_LAYER_STACK
 //static uint8_t oneshot_origin_layer[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 static uint8_t oneshot_origin_layer = 0;
-#endif  // OS_STEROIDS_FREE_LAYER_STACK
+#   endif  // OS_STEROIDS_FREE_LAYER_STACK
 
-#ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-#   define SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer, record)
-#else
-#   define SHOULD_FREE_LAYER_STACK true
-#endif
+#   ifdef OS_STEROIDS_TIMEOUT
+static uint16_t idle_timer = 0;
+static uint8_t active_os_index = -1;
 
-#ifdef OS_STEROIDS_TIMEOUT
 void housekeeping_task_oneshots_on_steroids(void) {
     if (idle_timer && timer_expired(timer_read(), idle_timer)) {
         clear_oneshots_on_steroids();
-        idle_timer = 0;
     }
 }
-#endif  // OS_STEROIDS_TIMEOUT
+#   endif  // OS_STEROIDS_TIMEOUT
 
 
 void unregister_mods_on_steroids(uint8_t mods) {
@@ -84,28 +72,39 @@ void deactivate_oneshot_on_steroids(int8_t index) {
     if (oneshot_state[index] != os_idle) {
 
         if (oneshot[index].modifier != 0) {
-            switch (oneshot_state[index]) {
-                case os_down_unused:
-                    unregister_mods_on_steroids(oneshot[index].modifier);
-                    break;
-                case os_down_used:
-                    unregister_mods(oneshot[index].modifier);
-                    break;
-                case os_up_queued:
-                    if (should_mod_be_held_after_tapping_term(oneshot[index].modifier, oneshot[index].trigger)) {
+#               ifdef OSL_STEROIDS_ABSORB_MODS
+            if (active_osl_index != -1 && index != active_osl_index) {
+                if (oneshot_pressed_mods & oneshot[index].modifier) {
+                    oneshot_pressed_mods &= ~oneshot[index].modifier;
+                    oneshot_added_mods |= oneshot[index].modifier;
+                }
+            } else {
+#               endif  // OSL_STEROIDS_ABSORB_MODS
+                switch (oneshot_state[index]) {
+                    case os_down_unused:
                         unregister_mods_on_steroids(oneshot[index].modifier);
-                    } else {
-                        del_oneshot_mods(oneshot[index].modifier);
-                    }
-                    break;
-                case os_up_queued_used:
-                    if (should_mod_be_held_after_tapping_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                        break;
+                    case os_down_used:
                         unregister_mods(oneshot[index].modifier);
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    case os_up_queued:
+                        if (should_mod_be_held_after_tapping_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                            unregister_mods_on_steroids(oneshot[index].modifier);
+                        } else {
+                            del_oneshot_mods(oneshot[index].modifier);
+                        }
+                        break;
+                    case os_up_queued_used:
+                        if (should_mod_be_held_after_tapping_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                            unregister_mods(oneshot[index].modifier);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+#               ifdef OSL_STEROIDS_ABSORB_MODS
             }
+#               endif  // OSL_STEROIDS_ABSORB_MODS
         }
 
         if (oneshot[index].layer != 0) {
@@ -116,21 +115,28 @@ void deactivate_oneshot_on_steroids(int8_t index) {
                 // If there is no other OSL active,
                 // restore oneshot_origin_layer
                 // and unregister the mods absorbed by the OSL.
-    #               ifdef OS_STEROIDS_FREE_LAYER_STACK
+#                   ifdef OS_STEROIDS_FREE_LAYER_STACK
                 if (oneshot_origin_layer != 0) {
                     layer_on(oneshot_origin_layer);
                     oneshot_origin_layer = 0;
                 }
-    #               endif  // OS_STEROIDS_FREE_LAYER_STACK
-    #               ifdef OSL_STEROIDS_ABSORB_MODS
+#                   endif  // OS_STEROIDS_FREE_LAYER_STACK
+#                   ifdef OSL_STEROIDS_ABSORB_MODS
                 if (oneshot_added_mods != 0) {
                     unregister_mods_on_steroids(oneshot_added_mods);
+                    oneshot_pressed_mods = 0;
                     oneshot_added_mods = 0;
                 }
-    #               endif  // OSL_STEROIDS_ABSORB_MODS
+#                   endif  // OSL_STEROIDS_ABSORB_MODS
             }
         }
         oneshot_state[index] = os_idle;
+#           ifdef OS_STEROIDS_TIMEOUT
+        if (index == active_os_index) {
+            idle_timer = 0;
+            active_os_index = -1;
+        }
+#           endif  // OS_STEROIDS_TIMEOUT
     }
 }
 
@@ -194,9 +200,6 @@ void clear_oneshots_on_steroids(void) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (oneshot_state[i] != os_idle) { deactivate_oneshot_on_steroids(i); }
     }
-#       ifdef OS_STEROIDS_TIMEOUT
-    idle_timer = 0;
-#       endif  // OS_STEROIDS_TIMEOUT
 }
 
 void reset_oneshot_layer_on_steroids(void) {
@@ -241,8 +244,7 @@ void clear_oneshot_mods_on_steroids(void) {
     }
 }
 
-
-#ifdef OSL_STEROIDS_ABSORB_MODS
+#   ifdef OSL_STEROIDS_ABSORB_MODS
 bool modifiers_handling(uint8_t index, uint8_t mod) {
     if (mod & oneshot_pressed_mods) {
 
@@ -259,9 +261,13 @@ bool modifiers_handling(uint8_t index, uint8_t mod) {
     }
     return true;
 }
-#endif  // OSL_STEROIDS_ABSORB_MODS
 
-#ifdef OS_STEROIDS_FREE_LAYER_STACK
+bool has_mod_been_absorbed_by_osl(uint_8t mod) {
+    return (oneshot_pressed_mods | oneshot_added_mods) & mod
+};
+#   endif  // OSL_STEROIDS_ABSORB_MODS
+
+#   ifdef OS_STEROIDS_FREE_LAYER_STACK
 // Handles `LT`, `MO` and `TT` keys.
 bool layer_switching_keys_handling(uint8_t i, uint8_t key_layer, keyrecord_t *record) {
     if (SHOULD_FREE_LAYER_STACK && key_layer == oneshot_origin_layer) {
@@ -270,7 +276,7 @@ bool layer_switching_keys_handling(uint8_t i, uint8_t key_layer, keyrecord_t *re
     }
     return true;
 }
-#endif  // OS_STEROIDS_FREE_LAYER_STACK
+#   endif  // OS_STEROIDS_FREE_LAYER_STACK
 
 
 bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
@@ -306,10 +312,19 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
 #                           ifdef OSL_STEROIDS_ABSORB_MODS
                         if (SHOULD_OSL_ABSORB_MODS) {
+#                               ifdef OS_STEROIDS_TIMEOUT
+                            if (active_os_index != -1) {
+                                if ((get_mods() | get_oneshot_mods()) & oneshot[active_os_index].modifier) {
+                                    // preventing OSM tapped before from idling
+                                    idle_timer = 0;
+                                    active_os_index = -1;
+                                }
+                            }
+#                               endif  // OS_STEROIDS_TIMEOUT
                             // removing the oneshot mod of mods
                             uint8_t mods = get_mods() & ~oneshot[i].modifier;
                             if (mods) {
-                                oneshot_pressed_mods = mods;
+                                oneshot_pressed_mods |= mods;
                             }
                             uint8_t oneshot_mods = get_oneshot_mods() & ~oneshot[i].modifier;
                             if (oneshot_mods) {
@@ -357,9 +372,10 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     }
 #                       ifdef OS_STEROIDS_TIMEOUT
                     idle_timer = (record->event.time + OS_STEROIDS_TIMEOUT) | 1;
+                    active_os_index = i;
 #                       endif  // OS_STEROIDS_TIMEOUT
                 } else {
-                    // The oneshot key has been released after than the tapping term
+                    // The oneshot key has been released after the tapping term
                     // or a key was tapped when the oneshot key was held:
                     // cancel the oneshot.
                     deactivate_oneshot_on_steroids(i);
@@ -500,14 +516,20 @@ __attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keyc
             // if another OSL is active, it must be reset.
             if (is_oneshot_layer_on_steroids(keycode)) { return false; }
             // keycode is not a OSL, it’s a OSM.
-#               ifdef SHOULD_OSM_STAY_ON_OSL_LAYER
+#               ifdef OSM_SHOULD_STAY_ON_OSL_LAYER
             return true;
 #               else
             // When using OSM as Callum mods, an OSL tapped before must be reset.
             return false;
-#               endif
+#               endif  // OSM_SHOULD_STAY_ON_OSL_LAYER
         } else {
-            // oneshot is OSM on steroids, it should stay pressed
+            // oneshot is OSM on steroids
+#               ifdef OSL_STEROIDS_ABSORB_MODS
+            if (is_oneshot_layer_on_steroids(keycode)) {
+                if (SHOULD_OSL_ABSORB_MODS) { return false; }
+            }
+#               endif  // OSL_STEROIDS_ABSORB_MODS
+            // OSM on steroids should stay pressed
             // whether keycode is OSM or OSL on steroids.
             return true;
         }
@@ -528,8 +550,6 @@ __attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keyc
         case QK_TRI_LAYER_LOWER ... QK_TRI_LAYER_UPPER:
             return true;
     }
-    // Ignore oneshot on steroids
-    if (is_oneshot_on_steroids(keycode)) { return true; }
 
     // Ignore tap-hold keys when held
     if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
