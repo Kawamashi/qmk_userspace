@@ -66,11 +66,11 @@ typedef enum {
 #  define OS(key, mods, layer) key, key, mods, layer
 #endif  // OS_STEROIDS_RELEASED_ON_OTHER_KEY
 
-#ifdef OSL_STEROIDS_ABSORB_MODS_PER_KEY
+/* #ifdef OSL_STEROIDS_ABSORB_MODS_PER_KEY
 #   define SHOULD_OSL_ABSORB_MODS should_osl_on_steroids_absorb_mods(oneshot[i].trigger, record)
 #else
 #   define SHOULD_OSL_ABSORB_MODS true
-#endif
+#endif */
 
 #ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
 #   define SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer, record)
@@ -140,7 +140,7 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
 
 bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger);
 
-bool should_osl_on_steroids_absorb_mods(uint16_t keycode, keyrecord_t* record);
+bool should_osl_on_steroids_absorb_mods(uint16_t keycode);
 
 bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record);
 

@@ -309,19 +309,17 @@ bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t oneshot,
         return false;
 #         endif  // OSM_SHOULD_STAY_ON_OSL_LAYER
     } else {
-            // oneshot is OSM on steroids
-#               ifdef OSL_STEROIDS_ABSORB_MODS
-            if (is_oneshot_layer_on_steroids(keycode)) {
-                if (SHOULD_OSL_ABSORB_MODS) { return false; }
-            }
-#               endif  // OSL_STEROIDS_ABSORB_MODS
-            // OSM on steroids should stay pressed
-            // whether keycode is OSM or OSL on steroids.
-            return true;
+      // oneshot is OSM on steroids
+#       ifdef OSL_STEROIDS_ABSORB_MODS
+      if (is_oneshot_layer_on_steroids(keycode)) {
+          if (should_osl_on_steroids_absorb_mods(keycode)) { return false; }
+      }
+#       endif  // OSL_STEROIDS_ABSORB_MODS
+      // OSM on steroids should stay pressed
+      // whether keycode is OSM or OSL on steroids.
+      return true;
     }
   }
-
-  //if (is_oneshot_layer_on_steroids(keycode)) { return false; }
 
   // Ignore tap-hold keys when held
   if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
@@ -340,4 +338,14 @@ bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer
     default:
       return false;
   }
+}
+
+bool should_osl_on_steroids_absorb_mods(uint16_t keycode) {
+    switch (keycode) {
+/*       case OS_1DK:
+        return false; */
+
+      default:
+        return true;
+    }
 }
