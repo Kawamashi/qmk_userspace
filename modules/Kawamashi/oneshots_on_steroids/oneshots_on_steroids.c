@@ -45,6 +45,27 @@ static uint8_t oneshot_added_mods = 0;
 #else
 #   define SHOULD_OSL_ABSORB_MODS true
 #endif */
+
+bool should_mod_be_released(uint8_t index, uint8_t mod) {
+    if (mod & oneshot_pressed_mods) {
+        oneshot_pressed_mods &= ~mod;
+        if (should_osl_on_steroids_absorb_mods(oneshot[index].trigger)) {
+            switch (oneshot_state[index]) {
+                case os_down_unused:
+                case os_up_queued:
+                    oneshot_added_mods |= mod;
+                    return false;
+                default:
+                    return true;
+            }
+        }
+    }
+    return true;
+}
+
+bool has_mod_been_absorbed_by_osl(uint8_t mod) {
+    return (oneshot_added_mods) & mod;
+};
 #   endif  // OSL_STEROIDS_ABSORB_MODS
 
 #   ifdef OS_STEROIDS_FREE_LAYER_STACK
@@ -76,24 +97,12 @@ void deactivate_oneshot_on_steroids(int8_t index) {
         if (oneshot[index].modifier != 0) {
 #               ifdef OSL_STEROIDS_ABSORB_MODS
             bool should_unregister_mod = true;
-            if (active_osl_index != -1 && index != active_osl_index
-                && (oneshot_pressed_mods & oneshot[index].modifier)) {
-                
-                oneshot_pressed_mods &= ~oneshot[index].modifier;
-                if (should_osl_on_steroids_absorb_mods(oneshot[active_osl_index].trigger)) {
-                    switch (oneshot_state[active_osl_index]) {
-                        case os_down_unused:
-                        case os_up_queued:
-                            oneshot_added_mods |= oneshot[index].modifier;
-                            should_unregister_mod = false;
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            if (active_osl_index != -1 && index != active_osl_index) {
+                should_unregister_mod = should_mod_be_released(active_osl_index, oneshot[index].modifier);
             }
             if (should_unregister_mod) {
 #           endif  // OSL_STEROIDS_ABSORB_MODS
+
                 switch (oneshot_state[index]) {
                     case os_down_unused:
                         unregister_mods_on_steroids(oneshot[index].modifier);
@@ -116,6 +125,7 @@ void deactivate_oneshot_on_steroids(int8_t index) {
                     default:
                         break;
                 }
+                
 #               ifdef OSL_STEROIDS_ABSORB_MODS
             }
 #               endif  // OSL_STEROIDS_ABSORB_MODS
@@ -255,30 +265,6 @@ void clear_oneshot_mods_on_steroids(void) {
         }
     }
 }
-
-#   ifdef OSL_STEROIDS_ABSORB_MODS
-bool modifiers_handling(uint8_t index, uint8_t mod) {
-    if (mod & oneshot_pressed_mods) {
-
-        oneshot_pressed_mods &= ~mod;
-        if (should_osl_on_steroids_absorb_mods(oneshot[index].trigger)) {
-            switch (oneshot_state[index]) {
-                case os_down_unused:
-                case os_up_queued:
-                    oneshot_added_mods |= mod;
-                    return false;
-                default:
-                    return true;
-            }
-        }
-    }
-    return true;
-}
-
-bool has_mod_been_absorbed_by_osl(uint8_t mod) {
-    return (oneshot_pressed_mods | oneshot_added_mods) & mod;
-};
-#   endif  // OSL_STEROIDS_ABSORB_MODS
 
 #   ifdef OS_STEROIDS_FREE_LAYER_STACK
 // Handles `LT`, `MO` and `TT` keys.
@@ -446,7 +432,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
 #                   ifdef OSL_STEROIDS_ABSORB_MODS
                 if (IS_MODIFIER_KEYCODE(keycode)) {
-                    if (!modifiers_handling(i, MOD_BIT(keycode))) {
+                    if (!should_mod_be_released(i, MOD_BIT(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
@@ -454,7 +440,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                 if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
                     uint8_t mod_tap_mods = QK_MOD_TAP_GET_MODS(keycode);
                     if ((mod_tap_mods & 0x10) != 0) { mod_tap_mods <<= 4; }
-                    if (!modifiers_handling(i, mod_tap_mods)) {
+                    if (!should_mod_be_released(i, mod_tap_mods)) {
                         should_continue_processing = false;
                         continue;
                     }
