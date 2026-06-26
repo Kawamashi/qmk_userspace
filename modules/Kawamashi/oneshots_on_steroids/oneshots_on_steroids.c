@@ -75,12 +75,24 @@ void deactivate_oneshot_on_steroids(int8_t index) {
 
         if (oneshot[index].modifier != 0) {
 #               ifdef OSL_STEROIDS_ABSORB_MODS
+            bool should_unregister_mod = true;
             if (active_osl_index != -1 && index != active_osl_index
-                && should_osl_on_steroids_absorb_mods(oneshot[active_osl_index].trigger)
                 && (oneshot_pressed_mods & oneshot[index].modifier)) {
-                    oneshot_pressed_mods &= ~oneshot[index].modifier;
-                    oneshot_added_mods |= oneshot[index].modifier;
-            } else {
+                
+                oneshot_pressed_mods &= ~oneshot[index].modifier;
+                if (should_osl_on_steroids_absorb_mods(oneshot[active_osl_index].trigger)) {
+                    switch (oneshot_state[active_osl_index]) {
+                        case os_down_unused:
+                        case os_up_queued:
+                            oneshot_added_mods |= oneshot[index].modifier;
+                            should_unregister_mod = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            if (should_unregister_mod) {
 #           endif  // OSL_STEROIDS_ABSORB_MODS
                 switch (oneshot_state[index]) {
                     case os_down_unused:
@@ -247,18 +259,18 @@ void clear_oneshot_mods_on_steroids(void) {
 #   ifdef OSL_STEROIDS_ABSORB_MODS
 bool modifiers_handling(uint8_t index, uint8_t mod) {
     if (mod & oneshot_pressed_mods) {
-        //if (should_osl_on_steroids_absorb_mods(oneshot[index].trigger)) {
+
+        oneshot_pressed_mods &= ~mod;
+        if (should_osl_on_steroids_absorb_mods(oneshot[index].trigger)) {
             switch (oneshot_state[index]) {
                 case os_down_unused:
                 case os_up_queued:
                     oneshot_added_mods |= mod;
-                    oneshot_pressed_mods &= ~mod;
                     return false;
-
                 default:
                     return true;
             }
-        //}
+        }
     }
     return true;
 }
@@ -433,20 +445,18 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
             if (i == active_osl_index) {
 
 #                   ifdef OSL_STEROIDS_ABSORB_MODS
-                if (should_osl_on_steroids_absorb_mods(oneshot[i].trigger)) {
-                    if (IS_MODIFIER_KEYCODE(keycode)) {
-                        if (!modifiers_handling(i, MOD_BIT(keycode))) {
-                            should_continue_processing = false;
-                            continue;
-                        }
+                if (IS_MODIFIER_KEYCODE(keycode)) {
+                    if (!modifiers_handling(i, MOD_BIT(keycode))) {
+                        should_continue_processing = false;
+                        continue;
                     }
-                    if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
-                        uint8_t mod_tap_mods = QK_MOD_TAP_GET_MODS(keycode);
-                        if ((mod_tap_mods & 0x10) != 0) { mod_tap_mods <<= 4; }
-                        if (!modifiers_handling(i, mod_tap_mods)) {
-                            should_continue_processing = false;
-                            continue;
-                        }
+                }
+                if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
+                    uint8_t mod_tap_mods = QK_MOD_TAP_GET_MODS(keycode);
+                    if ((mod_tap_mods & 0x10) != 0) { mod_tap_mods <<= 4; }
+                    if (!modifiers_handling(i, mod_tap_mods)) {
+                        should_continue_processing = false;
+                        continue;
                     }
                 }
 #                   endif  // OSL_STEROIDS_ABSORB_MODS
