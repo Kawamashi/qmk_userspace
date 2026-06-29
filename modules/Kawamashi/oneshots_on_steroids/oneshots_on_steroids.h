@@ -86,20 +86,14 @@ typedef enum {
  */
 //void oneshot_task(void);
 
-// Deactivates a specific one-shot on steroids key (by keycode)
-void cancel_oneshot_on_steroids(uint16_t keycode);
+//
+bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
 // Deactivates a specific one-shot on steroids key (by index)
 void deactivate_oneshot_on_steroids(int8_t index);
 
-// Deactivates all one-shot on steroids keys
-void clear_oneshots_on_steroids(void);
-
-// Deactivates the active one-shot layer
-void reset_oneshot_layer_on_steroids(void);
-
-// Deactivates all one-shot on steroids keys involving a modifier
-void clear_oneshot_mods_on_steroids(void);
+// Deactivates a specific one-shot on steroids key (by keycode)
+void cancel_oneshot_on_steroids(uint16_t keycode);
 
 // If the keycode is a one-shot on steroids key, returns its state
 // Otherwise, returns -1
@@ -109,7 +103,7 @@ int8_t get_oneshot_on_steroids_state(uint16_t keycode);
 // Otherwise, returns -1
 int8_t get_oneshot_on_steroids_index(uint16_t keycode);
 
-
+//
 uint8_t get_oneshot_layer_on_steroids(void);
 
 // Returns whether a keycode is a custom one-shot key or not
@@ -121,12 +115,33 @@ bool is_oneshot_layer_on_steroids(uint16_t keycode);
 // Returns whether a keycode is a custom one-shot mod key or not
 bool is_oneshot_mod_on_steroids(uint16_t keycode);
 
+//
+bool is_oneshot_layer_on_steroids_active(void);
+
+// Deactivates all one-shot on steroids keys
+void clear_oneshots_on_steroids(void);
+
+// Deactivates the active one-shot layer
+void reset_oneshot_layer_on_steroids(void);
+
+// Deactivates all one-shot on steroids keys involving a specific modifier
+void del_oneshot_mods_on_steroids(uint8_t mods);
+
+// Deactivates all one-shot on steroids keys involving any modifier
+void clear_oneshot_mods_on_steroids(void);
+
+
+
 //void post_process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
 
 // Custom one-shot keys implementation that doesn't rely on timers.
 // If a mod is used while it is held it will be unregistered on keyup as normal.
 // Otherwise it will be queued and only released after the next non-mod keyup.
 //bool process_oneshot_on_steroids(uint16_t keycode, keyrecord_t *record);
+
+
+
+bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record);
 
 // To be implemented by the user. Defines keys to cancel one-shot mods and layers.
 bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
@@ -136,17 +151,14 @@ bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
 bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
 
-bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record);
-
+//
 bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger);
 
+//
 bool should_osl_on_steroids_absorb_mods(uint16_t keycode);
 
+//
 bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record);
-
-bool is_oneshot_layer_on_steroids_active(void);
-
-bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
 #ifdef __cplusplus
 }
