@@ -55,9 +55,14 @@ typedef enum {
     os_up_queued_used,
 } oneshot_state_t;
 
-// Convert 5-bit to 8-bit packed modifiers by extracting the
-// upper bit and shift by 4 if bit 5 is set
-//#define GET_MOD_BITS(mod) ((mod & 0x10) == 0) ? mod : (mod << 4)
+
+uint16_t get_oneshot_on_steroids_tapping_term(uint16_t keycode, keyrecord_t *record);
+
+#if defined(OS_STEROIDS_TAPPING_TERM_PER_KEY)
+#   define GET_OS_STEROIDS_TAPPING_TERM(keycode, record) get_oneshot_on_steroids_tapping_term(keycode, record)
+#else
+#   define GET_OS_STEROIDS_TAPPING_TERM(keycode, record) (OS_STEROIDS_TAPPING_TERM)
+#endif
 
 // Oneshot-type wrapper
 #ifdef OS_STEROIDS_RELEASED_ON_OTHER_KEY
@@ -65,12 +70,6 @@ typedef enum {
 #else
 #  define OS(key, mods, layer) key, key, mods, layer
 #endif  // OS_STEROIDS_RELEASED_ON_OTHER_KEY
-
-/* #ifdef OSL_STEROIDS_ABSORB_MODS_PER_KEY
-#   define SHOULD_OSL_ABSORB_MODS should_osl_on_steroids_absorb_mods(oneshot[i].trigger, record)
-#else
-#   define SHOULD_OSL_ABSORB_MODS true
-#endif */
 
 #ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
 #   define SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer, record)

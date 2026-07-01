@@ -34,6 +34,16 @@ static oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_C
 static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 static int8_t active_osl_index = -1;
 
+#   ifdef OS_STEROIDS_TAPPING_TERM_PER_KEY
+__attribute__((weak)) uint16_t get_oneshot_on_steroids_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    
+    default:
+        return OS_STEROIDS_TAPPING_TERM;
+    }
+}
+#   endif  // OS_STEROIDS_TAPPING_TERM_PER_KEY
+
 
 #   if defined OSL_STEROIDS_ABSORB_MODS
 static uint8_t oneshot_pressed_mods = 0;
@@ -351,7 +361,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
             if (keycode == oneshot[i].suppressor) {
 
-                if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < TAPPING_TERM) {
+                if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < GET_OS_STEROIDS_TAPPING_TERM(keycode, record)) {
                     // The oneshot key has been released earlier than the tapping term,
                     // without any other key being pressed in-between:
                     // triggering the oneshot behaviour.
