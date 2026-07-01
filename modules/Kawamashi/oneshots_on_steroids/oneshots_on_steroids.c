@@ -511,12 +511,13 @@ __attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keyc
             // if another OSL is active, it must be reset.
             if (is_oneshot_layer_on_steroids(keycode)) { return false; }
             // keycode is not a OSL, it’s a OSM.
-#               ifdef OSM_SHOULD_STAY_ON_OSL_LAYER
-            return true;
-#               else
+#               ifdef OSM_SHOULD_LEAVE_OSL_LAYER
             // When using OSM as Callum mods, an OSL tapped before must be reset.
             return false;
-#               endif  // OSM_SHOULD_STAY_ON_OSL_LAYER
+#               else
+            // Standard behaviour, like vanilla OSM after OSL
+            return true;
+#               endif  // OSM_SHOULD_LEAVE_OSL_LAYER
         } else {
             // oneshot is OSM on steroids
 #               ifdef OSL_STEROIDS_ABSORB_MODS
