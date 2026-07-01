@@ -290,7 +290,7 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
   return true;
 }
 
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
+bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
 
   const uint8_t mods = get_mods() | get_oneshot_mods();
   if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }

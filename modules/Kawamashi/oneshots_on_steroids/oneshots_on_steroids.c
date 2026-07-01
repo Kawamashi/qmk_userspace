@@ -393,7 +393,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                 continue;
             }
 
-            if (should_oneshot_on_steroids_stay_pressed(keycode, oneshot[i].trigger, record)) {
+            if (should_oneshot_on_steroids_ignore_key(keycode, oneshot[i].trigger, record)) {
 #                   ifdef OS_STEROIDS_TIMEOUT
                 if (idle_timer) {idle_timer = (record->event.time + OS_STEROIDS_TIMEOUT) | 1;}
 #                   endif  // OS_STEROIDS_TIMEOUT
@@ -502,7 +502,7 @@ __attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
     }
 }
 
-__attribute__((weak)) bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
+__attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
 
     // Oneshot on steroids applied one after another
     if (is_oneshot_on_steroids(keycode)) {

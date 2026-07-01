@@ -149,7 +149,7 @@ bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 // To be implemented by the user. 
 // Defines keys not to release the modifier when determining whether a one-shot mod has been used.
 // Setting this to layer change keys allows carrying one-shot modifiers between layers.
-bool should_oneshot_on_steroids_stay_pressed(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
+bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
 
 //
 bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger);
