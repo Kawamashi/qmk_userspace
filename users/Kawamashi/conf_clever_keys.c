@@ -182,9 +182,9 @@ void get_clever_keycode(uint16_t* ongoing_keycode, keyrecord_t* record) {
           return replace_ongoing_key(PG_U, ongoing_keycode, record);
 
         case PG_T:
-          // "the"
-          invoke_key(PG_H,record);
-          return replace_ongoing_key(PG_E, ongoing_keycode, record);
+          // "tion"
+          invoke_key(PG_I,record);
+          //return replace_ongoing_key(PG_N, ongoing_keycode, record);
 
         case PG_I:
           // "ion"
