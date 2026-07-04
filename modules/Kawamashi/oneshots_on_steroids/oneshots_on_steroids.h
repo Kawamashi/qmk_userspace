@@ -59,11 +59,11 @@ typedef enum {
 #   define OS_STEROIDS_TERM TAPPING_TERM
 #endif
 
-// Function to customise the tapping term for each one-shot on steroids.
-uint16_t get_oneshot_on_steroids_tapping_term(uint16_t keycode, keyrecord_t *record);
+// Function to customise the one-shot term for each one-shot on steroids.
+uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 
 #ifdef OS_STEROIDS_TERM_PER_KEY
-#   define GET_OS_STEROIDS_TERM(keycode, record) get_oneshot_on_steroids_tapping_term(keycode, record)
+#   define GET_OS_STEROIDS_TERM(keycode, record) get_oneshot_on_steroids_term(keycode, record)
 #else
 #   define GET_OS_STEROIDS_TERM(keycode, record) (OS_STEROIDS_TERM)
 #endif
@@ -154,7 +154,7 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, k
 // When triggering the one-shot effect, define which mods should be released
 // to send one-shot mods instead, not to interfere with the mouse.
 // By default, the function returns true if mods include shift or ctrl.
-bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger);
+bool should_mod_be_held_after_oneshot_term(uint8_t mod, uint16_t trigger);
 
 // Function to customise which one-shot layer on steroids should absorb modifiers.
 bool should_osl_on_steroids_absorb_mods(uint16_t keycode);

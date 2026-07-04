@@ -35,7 +35,7 @@ static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT
 static int8_t active_osl_index = -1;
 
 #   ifdef OS_STEROIDS_TERM_PER_KEY
-__attribute__((weak)) uint16_t get_oneshot_on_steroids_tapping_term(uint16_t keycode, keyrecord_t *record) {
+__attribute__((weak)) uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
     
     default:
@@ -125,14 +125,14 @@ void deactivate_oneshot_on_steroids(int8_t index) {
                         unregister_mods(oneshot[index].modifier);
                         break;
                     case os_up_queued:
-                        if (should_mod_be_held_after_tapping_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                        if (should_mod_be_held_after_oneshot_term(oneshot[index].modifier, oneshot[index].trigger)) {
                             unregister_mods_on_steroids(oneshot[index].modifier);
                         } else {
                             del_oneshot_mods(oneshot[index].modifier);
                         }
                         break;
                     case os_up_queued_used:
-                        if (should_mod_be_held_after_tapping_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                        if (should_mod_be_held_after_oneshot_term(oneshot[index].modifier, oneshot[index].trigger)) {
                             unregister_mods(oneshot[index].modifier);
                         }
                         break;
@@ -362,12 +362,12 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
             if (keycode == oneshot[i].suppressor) {
 
                 if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < GET_OS_STEROIDS_TERM(keycode, record)) {
-                    // The oneshot key has been released earlier than the tapping term,
+                    // The oneshot key has been released earlier than the one-shot term,
                     // without any other key being pressed in-between:
                     // triggering the oneshot behaviour.
                     oneshot_state[i] = os_up_queued;
                     if (oneshot[i].modifier != 0) {
-                        if (!should_mod_be_held_after_tapping_term(oneshot[i].modifier, oneshot[i].trigger)) {
+                        if (!should_mod_be_held_after_oneshot_term(oneshot[i].modifier, oneshot[i].trigger)) {
                             unregister_mods(oneshot[i].modifier);
                             add_oneshot_mods(oneshot[i].modifier);
                         }
@@ -377,7 +377,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     active_os_index = i;
 #                       endif  // OS_STEROIDS_TIMEOUT
                 } else {
-                    // The oneshot key has been released after the tapping term
+                    // The oneshot key has been released after the one-shot term
                     // or a key was tapped when the oneshot key was held:
                     // cancel the oneshot.
                     deactivate_oneshot_on_steroids(i);
@@ -565,8 +565,8 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
     return false;
 }
 
-__attribute__((weak)) bool should_mod_be_held_after_tapping_term(uint8_t mod, uint16_t trigger) {
-    // shift and ctrl shouldn't be held after the tapping term,
+__attribute__((weak)) bool should_mod_be_held_after_oneshot_term(uint8_t mod, uint16_t trigger) {
+    // shift and ctrl shouldn't be held after the one-shot term,
     // using `add_oneshot_mods()` instead, not to interfere with the mouse
     if (mod & (MOD_MASK_CTRL | MOD_MASK_SHIFT)) { return false; }
     return true;
