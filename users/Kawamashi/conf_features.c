@@ -295,16 +295,24 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, k
   const uint8_t mods = get_mods() | get_oneshot_mods();
   if (keycode == OS_1DK && (mods & MOD_BIT(KC_ALGR))) { return false; }
 
+  bool is_mod_key = is_oneshot_mod_on_steroids(keycode);
+  bool is_layer_key = is_oneshot_layer_on_steroids(keycode);
+  
+  if (!record->tap.count) {
+    if (IS_QK_MOD_TAP(keycode)) { is_mod_key = true; }
+    if (IS_QK_LAYER_TAP(keycode)) { is_layer_key = true; }
+  }
+
   // Oneshot on steroids applied one after another
-  if (is_oneshot_on_steroids(keycode)) {
+  if (is_mod_key || is_layer_key) {
     if (is_oneshot_layer_on_steroids(oneshot)) {
       // Two OSL can't be active at the same time:
       // if another OSL is active, it must be reset.
-      if (is_oneshot_layer_on_steroids(keycode)) { return false; }
+      if (is_layer_key) { return false; }
         // keycode is not a OSL, it’s a OSM.
 #         ifdef OSM_SHOULD_LEAVE_OSL_LAYER
         // When using OSM as Callum mods, an OSL tapped before must be reset.
-        return false;
+        if (is_oneshot_mod_on_steroids(keycode)) { return false; }
 #         else
         // Standard behaviour, like vanilla OSM after OSL
         return true;
@@ -321,12 +329,6 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, k
       return true;
     }
   }
-
-  // Ignore tap-hold keys when held
-  if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
-    if (!record->tap.count) { return true; }
-  }
-
   return false;
 }
 
