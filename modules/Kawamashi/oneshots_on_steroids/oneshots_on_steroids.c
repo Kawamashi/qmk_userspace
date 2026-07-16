@@ -34,16 +34,6 @@ static oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_C
 static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 static int8_t active_osl_index = -1;
 
-#   ifdef OS_STEROIDS_TERM_PER_KEY
-__attribute__((weak)) uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-    
-    default:
-        return OS_STEROIDS_TERM;
-    }
-}
-#   endif  // OS_STEROIDS_TERM_PER_KEY
-
 
 #   if defined OSL_STEROIDS_ABSORB_MODS
 static uint8_t oneshot_pressed_mods = 0;
@@ -407,12 +397,13 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
         if (keycode == oneshot[i].trigger) { continue; }
 
         if (record->event.pressed) {    // On press
-
+#               ifdef OS_STEROIDS_CANCEL_KEY
             if (is_oneshot_on_steroids_cancel_key(keycode)) {
                 // Cancel oneshot on press of specific keys.
                 deactivate_oneshot_on_steroids(i);
                 continue;
             }
+#               endif  // OS_STEROIDS_CANCEL_KEY
 
             if (should_oneshot_on_steroids_ignore_key(keycode, oneshot[i].trigger, record)) {
 #                   ifdef OS_STEROIDS_TIMEOUT
@@ -522,6 +513,7 @@ __attribute__((weak)) bool is_oneshot_on_steroids_custom_behaviour(uint16_t keyc
     }
 }
 
+#   ifdef OS_STEROIDS_CANCEL_KEY
 __attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
     switch (keycode) {
 
@@ -529,6 +521,7 @@ __attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
             return false;
     }
 }
+#   endif  // OS_STEROIDS_CANCEL_KEY
 
 __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
 
@@ -559,56 +552,31 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
             break;
     }
 
-    // Oneshot on steroids applied one after another
-    //if (is_oneshot_on_steroids(keycode)) {
+    // Mod or layer-change key applied after one-shot on steroids
     if (is_mod_key || is_layer_key) {
         if (is_oneshot_layer_on_steroids(oneshot)) {
-            // Two OSL can't be active at the same time:
-            // if another OSL is active, it must be reset.
-            //if (is_oneshot_layer_on_steroids(keycode)) { return false; }
+            // If a layer-change key is pressed after an OSL, the OSL must be reset.
             if (is_layer_key) { return false; }
             // keycode is not a layer key, it’s a mod key.
 #               ifdef OSM_SHOULD_LEAVE_OSL_LAYER
             // When using OSM as Callum mods, an OSL tapped before must be reset.
             if (is_oneshot_mod_on_steroids(keycode)) { return false; }
 #               else
-            // Standard behaviour, like vanilla OSM after OSL
+            // Standard behaviour, like any mod key after an OSL
             return true;
 #               endif  // OSM_SHOULD_LEAVE_OSL_LAYER
         } else {
-            // oneshot is OSM on steroids
+            // one-shot is OSM on steroids
 #               ifdef OSL_STEROIDS_ABSORB_MODS
             if (is_oneshot_layer_on_steroids(keycode)) {
                 if (should_osl_on_steroids_absorb_mods(keycode)) { return false; }
             }
 #               endif  // OSL_STEROIDS_ABSORB_MODS
             // OSM on steroids should stay pressed
-            // whether keycode is OSM or OSL on steroids.
+            // whether keycode is a mod or a layer-change key.
             return true;
         }
     }
-
-/*     switch (keycode) {
-        // Ignore mod keys.
-        case KC_LCTL ... KC_RGUI:
-        case KC_HYPR:
-        case KC_MEH:
-        case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
-        // Ignore MO, TO, TG, TT, and OSL layer switch keys.
-        case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
-        case QK_MOMENTARY ... QK_MOMENTARY_MAX:
-        case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
-        case QK_TO ... QK_TO_MAX:
-        case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
-        case QK_TRI_LAYER_LOWER ... QK_TRI_LAYER_UPPER:
-            return true;
-    }
-
-    // Ignore tap-hold keys when held
-    if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode)) {
-        if (!record->tap.count) { return true; }
-    } */
-
     return false;
 }
 
@@ -618,6 +586,16 @@ __attribute__((weak)) bool should_mod_be_held_after_oneshot_term(uint8_t mod, ui
     if (mod & (MOD_MASK_CTRL | MOD_MASK_SHIFT)) { return false; }
     return true;
 }
+
+#   ifdef OS_STEROIDS_TERM_PER_KEY
+__attribute__((weak)) uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    
+    default:
+        return OS_STEROIDS_TERM;
+    }
+}
+#   endif  // OS_STEROIDS_TERM_PER_KEY
 
 #ifdef OSL_STEROIDS_ABSORB_MODS
 __attribute__((weak)) bool should_osl_on_steroids_absorb_mods(uint16_t keycode) {
@@ -629,7 +607,7 @@ __attribute__((weak)) bool should_osl_on_steroids_absorb_mods(uint16_t keycode) 
 }
 #endif  // OSL_STEROIDS_ABSORB_MODS
 
-#ifdef OS_STEROIDS_FREE_LAYER_STACK
+#ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
 __attribute__((weak)) bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record) {
     switch (layer) {
 
@@ -637,5 +615,5 @@ __attribute__((weak)) bool should_oneshot_on_steroids_deactivate_layer(uint16_t 
             return true;
     }
 }
-#endif  // OS_STEROIDS_FREE_LAYER_STACK
+#endif  // OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
 
