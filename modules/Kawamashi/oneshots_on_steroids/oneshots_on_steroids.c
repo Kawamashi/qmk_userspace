@@ -97,86 +97,85 @@ void unregister_mods_on_steroids(uint8_t mods) {
 }
 
 void deactivate_oneshot_on_steroids(int8_t index) {
-    if (oneshot_state[index] != os_idle) {
+    if (oneshot_state[index] == os_idle) { return; }
 
-        if (oneshot[index].modifier != 0) {
-#               ifdef OSL_STEROIDS_ABSORB_MODS
-            bool should_unregister_osm_on_steroids = true;
-            if (active_osl_index != -1 && index != active_osl_index) {
-                should_unregister_osm_on_steroids = should_unregister_mod(active_osl_index, oneshot[index].modifier);
-            }
-            if (should_unregister_osm_on_steroids) {
+    if (oneshot[index].modifier != 0) {
+#           ifdef OSL_STEROIDS_ABSORB_MODS
+        bool should_unregister_osm_on_steroids = true;
+        if (active_osl_index != -1 && index != active_osl_index) {
+            should_unregister_osm_on_steroids = should_unregister_mod(active_osl_index, oneshot[index].modifier);
+        }
+        if (should_unregister_osm_on_steroids) {
 #           endif  // OSL_STEROIDS_ABSORB_MODS
 
-                switch (oneshot_state[index]) {
-                    case os_down_unused:
+            switch (oneshot_state[index]) {
+                case os_down_unused:
+                    unregister_mods_on_steroids(oneshot[index].modifier);
+                    break;
+                case os_down_used:
+                    unregister_mods(oneshot[index].modifier);
+                    break;
+                case os_up_queued:
+                    if (should_mod_be_held_after_oneshot_release(oneshot[index].modifier, oneshot[index].trigger)) {
                         unregister_mods_on_steroids(oneshot[index].modifier);
-                        break;
-                    case os_down_used:
+                    } else {
+                        del_oneshot_mods(oneshot[index].modifier);
+                    }
+                    break;
+                case os_up_queued_used:
+                    if (should_mod_be_held_after_oneshot_release(oneshot[index].modifier, oneshot[index].trigger)) {
                         unregister_mods(oneshot[index].modifier);
-                        break;
-                    case os_up_queued:
-                        if (should_mod_be_held_after_oneshot_release(oneshot[index].modifier, oneshot[index].trigger)) {
-                            unregister_mods_on_steroids(oneshot[index].modifier);
-                        } else {
-                            del_oneshot_mods(oneshot[index].modifier);
-                        }
-                        break;
-                    case os_up_queued_used:
-                        if (should_mod_be_held_after_oneshot_release(oneshot[index].modifier, oneshot[index].trigger)) {
-                            unregister_mods(oneshot[index].modifier);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+#           ifdef OSL_STEROIDS_ABSORB_MODS
+        }
+#           endif  // OSL_STEROIDS_ABSORB_MODS
+    }
+
+    if (oneshot[index].layer != 0) {
+#           ifdef OS_STEROIDS_FREE_LAYER_STACK
+        bool should_leave_layer = true;
+        if (active_osl_index != -1 && index != active_osl_index) {
+            should_leave_layer = should_process_layer_off(index, oneshot[index].layer);
+        }
+        if (should_leave_layer) {
+#           endif  // OS_STEROIDS_FREE_LAYER_STACK
+            layer_off(oneshot[index].layer);
+#           ifdef OS_STEROIDS_FREE_LAYER_STACK
+        }
+#           endif  // OS_STEROIDS_FREE_LAYER_STACK
+
+        if (index == active_osl_index) {
+            active_osl_index = -1;
+            // If there is no other OSL active,
+            // restore oneshot_origin_layer
+            // and unregister the mods absorbed by the OSL.
+#               ifdef OS_STEROIDS_FREE_LAYER_STACK
+            if (oneshot_origin_layer != 0) {
+                layer_on(oneshot_origin_layer);
+                oneshot_origin_layer = 0;
+            }
+#               endif  // OS_STEROIDS_FREE_LAYER_STACK
 #               ifdef OSL_STEROIDS_ABSORB_MODS
+            if (oneshot_added_mods != 0) {
+                unregister_mods_on_steroids(oneshot_added_mods);
+                oneshot_pressed_mods = 0;
+                oneshot_added_mods = 0;
             }
 #               endif  // OSL_STEROIDS_ABSORB_MODS
         }
-
-        if (oneshot[index].layer != 0) {
-#               ifdef OS_STEROIDS_FREE_LAYER_STACK
-            bool should_leave_layer = true;
-            if (active_osl_index != -1 && index != active_osl_index) {
-                should_leave_layer = should_process_layer_off(index, oneshot[index].layer);
-            }
-            if (should_leave_layer) {
-#               endif  // OS_STEROIDS_FREE_LAYER_STACK
-                layer_off(oneshot[index].layer);
-#               ifdef OS_STEROIDS_FREE_LAYER_STACK
-            }
-#               endif  // OS_STEROIDS_FREE_LAYER_STACK
-
-            if (index == active_osl_index) {
-                active_osl_index = -1;
-                // If there is no other OSL active,
-                // restore oneshot_origin_layer
-                // and unregister the mods absorbed by the OSL.
-#                   ifdef OS_STEROIDS_FREE_LAYER_STACK
-                if (oneshot_origin_layer != 0) {
-                    layer_on(oneshot_origin_layer);
-                    oneshot_origin_layer = 0;
-                }
-#                   endif  // OS_STEROIDS_FREE_LAYER_STACK
-#                   ifdef OSL_STEROIDS_ABSORB_MODS
-                if (oneshot_added_mods != 0) {
-                    unregister_mods_on_steroids(oneshot_added_mods);
-                    oneshot_pressed_mods = 0;
-                    oneshot_added_mods = 0;
-                }
-#                   endif  // OSL_STEROIDS_ABSORB_MODS
-            }
-        }
-        oneshot_state[index] = os_idle;
-#           ifdef OS_STEROIDS_TIMEOUT
-        if (index == timed_oneshot_index) {
-            idle_timer = 0;
-            timed_oneshot_index = -1;
-        }
-#           endif  // OS_STEROIDS_TIMEOUT
     }
+    oneshot_state[index] = os_idle;
+#       ifdef OS_STEROIDS_TIMEOUT
+    if (index == timed_oneshot_index) {
+        idle_timer = 0;
+        timed_oneshot_index = -1;
+    }
+#       endif  // OS_STEROIDS_TIMEOUT
 }
 
 void cancel_oneshot_on_steroids(uint16_t keycode) {
@@ -249,34 +248,32 @@ void reset_oneshot_layer_on_steroids(void) {
 
 void del_oneshot_mods_on_steroids(uint8_t mods) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
-        if (oneshot_state[i] != os_idle){
-            if ((oneshot[i].modifier & mods) != 0) {
-                deactivate_oneshot_on_steroids(i);
-#               ifdef OSL_STEROIDS_ABSORB_MODS
-            } else if ((oneshot_added_mods & mods) != 0) {
-                // Case of OSL carrying modifiers
-                // In this case, we must remove modifiers w/o cancelling the OSL.
-                unregister_mods_on_steroids(mods);
-                oneshot_added_mods &= ~mods;
-#               endif  // OSL_STEROIDS_ABSORB_MODS
-            }
+        if (oneshot_state[i] == os_idle){ continue; }
+        if ((oneshot[i].modifier & mods) != 0) {
+            deactivate_oneshot_on_steroids(i);
+#           ifdef OSL_STEROIDS_ABSORB_MODS
+        } else if ((oneshot_added_mods & mods) != 0) {
+            // Case of OSL carrying modifiers
+            // In this case, we must remove modifiers w/o cancelling the OSL.
+            unregister_mods_on_steroids(mods);
+            oneshot_added_mods &= ~mods;
+#           endif  // OSL_STEROIDS_ABSORB_MODS
         }
     }
 }
 
 void clear_oneshot_mods_on_steroids(void) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
-        if (oneshot_state[i] != os_idle){
-            if (oneshot[i].modifier != 0) {
-                deactivate_oneshot_on_steroids(i);
-#               ifdef OSL_STEROIDS_ABSORB_MODS
-            } else if (oneshot_added_mods != 0) {
-                // Case of OSL carrying modifiers
-                // In this case, we must remove modifiers w/o cancelling the OSL.
-                unregister_mods_on_steroids(oneshot_added_mods);
-                oneshot_added_mods = 0;
-#               endif  // OSL_STEROIDS_ABSORB_MODS
-            }
+        if (oneshot_state[i] == os_idle){ continue; }
+        if (oneshot[i].modifier != 0) {
+            deactivate_oneshot_on_steroids(i);
+#           ifdef OSL_STEROIDS_ABSORB_MODS
+        } else if (oneshot_added_mods != 0) {
+            // Case of OSL carrying modifiers
+            // In this case, we must remove modifiers w/o cancelling the OSL.
+            unregister_mods_on_steroids(oneshot_added_mods);
+            oneshot_added_mods = 0;
+#           endif  // OSL_STEROIDS_ABSORB_MODS
         }
     }
 }
