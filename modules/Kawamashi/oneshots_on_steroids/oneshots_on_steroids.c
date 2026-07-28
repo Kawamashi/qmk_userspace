@@ -39,7 +39,7 @@ static int8_t active_osl_index = -1;
 static uint8_t oneshot_pressed_mods = 0;
 static uint8_t oneshot_added_mods = 0;
 
-bool should_mod_be_released(uint8_t index, uint8_t mod) {
+bool should_unregister_mod(uint8_t index, uint8_t mod) {
     if (mod & oneshot_pressed_mods) {
         oneshot_pressed_mods &= ~mod;
         if (should_osl_on_steroids_absorb_mods(oneshot[index].trigger)) {
@@ -66,7 +66,7 @@ bool has_mod_been_absorbed_by_osl(uint8_t mod) {
 static uint8_t oneshot_origin_layer = 0;
 
 // Handles `LT`, `MO` and `TT` keys.
-bool should_turn_layer_off(uint8_t i, uint8_t key_layer) {
+bool should_process_layer_off(uint8_t i, uint8_t key_layer) {
     //if (SHOULD_FREE_LAYER_STACK && key_layer == oneshot_origin_layer) {
     if (key_layer == oneshot_origin_layer) {
         oneshot_origin_layer = 0;
@@ -79,7 +79,7 @@ bool should_turn_layer_off(uint8_t i, uint8_t key_layer) {
 
 #   ifdef OS_STEROIDS_TIMEOUT
 static uint16_t idle_timer = 0;
-static uint8_t active_os_index = -1;
+static uint8_t timed_oneshot_index = -1;
 
 void housekeeping_task_oneshots_on_steroids(void) {
     if (idle_timer && timer_expired(timer_read(), idle_timer)) {
@@ -101,11 +101,11 @@ void deactivate_oneshot_on_steroids(int8_t index) {
 
         if (oneshot[index].modifier != 0) {
 #               ifdef OSL_STEROIDS_ABSORB_MODS
-            bool should_unregister_mod = true;
+            bool should_unregister_osm_on_steroids = true;
             if (active_osl_index != -1 && index != active_osl_index) {
-                should_unregister_mod = should_mod_be_released(active_osl_index, oneshot[index].modifier);
+                should_unregister_osm_on_steroids = should_unregister_mod(active_osl_index, oneshot[index].modifier);
             }
-            if (should_unregister_mod) {
+            if (should_unregister_osm_on_steroids) {
 #           endif  // OSL_STEROIDS_ABSORB_MODS
 
                 switch (oneshot_state[index]) {
@@ -140,7 +140,7 @@ void deactivate_oneshot_on_steroids(int8_t index) {
 #               ifdef OS_STEROIDS_FREE_LAYER_STACK
             bool should_leave_layer = true;
             if (active_osl_index != -1 && index != active_osl_index) {
-                should_leave_layer = should_turn_layer_off(index, oneshot[index].layer);
+                should_leave_layer = should_process_layer_off(index, oneshot[index].layer);
             }
             if (should_leave_layer) {
 #               endif  // OS_STEROIDS_FREE_LAYER_STACK
@@ -171,9 +171,9 @@ void deactivate_oneshot_on_steroids(int8_t index) {
         }
         oneshot_state[index] = os_idle;
 #           ifdef OS_STEROIDS_TIMEOUT
-        if (index == active_os_index) {
+        if (index == timed_oneshot_index) {
             idle_timer = 0;
-            active_os_index = -1;
+            timed_oneshot_index = -1;
         }
 #           endif  // OS_STEROIDS_TIMEOUT
     }
@@ -316,11 +316,11 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 #                           ifdef OSL_STEROIDS_ABSORB_MODS
                         if (should_osl_on_steroids_absorb_mods(oneshot[i].trigger)) {
 #                               ifdef OS_STEROIDS_TIMEOUT
-                            if (active_os_index != -1) {
-                                if ((get_mods() | get_oneshot_mods()) & oneshot[active_os_index].modifier) {
+                            if (timed_oneshot_index != -1) {
+                                if ((get_mods() | get_oneshot_mods()) & oneshot[timed_oneshot_index].modifier) {
                                     // preventing OSM tapped before from idling
                                     idle_timer = 0;
-                                    active_os_index = -1;
+                                    timed_oneshot_index = -1;
                                 }
                             }
 #                               endif  // OS_STEROIDS_TIMEOUT
@@ -375,7 +375,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     }
 #                       ifdef OS_STEROIDS_TIMEOUT
                     idle_timer = (record->event.time + OS_STEROIDS_TIMEOUT) | 1;
-                    active_os_index = i;
+                    timed_oneshot_index = i;
 #                       endif  // OS_STEROIDS_TIMEOUT
                 } else {
                     // The oneshot key has been released after the One Shot Term
@@ -450,7 +450,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                 }
 
                 if (mod_being_released) {
-                    if (!should_mod_be_released(i, mod_being_released)) {
+                    if (!should_unregister_mod(i, mod_being_released)) {
                         should_continue_processing = false;
                         continue;
                     }
@@ -459,25 +459,25 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
 #                   ifdef OS_STEROIDS_FREE_LAYER_STACK
                 if (IS_QK_MOMENTARY(keycode)) {  // `MO` keys
-                    if (!should_turn_layer_off(i, QK_MOMENTARY_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(i, QK_MOMENTARY_GET_LAYER(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
                 }
                 if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
-                    if (!should_turn_layer_off(i, QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(i, QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
                 }
                 if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {
-                    if (!should_turn_layer_off(i, QK_LAYER_TAP_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(i, QK_LAYER_TAP_GET_LAYER(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
                 }
                 if (IS_QK_LAYER_MOD(keycode)) {
-                    if (!should_turn_layer_off(i, QK_LAYER_MOD_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(i, QK_LAYER_MOD_GET_LAYER(keycode))) {
                         unregister_mods(QK_LAYER_MOD_GET_MODS(keycode));
                         should_continue_processing = false;
                         continue;
