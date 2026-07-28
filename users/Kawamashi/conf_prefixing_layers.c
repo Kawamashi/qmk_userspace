@@ -68,7 +68,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 bool insert_1dk(uint16_t keycode) {
 
   #ifdef ONE_DEAD_KEY_DEFFERED_SHIFT
-    // Special behaviour of PG_1DK when shifted
+    // Special behavior of PG_1DK when shifted
     // Shift must apply to the keycode following PG_1DK.
     const bool shift_mods = get_mods() & MOD_MASK_SHIFT;
     const bool shift_weak_mods = get_weak_mods() & MOD_MASK_SHIFT;

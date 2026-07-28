@@ -143,7 +143,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record);
  * I also use One Shot for All (OS4A) keys and layers. 
  * On their side of the keyboard, OS4A keys behave like one-shot layers, mainly to access Callum mods.
  * OS4A keys also act like one-shot shifts for the opposite side of the keyboard.
- * The latter behaviour is implemented with a prefixing layer.
+ * The latter behavior is implemented with a prefixing layer.
 */
 bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record);
 

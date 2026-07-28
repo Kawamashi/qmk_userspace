@@ -43,7 +43,7 @@ bool was_keycode_replaced(void);
 /**
  * Backspace countdown:
  * When a clever key is found, it supersede the ongoing key.
- * Sometimes, it's is not the desired behaviour.
+ * Sometimes, it's is not the desired behavior.
  * In this case, just delete the clever(s) key(s) and type again the desired letter.
  * To make it work, registering a clever key settles a "backspace countdown".
  * When it reaches 0, the buffer of recent keys is cleared.
@@ -57,7 +57,7 @@ void clear_recent_keys(void);
 /**
  * Idle timeout:
  * A timeout can be configured to clear the buffer if the keyboard is idle
- * for some time. This is useful to prevent unexpected behaviours.
+ * for some time. This is useful to prevent unexpected behaviors.
  * To be called from `housekeeping_task_user`.
  */
 //void recent_keys_task(void);

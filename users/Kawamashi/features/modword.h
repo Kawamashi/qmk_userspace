@@ -15,7 +15,7 @@ typedef enum {
 
 /* Idle timout:
  * Modword can be configured to deactivate if the keyboard is idle
- * for some time. This is useful to prevent unexpected behaviours.
+ * for some time. This is useful to prevent unexpected behaviors.
  * To be called from `housekeeping_task_user`.
  */
 void modword_task(void);

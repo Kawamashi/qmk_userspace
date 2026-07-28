@@ -29,7 +29,7 @@ bool is_tapping_sequence(uint16_t keycode);
 // Checks if the event is on a home-row MT with a valid matrix position.
 //bool is_tap_hold_event(uint16_t keycode, keyrecord_t* record, keypos_t pos);
 
-// Disables the hold behaviour of HRM during typing.
+// Disables the hold behavior of HRM during typing.
 //bool pre_process_record_flow_tap(uint16_t keycode, keyrecord_t* record);
 
 #ifdef __cplusplus

@@ -58,7 +58,7 @@ bool should_mod_be_released(uint8_t index, uint8_t mod) {
 
 bool has_mod_been_absorbed_by_osl(uint8_t mod) {
     return (oneshot_added_mods) & mod;
-};
+}
 #   endif  // OSL_STEROIDS_ABSORB_MODS
 
 
@@ -116,14 +116,14 @@ void deactivate_oneshot_on_steroids(int8_t index) {
                         unregister_mods(oneshot[index].modifier);
                         break;
                     case os_up_queued:
-                        if (should_mod_be_held_after_oneshot_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                        if (should_mod_be_held_after_oneshot_release(oneshot[index].modifier, oneshot[index].trigger)) {
                             unregister_mods_on_steroids(oneshot[index].modifier);
                         } else {
                             del_oneshot_mods(oneshot[index].modifier);
                         }
                         break;
                     case os_up_queued_used:
-                        if (should_mod_be_held_after_oneshot_term(oneshot[index].modifier, oneshot[index].trigger)) {
+                        if (should_mod_be_held_after_oneshot_release(oneshot[index].modifier, oneshot[index].trigger)) {
                             unregister_mods(oneshot[index].modifier);
                         }
                         break;
@@ -284,9 +284,9 @@ void clear_oneshot_mods_on_steroids(void) {
 
 bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
     
-    bool should_continue_processing = true;
+    if (!is_oneshot_on_steroids_custom_behavior(keycode, record)) { return false; }
 
-    if (!is_oneshot_on_steroids_custom_behaviour(keycode, record)) { return false; }
+    bool should_continue_processing = true;
 
     // Processing triggers and suppressors
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
@@ -324,7 +324,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                                 }
                             }
 #                               endif  // OS_STEROIDS_TIMEOUT
-                            // removing the oneshot mod of mods
+                            // removing the oneshot mod of `mods`
                             const uint8_t mods = get_mods() & ~oneshot[i].modifier;
                             if (mods) {
                                 oneshot_pressed_mods |= mods;
@@ -363,12 +363,12 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
             if (keycode == oneshot[i].suppressor) {
 
                 if (oneshot_state[i] == os_down_unused && timer_elapsed(oneshot_tap_time[i]) < GET_OS_STEROIDS_TERM(keycode, record)) {
-                    // The oneshot key has been released earlier than the one-shot term,
+                    // The oneshot key has been released earlier than the One Shot Term,
                     // without any other key being pressed in-between:
-                    // triggering the oneshot behaviour.
+                    // triggering the oneshot behavior.
                     oneshot_state[i] = os_up_queued;
                     if (oneshot[i].modifier != 0) {
-                        if (!should_mod_be_held_after_oneshot_term(oneshot[i].modifier, oneshot[i].trigger)) {
+                        if (!should_mod_be_held_after_oneshot_release(oneshot[i].modifier, oneshot[i].trigger)) {
                             unregister_mods(oneshot[i].modifier);
                             add_oneshot_mods(oneshot[i].modifier);
                         }
@@ -378,7 +378,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     active_os_index = i;
 #                       endif  // OS_STEROIDS_TIMEOUT
                 } else {
-                    // The oneshot key has been released after the one-shot term
+                    // The oneshot key has been released after the One Shot Term
                     // or a key was tapped when the oneshot key was held:
                     // cancel the oneshot.
                     deactivate_oneshot_on_steroids(i);
@@ -505,7 +505,7 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
     }
 }
 
-__attribute__((weak)) bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record) {
+__attribute__((weak)) bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
 
         default:
@@ -552,7 +552,7 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
             break;
     }
 
-    // Mod or layer-change key applied after one-shot on steroids
+    // Mod or layer-change key pressed after an OSoS key
     if (is_mod_key || is_layer_key) {
         if (is_oneshot_layer_on_steroids(oneshot)) {
             // If a layer-change key is pressed after an OSL, the OSL must be reset.
@@ -562,10 +562,10 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
             // When using OSM as Callum mods, an OSL tapped before must be reset.
             if (is_oneshot_mod_on_steroids(keycode)) { return false; }
 #               endif  // OSM_SHOULD_LEAVE_OSL_LAYER
-            // Standard behaviour, like any mod key after an OSL
+            // Standard behavior, like any mod key after an OSL
             return true;
         } else {
-            // one-shot is OSM on steroids
+            // one shot is OSM on steroids
 #               ifdef OSL_STEROIDS_ABSORB_MODS
             if (is_oneshot_layer_on_steroids(keycode)) {
                 if (should_osl_on_steroids_absorb_mods(keycode)) { return false; }
@@ -579,9 +579,10 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
     return false;
 }
 
-__attribute__((weak)) bool should_mod_be_held_after_oneshot_term(uint8_t mod, uint16_t trigger) {
-    // shift and ctrl shouldn't be held after the one-shot term,
-    // using `add_oneshot_mods()` instead, not to interfere with the mouse
+__attribute__((weak)) bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t trigger) {
+    // Shift and Ctrl are not kept registered after the OSoS key is released,
+    // to avoid interfering with mouse usage. If the one shot behavior is triggered,
+    // `add_oneshot_mods()` is used instead.
     if (mod & (MOD_MASK_CTRL | MOD_MASK_SHIFT)) { return false; }
     return true;
 }

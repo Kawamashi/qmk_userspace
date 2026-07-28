@@ -208,7 +208,7 @@ bool process_prefixing_layers(uint16_t keycode, keyrecord_t *record) {
 Pour faire `ê` avec l’approche Lafayette, il faut faire `★` `e`. Pour faire `Ê`, il faut faire `★` `Shift`+`e`. Je trouve ça plus logique de faire `Shift`+`ê`, donc `Shift`+`★` `e`. Dans ce même module, j’ai modifié le comportement de la touche 1DK avec `Shift`, pour que ce soit le caractère suivant `★` qui soit shifté :
 ```c
 bool insert_1dk(uint16_t keycode) {
-    // Special behaviour of PG_1DK when shifted
+    // Special behavior of PG_1DK when shifted
     // Shift must apply to the keycode following PG_1DK.
     const bool shift_mods = get_mods() & MOD_MASK_SHIFT;
     const bool shift_weak_mods = get_weak_mods() & MOD_MASK_SHIFT;

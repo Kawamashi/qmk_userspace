@@ -25,7 +25,7 @@ extern "C" {
 /* Idle timeout:
  *
  * Layerword can be configured to deactivate if the keyboard is idle
- * for some time. This is useful to prevent unexpected behaviours.
+ * for some time. This is useful to prevent unexpected behaviors.
  * To be called from `housekeeping_task_user`.
 */
 //void housekeeping_task_layerword(void);

@@ -262,7 +262,7 @@ const oneshot_t oneshot[] = {
   {OS(OS_NUMR, KC_NO, _NUMROW)}
 }; */
 
-bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* record) {
+bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* record) {
   
   switch (keycode) {
 
@@ -279,7 +279,7 @@ bool is_oneshot_on_steroids_custom_behaviour(uint16_t keycode, keyrecord_t* reco
       break;
 
     case OS_1DK:
-      // Custom behaviour when alt-gr
+      // Custom behavior when alt-gr
       const uint8_t mods = get_mods() | get_oneshot_mods();
       if (mods & MOD_BIT(KC_ALGR)) {
           tap_code16(ALGR(PG_1DK));
@@ -303,7 +303,7 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, k
     if (IS_QK_LAYER_TAP(keycode)) { is_layer_key = true; }
   }
 
-  // Mod or layer key applied after one-shot on steroids
+  // Mod or layer-change key pressed after an OSoS key
   if (is_mod_key || is_layer_key) {
     if (is_oneshot_layer_on_steroids(oneshot)) {
       // If a layer-change key is pressed after a OSL, the OSL must be reset.
@@ -313,7 +313,7 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, k
       // When using OSM as Callum mods, an OSL tapped before must be reset.
       if (is_oneshot_mod_on_steroids(keycode)) { return false; }
 #       endif  // OSM_SHOULD_LEAVE_OSL_LAYER
-      // Standard behaviour, like any mod key after an OSL
+      // Standard behavior, like any mod key after an OSL
       return true;
     } else {
       // one-shot is OSM on steroids
