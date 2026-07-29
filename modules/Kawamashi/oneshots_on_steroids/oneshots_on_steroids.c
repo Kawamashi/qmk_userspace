@@ -417,59 +417,57 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                     break;
             }
 
-        } else {    // On release
-            if (i == active_osl_index) {
+        } else if (i == active_osl_index) {    // On release
 
-#                   ifdef OSL_STEROIDS_ABSORB_MODS
-                uint8_t mod_being_released = 0;
-                if (IS_MODIFIER_KEYCODE(keycode)) {
-                    mod_being_released = MOD_BIT(keycode);
+#               ifdef OSL_STEROIDS_ABSORB_MODS
+            uint8_t mod_being_released = 0;
+            if (IS_MODIFIER_KEYCODE(keycode)) {
+                mod_being_released = MOD_BIT(keycode);
 
-                } else if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
-                    mod_being_released = QK_MOD_TAP_GET_MODS(keycode);
-                    if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
+            } else if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
+                mod_being_released = QK_MOD_TAP_GET_MODS(keycode);
+                if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
 
-                } else if (IS_QK_ONE_SHOT_MOD(keycode) && !record->tap.count) {
-                    mod_being_released = QK_ONE_SHOT_MOD_GET_MODS(keycode);
-                    if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
-                }
-
-                if (mod_being_released) {
-                    if (!should_unregister_mod(i, mod_being_released)) {
-                        should_continue_processing = false;
-                        continue;
-                    }
-                }
-#                   endif  // OSL_STEROIDS_ABSORB_MODS
-
-#                   ifdef OS_STEROIDS_FREE_LAYER_STACK
-                if (IS_QK_MOMENTARY(keycode)) {  // `MO` keys
-                    if (!should_process_layer_off(QK_MOMENTARY_GET_LAYER(keycode))) {
-                        should_continue_processing = false;
-                        continue;
-                    }
-                }
-                if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
-                    if (!should_process_layer_off(QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
-                        should_continue_processing = false;
-                        continue;
-                    }
-                }
-                if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {
-                    if (!should_process_layer_off(QK_LAYER_TAP_GET_LAYER(keycode))) {
-                        should_continue_processing = false;
-                        continue;
-                    }
-                }
-                if (IS_QK_LAYER_MOD(keycode)) {
-                    if (!should_process_layer_off(QK_LAYER_MOD_GET_LAYER(keycode))) {
-                        unregister_mods(QK_LAYER_MOD_GET_MODS(keycode));
-                        should_continue_processing = false;
-                        continue;
-                    }
-                }
-#                   endif  // OS_STEROIDS_FREE_LAYER_STACK
+            } else if (IS_QK_ONE_SHOT_MOD(keycode) && !record->tap.count) {
+                mod_being_released = QK_ONE_SHOT_MOD_GET_MODS(keycode);
+                if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
             }
+
+            if (mod_being_released) {
+                if (!should_unregister_mod(i, mod_being_released)) {
+                    should_continue_processing = false;
+                    continue;
+                }
+            }
+#               endif  // OSL_STEROIDS_ABSORB_MODS
+
+#               ifdef OS_STEROIDS_FREE_LAYER_STACK
+            if (IS_QK_MOMENTARY(keycode)) {  // `MO` keys
+                if (!should_process_layer_off(QK_MOMENTARY_GET_LAYER(keycode))) {
+                    should_continue_processing = false;
+                    continue;
+                }
+            }
+            if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
+                if (!should_process_layer_off(QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
+                    should_continue_processing = false;
+                    continue;
+                }
+            }
+            if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {
+                if (!should_process_layer_off(QK_LAYER_TAP_GET_LAYER(keycode))) {
+                    should_continue_processing = false;
+                    continue;
+                }
+            }
+            if (IS_QK_LAYER_MOD(keycode)) {
+                if (!should_process_layer_off(QK_LAYER_MOD_GET_LAYER(keycode))) {
+                    unregister_mods(QK_LAYER_MOD_GET_MODS(keycode));
+                    should_continue_processing = false;
+                    continue;
+                }
+            }
+#               endif  // OS_STEROIDS_FREE_LAYER_STACK
         }
     }
     return should_continue_processing;
