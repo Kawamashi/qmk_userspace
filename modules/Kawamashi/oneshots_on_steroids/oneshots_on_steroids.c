@@ -185,12 +185,6 @@ static int8_t get_oneshot_on_steroids_index(uint16_t keycode) {
     return -1;
 }
 
-void cancel_oneshot_on_steroids(uint16_t keycode) {
-
-    const int8_t index = get_oneshot_on_steroids_index(keycode);
-    if (index != -1) { deactivate_oneshot_on_steroids(index, true); }
-}
-
 int8_t get_oneshot_on_steroids_state(uint16_t keycode) {
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
         if (keycode == oneshot[i].trigger) { return oneshot_state[i]; }
@@ -226,6 +220,12 @@ bool is_oneshot_mod_on_steroids(uint16_t keycode) {
 bool is_oneshot_layer_on_steroids_active(void) {
     if (active_osl_index == -1) { return false; }
     return oneshot_state[active_osl_index] > os_down_used;
+}
+
+void cancel_oneshot_on_steroids(uint16_t keycode) {
+
+    const int8_t index = get_oneshot_on_steroids_index(keycode);
+    if (index != -1) { deactivate_oneshot_on_steroids(index, true); }
 }
 
 void clear_oneshots_on_steroids(void) {
