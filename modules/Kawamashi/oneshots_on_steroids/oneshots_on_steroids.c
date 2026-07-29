@@ -26,7 +26,7 @@ ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 #error "OS_STEROIDS_FREE_LAYER_STACK_PER_KEY needs OS_STEROIDS_FREE_LAYER_STACK to work. Please define OS_STEROIDS_FREE_LAYER_STACK."
 #endif
 
-static oneshot_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
+static oneshot_on_steroids_state_t oneshot_state[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = os_idle };
 static uint16_t oneshot_tap_time[OS_STEROIDS_COUNT] = { [0 ... OS_STEROIDS_COUNT - 1] = 0 };
 static int8_t active_osl_index = -1;
 
@@ -329,7 +329,7 @@ static void process_trigger_press(uint8_t index, keyrecord_t *record) {
             // not to mess up with the layer stack.
                 const uint8_t key_layer = read_source_layers_cache(record->event.key);
                 const uint8_t default_layer = get_highest_layer(default_layer_state);
-                if (SHOULD_FREE_LAYER_STACK && key_layer > oneshot[index].layer && key_layer != default_layer) {
+                if (OS_STEROIDS_SHOULD_FREE_LAYER_STACK && key_layer > oneshot[index].layer && key_layer != default_layer) {
                     oneshot_origin_layer = key_layer;
                     layer_off(key_layer);
                 }
@@ -437,56 +437,6 @@ static bool process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t
     return true;
 }
 
-/* static bool process_other_key_release(uint8_t index, uint16_t keycode, keyrecord_t *record) {
-
-#       ifdef OSL_STEROIDS_ABSORB_MODS
-    uint8_t mod_being_released = 0;
-    if (IS_MODIFIER_KEYCODE(keycode)) {
-        mod_being_released = MOD_BIT(keycode);
-
-    } else if (IS_QK_MOD_TAP(keycode) && !record->tap.count) {
-        mod_being_released = QK_MOD_TAP_GET_MODS(keycode);
-        if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
-
-    } else if (IS_QK_ONE_SHOT_MOD(keycode) && !record->tap.count) {
-        mod_being_released = QK_ONE_SHOT_MOD_GET_MODS(keycode);
-        if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
-    }
-
-    if (mod_being_released) {
-        if (!should_unregister_mod(index, mod_being_released)) {
-            return false;
-        }
-    }
-#       endif  // OSL_STEROIDS_ABSORB_MODS
-
-#       ifdef OS_STEROIDS_FREE_LAYER_STACK
-    if (IS_QK_MOMENTARY(keycode)) {  // `MO` keys
-        if (!should_process_layer_off(QK_MOMENTARY_GET_LAYER(keycode))) {
-            return false;
-        }
-    }
-    if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
-        if (!should_process_layer_off(QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
-            return false;
-        }
-    }
-    if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {
-        if (!should_process_layer_off(QK_LAYER_TAP_GET_LAYER(keycode))) {
-            return false;
-        }
-    }
-    if (IS_QK_LAYER_MOD(keycode)) {
-        if (!should_process_layer_off(QK_LAYER_MOD_GET_LAYER(keycode))) {
-            unregister_mods(QK_LAYER_MOD_GET_MODS(keycode));
-            return false;
-        }
-    }
-#       endif  // OS_STEROIDS_FREE_LAYER_STACK
-
-    return true;
-} */
-
 
 bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) {
     
@@ -513,9 +463,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) 
                 if (keycode == oneshot[i].trigger) { should_continue_processing = false; }
                 continue;
             }
-
             if (keycode == oneshot[i].suppressor) { process_suppressor_release(i, keycode, record); }
-
             // Trigger released
             if (keycode == oneshot[i].trigger) { should_continue_processing = false; }
         }
@@ -548,11 +496,6 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) 
                 continue;
             }
 #               endif  // OS_STEROIDS_FREE_LAYER_STACK
-
-/*             if (!process_other_key_release(i, keycode, record)) {
-                should_continue_processing = false;
-                continue;
-            } */
         }
     }
     return should_continue_processing;
