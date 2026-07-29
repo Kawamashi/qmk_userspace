@@ -92,13 +92,6 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 // Returns whether a modifier has been absorbed by an OSoS key
 bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
-// Deactivates a specific OSoS key (by index)
-void deactivate_oneshot_on_steroids(int8_t index);
-
-// If the keycode is an OSoS key, returns its index in the array of OSoS
-// Otherwise, returns -1
-int8_t get_oneshot_on_steroids_index(uint16_t keycode);
-
 // If the keycode is an OSoS key, returns its state
 // Otherwise, returns -1
 int8_t get_oneshot_on_steroids_state(uint16_t keycode);
