@@ -89,17 +89,29 @@ void unregister_mods_on_steroids(uint8_t mods) {
     unregister_mods(mods);
 }
 
+bool should_unregister_osm_on_steroids(int8_t index) {
+#       ifdef OSL_STEROIDS_ABSORB_MODS
+    if (active_osl_index != -1 && index != active_osl_index) {
+        return should_unregister_mod(active_osl_index, oneshot[index].modifier);
+    }
+#       endif  // OSL_STEROIDS_ABSORB_MODS
+    return true;
+}
+
+bool should_deactivate_layer(int8_t index) {
+#       ifdef OS_STEROIDS_FREE_LAYER_STACK
+    if (active_osl_index != -1 && index != active_osl_index) {
+        return should_process_layer_off(oneshot[index].layer);
+    }
+#       endif  // OS_STEROIDS_FREE_LAYER_STACK
+    return true;
+}
+
 void deactivate_oneshot_on_steroids(int8_t index) {
     if (oneshot_state[index] == os_idle) { return; }
 
     if (oneshot[index].modifier != 0) {
-#           ifdef OSL_STEROIDS_ABSORB_MODS
-        bool should_unregister_osm_on_steroids = true;
-        if (active_osl_index != -1 && index != active_osl_index) {
-            should_unregister_osm_on_steroids = should_unregister_mod(active_osl_index, oneshot[index].modifier);
-        }
-        if (should_unregister_osm_on_steroids) {
-#           endif  // OSL_STEROIDS_ABSORB_MODS
+        if (should_unregister_osm_on_steroids(index)) {
 
             switch (oneshot_state[index]) {
                 case os_down_unused:
@@ -123,22 +135,11 @@ void deactivate_oneshot_on_steroids(int8_t index) {
                 default:
                     break;
             }
-            
-#           ifdef OSL_STEROIDS_ABSORB_MODS
         }
-#           endif  // OSL_STEROIDS_ABSORB_MODS
     }
 
     if (oneshot[index].layer != 0) {
-#           ifdef OS_STEROIDS_FREE_LAYER_STACK
-        bool should_leave_layer = true;
-        if (active_osl_index != -1 && index != active_osl_index) {
-            should_leave_layer = should_process_layer_off(oneshot[index].layer);
-        }
-        if (should_leave_layer) { layer_off(oneshot[index].layer); }
-#           else
-        layer_off(oneshot[index].layer);
-#           endif  // OS_STEROIDS_FREE_LAYER_STACK
+        if (should_deactivate_layer(index)) { layer_off(oneshot[index].layer); }
 
         if (index == active_osl_index) {
             active_osl_index = -1;
