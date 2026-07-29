@@ -113,8 +113,11 @@ static bool should_process_layer_release(uint8_t index, uint16_t keycode, keyrec
 
 #   ifdef OS_STEROIDS_TIMEOUT
 static uint16_t idle_timer = 0;
-static uint8_t timed_oneshot_index = -1;
+static int8_t timed_oneshot_index = -1;
 
+// One Shot on steroids can be configured to deactivate if the keyboard is idle for some time.
+// This is useful to prevent unexpected behaviors.
+// In config.h, define `OS_STEROIDS_TIMEOUT` with a time in milliseconds.
 void housekeeping_task_oneshots_on_steroids(void) {
     if (idle_timer && timer_expired(timer_read(), idle_timer)) {
         clear_oneshots_on_steroids();
@@ -398,13 +401,13 @@ static void process_suppressor_release(uint8_t index, uint16_t keycode, keyrecor
     }
 }
 
-static bool process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t *record) {
+static void process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t *record) {
 
 #       ifdef OS_STEROIDS_CANCEL_KEY
     if (is_oneshot_on_steroids_cancel_key(keycode)) {
         // Cancel oneshot on press of specific keys.
         deactivate_oneshot_on_steroids(index, false);
-        return false;
+        return;
     }
 #       endif  // OS_STEROIDS_CANCEL_KEY
 
@@ -412,7 +415,7 @@ static bool process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t
 #           ifdef OS_STEROIDS_TIMEOUT
         if (idle_timer) {idle_timer = (record->event.time + OS_STEROIDS_TIMEOUT) | 1;}
 #           endif  // OS_STEROIDS_TIMEOUT
-        return false;
+        return;
     }
     
     // Regular key pressed
@@ -434,7 +437,6 @@ static bool process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t
         default:
             break;
     }
-    return true;
 }
 
 
@@ -476,9 +478,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) 
         if (keycode == oneshot[i].trigger) { continue; }
 
         if (record->event.pressed) {    // On press
-            if (!process_other_key_press(i, keycode, record)) {
-                continue;
-            }
+            process_other_key_press(i, keycode, record);
 
         } else if (i == active_osl_index) {
             // Regular key release when an OSL is active

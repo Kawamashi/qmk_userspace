@@ -82,13 +82,6 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 #endif
 
 
-/* Idle timeout:
- * One Shot on steroids are configured to deactivate if the keyboard is idle for some time.
- * This is useful to prevent unexpected behaviors.
- * In config.h, define `ONESHOT_TIMEOUT` with a time in milliseconds.
- */
-//void oneshot_task(void);
-
 // If the keycode is an OSoS key, returns its state
 // Otherwise, returns -1
 int8_t get_oneshot_on_steroids_state(uint16_t keycode);
