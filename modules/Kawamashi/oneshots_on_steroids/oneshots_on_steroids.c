@@ -38,15 +38,13 @@ static uint8_t oneshot_added_mods = 0;
 bool should_unregister_mod(uint8_t index, uint8_t mod) {
     if (mod & oneshot_pressed_mods) {
         oneshot_pressed_mods &= ~mod;
-        if (should_osl_on_steroids_absorb_mods(oneshot[index].trigger)) {
-            switch (oneshot_state[index]) {
-                case os_down_unused:
-                case os_up_queued:
-                    oneshot_added_mods |= mod;
-                    return false;
-                default:
-                    return true;
-            }
+        switch (oneshot_state[index]) {
+            case os_down_unused:
+            case os_up_queued:
+                oneshot_added_mods |= mod;
+                return false;
+            default:
+                return true;
         }
     }
     return true;
@@ -292,8 +290,8 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
                         // OSL on steroids can deactivate another layer only if there is no ongoing oneshot layer,
                         // not to mess up with the layer stack.
                             const uint8_t key_layer = read_source_layers_cache(record->event.key);
-                            //uint8_t default_layer = get_highest_layer(default_layer_state);
-                            if (SHOULD_FREE_LAYER_STACK && key_layer > oneshot[i].layer) {  // && key_layer != default_layer
+                            //const uint8_t default_layer = get_highest_layer(default_layer_state);
+                            if (SHOULD_FREE_LAYER_STACK && key_layer > oneshot[i].layer) {// && key_layer != default_layer) {
                                 oneshot_origin_layer = key_layer;
                                 layer_off(key_layer);
                             }
