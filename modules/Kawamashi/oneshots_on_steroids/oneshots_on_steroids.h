@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2026 @Kawamashi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ extern "C" {
  * 
  * For one shot mods, the `modifier` field must use the MOD_BIT() macro.
  * Modifiers can be combined, for ex. MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT)
- * `0` must be used if the one shot key triggers no modifier.
+ * `0` must be used for layer-only one shot keys.
  * The `layer` field is used for one shot layers.
- * `0` must be used for mods-only one shots on steroids.
+ * `0` must be used for mods-only one shot keys.
  */ 
 typedef struct {
   uint16_t trigger;
@@ -43,7 +43,7 @@ typedef struct {
 } oneshot_t;
 
 // Array of one shot on steroids keys.
-// Each OSoS must also be declared in custom_keycodes.
+// Each OSoS key must also be declared in custom_keycodes.
 extern const oneshot_t oneshot[];
 
 // Represents the five states a one shot key can be in
@@ -76,7 +76,7 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 #endif  // OS_STEROIDS_SPLIT_TRIGGER_HOLD
 
 #ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-#   define SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer, record)
+#   define SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer)
 #else
 #   define SHOULD_FREE_LAYER_STACK true
 #endif
@@ -142,7 +142,7 @@ bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* recor
 bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 
 // Defines keys to be ignored when determining whether a one shot on steroids has been used.
-// Setting this to one shot layer on steroids allows carrying one shot modifiers between layers.
+// Setting this to OSoS layer keys allows carrying one shot modifiers between layers.
 bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
 
 // When triggering the one shot effect, define which mods should be released
@@ -150,11 +150,11 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, k
 // By default, the function returns true if mods include shift or ctrl.
 bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t trigger);
 
-// Function to customise which one shot layer on steroids should absorb modifiers.
+// Function to customise which OSoS layer keys should absorb modifiers.
 bool should_osl_on_steroids_absorb_mods(uint16_t keycode);
 
-// Function to customise which one shot layer on steroids should deactivate the layer it is comming from.
-bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record);
+// Function to customise which OSoS layer keys should deactivate the layer it is comming from.
+bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer);
 
 #ifdef __cplusplus
 }

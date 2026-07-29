@@ -1,4 +1,4 @@
-/* Copyright 2025 @Kawamashi
+/* Copyright 2026 @Kawamashi
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,6 @@ ASSERT_COMMUNITY_MODULES_MIN_API_VERSION(1, 0, 0);
 #ifdef NO_ACTION_ONESHOT
 #error "One Shots on Steroids need vanilla One Shot Keys to work. Please undefine NO_ACTION_ONESHOT."
 #endif  // NO_ACTION_ONESHOT
-
-/* #if defined OSL_STEROIDS_ABSORB_MODS_PER_KEY && !defined OSL_STEROIDS_ABSORB_MODS
-#error "OSL_STEROIDS_ABSORB_MODS_PER_KEY needs OSL_STEROIDS_ABSORB_MODS to work. Please define OSL_STEROIDS_ABSORB_MODS."
-#endif */
 
 #if defined OS_STEROIDS_FREE_LAYER_STACK_PER_KEY && !defined OS_STEROIDS_FREE_LAYER_STACK
 #error "OS_STEROIDS_FREE_LAYER_STACK_PER_KEY needs OS_STEROIDS_FREE_LAYER_STACK to work. Please define OS_STEROIDS_FREE_LAYER_STACK."
@@ -66,8 +62,7 @@ bool has_mod_been_absorbed_by_osl(uint8_t mod) {
 static uint8_t oneshot_origin_layer = 0;
 
 // Handles `LT`, `MO` and `TT` keys.
-bool should_process_layer_off(uint8_t i, uint8_t key_layer) {
-    //if (SHOULD_FREE_LAYER_STACK && key_layer == oneshot_origin_layer) {
+bool should_process_layer_off(uint8_t key_layer) {
     if (key_layer == oneshot_origin_layer) {
         oneshot_origin_layer = 0;
         return false;  // Skip default handling.
@@ -140,13 +135,11 @@ void deactivate_oneshot_on_steroids(int8_t index) {
 #           ifdef OS_STEROIDS_FREE_LAYER_STACK
         bool should_leave_layer = true;
         if (active_osl_index != -1 && index != active_osl_index) {
-            should_leave_layer = should_process_layer_off(index, oneshot[index].layer);
+            should_leave_layer = should_process_layer_off(oneshot[index].layer);
         }
-        if (should_leave_layer) {
-#           endif  // OS_STEROIDS_FREE_LAYER_STACK
-            layer_off(oneshot[index].layer);
-#           ifdef OS_STEROIDS_FREE_LAYER_STACK
-        }
+        if (should_leave_layer) { layer_off(oneshot[index].layer); }
+#           else
+        layer_off(oneshot[index].layer);
 #           endif  // OS_STEROIDS_FREE_LAYER_STACK
 
         if (index == active_osl_index) {
@@ -226,10 +219,8 @@ bool is_oneshot_mod_on_steroids(uint16_t keycode) {
 }
 
 bool is_oneshot_layer_on_steroids_active(void) {
-    if (active_osl_index != -1) {
-        return oneshot_state[active_osl_index] > os_down_used;
-    }
-    return false;
+    if (active_osl_index == -1) { return false; }
+    return oneshot_state[active_osl_index] > os_down_used;
 }
 
 void clear_oneshots_on_steroids(void) {
@@ -239,10 +230,9 @@ void clear_oneshots_on_steroids(void) {
 }
 
 void reset_oneshot_layer_on_steroids(void) {
-    if (active_osl_index != -1) {
-        if (oneshot_state[active_osl_index] > os_down_used) {
-            deactivate_oneshot_on_steroids(active_osl_index);
-        }
+    if (active_osl_index == -1) { return; }
+    if (oneshot_state[active_osl_index] > os_down_used) {
+        deactivate_oneshot_on_steroids(active_osl_index);
     }
 }
 
@@ -456,25 +446,25 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record){
 
 #                   ifdef OS_STEROIDS_FREE_LAYER_STACK
                 if (IS_QK_MOMENTARY(keycode)) {  // `MO` keys
-                    if (!should_process_layer_off(i, QK_MOMENTARY_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(QK_MOMENTARY_GET_LAYER(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
                 }
                 if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
-                    if (!should_process_layer_off(i, QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
                 }
                 if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {
-                    if (!should_process_layer_off(i, QK_LAYER_TAP_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(QK_LAYER_TAP_GET_LAYER(keycode))) {
                         should_continue_processing = false;
                         continue;
                     }
                 }
                 if (IS_QK_LAYER_MOD(keycode)) {
-                    if (!should_process_layer_off(i, QK_LAYER_MOD_GET_LAYER(keycode))) {
+                    if (!should_process_layer_off(QK_LAYER_MOD_GET_LAYER(keycode))) {
                         unregister_mods(QK_LAYER_MOD_GET_MODS(keycode));
                         should_continue_processing = false;
                         continue;
@@ -605,7 +595,7 @@ __attribute__((weak)) bool should_osl_on_steroids_absorb_mods(uint16_t keycode) 
 #endif  // OSL_STEROIDS_ABSORB_MODS
 
 #ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-__attribute__((weak)) bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record) {
+__attribute__((weak)) bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer) {
     switch (layer) {
 
         default:

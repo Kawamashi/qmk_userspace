@@ -330,7 +330,7 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, k
   return false;
 }
 
-bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer, keyrecord_t* record) {
+bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer) {
   switch (keycode) {
     case OS_NUMR:
     case OS_WNUM:
