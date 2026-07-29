@@ -244,7 +244,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
 // One-shot mods
 
-const oneshot_on_steroids_t oneshot[] = {
+const oneshot_on_steroids_t oneshot_os[] = {
   {OS(OS_SHFT, OS_SHFT, MOD_BIT(KC_LSFT),                    _BASE    )},
   {OS(OS_WINM, LT_MGC,  0,                                   _FUNCAPPS)},
   {OS(OS_WNUM, LT_REPT, MOD_BIT(KC_LGUI),                    _NUMROW  )},

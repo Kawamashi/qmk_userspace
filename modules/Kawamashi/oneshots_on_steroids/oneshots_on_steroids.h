@@ -44,7 +44,7 @@ typedef struct {
 
 // Array of one shot on steroids keys.
 // Each OSoS key must also be declared in custom_keycodes.
-extern const oneshot_on_steroids_t oneshot[];
+extern const oneshot_on_steroids_t oneshot_os[];
 
 // Represents the five states a one shot key can be in
 typedef enum {
@@ -76,7 +76,7 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 #endif  // OS_STEROIDS_SPLIT_TRIGGER_HOLD
 
 #ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-#   define OS_STEROIDS_SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot[i].trigger, key_layer)
+#   define OS_STEROIDS_SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot_os[i].trigger, key_layer)
 #else
 #   define OS_STEROIDS_SHOULD_FREE_LAYER_STACK true
 #endif
