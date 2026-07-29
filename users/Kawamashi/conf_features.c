@@ -106,6 +106,7 @@ bool process_macros_II(uint16_t keycode, keyrecord_t *record) {
     // Other macros (on press).
     switch (keycode) {
       case PG_DEG:
+        cancel_oneshot_on_steroids(OS_SHFT);
         tap_code(PG_1DK);
         tap_code(KC_0);
         return false;

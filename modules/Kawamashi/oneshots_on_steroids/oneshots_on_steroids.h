@@ -93,7 +93,7 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
 // Deactivates a specific OSoS key (by index)
-void deactivate_oneshot_on_steroids(int8_t index);
+//void deactivate_oneshot_on_steroids(int8_t index);
 
 // Deactivates a specific OSoS key (by keycode)
 void cancel_oneshot_on_steroids(uint16_t keycode);
@@ -104,7 +104,7 @@ int8_t get_oneshot_on_steroids_state(uint16_t keycode);
 
 // If the keycode is an OSoS key, returns its index in the array of OSoS
 // Otherwise, returns -1
-int8_t get_oneshot_on_steroids_index(uint16_t keycode);
+//int8_t get_oneshot_on_steroids_index(uint16_t keycode);
 
 // If there is an active OSoS layer, returns the layer
 // Otherwise, returns 0
