@@ -312,19 +312,19 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, k
     // If a layer-change key is pressed after a OSL, the OSL must be reset.
     if (is_layer_key) { return false; }
     // keycode is not a layer key, it’s a mod key.
-#     ifdef OSM_SHOULD_LEAVE_OSL_LAYER
+#     ifdef OS_MOD_SHOULD_LEAVE_OS_LAYER
     // When using OSM as Callum mods, an OSL tapped before must be reset.
     if (is_oneshot_mod_on_steroids(keycode)) { return false; }
-#     endif  // OSM_SHOULD_LEAVE_OSL_LAYER
+#     endif  // OS_MOD_SHOULD_LEAVE_OS_LAYER
     // Standard behavior, like any mod key after an OSL
     return true;
   } else {
     // one-shot is OSM on steroids
-#     ifdef OSL_STEROIDS_ABSORB_MODS
+#     ifdef OS_STEROIDS_ABSORB_MODS
     if (is_oneshot_layer_on_steroids(keycode)) {
-        if (should_osl_on_steroids_absorb_mods(keycode)) { return false; }
+        if (should_oneshot_on_steroids_absorb_mods(keycode)) { return false; }
     }
-#     endif  // OSL_STEROIDS_ABSORB_MODS
+#     endif  // OS_STEROIDS_ABSORB_MODS
     // OSM on steroids should stay pressed
     // whether keycode is a mod or a layer-change key.
     return true;

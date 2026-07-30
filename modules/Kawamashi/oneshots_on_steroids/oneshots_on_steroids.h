@@ -75,12 +75,6 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 #  define OS(key, mods, layer) key, key, mods, layer
 #endif  // OS_STEROIDS_SPLIT_TRIGGER_HOLD
 
-#ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-#   define SHOULD_OS_STEROIDS_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot_os[i].trigger, key_layer)
-#else
-#   define SHOULD_OS_STEROIDS_FREE_LAYER_STACK true
-#endif
-
 
 // If the keycode is an OSoS key, returns its state
 // Otherwise, returns -1
@@ -134,13 +128,13 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, k
 bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t trigger);
 
 
-#   if defined OSL_STEROIDS_ABSORB_MODS
+#   if defined OS_STEROIDS_ABSORB_MODS
 // Returns whether a modifier has been absorbed by an OSoS key
 bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
 // Function to customise which OSoS layer keys should absorb modifiers.
-bool should_osl_on_steroids_absorb_mods(uint16_t keycode);
-#   endif  // OSL_STEROIDS_ABSORB_MODS
+bool should_oneshot_on_steroids_absorb_mods(uint16_t keycode);
+#   endif  // OS_STEROIDS_ABSORB_MODS
 
 #   ifdef OS_STEROIDS_FREE_LAYER_STACK
 // Function to customise which OSoS layer keys should deactivate the layer it is comming from.
