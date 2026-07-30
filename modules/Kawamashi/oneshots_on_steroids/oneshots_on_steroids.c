@@ -125,6 +125,11 @@ void housekeeping_task_oneshots_on_steroids(void) {
         clear_oneshots_on_steroids();
     }
 }
+
+// Update the timeout of an OSoS key
+static void set_oneshot_on_steroids_idle_timer(uint16_t keycode, keyrecord_t *record) {
+    idle_timer = (record->event.time + get_oneshot_on_steroids_timeout(keycode, record)) | 1;
+}
 #   endif  // OS_STEROIDS_TIMEOUT
 
 
@@ -394,7 +399,7 @@ static void process_suppressor_release(uint8_t index, uint16_t keycode, keyrecor
             }
         }
 #           ifdef OS_STEROIDS_TIMEOUT
-        idle_timer = (record->event.time + OS_STEROIDS_TIMEOUT) | 1;
+        set_oneshot_on_steroids_idle_timer(oneshot_os[index].trigger, record);
         timed_oneshot_index = index;
 #           endif  // OS_STEROIDS_TIMEOUT
     } else {
@@ -415,7 +420,7 @@ static void process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t
 
     if (should_oneshot_on_steroids_ignore_key(keycode, oneshot_os[index].trigger, record)) {
 #           ifdef OS_STEROIDS_TIMEOUT
-        if (idle_timer) {idle_timer = (record->event.time + OS_STEROIDS_TIMEOUT) | 1;}
+        if (idle_timer) { set_oneshot_on_steroids_idle_timer(oneshot_os[index].trigger, record); }
 #           endif  // OS_STEROIDS_TIMEOUT
         return;
     }
@@ -593,7 +598,7 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
     }
 }
 
-__attribute__((weak)) bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t trigger) {
+__attribute__((weak)) bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t keycode) {
     // Shift and Ctrl are not kept registered after the OSoS key is released,
     // to avoid interfering with mouse usage. If the one shot behavior is triggered,
     // `add_oneshot_mods()` is used instead.
@@ -608,6 +613,16 @@ __attribute__((weak)) uint16_t get_oneshot_on_steroids_term(uint16_t keycode, ke
         return OS_STEROIDS_TERM;
     }
 }
+
+#   ifdef OS_STEROIDS_TIMEOUT
+__attribute__((weak)) uint16_t get_oneshot_on_steroids_timeout(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    
+    default:
+        return OS_STEROIDS_TIMEOUT;
+    }
+}
+#   endif  // OS_STEROIDS_TIMEOUT
 
 #ifdef OS_STEROIDS_ABSORB_MODS
 __attribute__((weak)) bool should_oneshot_on_steroids_absorb_mods(uint16_t keycode) {

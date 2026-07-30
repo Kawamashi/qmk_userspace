@@ -66,9 +66,6 @@ typedef enum {
 #   define OS_STEROIDS_TERM TAPPING_TERM
 #endif
 
-// Function to customise the One Shot Term for each one shot on steroids.
-uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
-
 // If the keycode is an OSoS key, returns its state
 // Otherwise, returns -1
 int8_t get_oneshot_on_steroids_state(uint16_t keycode);
@@ -104,6 +101,13 @@ void del_oneshot_mods_on_steroids(uint8_t mods);
 // Deactivates all OSoS keys using any modifier
 void clear_oneshot_mods_on_steroids(void);
 
+
+
+//*******************************************  Callbacks  ********************************************//
+
+// Callback to customise the One Shot Term for each one shot on steroids.
+uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
+
 // Handles one shot on steroids custom behavior,
 // before their standard processing
 bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* record);
@@ -112,25 +116,28 @@ bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* recor
 bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 
 // Defines keys to be ignored when determining whether a one shot on steroids has been used.
-// Setting this to OSoS layer keys allows carrying one shot modifiers between layers.
 bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
 
 // When triggering the one shot effect, define which mods should be released
 // to send one shot mods instead, not to interfere with the mouse.
 // By default, the function returns true if mods include shift or ctrl.
-bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t trigger);
+bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t keycode);
 
+#   ifdef OS_STEROIDS_TIMEOUT
+// // Callback to customise the timeout for each one shot on steroids.
+uint16_t get_oneshot_on_steroids_timeout(uint16_t keycode, keyrecord_t *record);
+#   endif  // OS_STEROIDS_TIMEOUT
 
 #   if defined OS_STEROIDS_ABSORB_MODS
 // Returns whether a modifier has been absorbed by an OSoS key
 bool has_mod_been_absorbed_by_osl(uint8_t mod);
 
-// Function to customise which OSoS layer keys should absorb modifiers.
+// Callback to customise which OSoS layer keys should absorb modifiers.
 bool should_oneshot_on_steroids_absorb_mods(uint16_t keycode);
 #   endif  // OS_STEROIDS_ABSORB_MODS
 
 #   ifdef OS_STEROIDS_FREE_LAYER_STACK
-// Function to customise which OSoS layer keys should deactivate the layer it is comming from.
+// Callback to customise which OSoS layer keys should deactivate the layer it is comming from.
 bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer);
 #   endif  // OS_STEROIDS_FREE_LAYER_STACK
 
