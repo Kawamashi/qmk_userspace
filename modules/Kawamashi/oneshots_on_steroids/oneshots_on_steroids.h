@@ -74,6 +74,11 @@ int8_t get_oneshot_on_steroids_state(uint16_t keycode);
 // Otherwise, returns 0
 uint8_t get_oneshot_layer_on_steroids(void);
 
+#   if defined OS_STEROIDS_ABSORB_MODS
+// Returns the modifiers absorbed by an OSoS key
+bool get_absorbed_mods(void);
+#   endif  // OS_STEROIDS_ABSORB_MODS
+
 // Returns whether a keycode is an OSoS key
 bool is_oneshot_on_steroids(uint16_t keycode);
 
@@ -129,9 +134,6 @@ uint16_t get_oneshot_on_steroids_timeout(uint16_t keycode, keyrecord_t *record);
 #   endif  // OS_STEROIDS_TIMEOUT
 
 #   if defined OS_STEROIDS_ABSORB_MODS
-// Returns whether a modifier has been absorbed by an OSoS key
-bool has_mod_been_absorbed_by_osl(uint8_t mod);
-
 // Callback to customise which OSoS layer keys should absorb modifiers.
 bool should_oneshot_on_steroids_absorb_mods(uint16_t keycode);
 #   endif  // OS_STEROIDS_ABSORB_MODS

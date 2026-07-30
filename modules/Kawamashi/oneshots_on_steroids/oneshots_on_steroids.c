@@ -73,8 +73,8 @@ static bool should_process_mod_release(uint8_t index, uint16_t keycode, keyrecor
     return true;
 }
 
-bool has_mod_been_absorbed_by_osl(uint8_t mod) {
-    return (oneshot_added_mods) & mod;
+bool get_absorbed_mods(void) {
+    return oneshot_added_mods;
 }
 #   endif  // OS_STEROIDS_ABSORB_MODS
 
