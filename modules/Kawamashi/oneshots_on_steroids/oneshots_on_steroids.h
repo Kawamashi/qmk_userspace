@@ -76,9 +76,9 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 #endif  // OS_STEROIDS_SPLIT_TRIGGER_HOLD
 
 #ifdef OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-#   define OS_STEROIDS_SHOULD_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot_os[i].trigger, key_layer)
+#   define SHOULD_OS_STEROIDS_FREE_LAYER_STACK should_oneshot_on_steroids_deactivate_layer(oneshot_os[i].trigger, key_layer)
 #else
-#   define OS_STEROIDS_SHOULD_FREE_LAYER_STACK true
+#   define SHOULD_OS_STEROIDS_FREE_LAYER_STACK true
 #endif
 
 

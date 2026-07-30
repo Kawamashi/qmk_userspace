@@ -63,6 +63,11 @@ static bool should_process_mod_release(uint8_t index, uint16_t keycode, keyrecor
     } else if (IS_QK_ONE_SHOT_MOD(keycode) && !record->tap.count) {
         mod_being_released = QK_ONE_SHOT_MOD_GET_MODS(keycode);
         if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
+
+    } else if (IS_QK_LAYER_MOD(keycode)) {
+        mod_being_released = QK_LAYER_MOD_GET_MODS(keycode);
+        if ((mod_being_released & 0x10) != 0) { mod_being_released <<= 4; }
+        layer_off(QK_LAYER_MOD_GET_LAYER(keycode));
     }
 
     if (mod_being_released) {
@@ -332,7 +337,7 @@ static void process_trigger_press(uint8_t index, keyrecord_t *record) {
             // not to mess up with the layer stack.
                 const uint8_t key_layer = read_source_layers_cache(record->event.key);
                 const uint8_t default_layer = get_highest_layer(default_layer_state);
-                if (OS_STEROIDS_SHOULD_FREE_LAYER_STACK && key_layer > oneshot_os[index].layer && key_layer != default_layer) {
+                if (SHOULD_OS_STEROIDS_FREE_LAYER_STACK && key_layer > oneshot_os[index].layer && key_layer != default_layer) {
                     oneshot_origin_layer = key_layer;
                     layer_off(key_layer);
                 }
@@ -455,7 +460,6 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) 
                 // Trigger keydown
                 process_trigger_press(i, record);
                 should_continue_processing = false;
-                continue;
             }
 
         } else {    // On release
@@ -475,6 +479,7 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) 
     for (uint8_t i = 0; i < OS_STEROIDS_COUNT; i++) {
 
         if (oneshot_state[i] == os_idle) { continue; }
+        // Triggers has been processed before
         if (keycode == oneshot_os[i].trigger) { continue; }
 
         if (record->event.pressed) {    // On press
@@ -493,7 +498,6 @@ bool process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *record) 
 #               ifdef OS_STEROIDS_FREE_LAYER_STACK
             if (!should_process_layer_release(i, keycode, record)) {
                 should_continue_processing = false;
-                continue;
             }
 #               endif  // OS_STEROIDS_FREE_LAYER_STACK
         }
@@ -517,11 +521,16 @@ void post_process_record_oneshots_on_steroids(uint16_t keycode, keyrecord_t *rec
 }
 
 __attribute__((weak)) bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* record) {
-    switch (keycode) {
+    if (record->event.pressed) {
+        switch (keycode) {
 
-        default:
-            return true;
+            default:
+                break;
+        }
+    } else {
+
     }
+    return true;
 }
 
 #   ifdef OS_STEROIDS_CANCEL_KEY
@@ -626,4 +635,3 @@ __attribute__((weak)) bool should_oneshot_on_steroids_deactivate_layer(uint16_t 
     }
 }
 #endif  // OS_STEROIDS_FREE_LAYER_STACK_PER_KEY
-

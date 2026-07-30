@@ -263,29 +263,31 @@ const oneshot_on_steroids_t oneshot_os[] = {
 }; */
 
 bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* record) {
-  
-  switch (keycode) {
 
-    case OS_NUMR:
-      //if (get_oneshot_layer_on_steroids() == _1DK) { insert_1dk(keycode); }
-      if (IS_LAYER_ON(_1DK)) {
-        insert_1dk(keycode);
-      } else if (get_oneshot_on_steroids_state(OS_SHFT) > 0) {
-        return toggle_modword(capsword, CAPSWORD, record);
-      }
-      // OS_SHFT + OS_NUMR -> Capsword only if layer _1DK is off.
-      // On _1DK layer, OS_NUMR can be combined with shift to tap symbols like ⅔, ¾ etc.
-      //if (get_oneshot_on_steroids_state(OS_SHFT) > 0 && IS_LAYER_OFF(_1DK)) { return toggle_modword(capsword, CAPSWORD, record); }
-      break;
+  if (record->event.pressed) {
+    switch (keycode) {
 
-    case OS_1DK:
-      // Custom behavior when alt-gr
-      const uint8_t mods = get_mods() | get_oneshot_mods();
-      if (mods & MOD_BIT(KC_ALGR)) {
-          tap_code16(ALGR(PG_1DK));
-          return false;
-      }
-      break;
+      case OS_NUMR:
+        //if (get_oneshot_layer_on_steroids() == _1DK) { insert_1dk(keycode); }
+        if (IS_LAYER_ON(_1DK)) {
+          insert_1dk(keycode);
+        } else if (get_oneshot_on_steroids_state(OS_SHFT) > 0) {
+          return toggle_modword(capsword, CAPSWORD, record);
+        }
+        // OS_SHFT + OS_NUMR -> Capsword only if layer _1DK is off.
+        // On _1DK layer, OS_NUMR can be combined with shift to tap symbols like ⅔, ¾ etc.
+        //if (get_oneshot_on_steroids_state(OS_SHFT) > 0 && IS_LAYER_OFF(_1DK)) { return toggle_modword(capsword, CAPSWORD, record); }
+        break;
+
+      case OS_1DK:
+        // Custom behavior when alt-gr
+        const uint8_t mods = get_mods() | get_oneshot_mods();
+        if (mods & MOD_BIT(KC_ALGR)) {
+            tap_code16(ALGR(PG_1DK));
+            return false;
+        }
+        break;
+    }
   }
   return true;
 }
