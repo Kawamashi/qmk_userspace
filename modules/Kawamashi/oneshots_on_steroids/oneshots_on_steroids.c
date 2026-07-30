@@ -382,7 +382,7 @@ static void process_trigger_press(uint8_t index, keyrecord_t *record) {
 
 static void process_suppressor_release(uint8_t index, uint16_t keycode, keyrecord_t *record) {
 
-    if (oneshot_state[index] == os_down_unused && timer_elapsed(oneshot_tap_time[index]) < GET_OS_STEROIDS_TERM(keycode, record)) {
+    if (oneshot_state[index] == os_down_unused && timer_elapsed(oneshot_tap_time[index]) < get_oneshot_on_steroids_term(keycode, record)) {
         // The oneshot key has been released earlier than the One Shot Term,
         // without any other key being pressed in-between:
         // triggering the oneshot behavior.
@@ -601,7 +601,6 @@ __attribute__((weak)) bool should_mod_be_held_after_oneshot_release(uint8_t mod,
     return true;
 }
 
-#   ifdef OS_STEROIDS_TERM_PER_KEY
 __attribute__((weak)) uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
     
@@ -609,7 +608,6 @@ __attribute__((weak)) uint16_t get_oneshot_on_steroids_term(uint16_t keycode, ke
         return OS_STEROIDS_TERM;
     }
 }
-#   endif  // OS_STEROIDS_TERM_PER_KEY
 
 #ifdef OS_STEROIDS_ABSORB_MODS
 __attribute__((weak)) bool should_oneshot_on_steroids_absorb_mods(uint16_t keycode) {

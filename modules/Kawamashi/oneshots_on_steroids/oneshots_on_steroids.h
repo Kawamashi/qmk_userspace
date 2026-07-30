@@ -55,19 +55,6 @@ typedef enum {
     os_up_queued_used,
 } oneshot_on_steroids_state_t;
 
-#if !defined OS_STEROIDS_TERM
-#   define OS_STEROIDS_TERM TAPPING_TERM
-#endif
-
-// Function to customise the One Shot Term for each one shot on steroids.
-uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
-
-#ifdef OS_STEROIDS_TERM_PER_KEY
-#   define GET_OS_STEROIDS_TERM(keycode, record) get_oneshot_on_steroids_term(keycode, record)
-#else
-#   define GET_OS_STEROIDS_TERM(keycode, record) (OS_STEROIDS_TERM)
-#endif
-
 // Oneshot-type wrapper
 #ifdef OS_STEROIDS_SPLIT_TRIGGER_HOLD
 #  define OS(key1, key2, mods, layer) key1, key2, mods, layer
@@ -75,6 +62,12 @@ uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 #  define OS(key, mods, layer) key, key, mods, layer
 #endif  // OS_STEROIDS_SPLIT_TRIGGER_HOLD
 
+#if !defined OS_STEROIDS_TERM
+#   define OS_STEROIDS_TERM TAPPING_TERM
+#endif
+
+// Function to customise the One Shot Term for each one shot on steroids.
+uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 
 // If the keycode is an OSoS key, returns its state
 // Otherwise, returns -1
