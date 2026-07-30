@@ -82,7 +82,7 @@ bool has_mod_been_absorbed_by_osl(uint8_t mod) {
 #   ifdef OS_STEROIDS_FREE_LAYER_STACK
 static uint8_t oneshot_origin_layer = 0;
 
-// Handles `LT`, `MO` and `TT` keys.
+// Handles `LT`, `MO`, `LM` and `TT` keys.
 static bool should_process_layer_off(uint8_t key_layer) {
     if (key_layer == oneshot_origin_layer) {
         oneshot_origin_layer = 0;
@@ -99,10 +99,10 @@ static bool should_process_layer_release(uint8_t index, uint16_t keycode, keyrec
     if (IS_QK_LAYER_TAP_TOGGLE(keycode)) {  // `TT` keys
         return should_process_layer_off(QK_LAYER_TAP_TOGGLE_GET_LAYER(keycode));
     }
-    if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {
+    if (IS_QK_LAYER_TAP(keycode) && !record->tap.count) {  // `LT` keys
         return should_process_layer_off(QK_LAYER_TAP_GET_LAYER(keycode));
     }
-    if (IS_QK_LAYER_MOD(keycode)) {
+    if (IS_QK_LAYER_MOD(keycode)) {  // `LM` keys
         if (!should_process_layer_off(QK_LAYER_MOD_GET_LAYER(keycode))) {
             unregister_mods(QK_LAYER_MOD_GET_MODS(keycode));
             return false;
@@ -407,13 +407,11 @@ static void process_suppressor_release(uint8_t index, uint16_t keycode, keyrecor
 
 static void process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t *record) {
 
-#       ifdef OS_STEROIDS_CANCEL_KEY
     if (is_oneshot_on_steroids_cancel_key(keycode)) {
         // Cancel oneshot on press of specific keys.
         deactivate_oneshot_on_steroids(index, false);
         return;
     }
-#       endif  // OS_STEROIDS_CANCEL_KEY
 
     if (should_oneshot_on_steroids_ignore_key(keycode, oneshot_os[index].trigger, record)) {
 #           ifdef OS_STEROIDS_TIMEOUT
@@ -532,7 +530,6 @@ __attribute__((weak)) bool is_oneshot_on_steroids_custom_behavior(uint16_t keyco
     return true;
 }
 
-#   ifdef OS_STEROIDS_CANCEL_KEY
 __attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
     switch (keycode) {
 
@@ -540,7 +537,6 @@ __attribute__((weak)) bool is_oneshot_on_steroids_cancel_key(uint16_t keycode) {
             return false;
     }
 }
-#   endif  // OS_STEROIDS_CANCEL_KEY
 
 __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t oneshot, keyrecord_t* record) {
 
