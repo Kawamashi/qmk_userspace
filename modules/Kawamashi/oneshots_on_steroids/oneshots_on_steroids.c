@@ -73,7 +73,7 @@ static bool should_process_mod_release(uint8_t index, uint16_t keycode, keyrecor
     return true;
 }
 
-bool get_absorbed_mods(void) {
+uint8_t get_absorbed_mods(void) {
     return oneshot_added_mods;
 }
 #   endif  // OS_STEROIDS_ABSORB_MODS
@@ -117,7 +117,7 @@ static bool should_process_layer_release(uint8_t index, uint16_t keycode, keyrec
 static uint16_t idle_timer = 0;
 static int8_t timed_oneshot_index = -1;
 
-// One Shot on steroids can be configured to deactivate if the keyboard is idle for some time.
+// One Shot on Steroids can be configured to deactivate if the keyboard is idle for some time.
 // This is useful to prevent unexpected behaviors.
 // In config.h, define `OS_STEROIDS_TIMEOUT` with a time in milliseconds.
 void housekeeping_task_oneshots_on_steroids(void) {
@@ -159,7 +159,7 @@ static bool should_deactivate_layer(int8_t index) {
 }
 
 static void deactivate_oneshot_on_steroids(int8_t index, bool called_by_user) {
-    // Deactivates a specific OSoS key (by index)
+    // Deactivate a specific OSoS key (by index)
     if (oneshot_state[index] == os_idle) { return; }
 
     if (oneshot_os[index].modifier != 0) {
@@ -300,7 +300,7 @@ void del_oneshot_mods_on_steroids(uint8_t mods) {
             deactivate_oneshot_on_steroids(i, true);
 #           ifdef OS_STEROIDS_ABSORB_MODS
         } else if ((oneshot_added_mods & mods) != 0) {
-            // Case of OSL carrying modifiers
+            // Case of modifiers absorbed by OSL
             // In this case, we must remove modifiers w/o cancelling the OSL.
             unregister_mods_on_steroids(mods);
             oneshot_added_mods &= ~mods;
@@ -316,7 +316,7 @@ void clear_oneshot_mods_on_steroids(void) {
             deactivate_oneshot_on_steroids(i, true);
 #           ifdef OS_STEROIDS_ABSORB_MODS
         } else if (oneshot_added_mods != 0) {
-            // Case of OSL carrying modifiers
+            // Case of modifiers absorbed by OSL
             // In this case, we must remove modifiers w/o cancelling the OSL.
             unregister_mods_on_steroids(oneshot_added_mods);
             oneshot_added_mods = 0;
@@ -428,7 +428,7 @@ static void process_other_key_press(uint8_t index, uint16_t keycode, keyrecord_t
     // Regular key pressed
     switch (oneshot_state[index]) {
         case os_down_unused:
-            // When the mod key is still pressed
+            // When the oneshot key is still pressed
             oneshot_state[index] = os_down_used;
             break;
         case os_up_queued:
@@ -564,6 +564,7 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
             if (record->tap.count) { break; }
         case QK_LAYER_TAP_TOGGLE ... QK_LAYER_TAP_TOGGLE_MAX:
         case QK_MOMENTARY ... QK_MOMENTARY_MAX:
+        case QK_LAYER_MOD ... QK_LAYER_MOD_MAX:
         case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX:
         case QK_TO ... QK_TO_MAX:
         case QK_TOGGLE_LAYER ... QK_TOGGLE_LAYER_MAX:
@@ -586,13 +587,13 @@ __attribute__((weak)) bool should_oneshot_on_steroids_ignore_key(uint16_t keycod
         // Standard behavior, like any mod key after an OSL
         return true;
     } else {
-        // one shot is OSM on steroids
+        // oneshot is OSoS mod key
 #           ifdef OS_STEROIDS_ABSORB_MODS
         if (is_oneshot_layer_on_steroids(keycode)) {
             if (should_oneshot_on_steroids_absorb_mods(keycode)) { return false; }
         }
 #           endif  // OS_STEROIDS_ABSORB_MODS
-        // OSM on steroids should stay pressed
+        // OSoS mod keys should stay pressed
         // whether keycode is a mod or a layer-change key.
         return true;
     }

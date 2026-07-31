@@ -22,18 +22,18 @@
 extern "C" {
 #endif
 
-/*Custom one shot on steroids key structure.
+/* One Shot on Steroids key structure.
  * 
- * The `trigger` field is the keycode that is pressed to initiate the one shot on steroids.
- * The `suppressor` field is the keycode that is held to continue the one shot on steroids.
+ * The `trigger` field is the keycode that is pressed to initiate the One Shot on Steroids.
+ * The `suppressor` field is the keycode that is held to continue the One Shot on Steroids.
  * Trigger and suppressor are usually the same key.
  * In some cases, instead of holding down the trigger key, it’s easier to use another key, hence the suppressor key.
  * 
- * For one shot mods, the `modifier` field must use the MOD_BIT() macro.
+ * For OSoS mod keys, the `modifier` field must use the MOD_BIT() macro.
  * Modifiers can be combined, for ex. MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT)
- * `0` must be used for layer-only one shot keys.
- * The `layer` field is used for one shot layers.
- * `0` must be used for mods-only one shot keys.
+ * `0` must be used for layer-only OSoS key.
+ * The `layer` field is used for OSoS layer keys.
+ * `0` must be used for modifier-only OSoS keys.
  */ 
 typedef struct {
   uint16_t trigger;
@@ -42,11 +42,11 @@ typedef struct {
   uint8_t layer;
 } oneshot_on_steroids_t;
 
-// Array of one shot on steroids keys.
-// Each OSoS key must also be declared in custom_keycodes.
+// Array of One Shot on Steroids keys.
+// Each OSoS key must also be declared in `custom_keycodes`.
 extern const oneshot_on_steroids_t oneshot_os[];
 
-// Represents the five states a one shot key can be in
+// Represents the five states an OSoS key can be in
 typedef enum {
     os_idle,
     os_down_unused,
@@ -75,8 +75,8 @@ int8_t get_oneshot_on_steroids_state(uint16_t keycode);
 uint8_t get_oneshot_layer_on_steroids(void);
 
 #   if defined OS_STEROIDS_ABSORB_MODS
-// Returns the modifiers absorbed by an OSoS key
-bool get_absorbed_mods(void);
+// Returns the modifiers absorbed by an OSoS layer key
+uint8_t get_absorbed_mods(void);
 #   endif  // OS_STEROIDS_ABSORB_MODS
 
 // Returns whether a keycode is an OSoS key
@@ -110,17 +110,16 @@ void clear_oneshot_mods_on_steroids(void);
 
 //*******************************************  Callbacks  ********************************************//
 
-// Callback to customise the One Shot Term for each one shot on steroids.
+// Callback to customise the One Shot Term for each OSoS keys.
 uint16_t get_oneshot_on_steroids_term(uint16_t keycode, keyrecord_t *record);
 
-// Handles one shot on steroids custom behavior,
-// before their standard processing
+// Handles OSoS custom behavior, before their standard processing
 bool is_oneshot_on_steroids_custom_behavior(uint16_t keycode, keyrecord_t* record);
 
-// Defines keys to cancel one shot mods and layers.
+// Defines keys to cancel One Shots on Steroids.
 bool is_oneshot_on_steroids_cancel_key(uint16_t keycode);
 
-// Defines keys to be ignored when determining whether a one shot on steroids has been used.
+// Determines whether a key press should be ignored by an active OSoS key.
 bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, keyrecord_t* record);
 
 // When triggering the one shot effect, define which mods should be released
@@ -129,7 +128,7 @@ bool should_oneshot_on_steroids_ignore_key(uint16_t keycode, uint16_t trigger, k
 bool should_mod_be_held_after_oneshot_release(uint8_t mod, uint16_t keycode);
 
 #   ifdef OS_STEROIDS_TIMEOUT
-// // Callback to customise the timeout for each one shot on steroids.
+// // Callback to customise the timeout for each OSoS keys.
 uint16_t get_oneshot_on_steroids_timeout(uint16_t keycode, keyrecord_t *record);
 #   endif  // OS_STEROIDS_TIMEOUT
 
@@ -139,7 +138,7 @@ bool should_oneshot_on_steroids_absorb_mods(uint16_t keycode);
 #   endif  // OS_STEROIDS_ABSORB_MODS
 
 #   ifdef OS_STEROIDS_FREE_LAYER_STACK
-// Callback to customise which OSoS layer keys should deactivate the layer it is comming from.
+// Callback to customise which OSoS layer keys should deactivate their origin layer.
 bool should_oneshot_on_steroids_deactivate_layer(uint16_t keycode, uint8_t layer);
 #   endif  // OS_STEROIDS_FREE_LAYER_STACK
 
